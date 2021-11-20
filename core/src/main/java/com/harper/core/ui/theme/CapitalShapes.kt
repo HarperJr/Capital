@@ -1,4 +1,4 @@
-package com.harper.capital.theme
+package com.harper.core.ui.theme
 
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.RoundedCornerShape

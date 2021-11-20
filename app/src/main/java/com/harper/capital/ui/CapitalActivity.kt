@@ -1,33 +1,49 @@
 package com.harper.capital.ui
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import com.harper.capital.theme.CapitalTheme
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.fragment.app.FragmentActivity
+import com.github.terrakok.cicerone.Navigator
+import com.github.terrakok.cicerone.NavigatorHolder
+import com.github.terrakok.cicerone.androidx.AppNavigator
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CapitalActivity : ComponentActivity() {
+class CapitalActivity : FragmentActivity() {
+    private val viewModel by viewModel<CapitalViewModel>()
+    private val navigationHolder: NavigatorHolder by inject()
+    private lateinit var navigator: Navigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            CapitalTheme {
-                Surface(modifier = Modifier.background(CapitalTheme.colors.background)) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Text(
-                            modifier = Modifier.align(Alignment.Center),
-                            text = "Hello world",
-                            style = CapitalTheme.typography.header
-                        )
-                    }
-                }
-            }
-        }
+        val navHostView = FrameLayout(this)
+            .apply { id = NAV_HOST_VIEW_ID }
+        setContentView(
+            navHostView,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+        )
+        navigator = createNavigator(navHostView)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.start()
+        navigationHolder.setNavigator(navigator)
+    }
+
+    override fun onStop() {
+        navigationHolder.removeNavigator()
+        super.onStop()
+    }
+
+    private fun createNavigator(navHostView: ViewGroup): Navigator =
+        AppNavigator(this, navHostView.id, supportFragmentManager)
+
+    companion object {
+        private const val NAV_HOST_VIEW_ID = 0x162432
     }
 }

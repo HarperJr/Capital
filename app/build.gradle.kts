@@ -7,16 +7,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion = Version.Application.COMPILE_SDK
-    buildToolsVersion = Version.Application.BUILD_TOOLS
-
-    defaultConfig {
-        applicationId = "com.harper.capital"
-        minSdk = Version.Application.MIN_SDK
-        targetSdk = Version.Application.TARGET_SDK
-        versionCode = Version.Application.VERSION_CODE
-        versionName = Version.Application.VERSION_NAME
-
+    capitalAppDefaultConfig {
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments(
@@ -30,29 +21,13 @@ android {
         }
     }
 
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                File("proguard-rules.pro")
-            )
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
     kotlinOptions {
-        jvmTarget = Version.JVM_TARGET
+        jvmTarget = Version.jvmTarget
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Version.Library.COMPOSE
-        kotlinCompilerVersion = Version.KOTLIN
+        kotlinCompilerExtensionVersion = Version.Library.compose
+        kotlinCompilerVersion = Version.kotlin
     }
 
     buildFeatures {
@@ -76,4 +51,7 @@ dependencies {
     room()
     coil()
     timber()
+
+    // modules
+    core()
 }

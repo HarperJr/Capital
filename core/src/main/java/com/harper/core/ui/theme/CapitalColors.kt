@@ -1,6 +1,5 @@
-package com.harper.capital.theme
+package com.harper.core.ui.theme
 
-import androidx.compose.material.Colors
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 
