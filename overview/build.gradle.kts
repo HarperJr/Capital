@@ -19,6 +19,7 @@ android {
 dependencies {
     android()
     compose()
+    composeConstraintLayout()
     koin()
     core()
 }

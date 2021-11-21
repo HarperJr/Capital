@@ -34,12 +34,12 @@ class CapitalTypography internal constructor(
         ),
         regular: TextStyle = TextStyle(
             fontWeight = FontWeight.Medium,
-            fontSize = 14.sp,
+            fontSize = 16.sp,
             letterSpacing = 0.1.sp
         ),
         underline: TextStyle = TextStyle(
             fontWeight = FontWeight.Medium,
-            fontSize = 12.sp,
+            fontSize = 14.sp,
             letterSpacing = 0.1.sp
         )
     ) : this(

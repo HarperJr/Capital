@@ -55,6 +55,10 @@ fun DependencyHandlerScope.compose() {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
 }
 
+fun DependencyHandlerScope.composeConstraintLayout() {
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.0-rc01")
+}
+
 fun DependencyHandlerScope.implementation(module: String) = add("implementation", module)
 
 fun DependencyHandlerScope.debugImplementation(module: String) = add("debugImplementation", module)

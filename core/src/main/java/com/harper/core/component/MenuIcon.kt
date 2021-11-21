@@ -12,12 +12,12 @@ import androidx.compose.ui.res.vectorResource
 import com.harper.core.theme.CapitalTheme
 
 @Composable
-fun Icon(modifier: Modifier = Modifier, @DrawableRes iconRes: Int, onClick: () -> Unit) {
-    Icon(modifier, imageVector = ImageVector.vectorResource(id = iconRes), onClick)
+fun MenuIcon(modifier: Modifier = Modifier, @DrawableRes iconRes: Int, onClick: () -> Unit = {}) {
+    MenuIcon(modifier, imageVector = ImageVector.vectorResource(id = iconRes), onClick)
 }
 
 @Composable
-fun Icon(modifier: Modifier = Modifier, imageVector: ImageVector, onClick: () -> Unit) {
+fun MenuIcon(modifier: Modifier = Modifier, imageVector: ImageVector, onClick: () -> Unit = {}) {
     IconButton(onClick = onClick) {
         Image(
             modifier = modifier,

@@ -11,9 +11,9 @@ class CapitalShapes(
 
     val small: CornerBasedShape = RoundedCornerShape(4.dp),
 
-    val medium: CornerBasedShape = RoundedCornerShape(4.dp),
+    val medium: CornerBasedShape = RoundedCornerShape(6.dp),
 
-    val large: CornerBasedShape = RoundedCornerShape(0.dp)
+    val large: CornerBasedShape = RoundedCornerShape(8.dp)
 ) {
 
     /**
