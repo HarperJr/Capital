@@ -24,22 +24,6 @@ android {
     kotlinOptions {
         jvmTarget = Version.jvmTarget
     }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = Version.Library.compose
-        kotlinCompilerVersion = Version.kotlin
-    }
-
-    buildFeatures {
-        compose = true
-    }
-
-    packagingOptions {
-        // Multiple dependency bring these files in. Exclude them to enable
-        // our test APK to build (has no effect on our AARs)
-        resources.excludes += "/META-INF/AL2.0"
-        resources.excludes += "/META-INF/LGPL2.1"
-    }
 }
 
 dependencies {
@@ -52,6 +36,6 @@ dependencies {
     coil()
     timber()
 
-    // modules
+    overview()
     core()
 }

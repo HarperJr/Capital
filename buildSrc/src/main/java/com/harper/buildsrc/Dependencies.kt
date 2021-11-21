@@ -6,12 +6,16 @@ fun DependencyHandlerScope.core() {
     project(":core")
 }
 
+fun DependencyHandlerScope.overview() {
+    project(":overview")
+}
+
 fun DependencyHandlerScope.android() {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Version.kotlin}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Version.kotlin}")
-    implementation("androidx.core:core-ktx:1.6.0")
-    implementation("androidx.appcompat:appcompat:1.3.1")
-    implementation("com.google.android.material:material:1.4.0")
+    implementation("androidx.core:core-ktx:${Version.Library.ktx}")
+    implementation("androidx.appcompat:appcompat:${Version.Library.appCompat}")
+    implementation("com.google.android.material:material:${Version.Library.material}")
 }
 
 fun DependencyHandlerScope.cicerone() = implementation("com.github.terrakok:cicerone:7.1")
@@ -46,14 +50,14 @@ fun DependencyHandlerScope.compose() {
     implementation("androidx.compose.material:material:${Version.Library.compose}")
     implementation("androidx.compose.foundation:foundation:${Version.Library.compose}")
     implementation("androidx.compose.foundation:foundation-layout:${Version.Library.compose}")
-    implementation("androidx.compose.ui:ui-tooling:${Version.Library.compose}")
+    debugImplementation("androidx.compose.ui:ui-tooling:${Version.Library.compose}")
     implementation("androidx.compose.animation:animation:${Version.Library.compose}")
-    implementation("androidx.compose.ui:ui-test-junit4:${Version.Library.compose}")
-    implementation("androidx.compose.ui:ui-test-manifest:${Version.Library.compose}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-rc01")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
 }
 
 fun DependencyHandlerScope.implementation(module: String) = add("implementation", module)
+
+fun DependencyHandlerScope.debugImplementation(module: String) = add("debugImplementation", module)
 
 fun DependencyHandlerScope.kapt(module: String) = add("kapt", module)
 

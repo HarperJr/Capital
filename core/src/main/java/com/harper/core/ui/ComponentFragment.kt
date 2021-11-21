@@ -12,9 +12,9 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import com.harper.core.ui.ext.cast
-import com.harper.core.ui.ext.tryCast
-import com.harper.core.ui.theme.CapitalTheme
+import com.harper.core.ext.cast
+import com.harper.core.ext.tryCast
+import com.harper.core.theme.CapitalTheme
 import org.koin.androidx.scope.fragmentScope
 import org.koin.androidx.viewmodel.ViewModelOwner
 import org.koin.androidx.viewmodel.scope.viewModel

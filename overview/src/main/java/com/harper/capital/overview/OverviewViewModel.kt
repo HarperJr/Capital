@@ -1,4 +1,4 @@
-package com.harper.capital.ui.overview
+package com.harper.capital.overview
 
 import com.harper.core.ui.ComponentViewModel
 

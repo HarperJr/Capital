@@ -1,4 +1,4 @@
-package com.harper.core.ui.ext
+package com.harper.core.ext
 
 inline fun <reified T : Any> Any?.tryCast(): T? = this as? T
 

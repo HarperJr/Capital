@@ -20,4 +20,5 @@ dependencies {
     android()
     compose()
     koin()
+    core()
 }

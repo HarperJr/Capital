@@ -1,4 +1,4 @@
-package com.harper.core.ui.theme
+package com.harper.core.theme
 
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.isSystemInDarkTheme

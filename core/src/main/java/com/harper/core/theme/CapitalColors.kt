@@ -1,4 +1,4 @@
-package com.harper.core.ui.theme
+package com.harper.core.theme
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
@@ -8,16 +8,16 @@ private val secondaryLight = Color(0xFFFFFFFF)
 private val backgroundLight = Color(0xFFFFFFFF)
 private val onPrimaryLight = Color(0xFFFFFFFF)
 private val onSecondaryLight = Color(0xFFFFFFFF)
-private val onBackgroundLight = Color(0xFFFFFFFF)
-private val errorLight = Color(0xFFFFFFFF)
+private val onBackgroundLight = Color(0xFF0F0F0F)
+private val errorLight = Color(0xFF9B0000)
 
-private val primaryDark = Color(0xFFFFFFFF)
-private val secondaryDark = Color(0xFFFFFFFF)
-private val backgroundDark = Color(0xFFFFFFFF)
+private val primaryDark = Color(0xFF444444)
+private val secondaryDark = Color(0xFF000000)
+private val backgroundDark = Color(0xFF000000)
 private val onPrimaryDark = Color(0xFFFFFFFF)
 private val onSecondaryDark = Color(0xFFFFFFFF)
-private val onBackgroundDark = Color(0xFFFFFFFF)
-private val errorDark = Color(0xFFFFFFFF)
+private val onBackgroundDark = Color(0xFFE7E7E7)
+private val errorDark = Color(0xFF9B0000)
 
 
 @Stable
@@ -94,13 +94,13 @@ fun lightColors(
     onSecondary: Color = onSecondaryLight,
     onBackground: Color = onBackgroundLight
 ): CapitalColors = CapitalColors(
-    primaryLight,
-    secondaryLight,
-    backgroundLight,
+    primary,
+    secondary,
+    background,
     error,
-    onPrimaryLight,
-    onSecondaryLight,
-    onBackgroundLight,
+    onPrimary,
+    onSecondary,
+    onBackground,
     isLight = true
 )
 
