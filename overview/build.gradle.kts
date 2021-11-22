@@ -11,6 +11,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    capitalLibBuildFeatures()
+
     kotlinOptions {
         jvmTarget = Version.jvmTarget
     }
@@ -21,5 +23,7 @@ dependencies {
     compose()
     composeConstraintLayout()
     koin()
+
     core()
+    spec()
 }

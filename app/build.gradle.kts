@@ -29,13 +29,12 @@ android {
 dependencies {
     android()
     compose()
-    retrofit()
     cicerone()
     koin()
-    room()
-    coil()
     timber()
 
     overview()
+    database()
+    repository()
     core()
 }

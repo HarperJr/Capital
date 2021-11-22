@@ -19,7 +19,6 @@ private val onSecondaryDark = Color(0xFFFFFFFF)
 private val onBackgroundDark = Color(0xFFE7E7E7)
 private val errorDark = Color(0xFF9B0000)
 
-
 @Stable
 class CapitalColors(
     primary: Color,
@@ -82,6 +81,12 @@ class CapitalColors(
                 "onBackground=$onBackground, " +
                 "isLight=$isLight" +
                 ")"
+    }
+
+    companion object {
+        val White: Color = Color(0xFFE7E7E7)
+        val DeepBlue: Color = Color(0xFF1947EE)
+        val LightBlue: Color = Color(0xFF5374EC)
     }
 }
 

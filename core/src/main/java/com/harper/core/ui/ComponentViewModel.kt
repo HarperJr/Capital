@@ -2,8 +2,11 @@ package com.harper.core.ui
 
 import android.os.Looper
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 abstract class ComponentViewModel<S : Any>(private val defaultState: S) : ViewModel() {
     val state: StateFlow<S>
@@ -20,7 +23,7 @@ abstract class ComponentViewModel<S : Any>(private val defaultState: S) : ViewMo
 
     protected open fun onFirstStart() {}
 
-    protected fun mutateState(mutation: S.() -> S) {
+    protected fun mutateState(mutation: (S) -> S) {
         check(Looper.getMainLooper().isCurrentThread) { "Unsafe change of state is forbidden! Use main thread" }
         _state.value = mutation.invoke(_state.value)
     }
@@ -31,6 +34,8 @@ abstract class ComponentViewModel<S : Any>(private val defaultState: S) : ViewMo
             .also { mutation.invoke(it) }
         stateMutation.newState?.let { _state.value = it }
     }
+
+    protected fun launch(closure: suspend CoroutineScope.() -> Unit) = viewModelScope.launch { closure.invoke(this) }
 
     inner class StateMutation<S : Any> {
         var newState: S? = null

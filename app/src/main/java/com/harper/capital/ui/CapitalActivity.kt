@@ -8,11 +8,17 @@ import com.github.terrakok.cicerone.Navigator
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.scope.activityScope
+import org.koin.androidx.viewmodel.ViewModelOwner
+import org.koin.androidx.viewmodel.scope.viewModel
 
 class CapitalActivity : FragmentActivity() {
-    private val viewModel by viewModel<CapitalViewModel>()
+    private val scope by activityScope()
+    private val viewModel by scope.viewModel<CapitalViewModel>(owner = {
+        ViewModelOwner.from(this)
+    })
     private val navigationHolder: NavigatorHolder by inject()
+
     private lateinit var navigator: Navigator
 
     override fun onCreate(savedInstanceState: Bundle?) {

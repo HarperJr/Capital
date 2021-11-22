@@ -92,6 +92,15 @@ fun LibraryExtension.capitalLibDefaultConfig(configClosure: LibraryDefaultConfig
         kotlinCompilerExtensionVersion = Version.Library.compose
     }
 
+    packagingOptions {
+        // Multiple dependency bring these files in. Exclude them to enable
+        // our test APK to build (has no effect on our AARs)
+        resources.excludes += "/META-INF/AL2.0"
+        resources.excludes += "/META-INF/LGPL2.1"
+    }
+}
+
+fun LibraryExtension.capitalLibBuildFeatures() {
     buildFeatures {
         viewBinding = true
         compose = true
@@ -100,12 +109,5 @@ fun LibraryExtension.capitalLibDefaultConfig(configClosure: LibraryDefaultConfig
         renderScript = false
         resValues = false
         shaders = false
-    }
-
-    packagingOptions {
-        // Multiple dependency bring these files in. Exclude them to enable
-        // our test APK to build (has no effect on our AARs)
-        resources.excludes += "/META-INF/AL2.0"
-        resources.excludes += "/META-INF/LGPL2.1"
     }
 }

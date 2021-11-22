@@ -10,6 +10,18 @@ fun DependencyHandlerScope.overview() {
     project(":overview")
 }
 
+fun DependencyHandlerScope.database() {
+    project(":database")
+}
+
+fun DependencyHandlerScope.spec() {
+    project(":spec")
+}
+
+fun DependencyHandlerScope.repository() {
+    project(":repository")
+}
+
 fun DependencyHandlerScope.android() {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Version.kotlin}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${Version.kotlin}")

@@ -11,6 +11,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    capitalLibBuildFeatures()
+
     kotlinOptions {
         jvmTarget = Version.jvmTarget
     }

@@ -1,7 +1,11 @@
 package com.harper.capital
 
 import android.app.Application
-import com.harper.capital.ui.di.application
+import com.harper.capital.database.databaseModule
+import com.harper.capital.overview.overviewModule
+import com.harper.capital.repository.repositoryModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 
@@ -12,7 +16,9 @@ class CapitalApplication : Application() {
         super.onCreate()
 
         koinApp = startKoin {
-            modules(application)
+            modules(appModule, overviewModule, databaseModule, repositoryModule)
+            androidContext(applicationContext)
+            androidLogger()
         }
     }
 
