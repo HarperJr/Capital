@@ -94,11 +94,8 @@ private fun Overview(state: OverviewState.Data, eventSender: EventSender<Overvie
                 items(state.assets) {
                     AssetCard(
                         modifier = Modifier
-                            .size(width = 300.dp, height = 156.dp)
                             .padding(horizontal = 16.dp),
-                        asset = it,
-                        onIncomeClick = { eventSender.event(OverviewEvent.IncomeClick(0L)) },
-                        onExpenseClick = { eventSender.event(OverviewEvent.ExpenseClick(0L)) }
+                        asset = it
                     )
                 }
                 item {
@@ -133,7 +130,7 @@ fun OverviewTopBar() {
             modifier = Modifier.padding(16.dp),
             text = stringResource(
                 id = R.string.amount_available,
-                123.00.format(com.harper.capital.spec.domain.Currency.RUR.name)
+                123.00.format(com.harper.capital.spec.domain.Currency.RUB.name)
             ),
             style = CapitalTheme.typography.title,
             color = CapitalTheme.colors.onBackground

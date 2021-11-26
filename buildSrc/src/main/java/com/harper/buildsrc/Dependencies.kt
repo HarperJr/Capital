@@ -41,6 +41,10 @@ fun DependencyHandlerScope.koin() {
     implementation("io.insert-koin:koin-androidx-compose:${Version.Library.koin}")
 }
 
+fun DependencyHandlerScope.gson() {
+    implementation("com.google.code.gson:gson:2.8.6")
+}
+
 fun DependencyHandlerScope.retrofit() {
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

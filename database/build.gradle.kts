@@ -31,4 +31,5 @@ dependencies {
     koin()
     core()
     room()
+    gson()
 }

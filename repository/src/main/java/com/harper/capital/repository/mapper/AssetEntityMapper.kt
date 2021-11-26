@@ -10,7 +10,8 @@ object AssetEntityMapper : (Asset) -> AssetEntity {
             id = id,
             name = name,
             currencyId = currency.ordinal,
-            amount = amount
+            amount = amount,
+            metadata = metadata.let(AssetMetadataEntityMapper)
         )
     }
 }

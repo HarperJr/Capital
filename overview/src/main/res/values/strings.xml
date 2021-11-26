@@ -4,4 +4,6 @@
     <string name="add">Add</string>
     <string name="income">Income</string>
     <string name="expense">Expense</string>
+    <string name="credit_card">Credit card</string>
+    <string name="goal">Goal</string>
 </resources>

@@ -13,7 +13,9 @@ class CapitalShapes(
 
     val medium: CornerBasedShape = RoundedCornerShape(6.dp),
 
-    val large: CornerBasedShape = RoundedCornerShape(8.dp)
+    val large: CornerBasedShape = RoundedCornerShape(8.dp),
+
+    val extraLarge: CornerBasedShape = RoundedCornerShape(12.dp)
 ) {
 
     /**
@@ -22,11 +24,13 @@ class CapitalShapes(
     fun copy(
         small: CornerBasedShape = this.small,
         medium: CornerBasedShape = this.medium,
-        large: CornerBasedShape = this.large
+        large: CornerBasedShape = this.large,
+        extraLarge: CornerBasedShape = this.extraLarge
     ): CapitalShapes = CapitalShapes(
         small = small,
         medium = medium,
-        large = large
+        large = large,
+        extraLarge = extraLarge
     )
 
     override fun equals(other: Any?): Boolean {
@@ -36,6 +40,7 @@ class CapitalShapes(
         if (small != other.small) return false
         if (medium != other.medium) return false
         if (large != other.large) return false
+        if (extraLarge != other.extraLarge) return false
 
         return true
     }
@@ -44,6 +49,7 @@ class CapitalShapes(
         var result = small.hashCode()
         result = 31 * result + medium.hashCode()
         result = 31 * result + large.hashCode()
+        result = 31 * result + extraLarge.hashCode()
         return result
     }
 

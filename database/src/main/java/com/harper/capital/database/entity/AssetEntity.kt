@@ -11,6 +11,7 @@ object AssetTable {
     const val name = "name"
     const val currencyId = "currency_id"
     const val amount = "amount"
+    const val type = "type"
 }
 
 @Entity(tableName = AssetTable.tableName)
@@ -19,5 +20,6 @@ data class AssetEntity(
     @ColumnInfo(name = AssetTable.id) val id: Long,
     @ColumnInfo(name = AssetTable.name) val name: String,
     @ColumnInfo(name = AssetTable.currencyId) val currencyId: Int,
-    @ColumnInfo(name = AssetTable.amount) val amount: Double
+    @ColumnInfo(name = AssetTable.amount) val amount: Double,
+    @ColumnInfo(name = AssetTable.type) val metadata: AssetMetadataEntity
 )

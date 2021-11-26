@@ -7,9 +7,7 @@ class GlobalRouterImpl : Router(), GlobalRouter {
 
     override fun setRoot() = newRootScreen(Screens.overview())
 
-    override fun navigateToAddAsset() {
-
-    }
+    override fun navigateToAddAsset() = navigateTo(Screens.assetAdd())
 
     override fun back() = exit()
 }

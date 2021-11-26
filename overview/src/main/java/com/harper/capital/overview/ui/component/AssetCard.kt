@@ -1,128 +1,129 @@
 package com.harper.capital.overview.ui.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
 import androidx.compose.material.Card
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import com.harper.capital.overview.R
 import com.harper.capital.spec.domain.Asset
+import com.harper.capital.spec.domain.AssetMetadata
+import com.harper.capital.spec.domain.Currency
 import com.harper.core.component.ComposablePreview
 import com.harper.core.ext.format
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
-import com.harper.core.theme.capitalButtonColors
 
 @Composable
 fun AssetCard(
     modifier: Modifier = Modifier,
-    asset: Asset,
-    onIncomeClick: () -> Unit,
-    onExpenseClick: () -> Unit
+    asset: Asset
 ) {
     Card(
-        modifier = modifier,
-        backgroundColor = CapitalTheme.colors.primary,
+        modifier = modifier.size(width = 264.dp, height = 160.dp),
+        backgroundColor = CapitalColors.DarkNight,
         elevation = 4.dp,
-        shape = CapitalTheme.shapes.large
+        shape = CapitalTheme.shapes.extraLarge
     ) {
         ConstraintLayout(
             modifier = Modifier
-                .padding(8.dp)
                 .fillMaxSize()
         ) {
-            val (icon, name, edit, amount, income, expense) = createRefs()
-            Icon(
+            val (icon, name, description, amount) = createRefs()
+            Image(
                 modifier = Modifier
-                    .size(32.dp)
                     .constrainAs(icon) {
-                        start.linkTo(parent.start)
-                        top.linkTo(parent.top)
+                        end.linkTo(parent.end, margin = 8.dp)
+                        top.linkTo(parent.top, margin = 8.dp)
                     },
-                imageVector = CapitalIcons.Wallet,
-                contentDescription = null,
-                tint = CapitalTheme.colors.onSecondary
+                imageVector = CapitalIcons.Bank.Tinkoff,
+                contentDescription = null
             )
+            Text(
+                modifier = Modifier
+                    .constrainAs(amount) {
+                        start.linkTo(parent.start, margin = 16.dp)
+                        top.linkTo(parent.top, margin = 16.dp)
+                    },
+                text = buildAnnotatedString {
+                    val text = asset.amount.format(asset.currency.name)
+                    val commaIndex = text.indexOf(',')
+                    append(text)
+                    addStyle(SpanStyle(fontSize = 24.sp), start = 0, end = commaIndex)
+                    addStyle(SpanStyle(fontSize = 14.sp), start = commaIndex, end = text.length - 1)
+                    addStyle(
+                        SpanStyle(fontSize = 24.sp),
+                        start = text.length - 1,
+                        end = text.length
+                    )
+                },
+                color = CapitalColors.White,
+                style = CapitalTheme.typography.regular
+            )
+
+            val metadata = remember { asset.metadata }
+            if (metadata is AssetMetadata.Credit) {
+                MetadataBlock(
+                    modifier = Modifier
+                        .constrainAs(description) {
+                            top.linkTo(amount.bottom)
+                            start.linkTo(amount.start)
+                        },
+                    type = stringResource(id = R.string.credit_card),
+                    info = (asset.amount - metadata.limit).format(asset.currency.name)
+                )
+            }
+            if (metadata is AssetMetadata.Goal) {
+                MetadataBlock(
+                    modifier = Modifier
+                        .constrainAs(description) {
+                            top.linkTo(amount.bottom)
+                            start.linkTo(amount.start)
+                        },
+                    type = stringResource(id = R.string.goal),
+                    info = metadata.goal.format(asset.currency.name)
+                )
+            }
+
             Text(
                 modifier = Modifier
                     .constrainAs(name) {
-                        linkTo(
-                            start = icon.end,
-                            end = edit.start,
-                            top = icon.top,
-                            bottom = icon.bottom
-                        )
-                        width = Dimension.fillToConstraints
-                    }
-                    .padding(horizontal = 8.dp),
-                text = asset.name,
-                style = CapitalTheme.typography.regular,
-                color = CapitalTheme.colors.onPrimary,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1
-            )
-            Icon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .constrainAs(edit) {
-                        end.linkTo(parent.end)
-                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom, margin = 8.dp)
+                        start.linkTo(parent.start, margin = 16.dp)
                     },
-                imageVector = CapitalIcons.Edit,
-                contentDescription = null,
-                tint = CapitalTheme.colors.onSecondary
+                text = asset.name,
+                color = CapitalColors.White,
+                style = CapitalTheme.typography.regular
             )
-            Text(
-                modifier = Modifier.constrainAs(amount) {
-                    linkTo(start = parent.start, end = parent.end)
-                    top.linkTo(name.bottom, margin = 8.dp)
-                },
-                text = asset.amount.format(asset.currency.name),
-                style = CapitalTheme.typography.header.copy(fontWeight = FontWeight.Bold),
-                color = CapitalTheme.colors.onPrimary
-            )
-            Button(
-                modifier = Modifier.constrainAs(income) {
-                    end.linkTo(expense.start, margin = 16.dp)
-                    top.linkTo(expense.top)
-                },
-                onClick = onIncomeClick,
-                colors = capitalButtonColors(),
-                shape = CapitalTheme.shapes.medium
-            ) {
-                Text(
-                    text = stringResource(id = R.string.income),
-                    style = CapitalTheme.typography.regular,
-                    color = CapitalColors.White
-                )
-            }
-            Button(
-                modifier = Modifier.constrainAs(expense) {
-                    bottom.linkTo(parent.bottom)
-                    end.linkTo(parent.end)
-                },
-                onClick = onExpenseClick,
-                colors = capitalButtonColors(),
-                shape = CapitalTheme.shapes.medium
-            ) {
-                Text(
-                    text = stringResource(id = R.string.expense),
-                    style = CapitalTheme.typography.regular,
-                    color = CapitalColors.White
-                )
-            }
         }
+    }
+}
+
+@Composable
+fun MetadataBlock(modifier: Modifier = Modifier, type: String, info: String) {
+    Column(modifier = modifier) {
+        Text(
+            text = type,
+            color = CapitalColors.Grey,
+            style = CapitalTheme.typography.regularSmall
+        )
+        Text(
+            modifier = Modifier.padding(top = 4.dp),
+            text = info,
+            color = CapitalColors.White,
+            style = CapitalTheme.typography.regularSmall
+        )
     }
 }
 
@@ -136,15 +137,13 @@ private fun AssetCardLight() {
                 .padding(16.dp)
         ) {
             AssetCard(
-                modifier = Modifier.height(200.dp),
                 asset = Asset(
                     0L,
                     "Tinkoff Bank",
-                    124000.00,
-                    com.harper.capital.spec.domain.Currency.RUR
-                ),
-                {},
-                {}
+                    45000.00,
+                    Currency.RUB,
+                    metadata = AssetMetadata.Credit(limit = 75000.00)
+                )
             )
         }
     }
@@ -160,15 +159,13 @@ private fun AssetCardDark() {
                 .padding(16.dp)
         ) {
             AssetCard(
-                modifier = Modifier.height(200.dp),
                 asset = Asset(
                     0L,
-                    "Tinkoff Bank",
-                    124000.00,
-                    com.harper.capital.spec.domain.Currency.EUR
-                ),
-                {},
-                {}
+                    "Big house",
+                    75000.00,
+                    Currency.EUR,
+                    metadata = AssetMetadata.Goal(goal = 100000.00)
+                )
             )
         }
     }

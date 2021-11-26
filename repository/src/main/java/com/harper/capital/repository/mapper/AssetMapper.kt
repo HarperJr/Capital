@@ -11,7 +11,8 @@ object AssetMapper : (AssetEntity) -> Asset {
             id = id,
             name = name,
             currency = Currency.of(currencyId),
-            amount = amount
+            amount = amount,
+            metadata = entity.metadata.let(AssetMetadataMapper)
         )
     }
 }

@@ -24,6 +24,13 @@ object CapitalIcons {
         get() = Icons.Rounded.ArrowBack
     val Edit: ImageVector
         get() = Icons.Rounded.Edit
+
+    object Bank {
+
+        val Tinkoff: ImageVector
+            @Composable
+            get() = ImageVector.vectorResource(id = R.drawable.ic_tinkoff)
+    }
 }
 
 @Composable
@@ -32,6 +39,16 @@ private fun Icons() {
     Row(modifier = Modifier.background(CapitalTheme.colors.background)) {
         icons.forEach {
             MenuIcon(imageVector = it)
+        }
+    }
+}
+
+@Composable
+private fun BankIcons() {
+    val icons = listOf(CapitalIcons.Bank.Tinkoff)
+    Row(modifier = Modifier.background(CapitalTheme.colors.background)) {
+        icons.forEach {
+            MenuIcon(imageVector = it, hasTint = false)
         }
     }
 }
@@ -49,6 +66,22 @@ private fun IconsLight() {
 private fun IconsDark() {
     ComposablePreview(isDark = true) {
         Icons()
+    }
+}
+
+@Preview
+@Composable
+private fun BankIconsLight() {
+    ComposablePreview {
+        BankIcons()
+    }
+}
+
+@Preview
+@Composable
+private fun BankIconsDark() {
+    ComposablePreview(isDark = true) {
+        BankIcons()
     }
 }
 

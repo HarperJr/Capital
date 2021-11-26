@@ -2,7 +2,7 @@ package com.harper.capital.spec.domain
 
 enum class Currency {
     USD,
-    RUR,
+    RUB,
     EUR;
 
     companion object {

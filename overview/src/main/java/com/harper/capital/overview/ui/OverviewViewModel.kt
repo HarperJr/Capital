@@ -24,11 +24,11 @@ class OverviewViewModel(
 
     override fun onEvent(event: OverviewEvent) {
         when (event) {
-            OverviewEvent.AddAssetClick -> onAddAsset()
+            is OverviewEvent.AddAssetClick -> onAddAsset()
+            is OverviewEvent.IncomeClick -> {}
+            is OverviewEvent.ExpenseClick -> {}
         }
     }
 
-    private fun onAddAsset() {
-
-    }
+    private fun onAddAsset() = router.navigateToAddAsset()
 }

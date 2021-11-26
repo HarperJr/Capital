@@ -85,8 +85,10 @@ class CapitalColors(
 
     companion object {
         val White: Color = Color(0xFFE7E7E7)
+        val Grey: Color = Color(0xFFBFBFBF)
         val DeepBlue: Color = Color(0xFF1947EE)
         val LightBlue: Color = Color(0xFF5374EC)
+        val DarkNight: Color = Color(0xFF231F20)
     }
 }
 

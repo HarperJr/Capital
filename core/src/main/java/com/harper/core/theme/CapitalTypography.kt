@@ -3,9 +3,27 @@ package com.harper.core.theme
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.harper.core.R
+
+private val Roboto: FontFamily = FontFamily(
+    Font(R.font.roboto_black, weight = FontWeight.Black, style = FontStyle.Normal),
+    Font(R.font.roboto_black_italic, weight = FontWeight.Black, style = FontStyle.Italic),
+    Font(R.font.roboto_bold, weight = FontWeight.Bold, style = FontStyle.Normal),
+    Font(R.font.roboto_bold_italic, weight = FontWeight.Bold, style = FontStyle.Italic),
+    Font(R.font.roboto_italic, weight = FontWeight.Normal, style = FontStyle.Italic),
+    Font(R.font.roboto_light, weight = FontWeight.Light, style = FontStyle.Normal),
+    Font(R.font.roboto_light_italic, weight = FontWeight.Light, style = FontStyle.Italic),
+    Font(R.font.roboto_medium, weight = FontWeight.Medium, style = FontStyle.Normal),
+    Font(R.font.roboto_medium_italic, weight = FontWeight.Medium, style = FontStyle.Italic),
+    Font(R.font.roboto_regular, weight = FontWeight.Normal, style = FontStyle.Normal),
+    Font(R.font.roboto_thin, weight = FontWeight.Thin, style = FontStyle.Normal),
+    Font(R.font.roboto_thin_italic, weight = FontWeight.Thin, style = FontStyle.Italic)
+)
 
 @Immutable
 class CapitalTypography internal constructor(
@@ -13,10 +31,11 @@ class CapitalTypography internal constructor(
     val title: TextStyle,
     val subtitle: TextStyle,
     val regular: TextStyle,
+    val regularSmall: TextStyle,
     val underline: TextStyle
 ) {
     constructor(
-        defaultFontFamily: FontFamily = FontFamily.Monospace,
+        defaultFontFamily: FontFamily = Roboto,
         header: TextStyle = TextStyle(
             fontWeight = FontWeight.Normal,
             fontSize = 24.sp,
@@ -33,8 +52,13 @@ class CapitalTypography internal constructor(
             letterSpacing = 0.15.sp
         ),
         regular: TextStyle = TextStyle(
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
+            letterSpacing = 0.1.sp
+        ),
+        regularSmall: TextStyle = TextStyle(
+            fontWeight = FontWeight.Normal,
+            fontSize = 12.sp,
             letterSpacing = 0.1.sp
         ),
         underline: TextStyle = TextStyle(
@@ -47,6 +71,7 @@ class CapitalTypography internal constructor(
         title = title.withDefaultFontFamily(defaultFontFamily),
         subtitle = subtitle.withDefaultFontFamily(defaultFontFamily),
         regular = regular.withDefaultFontFamily(defaultFontFamily),
+        regularSmall = regularSmall.withDefaultFontFamily(defaultFontFamily),
         underline = underline.withDefaultFontFamily(defaultFontFamily)
     )
 
@@ -58,12 +83,14 @@ class CapitalTypography internal constructor(
         title: TextStyle = this.title,
         subtitle: TextStyle = this.subtitle,
         regular: TextStyle = this.regular,
+        regularSmall: TextStyle = this.regularSmall,
         underline: TextStyle = this.underline
     ): CapitalTypography = CapitalTypography(
         header = header,
         title = title,
         subtitle = subtitle,
         regular = regular,
+        regularSmall = regularSmall,
         underline = underline
     )
 
@@ -75,6 +102,7 @@ class CapitalTypography internal constructor(
         if (title != other.title) return false
         if (subtitle != other.subtitle) return false
         if (regular != other.regular) return false
+        if (regularSmall != other.regularSmall) return false
         if (underline != other.underline) return false
 
         return true
@@ -85,6 +113,7 @@ class CapitalTypography internal constructor(
         result = 31 * result + title.hashCode()
         result = 31 * result + subtitle.hashCode()
         result = 31 * result + regular.hashCode()
+        result = 31 * result + regularSmall.hashCode()
         result = 31 * result + underline.hashCode()
 
         return result
