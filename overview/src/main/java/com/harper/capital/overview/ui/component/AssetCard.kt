@@ -9,18 +9,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.harper.capital.overview.R
 import com.harper.capital.spec.domain.Asset
 import com.harper.capital.spec.domain.AssetMetadata
 import com.harper.capital.spec.domain.Currency
+import com.harper.core.component.AmountText
 import com.harper.core.component.ComposablePreview
-import com.harper.core.ext.format
+import com.harper.core.ext.formatCurrency
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
@@ -50,49 +48,39 @@ fun AssetCard(
                 imageVector = CapitalIcons.Bank.Tinkoff,
                 contentDescription = null
             )
-            Text(
+            AmountText(
                 modifier = Modifier
                     .constrainAs(amount) {
                         start.linkTo(parent.start, margin = 16.dp)
                         top.linkTo(parent.top, margin = 16.dp)
                     },
-                text = buildAnnotatedString {
-                    val text = asset.amount.format(asset.currency.name)
-                    val commaIndex = text.indexOf(',')
-                    append(text)
-                    addStyle(SpanStyle(fontSize = 24.sp), start = 0, end = commaIndex)
-                    addStyle(SpanStyle(fontSize = 14.sp), start = commaIndex, end = text.length - 1)
-                    addStyle(
-                        SpanStyle(fontSize = 24.sp),
-                        start = text.length - 1,
-                        end = text.length
-                    )
-                },
+                text = asset.amount.formatCurrency(asset.currency.name),
                 color = CapitalColors.White,
                 style = CapitalTheme.typography.regular
             )
 
             val metadata = remember { asset.metadata }
-            if (metadata is AssetMetadata.Credit) {
-                MetadataBlock(
-                    modifier = Modifier
-                        .constrainAs(description) {
-                            top.linkTo(amount.bottom)
-                            start.linkTo(amount.start)
-                        },
-                    type = stringResource(id = R.string.credit_card),
-                    info = (asset.amount - metadata.limit).format(asset.currency.name)
-                )
+            val (type, info) = when (metadata) {
+                is AssetMetadata.Credit -> {
+                    stringResource(id = R.string.credit_card) to
+                            (asset.amount - metadata.limit).formatCurrency(asset.currency.name)
+                }
+                is AssetMetadata.Goal -> {
+                    stringResource(id = R.string.goal) to
+                            metadata.goal.formatCurrency(asset.currency.name)
+                }
+                else -> null to null
             }
-            if (metadata is AssetMetadata.Goal) {
+
+            if (type != null && info != null) {
                 MetadataBlock(
                     modifier = Modifier
                         .constrainAs(description) {
                             top.linkTo(amount.bottom)
                             start.linkTo(amount.start)
                         },
-                    type = stringResource(id = R.string.goal),
-                    info = metadata.goal.format(asset.currency.name)
+                    type = type,
+                    info = info
                 )
             }
 

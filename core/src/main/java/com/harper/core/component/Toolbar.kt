@@ -54,7 +54,7 @@ data class MenuItem(val id: Int, val imageVector: ImageVector)
 
 @Preview
 @Composable
-fun ToolbarLight() {
+private fun ToolbarLight() {
     ComposablePreview {
         Toolbar(
             title = {
@@ -79,7 +79,7 @@ fun ToolbarLight() {
 
 @Preview
 @Composable
-fun ToolbarDark() {
+private fun ToolbarDark() {
     ComposablePreview(isDark = true) {
         Toolbar(
             title = {

@@ -3,6 +3,8 @@ package com.harper.capital.overview.ui
 import com.harper.capital.overview.domain.FetchAssetsUseCase
 import com.harper.capital.overview.ui.model.OverviewEvent
 import com.harper.capital.overview.ui.model.OverviewState
+import com.harper.capital.spec.domain.Account
+import com.harper.capital.spec.domain.Currency
 import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventObserver
 import com.harper.core.ui.navigation.GlobalRouter
@@ -18,7 +20,7 @@ class OverviewViewModel(
 
         launch {
             val assets = fetchAssetsUseCase()
-            mutateState { OverviewState.Data(assets = assets) }
+            mutateState { OverviewState.Data(account = Account(12455.23, Currency.RUB), assets = assets) }
         }
     }
 
