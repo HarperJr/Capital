@@ -12,22 +12,22 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.harper.core.ext.formatCurrency
+import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalTheme
 
 @Composable
-fun AmountText(modifier: Modifier = Modifier, text: String, style: TextStyle, color: Color) {
+fun AmountText(modifier: Modifier = Modifier, amount: Double, currencyIso: String, style: TextStyle, color: Color) {
     Text(
         modifier = modifier,
         text = buildAnnotatedString {
+            val text = amount.formatCurrencySymbol(currencyIso)
             val commaIndex = text.indexOf(',')
             append(text)
             if (commaIndex != -1) {
-                addStyle(SpanStyle(fontSize = 24.sp), start = 0, end = commaIndex + 1)
-                addStyle(SpanStyle(fontSize = 14.sp), start = commaIndex + 1, end = text.length - 1)
+                addStyle(SpanStyle(fontSize = style.fontSize), start = 0, end = commaIndex + 1)
+                addStyle(SpanStyle(fontSize = style.fontSize / 2), start = commaIndex + 1, end = text.length - 1)
                 addStyle(
-                    SpanStyle(fontSize = 24.sp),
+                    SpanStyle(fontSize = style.fontSize),
                     start = text.length - 1,
                     end = text.length
                 )
@@ -48,7 +48,8 @@ private fun AmountTextLight() {
                 .padding(16.dp)
         ) {
             AmountText(
-                text = 1455244.42.formatCurrency("USD"),
+                amount = 1455244.42,
+                currencyIso = "USD",
                 style = CapitalTheme.typography.regular,
                 color = CapitalTheme.colors.onBackground
             )
@@ -66,7 +67,8 @@ private fun AmountTextDark() {
                 .padding(16.dp)
         ) {
             AmountText(
-                text = 1455244.42.formatCurrency("RUB"),
+                amount = 1455244.42,
+                currencyIso = "RUB",
                 style = CapitalTheme.typography.regular,
                 color = CapitalTheme.colors.onBackground
             )

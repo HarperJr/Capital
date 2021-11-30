@@ -6,4 +6,7 @@
     <string name="credit_card">Credit card</string>
     <string name="goal">Goal</string>
     <string name="add_asset_title">Add new asset</string>
+    <string name="asset_enter_name_hint">Enter the name</string>
+    <string name="search">Search</string>
+    <string name="select_currency">Select currency</string>
 </resources>

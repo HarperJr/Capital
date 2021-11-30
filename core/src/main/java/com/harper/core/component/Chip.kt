@@ -16,7 +16,7 @@ import com.harper.core.theme.CapitalTheme
 fun Chip(modifier: Modifier = Modifier, text: @Composable () -> Unit) {
     Box(
         modifier = modifier
-            .background(CapitalColors.DeepBlue, shape = RoundedCornerShape(percent = 50))
+            .background(CapitalColors.DodgerBlue, shape = RoundedCornerShape(percent = 50))
             .padding(horizontal = 12.dp, vertical = 6.dp)
     ) {
         text.invoke()

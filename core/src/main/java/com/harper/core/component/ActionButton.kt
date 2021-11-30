@@ -24,7 +24,7 @@ fun ActionButton(modifier: Modifier = Modifier, text: String, enabled: Boolean =
         colors = buttonColors
     ) {
         val textColor = remember {
-            if (borderless) CapitalColors.DeepBlue else CapitalColors.White
+            if (borderless) CapitalColors.DodgerBlue else CapitalColors.White
         }
         Text(text = text, style = CapitalTheme.typography.regular, color = textColor)
     }

@@ -3,7 +3,7 @@ package com.harper.capital.repository.mapper
 import com.harper.capital.database.entity.AssetMetadataEntity
 import com.harper.capital.spec.domain.AssetMetadata
 
-object AssetMetadataMapper : (AssetMetadataEntity) -> AssetMetadata {
+internal object AssetMetadataMapper : (AssetMetadataEntity) -> AssetMetadata {
 
     override fun invoke(entity: AssetMetadataEntity): AssetMetadata = when(entity) {
         is AssetMetadataEntity.Default -> AssetMetadata.Default

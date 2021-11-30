@@ -4,7 +4,7 @@ import com.harper.capital.database.entity.AssetEntity
 import com.harper.capital.spec.domain.Asset
 import com.harper.capital.spec.domain.Currency
 
-object AssetMapper : (AssetEntity) -> Asset {
+internal object AssetMapper : (AssetEntity) -> Asset {
 
     override fun invoke(entity: AssetEntity): Asset = with(entity) {
         Asset(

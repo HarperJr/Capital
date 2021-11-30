@@ -30,20 +30,22 @@ abstract class ComponentViewModel<S : Any>(private val defaultState: S) : ViewMo
 
     protected fun mutateReducedState(mutation: StateMutation<S>.() -> Unit) {
         check(Looper.getMainLooper().isCurrentThread) { "Unsafe change of state is forbidden! Use main thread" }
-        val stateMutation = StateMutation<S>()
+        val stateMutation = StateMutation(_state)
             .also { mutation.invoke(it) }
         stateMutation.newState?.let { _state.value = it }
     }
 
     protected fun launch(closure: suspend CoroutineScope.() -> Unit) = viewModelScope.launch { closure.invoke(this) }
 
-    inner class StateMutation<S : Any> {
+    class StateMutation<S : Any>(private val stateFlow: StateFlow<S>) {
+        val state: S
+            get() = stateFlow.value
         var newState: S? = null
 
-        inline fun <reified FS : S> forState(mutation: S.() -> FS) {
-            val state = state.value
-            if (state is FS) {
-                newState = mutation.invoke(state)
+        inline fun <reified FS : S> forState(mutation: (FS) -> FS) {
+            val currentState = state
+            if (currentState is FS) {
+                newState = mutation.invoke(currentState)
             }
         }
     }

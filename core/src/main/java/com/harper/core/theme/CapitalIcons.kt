@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -24,7 +25,8 @@ object CapitalIcons {
         get() = Icons.Rounded.ArrowBack
     val Edit: ImageVector
         get() = Icons.Rounded.Edit
-
+    val Search: ImageVector
+        get() = Icons.Rounded.Search
     object Bank {
 
         val Tinkoff: ImageVector
@@ -35,7 +37,7 @@ object CapitalIcons {
 
 @Composable
 private fun Icons() {
-    val icons = listOf(CapitalIcons.Wallet, CapitalIcons.ArrowBack, CapitalIcons.Edit)
+    val icons = listOf(CapitalIcons.Wallet, CapitalIcons.ArrowBack, CapitalIcons.Edit, CapitalIcons.Search)
     Row(modifier = Modifier.background(CapitalTheme.colors.background)) {
         icons.forEach {
             MenuIcon(imageVector = it)

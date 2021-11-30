@@ -3,16 +3,12 @@ package com.harper.core.theme
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.graphics.Color
 
 @Composable
 fun capitalButtonColors(): ButtonColors = ButtonDefaults.buttonColors(
-    backgroundColor = CapitalColors.DeepBlue,
+    backgroundColor = CapitalColors.DodgerBlue,
     contentColor = CapitalColors.White,
-    disabledBackgroundColor = CapitalColors.LightBlue,
+    disabledBackgroundColor = CapitalColors.CornflowerBlue,
     disabledContentColor = CapitalColors.White
 )
 
@@ -21,5 +17,5 @@ fun capitalButtonBorderlessColors(): ButtonColors = ButtonDefaults.buttonColors(
     backgroundColor = CapitalColors.Transparent,
     contentColor = CapitalColors.Transparent,
     disabledBackgroundColor = CapitalColors.Transparent,
-    disabledContentColor = CapitalColors.Grey
+    disabledContentColor = CapitalColors.Silver
 )

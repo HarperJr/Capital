@@ -1,7 +1,7 @@
 package com.harper.capital.overview
 
-import com.harper.capital.overview.asset.AssetAddFragment
-import com.harper.capital.overview.asset.AssetAddViewModel
+import com.harper.capital.overview.asset.ui.AssetAddFragment
+import com.harper.capital.overview.asset.ui.AssetAddViewModel
 import com.harper.capital.overview.domain.FetchAssetsUseCase
 import com.harper.capital.overview.ui.OverviewFragment
 import com.harper.capital.overview.ui.OverviewViewModel

@@ -18,7 +18,7 @@ import com.harper.capital.spec.domain.AssetMetadata
 import com.harper.capital.spec.domain.Currency
 import com.harper.core.component.AmountText
 import com.harper.core.component.ComposablePreview
-import com.harper.core.ext.formatCurrency
+import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
@@ -30,7 +30,7 @@ fun AssetCard(
 ) {
     Card(
         modifier = modifier.size(width = 264.dp, height = 160.dp),
-        backgroundColor = CapitalColors.DarkNight,
+        backgroundColor = CapitalColors.Thunder,
         elevation = 4.dp,
         shape = CapitalTheme.shapes.extraLarge
     ) {
@@ -54,7 +54,8 @@ fun AssetCard(
                         start.linkTo(parent.start, margin = 16.dp)
                         top.linkTo(parent.top, margin = 16.dp)
                     },
-                text = asset.amount.formatCurrency(asset.currency.name),
+                amount = asset.amount,
+                currencyIso = asset.currency.name,
                 color = CapitalColors.White,
                 style = CapitalTheme.typography.regular
             )
@@ -63,11 +64,11 @@ fun AssetCard(
             val (type, info) = when (metadata) {
                 is AssetMetadata.Credit -> {
                     stringResource(id = R.string.credit_card) to
-                            (asset.amount - metadata.limit).formatCurrency(asset.currency.name)
+                            (asset.amount - metadata.limit).formatCurrencySymbol(asset.currency.name)
                 }
                 is AssetMetadata.Goal -> {
                     stringResource(id = R.string.goal) to
-                            metadata.goal.formatCurrency(asset.currency.name)
+                            metadata.goal.formatCurrencySymbol(asset.currency.name)
                 }
                 else -> null to null
             }
@@ -103,7 +104,7 @@ fun MetadataBlock(modifier: Modifier = Modifier, type: String, info: String) {
     Column(modifier = modifier) {
         Text(
             text = type,
-            color = CapitalColors.Grey,
+            color = CapitalColors.Silver,
             style = CapitalTheme.typography.regularSmall
         )
         Text(
