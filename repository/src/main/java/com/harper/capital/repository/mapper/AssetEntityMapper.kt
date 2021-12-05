@@ -11,7 +11,9 @@ internal object AssetEntityMapper : (Asset) -> AssetEntity {
             name = name,
             currencyId = currency.ordinal,
             amount = amount,
-            metadata = metadata.let(AssetMetadataEntityMapper)
+            type = metadata.let(AssetTypeEntityMapper),
+            icon = model.icon.name,
+            color = model.color.value
         )
     }
 }

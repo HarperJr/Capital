@@ -12,14 +12,18 @@ object AssetTable {
     const val currencyId = "currency_id"
     const val amount = "amount"
     const val type = "type"
+    const val icon = "icon"
+    const val color = "color"
 }
 
 @Entity(tableName = AssetTable.tableName)
 data class AssetEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = AssetTable.id) val id: Long,
+    @ColumnInfo(name = AssetTable.id) val id: Long = 0L,
     @ColumnInfo(name = AssetTable.name) val name: String,
     @ColumnInfo(name = AssetTable.currencyId) val currencyId: Int,
     @ColumnInfo(name = AssetTable.amount) val amount: Double,
-    @ColumnInfo(name = AssetTable.type) val metadata: AssetMetadataEntity
+    @ColumnInfo(name = AssetTable.type) val type: AssetEntityType,
+    @ColumnInfo(name = AssetTable.color) val color: Long,
+    @ColumnInfo(name = AssetTable.icon) val icon: String
 )

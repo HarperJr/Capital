@@ -1,7 +1,12 @@
 package com.harper.capital.overview.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Scaffold
@@ -21,7 +26,11 @@ import com.harper.capital.overview.ui.model.OverviewEvent
 import com.harper.capital.overview.ui.model.OverviewState
 import com.harper.capital.overview.ui.model.PreviewStateProvider
 import com.harper.capital.spec.domain.Account
-import com.harper.core.component.*
+import com.harper.core.component.ActionButton
+import com.harper.core.component.AmountText
+import com.harper.core.component.ComposablePreview
+import com.harper.core.component.Separator
+import com.harper.core.component.Toolbar
 import com.harper.core.ext.cast
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentFragment
@@ -51,7 +60,7 @@ private fun LoadingPlaceholder() {
 }
 
 @Composable
-private fun Overview(state: OverviewState.Data, eventSender: EventSender<OverviewEvent>) {
+private fun Overview(state: OverviewState.Data, es: EventSender<OverviewEvent>) {
     Scaffold(
         topBar = { OverviewTopBar(account = state.account) }) {
         Column(
@@ -70,7 +79,7 @@ private fun Overview(state: OverviewState.Data, eventSender: EventSender<Overvie
                     .align(Alignment.End),
                 text = stringResource(id = R.string.add_new),
                 borderless = true
-            ) { eventSender.event(OverviewEvent.AddAssetClick) }
+            ) { es.send(OverviewEvent.AddAssetClick) }
             Spacer(
                 modifier = Modifier
                     .height(16.dp)

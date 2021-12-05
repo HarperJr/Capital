@@ -22,9 +22,13 @@ fun DependencyHandlerScope.repository() {
     project(":repository")
 }
 
+fun DependencyHandlerScope.kotlin() {
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.Library.coroutines}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Version.kotlin}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Version.kotlin}")
+}
+
 fun DependencyHandlerScope.android() {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Version.kotlin}")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${Version.kotlin}")
     implementation("androidx.core:core-ktx:${Version.Library.ktx}")
     implementation("androidx.appcompat:appcompat:${Version.Library.appCompat}")
     implementation("com.google.android.material:material:${Version.Library.material}")
@@ -69,6 +73,19 @@ fun DependencyHandlerScope.compose() {
     debugImplementation("androidx.compose.ui:ui-tooling:${Version.Library.compose}")
     implementation("androidx.compose.animation:animation:${Version.Library.compose}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
+}
+
+fun DependencyHandlerScope.accompanist() {
+    implementation("com.google.accompanist:accompanist-insets:${Version.Library.accompanist}")
+    implementation("com.google.accompanist:accompanist-insets-ui:${Version.Library.accompanist}")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:${Version.Library.accompanist}")
+    implementation("com.google.accompanist:accompanist-pager:${Version.Library.accompanist}")
+    implementation("com.google.accompanist:accompanist-pager-indicators:${Version.Library.accompanist}")
+    implementation("com.google.accompanist:accompanist-swiperefresh:${Version.Library.accompanist}")
+    implementation("com.google.accompanist:accompanist-placeholder:${Version.Library.accompanist}")
+    implementation("com.google.accompanist:accompanist-flowlayout:${Version.Library.accompanist}")
+    implementation("com.google.accompanist:accompanist-permissions:${Version.Library.accompanist}")
+    implementation("com.google.accompanist:accompanist-drawablepainter:${Version.Library.accompanist}")
 }
 
 fun DependencyHandlerScope.composeConstraintLayout() {

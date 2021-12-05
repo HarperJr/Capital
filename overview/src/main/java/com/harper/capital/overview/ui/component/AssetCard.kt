@@ -2,25 +2,32 @@ package com.harper.capital.overview.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.harper.capital.overview.R
+import com.harper.capital.overview.asset.ui.component.getImageVector
 import com.harper.capital.spec.domain.Asset
+import com.harper.capital.spec.domain.AssetColor
+import com.harper.capital.spec.domain.AssetIcon
 import com.harper.capital.spec.domain.AssetMetadata
 import com.harper.capital.spec.domain.Currency
 import com.harper.core.component.AmountText
 import com.harper.core.component.ComposablePreview
 import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalColors
-import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 
 @Composable
@@ -30,7 +37,7 @@ fun AssetCard(
 ) {
     Card(
         modifier = modifier.size(width = 264.dp, height = 160.dp),
-        backgroundColor = CapitalColors.Thunder,
+        backgroundColor = Color(asset.color.value),
         elevation = 4.dp,
         shape = CapitalTheme.shapes.extraLarge
     ) {
@@ -45,7 +52,7 @@ fun AssetCard(
                         end.linkTo(parent.end, margin = 8.dp)
                         top.linkTo(parent.top, margin = 8.dp)
                     },
-                imageVector = CapitalIcons.Bank.Tinkoff,
+                imageVector = asset.icon.getImageVector(),
                 contentDescription = null
             )
             AmountText(
@@ -131,7 +138,9 @@ private fun AssetCardLight() {
                     "Tinkoff Bank",
                     45000.00,
                     Currency.RUB,
-                    metadata = AssetMetadata.Credit(limit = 75000.00)
+                    metadata = AssetMetadata.Credit(limit = 75000.00),
+                    icon = AssetIcon.TINKOFF,
+                    color = AssetColor.DARK_TINKOFF
                 )
             )
         }
@@ -153,7 +162,9 @@ private fun AssetCardDark() {
                     "Big house",
                     75000.00,
                     Currency.EUR,
-                    metadata = AssetMetadata.Goal(goal = 100000.00)
+                    icon = AssetIcon.TINKOFF,
+                    metadata = AssetMetadata.Goal(goal = 100000.00),
+                    color = AssetColor.DARK_TINKOFF
                 )
             )
         }

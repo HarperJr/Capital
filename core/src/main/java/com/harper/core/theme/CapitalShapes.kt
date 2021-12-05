@@ -8,14 +8,11 @@ import androidx.compose.ui.unit.dp
 
 @Immutable
 class CapitalShapes(
-
     val small: CornerBasedShape = RoundedCornerShape(4.dp),
-
     val medium: CornerBasedShape = RoundedCornerShape(6.dp),
-
     val large: CornerBasedShape = RoundedCornerShape(8.dp),
-
-    val extraLarge: CornerBasedShape = RoundedCornerShape(12.dp)
+    val extraLarge: CornerBasedShape = RoundedCornerShape(12.dp),
+    val bottomSheet: CornerBasedShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
 ) {
 
     /**
@@ -25,12 +22,14 @@ class CapitalShapes(
         small: CornerBasedShape = this.small,
         medium: CornerBasedShape = this.medium,
         large: CornerBasedShape = this.large,
-        extraLarge: CornerBasedShape = this.extraLarge
+        extraLarge: CornerBasedShape = this.extraLarge,
+        bottomSheet: CornerBasedShape = this.bottomSheet
     ): CapitalShapes = CapitalShapes(
         small = small,
         medium = medium,
         large = large,
-        extraLarge = extraLarge
+        extraLarge = extraLarge,
+        bottomSheet = bottomSheet
     )
 
     override fun equals(other: Any?): Boolean {
@@ -41,6 +40,7 @@ class CapitalShapes(
         if (medium != other.medium) return false
         if (large != other.large) return false
         if (extraLarge != other.extraLarge) return false
+        if (bottomSheet != other.bottomSheet) return false
 
         return true
     }
@@ -50,6 +50,7 @@ class CapitalShapes(
         result = 31 * result + medium.hashCode()
         result = 31 * result + large.hashCode()
         result = 31 * result + extraLarge.hashCode()
+        result = 31 * result + bottomSheet.hashCode()
         return result
     }
 

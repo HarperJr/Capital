@@ -45,17 +45,9 @@ fun ColorSelectableCircle(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(4.dp)
-                    .background(color = color.toComposableColor(), shape = CircleShape)
+                    .background(color = Color(color.value), shape = CircleShape)
                     .clickable { onSelect.invoke() }
             )
         }
     }
-}
-
-private fun AssetColor.toComposableColor(): Color = when (this) {
-    AssetColor.DARK -> CapitalColors.Thunder
-    AssetColor.GREEN -> CapitalColors.Green
-    AssetColor.RED -> CapitalColors.Red
-    AssetColor.BLUE -> CapitalColors.DodgerBlue
-    AssetColor.LIGHT_BLUE -> CapitalColors.CornflowerBlue
 }

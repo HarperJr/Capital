@@ -18,8 +18,8 @@ import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.harper.core.ext.formatWithoutZeroDecimals
 import com.harper.core.ext.formatAmount
+import com.harper.core.ext.formatWithoutZeroDecimal
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
@@ -39,7 +39,7 @@ fun AmountTextField(
     val interactionSource = remember { MutableInteractionSource() }
     TextField(
         modifier = modifier,
-        value = amount.formatWithoutZeroDecimals(),
+        value = amount.formatWithoutZeroDecimal(),
         placeholder = placeholder,
         leadingIcon = leadingIcon,
         onValueChange = { value ->
@@ -101,7 +101,7 @@ private fun AmountTextFieldDark() {
                 .padding(16.dp)
         ) {
             AmountTextField(
-                amount = 1225.44,
+                amount = 1225.0,
                 textStyle = CapitalTheme.typography.regular,
                 textColor = CapitalColors.DodgerBlue
             ) {}

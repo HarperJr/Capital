@@ -9,4 +9,5 @@
     <string name="asset_enter_name_hint">Enter the name</string>
     <string name="search">Search</string>
     <string name="select_currency">Select currency</string>
+    <string name="select_icon">Select icon</string>
 </resources>

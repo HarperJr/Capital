@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import com.google.accompanist.insets.ProvideWindowInsets
 import com.harper.core.ext.cast
 import com.harper.core.ext.tryCast
 import com.harper.core.theme.CapitalTheme
@@ -36,8 +37,10 @@ abstract class ComponentFragment<VM : ComponentViewModel<*>> : Fragment() {
         .apply {
             setContent {
                 CapitalTheme {
-                    Surface(modifier = Modifier.background(CapitalTheme.colors.background)) {
-                        content().invoke()
+                    ProvideWindowInsets {
+                        Surface(modifier = Modifier.background(CapitalTheme.colors.background)) {
+                            content().invoke()
+                        }
                     }
                 }
             }

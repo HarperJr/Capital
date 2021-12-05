@@ -1,11 +1,11 @@
 package com.harper.core.ext
 
 import android.icu.text.DecimalFormat
+import android.icu.text.DecimalFormatSymbols
 import android.icu.text.NumberFormat
 import android.icu.util.Currency
 import android.icu.util.ULocale
 import java.util.*
-import kotlin.math.roundToLong
 
 fun Double.formatCurrencySymbol(currencyIso: String): String = NumberFormat.getCurrencyInstance(ULocale("ru"))
     .apply { this.currency = Currency.getInstance(currencyIso.uppercase()) }
@@ -16,11 +16,11 @@ fun String.parseAmountWithCurrency(currencyIso: String): Double = NumberFormat.g
     .parse(this)
     .toDouble()
 
-fun Double.formatWithoutZeroDecimals(): String = DecimalFormat("#.##")
+fun Double.formatWithoutZeroDecimal(): String = DecimalFormat("#.##", DecimalFormatSymbols.getInstance(ULocale.US))
     .format(this)
     .let { formattedValue ->
         val decimalSeparatorIndex = formattedValue.indexOf('.')
-        if (decimalSeparatorIndex != -1 && formattedValue.substring(decimalSeparatorIndex).toInt() != 0) {
+        if (decimalSeparatorIndex != -1 && formattedValue.substring(decimalSeparatorIndex).all { it == '0' }) {
             formattedValue.substring(startIndex = 0, endIndex = decimalSeparatorIndex)
         } else {
             formattedValue

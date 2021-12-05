@@ -27,11 +27,24 @@ object CapitalIcons {
         get() = Icons.Rounded.Edit
     val Search: ImageVector
         get() = Icons.Rounded.Search
+
     object Bank {
 
         val Tinkoff: ImageVector
             @Composable
             get() = ImageVector.vectorResource(id = R.drawable.ic_tinkoff)
+        val Alpha: ImageVector
+            @Composable
+            get() = ImageVector.vectorResource(id = R.drawable.ic_alfa)
+        val Vtb: ImageVector
+            @Composable
+            get() = ImageVector.vectorResource(id = R.drawable.ic_vtb)
+        val Sber: ImageVector
+            @Composable
+            get() = ImageVector.vectorResource(id = R.drawable.ic_sber)
+        val Raiffeisen: ImageVector
+            @Composable
+            get() = ImageVector.vectorResource(id = R.drawable.ic_raiffeisen)
     }
 }
 
@@ -47,7 +60,13 @@ private fun Icons() {
 
 @Composable
 private fun BankIcons() {
-    val icons = listOf(CapitalIcons.Bank.Tinkoff)
+    val icons = listOf(
+        CapitalIcons.Bank.Tinkoff,
+        CapitalIcons.Bank.Alpha,
+        CapitalIcons.Bank.Vtb,
+        CapitalIcons.Bank.Sber,
+        CapitalIcons.Bank.Raiffeisen
+    )
     Row(modifier = Modifier.background(CapitalTheme.colors.background)) {
         icons.forEach {
             MenuIcon(imageVector = it, hasTint = false)

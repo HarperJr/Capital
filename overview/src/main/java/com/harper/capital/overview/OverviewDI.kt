@@ -1,5 +1,6 @@
 package com.harper.capital.overview
 
+import com.harper.capital.overview.asset.domain.AddAssetUseCase
 import com.harper.capital.overview.asset.ui.AssetAddFragment
 import com.harper.capital.overview.asset.ui.AssetAddViewModel
 import com.harper.capital.overview.domain.FetchAssetsUseCase
@@ -17,6 +18,7 @@ val overviewModule
         }
 
         scope<AssetAddFragment> {
-            viewModel { AssetAddViewModel() }
+            scoped { AddAssetUseCase(get()) }
+            viewModel { AssetAddViewModel(get(), get()) }
         }
     }

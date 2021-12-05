@@ -8,6 +8,8 @@ import com.harper.capital.spec.domain.Currency
 import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventObserver
 import com.harper.core.ui.navigation.GlobalRouter
+import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 
 class OverviewViewModel(
     private val router: GlobalRouter,
@@ -19,8 +21,11 @@ class OverviewViewModel(
         super.onFirstStart()
 
         launch {
-            val assets = fetchAssetsUseCase()
-            mutateState { OverviewState.Data(account = Account(12455.23, Currency.RUB), assets = assets) }
+            val assetsFlow = fetchAssetsUseCase()
+            assetsFlow.collect { assets ->
+                mutateState { OverviewState.Data(account = Account(12455.23, Currency.RUB), assets = assets) }
+                Timber.d("Assets were received")
+            }
         }
     }
 
