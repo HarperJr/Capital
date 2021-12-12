@@ -6,10 +6,6 @@ fun DependencyHandlerScope.core() {
     project(":core")
 }
 
-fun DependencyHandlerScope.overview() {
-    project(":overview")
-}
-
 fun DependencyHandlerScope.database() {
     project(":database")
 }

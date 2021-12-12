@@ -37,7 +37,7 @@ fun AmountTextField(
     onValueChange: (Double) -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-    TextField(
+    CapitalTextField(
         modifier = modifier,
         value = amount.formatWithoutZeroDecimal(),
         placeholder = placeholder,

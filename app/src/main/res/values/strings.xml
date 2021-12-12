@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">Capital</string>
+
+    <string name="overview_title">Overview</string>
+
+    <string name="add_new">Add new</string>
+
+    <string name="income">Income</string>
+
+    <string name="expense">Expense</string>
+    <string name="credit_card">Credit card</string>
+    <string name="goal">Goal</string>
+
+    <string name="add_asset_title">Add new asset</string>
+    <string name="asset_enter_name_hint">Enter the name</string>
+
+    <string name="search">Search</string>
+
+    <string name="select_currency">Select currency</string>
+    <string name="select_icon">Select icon</string>
+    <string name="select_color">Select color</string>
+
+    <string name="asset_type">Asset type</string>
+
+    <string name="include_asset">Include asset in balance</string>
+    <string name="include_asset_subtitle">Check this to include in balance</string>
+
+    <string name="type_debet">Debet asset</string>
+    <string name="type_credit">Credit</string>
+    <string name="type_goal">Goal</string>
 </resources>

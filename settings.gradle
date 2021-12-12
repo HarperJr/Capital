@@ -1,7 +1,6 @@
 rootProject.name = "Capital"
 include ':app'
 include ':core'
-include ':overview'
 include ':database'
 include ':spec'
 include ':repository'

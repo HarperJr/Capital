@@ -2,6 +2,7 @@ import com.harper.buildsrc.Version
 import com.harper.buildsrc.capitalLibDefaultConfig
 import com.harper.buildsrc.core
 import com.harper.buildsrc.kotlin
+import com.harper.buildsrc.repository
 
 plugins {
     id("com.android.library")
@@ -31,5 +32,6 @@ android {
 
 dependencies {
     kotlin()
+
     core()
 }

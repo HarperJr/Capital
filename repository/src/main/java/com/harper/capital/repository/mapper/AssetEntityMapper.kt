@@ -1,7 +1,7 @@
 package com.harper.capital.repository.mapper
 
 import com.harper.capital.database.entity.AssetEntity
-import com.harper.capital.spec.domain.Asset
+import com.harper.capital.domain.model.Asset
 
 internal object AssetEntityMapper : (Asset) -> AssetEntity {
 

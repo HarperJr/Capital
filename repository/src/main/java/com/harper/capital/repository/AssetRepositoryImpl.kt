@@ -5,11 +5,10 @@ import com.harper.capital.database.dao.AssetDao
 import com.harper.capital.database.entity.AssetEntityType
 import com.harper.capital.database.entity.CreditEntity
 import com.harper.capital.database.entity.GoalEntity
+import com.harper.capital.domain.model.Asset
+import com.harper.capital.domain.model.AssetMetadata
 import com.harper.capital.repository.mapper.AssetEntityMapper
 import com.harper.capital.repository.mapper.AssetMapper
-import com.harper.capital.spec.domain.Asset
-import com.harper.capital.spec.domain.AssetMetadata
-import com.harper.capital.spec.repository.AssetRepository
 import com.harper.core.ext.cast
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

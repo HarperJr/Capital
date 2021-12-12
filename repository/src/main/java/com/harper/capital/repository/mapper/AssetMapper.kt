@@ -1,11 +1,11 @@
 package com.harper.capital.repository.mapper
 
 import com.harper.capital.database.entity.AssetEntity
-import com.harper.capital.spec.domain.Asset
-import com.harper.capital.spec.domain.AssetColor
-import com.harper.capital.spec.domain.AssetIcon
-import com.harper.capital.spec.domain.AssetMetadata
-import com.harper.capital.spec.domain.Currency
+import com.harper.capital.domain.model.Asset
+import com.harper.capital.domain.model.AssetColor
+import com.harper.capital.domain.model.AssetIcon
+import com.harper.capital.domain.model.AssetMetadata
+import com.harper.capital.domain.model.Currency
 
 internal object AssetMapper : (AssetEntity, AssetMetadata) -> Asset {
 
