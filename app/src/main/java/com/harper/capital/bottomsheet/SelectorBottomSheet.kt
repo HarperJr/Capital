@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
+import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,7 +20,7 @@ import com.harper.core.theme.CapitalTheme
 
 @Composable
 fun SelectorBottomSheet(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     data: SelectorBottomSheetData,
     onValueSelect: (String) -> Unit
 ) {
@@ -76,9 +77,9 @@ private fun AssetTypeBottomSheetDark() {
 }
 
 @Composable
-private fun rememberSelectorBottomSheetData(data: SelectorBottomSheetData) = remember { data }
+private fun rememberSelectorBottomSheetData(data: SelectorBottomSheetData) = remember(data) { data }
 
-class SelectorBottomSheetData(val values: List<Value>, val selectedValue: String? = null) {
+data class SelectorBottomSheetData(val values: List<Value>, val selectedValue: String? = null) {
 
     class Value(val name: String, val text: String)
 }

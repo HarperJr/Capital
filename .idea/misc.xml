@@ -3,11 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/HarperJr/Desktop/InDev/Capital/core/src/main/res/drawable/bg_card_whiteness.xml" value="0.149" />
         <entry key="..\:/Users/HarperJr/Desktop/InDev/Capital/core/src/main/res/drawable/ic_account_balance_wallet.xml" value="0.175" />
         <entry key="..\:/Users/HarperJr/Desktop/InDev/Capital/core/src/main/res/drawable/ic_alfa.xml" value="0.149" />
         <entry key="..\:/Users/HarperJr/Desktop/InDev/Capital/core/src/main/res/drawable/ic_btc.xml" value="0.149" />
         <entry key="..\:/Users/HarperJr/Desktop/InDev/Capital/core/src/main/res/drawable/ic_eth.xml" value="0.149" />
         <entry key="..\:/Users/HarperJr/Desktop/InDev/Capital/core/src/main/res/drawable/ic_eur.xml" value="0.149" />
+        <entry key="..\:/Users/HarperJr/Desktop/InDev/Capital/core/src/main/res/drawable/ic_list.xml" value="0.149" />
         <entry key="..\:/Users/HarperJr/Desktop/InDev/Capital/core/src/main/res/drawable/ic_piggy_bank.xml" value="0.149" />
         <entry key="..\:/Users/HarperJr/Desktop/InDev/Capital/core/src/main/res/drawable/ic_sber.xml" value="0.149" />
         <entry key="..\:/Users/HarperJr/Desktop/InDev/Capital/core/src/main/res/drawable/ic_tinkoff.xml" value="0.1735" />

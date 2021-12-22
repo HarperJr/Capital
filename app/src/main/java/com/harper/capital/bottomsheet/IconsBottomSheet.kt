@@ -93,7 +93,9 @@ fun IconsBottomSheet(
         Grid(modifier = Modifier.padding(horizontal = 16.dp), columns = 4, items = filteredIcons) {
             Box(modifier = Modifier.padding(4.dp)) {
                 IconItem(
-                    modifier = Modifier.size(44.dp).align(Alignment.Center),
+                    modifier = Modifier
+                        .size(44.dp)
+                        .align(Alignment.Center),
                     icon = it.imageVector,
                     isSelected = it.name == ibsData.selectedIcon
                 ) {
@@ -106,14 +108,11 @@ fun IconsBottomSheet(
 
 @Composable
 private fun IconItem(modifier: Modifier = Modifier, icon: ImageVector, isSelected: Boolean, onClick: () -> Unit) {
+    val selectorColor = if (isSelected) CapitalColors.Silver else CapitalColors.Transparent
     Box(
         modifier = modifier
             .background(
-                color = if (isSelected) {
-                    CapitalTheme.colors.secondary
-                } else {
-                    CapitalColors.Transparent
-                }, shape = CircleShape
+                color = selectorColor, shape = CircleShape
             )
             .clickable { onClick.invoke() }
     ) {
@@ -161,12 +160,12 @@ private fun IconsBottomSheetDark() {
 }
 
 @Composable
-private fun rememberIconsBottomSheetData(data: IconsBottomSheetData) = remember { data }
+private fun rememberIconsBottomSheetData(data: IconsBottomSheetData) = remember(data) { data }
 
-class IconsBottomSheetData(
+data class IconsBottomSheetData(
     val icons: List<Icon>,
     val selectedIcon: String? = null
 ) {
 
-    class Icon(val name: String, val imageVector: ImageVector)
+    data class Icon(val name: String, val imageVector: ImageVector)
 }

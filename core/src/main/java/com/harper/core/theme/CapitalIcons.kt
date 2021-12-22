@@ -2,10 +2,10 @@ package com.harper.core.theme
 
 import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -29,19 +29,25 @@ object CapitalIcons {
         get() = ImageVector.vectorResource(id = R.drawable.ic_mobile)
     val Income: ImageVector
         @Composable
-        get() = ImageVector.vectorResource(id = R.drawable.ic_vertical_align_bottom)
+        get() = ImageVector.vectorResource(id = R.drawable.ic_income)
     val Expense: ImageVector
         @Composable
-        get() = ImageVector.vectorResource(id = R.drawable.ic_vertical_align_top)
+        get() = ImageVector.vectorResource(id = R.drawable.ic_expense)
+    val List: ImageVector
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_list)
+    val Navigation
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_navigation)
 
-    val ArrowBack
-        get() = Icons.Rounded.ArrowBack
     val ArrowRight
         get() = Icons.Rounded.ArrowForward
     val Edit: ImageVector
         get() = Icons.Rounded.Edit
     val Search: ImageVector
         get() = Icons.Rounded.Search
+    val Settings: ImageVector
+        get() = Icons.Rounded.Settings
 
     object Bank {
 
@@ -84,12 +90,14 @@ private fun Icons() {
         CapitalIcons.Wallet,
         CapitalIcons.ProductCart,
         CapitalIcons.Mobile,
-        CapitalIcons.ArrowBack,
+        CapitalIcons.Navigation,
         CapitalIcons.Edit,
         CapitalIcons.Search,
         CapitalIcons.ArrowRight,
         CapitalIcons.Income,
-        CapitalIcons.Expense
+        CapitalIcons.Expense,
+        CapitalIcons.Settings,
+        CapitalIcons.List
     )
     Grid(modifier = Modifier.background(CapitalTheme.colors.background), columns = 6, icons) {
         MenuIcon(imageVector = it)

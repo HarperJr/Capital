@@ -15,8 +15,8 @@ import kotlin.math.roundToInt
 fun Modifier.assetCardSize(fraction: Float = 1f) =
     this.then(if (fraction == 1f) FillWholeMaxSize else createFillSizeModifier(fraction))
 
-private const val cardWidth: Int = 264
-private const val cardHeight: Int = 160
+private const val cardWidth: Int = 292
+private const val cardHeight: Int = 164
 private const val cardHeightScaleFactor: Float = cardHeight.toFloat() / cardWidth.toFloat()
 
 private val FillWholeMaxSize = createFillSizeModifier(1f)

@@ -28,4 +28,6 @@ sealed class AssetAddEvent {
     object IconSelectClick : AssetAddEvent()
 
     object AssetTypeSelectClick : AssetAddEvent()
+
+    object BackClick : AssetAddEvent()
 }

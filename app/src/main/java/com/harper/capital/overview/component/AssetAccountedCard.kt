@@ -1,5 +1,6 @@
 package com.harper.capital.overview.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,12 +10,16 @@ import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.harper.capital.R
 import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.Currency
 import com.harper.core.component.AmountText
 import com.harper.core.component.ComposablePreview
+import com.harper.core.ext.compose.assetCardSize
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
@@ -24,11 +29,18 @@ fun AssetAccountedCard(
     account: Account
 ) {
     Card(
-        modifier = modifier.size(width = 264.dp, height = 160.dp),
+        modifier = modifier.assetCardSize(),
         backgroundColor = CapitalColors.Thunder,
-        elevation = 4.dp,
+        elevation = 6.dp,
         shape = CapitalTheme.shapes.extraLarge
     ) {
+        Image(
+            modifier = Modifier
+                .fillMaxSize(0.5f),
+            imageVector = ImageVector.vectorResource(id = R.drawable.bg_card_whiteness),
+            contentDescription = null,
+            alignment = Alignment.CenterEnd
+        )
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -39,7 +51,7 @@ fun AssetAccountedCard(
                 amount = account.amount,
                 currencyIso = account.currency.name,
                 color = CapitalColors.White,
-                style = CapitalTheme.typography.regular
+                style = CapitalTheme.typography.header
             )
         }
     }

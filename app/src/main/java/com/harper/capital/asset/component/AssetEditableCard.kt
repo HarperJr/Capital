@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
 import androidx.compose.material.Text
@@ -17,6 +18,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,7 +54,7 @@ fun AssetEditableCard(
     onNameChange: (String) -> Unit
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.assetCardSize(),
         backgroundColor = Color(color.value),
         elevation = 4.dp,
         shape = CapitalTheme.shapes.extraLarge
@@ -89,7 +91,12 @@ fun AssetEditableCard(
                     }
                     .clickable { onIconClick.invoke() }
             ) {
-                Image(modifier = Modifier.fillMaxSize(), imageVector = icon.getImageVector(), contentDescription = null)
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    imageVector = icon.getImageVector(),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(CapitalColors.White)
+                )
             }
             AmountTextField(
                 modifier = Modifier.constrainAs(atfAmount) {
@@ -135,7 +142,6 @@ private fun AssetEditableCardLight() {
     ComposablePreview {
         Box(
             modifier = Modifier
-                .assetCardSize()
                 .background(CapitalTheme.colors.background)
                 .padding(32.dp)
         ) {
@@ -160,7 +166,6 @@ private fun AssetEditableCardDark() {
     ComposablePreview(isDark = true) {
         Box(
             modifier = Modifier
-                .assetCardSize()
                 .background(CapitalTheme.colors.background)
                 .padding(32.dp)
         ) {

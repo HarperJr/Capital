@@ -34,6 +34,7 @@ class AssetAddViewModel(
             is AssetAddEvent.IconSelectClick -> onIconSelectClick()
             is AssetAddEvent.Apply -> onApply()
             is AssetAddEvent.IncludeAssetCheckedChange -> onIncludeAssetCheckedChange(event)
+            is AssetAddEvent.BackClick -> router.back()
         }
     }
 
