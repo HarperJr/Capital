@@ -1,13 +1,15 @@
 package com.harper.capital.asset
 
 import com.harper.capital.asset.domain.AddAssetUseCase
+import com.harper.capital.asset.model.AssetAddBottomSheet
+import com.harper.capital.asset.model.AssetAddBottomSheetState
 import com.harper.capital.asset.model.AssetAddEvent
-import com.harper.capital.asset.model.AssetAddEventBottomSheet
 import com.harper.capital.asset.model.AssetAddState
-import com.harper.capital.asset.model.BottomSheetEvent
 import com.harper.capital.domain.model.Asset
+import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.domain.model.AssetMetadata
 import com.harper.capital.domain.model.AssetType
+import com.harper.capital.domain.model.Currency
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventObserver
@@ -31,6 +33,7 @@ class AssetAddViewModel(
             is AssetAddEvent.AssetTypeSelectClick -> onAssetTypeSelectClick()
             is AssetAddEvent.IconSelectClick -> onIconSelectClick()
             is AssetAddEvent.Apply -> onApply()
+            is AssetAddEvent.IncludeAssetCheckedChange -> onIncludeAssetCheckedChange(event)
         }
     }
 
@@ -52,36 +55,48 @@ class AssetAddViewModel(
         }
     }
 
+    private fun onIncludeAssetCheckedChange(event: AssetAddEvent.IncludeAssetCheckedChange) {
+        // TODO implement
+    }
+
     private fun onIconSelect(event: AssetAddEvent.IconSelect) {
+        val selectedIcon = AssetIcon.valueOf(event.iconName)
         mutateState {
-            it.copy(icon = event.icon, bottomSheetEvent = BottomSheetEvent(AssetAddEventBottomSheet.SELECT_ICON, false))
+            it.copy(icon = selectedIcon, bottomSheetState = it.bottomSheetState.copy(isExpended = false))
         }
     }
 
     private fun onIconSelectClick() {
         mutateState {
-            it.copy(bottomSheetEvent = BottomSheetEvent(AssetAddEventBottomSheet.SELECT_ICON, true))
+            it.copy(
+                bottomSheetState = AssetAddBottomSheetState(
+                    bottomSheet = AssetAddBottomSheet.Icons(it.icon)
+                )
+            )
         }
     }
 
     private fun onAssetTypeSelectClick() {
         mutateState {
             it.copy(
-                bottomSheetEvent = BottomSheetEvent(bottomSheet = AssetAddEventBottomSheet.SELECT_ASSET_TYPE, true)
+                bottomSheetState = AssetAddBottomSheetState(
+                    bottomSheet = AssetAddBottomSheet.AssetTypes(it.metadata.assetType)
+                )
             )
         }
     }
 
     private fun onAssetTypeSelect(event: AssetAddEvent.AssetTypeSelect) {
+        val selectedAssetType = AssetType.valueOf(event.assetTypeName)
         mutateState {
-            val metadata = when (event.assetType) {
+            val metadata = when (selectedAssetType) {
                 AssetType.DEFAULT -> AssetMetadata.Default
                 AssetType.CREDIT -> AssetMetadata.Credit(limit = 0.0)
                 AssetType.GOAL -> AssetMetadata.Goal(goal = 0.0)
             }
             it.copy(
                 metadata = metadata,
-                bottomSheetEvent = BottomSheetEvent(AssetAddEventBottomSheet.SELECT_ASSET_TYPE, false)
+                bottomSheetState = it.bottomSheetState.copy(isExpended = false)
             )
         }
     }
@@ -100,7 +115,11 @@ class AssetAddViewModel(
 
     private fun onCurrencySelectClick() {
         mutateState {
-            it.copy(bottomSheetEvent = BottomSheetEvent(AssetAddEventBottomSheet.SELECT_CURRENCY, true))
+            it.copy(
+                bottomSheetState = AssetAddBottomSheetState(
+                    bottomSheet = AssetAddBottomSheet.Currencies(Currency.values().toList(), it.currency)
+                )
+            )
         }
     }
 
@@ -108,7 +127,7 @@ class AssetAddViewModel(
         mutateState {
             it.copy(
                 currency = event.currency,
-                bottomSheetEvent = BottomSheetEvent(AssetAddEventBottomSheet.SELECT_CURRENCY, false)
+                bottomSheetState = it.bottomSheetState.copy(isExpended = false)
             )
         }
     }

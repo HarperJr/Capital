@@ -12,7 +12,8 @@
     <string name="goal">Goal</string>
 
     <string name="add_asset_title">Add new asset</string>
-    <string name="asset_enter_name_hint">Enter the name</string>
+    <string name="enter_name_hint">Enter the name</string>
+    <string name="enter_amount_hint">Enter amount</string>
 
     <string name="search">Search</string>
 
@@ -28,4 +29,6 @@
     <string name="type_debet">Debet asset</string>
     <string name="type_credit">Credit</string>
     <string name="type_goal">Goal</string>
+    <string name="add_expense_category">Add expense categiry</string>
+    <string name="edit">Edit asset</string>
 </resources>

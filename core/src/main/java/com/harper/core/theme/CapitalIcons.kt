@@ -1,7 +1,6 @@
 package com.harper.core.theme
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowForward
@@ -14,6 +13,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.harper.core.R
 import com.harper.core.component.ComposablePreview
+import com.harper.core.component.Grid
 import com.harper.core.component.MenuIcon
 
 object CapitalIcons {
@@ -21,6 +21,18 @@ object CapitalIcons {
     val Wallet: ImageVector
         @Composable
         get() = ImageVector.vectorResource(id = R.drawable.ic_account_balance_wallet)
+    val ProductCart: ImageVector
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_product_cart)
+    val Mobile: ImageVector
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_mobile)
+    val Income: ImageVector
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_vertical_align_bottom)
+    val Expense: ImageVector
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_vertical_align_top)
 
     val ArrowBack
         get() = Icons.Rounded.ArrowBack
@@ -48,6 +60,21 @@ object CapitalIcons {
         val Raiffeisen: ImageVector
             @Composable
             get() = ImageVector.vectorResource(id = R.drawable.ic_raiffeisen)
+        val Euro: ImageVector
+            @Composable
+            get() = ImageVector.vectorResource(id = R.drawable.ic_eur)
+        val Dollar: ImageVector
+            @Composable
+            get() = ImageVector.vectorResource(id = R.drawable.ic_usd)
+        val Etherium: ImageVector
+            @Composable
+            get() = ImageVector.vectorResource(id = R.drawable.ic_eth)
+        val Bitcoin: ImageVector
+            @Composable
+            get() = ImageVector.vectorResource(id = R.drawable.ic_btc)
+        val PiggyBank: ImageVector
+            @Composable
+            get() = ImageVector.vectorResource(id = R.drawable.ic_piggy_bank)
     }
 }
 
@@ -55,15 +82,17 @@ object CapitalIcons {
 private fun Icons() {
     val icons = listOf(
         CapitalIcons.Wallet,
+        CapitalIcons.ProductCart,
+        CapitalIcons.Mobile,
         CapitalIcons.ArrowBack,
         CapitalIcons.Edit,
         CapitalIcons.Search,
-        CapitalIcons.ArrowRight
+        CapitalIcons.ArrowRight,
+        CapitalIcons.Income,
+        CapitalIcons.Expense
     )
-    Row(modifier = Modifier.background(CapitalTheme.colors.background)) {
-        icons.forEach {
-            MenuIcon(imageVector = it)
-        }
+    Grid(modifier = Modifier.background(CapitalTheme.colors.background), columns = 6, icons) {
+        MenuIcon(imageVector = it)
     }
 }
 
@@ -74,12 +103,15 @@ private fun BankIcons() {
         CapitalIcons.Bank.Alpha,
         CapitalIcons.Bank.Vtb,
         CapitalIcons.Bank.Sber,
-        CapitalIcons.Bank.Raiffeisen
+        CapitalIcons.Bank.Raiffeisen,
+        CapitalIcons.Bank.Euro,
+        CapitalIcons.Bank.Dollar,
+        CapitalIcons.Bank.Etherium,
+        CapitalIcons.Bank.Bitcoin,
+        CapitalIcons.Bank.PiggyBank
     )
-    Row(modifier = Modifier.background(CapitalTheme.colors.background)) {
-        icons.forEach {
-            MenuIcon(imageVector = it, hasTint = false)
-        }
+    Grid(modifier = Modifier.background(CapitalTheme.colors.background), columns = 6, icons) {
+        MenuIcon(imageVector = it)
     }
 }
 

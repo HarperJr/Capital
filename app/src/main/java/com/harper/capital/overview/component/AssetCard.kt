@@ -19,12 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.harper.capital.R
-import com.harper.capital.asset.component.getImageVector
 import com.harper.capital.domain.model.Asset
 import com.harper.capital.domain.model.AssetColor
 import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.domain.model.AssetMetadata
 import com.harper.capital.domain.model.Currency
+import com.harper.capital.ext.getImageVector
 import com.harper.core.component.AmountText
 import com.harper.core.component.ComposablePreview
 import com.harper.core.ext.formatCurrencySymbol

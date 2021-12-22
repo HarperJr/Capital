@@ -29,18 +29,15 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.imePadding
 import com.harper.capital.R
 import com.harper.capital.asset.component.AssetEditableCard
-import com.harper.capital.asset.component.AssetTypeBottomSheet
 import com.harper.capital.asset.component.ColorSelectableCircle
-import com.harper.capital.asset.component.CurrencyBottomSheet
-import com.harper.capital.asset.component.IconsBottomSheet
-import com.harper.capital.asset.component.resolveAssetTypeText
+import com.harper.capital.asset.model.AssetAddBottomSheet
 import com.harper.capital.asset.model.AssetAddEvent
-import com.harper.capital.asset.model.AssetAddEventBottomSheet
 import com.harper.capital.asset.model.AssetAddState
 import com.harper.capital.asset.model.AssetAddStateProvider
-import com.harper.capital.domain.model.AssetIcon
-import com.harper.capital.domain.model.AssetType
-import com.harper.capital.domain.model.Currency
+import com.harper.capital.bottomsheet.CurrencyBottomSheet
+import com.harper.capital.bottomsheet.IconsBottomSheet
+import com.harper.capital.bottomsheet.SelectorBottomSheet
+import com.harper.capital.ext.getText
 import com.harper.core.component.ActionButton
 import com.harper.core.component.ArrowSettingBox
 import com.harper.core.component.ComposablePreview
@@ -73,41 +70,16 @@ class AssetAddFragment : ComponentFragment<AssetAddViewModel>(), EventSender<Ass
 @OptIn(ExperimentalMaterialApi::class)
 private fun Content(state: AssetAddState, es: EventSender<AssetAddEvent>) {
     val scaffoldState = rememberBottomSheetScaffoldState()
-    val bottomSheet = remember(state.bottomSheetEvent.bottomSheet) {
-        state.bottomSheetEvent.bottomSheet
+    val bottomSheet = remember(state.bottomSheetState.bottomSheet) {
+        state.bottomSheetState.bottomSheet
     }
 
     BottomSheetScaffold(
         topBar = { AssetAddTopBar() },
         sheetContent = {
-            when (bottomSheet) {
-                AssetAddEventBottomSheet.SELECT_CURRENCY -> {
-                    CurrencyBottomSheet(
-                        modifier = Modifier.fillMaxHeight(),
-                        currencies = Currency.values().toList(),
-                        selectedCurrency = state.currency,
-                        onCurrencySelect = { es.send(AssetAddEvent.CurrencySelect(it)) }
-                    )
-                }
-                AssetAddEventBottomSheet.SELECT_ICON -> {
-                    IconsBottomSheet(
-                        modifier = Modifier.fillMaxHeight(),
-                        icons = AssetIcon.values().toList(),
-                        selectedIcon = state.icon,
-                        onIconSelect = { es.send(AssetAddEvent.IconSelect(it)) }
-                    )
-                }
-                AssetAddEventBottomSheet.SELECT_ASSET_TYPE -> {
-                    AssetTypeBottomSheet(
-                        modifier = Modifier.fillMaxHeight(),
-                        assetTypes = AssetType.values().toList(),
-                        selectedAssetType = state.metadata.assetType,
-                        onAssetTypeSelect = { es.send(AssetAddEvent.AssetTypeSelect(it)) }
-                    )
-                }
-            }
-            LaunchedEffect(state.bottomSheetEvent) {
-                if (state.bottomSheetEvent.isExpended) {
+            BottomSheetContent(bottomSheet, es)
+            LaunchedEffect(state.bottomSheetState) {
+                if (state.bottomSheetState.isExpended) {
                     scaffoldState.bottomSheetState.expand()
                 } else {
                     scaffoldState.bottomSheetState.collapse()
@@ -168,7 +140,7 @@ private fun Content(state: AssetAddState, es: EventSender<AssetAddEvent>) {
             ArrowSettingBox(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(id = R.string.asset_type),
-                subtitle = resolveAssetTypeText(state.metadata.assetType),
+                subtitle = state.metadata.assetType.getText(),
                 onClick = { es.send(AssetAddEvent.AssetTypeSelectClick) })
             SwitchSettingBox(
                 modifier = Modifier.fillMaxWidth(),
@@ -182,6 +154,7 @@ private fun Content(state: AssetAddState, es: EventSender<AssetAddEvent>) {
             ) {
                 ActionButton(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .align(Alignment.BottomCenter)
                         .padding(16.dp),
                     text = stringResource(id = R.string.add_new),
@@ -189,6 +162,36 @@ private fun Content(state: AssetAddState, es: EventSender<AssetAddEvent>) {
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun BottomSheetContent(bottomSheet: AssetAddBottomSheet?, es: EventSender<AssetAddEvent>) {
+    when (bottomSheet) {
+        is AssetAddBottomSheet.Currencies -> {
+            CurrencyBottomSheet(
+                modifier = Modifier.fillMaxHeight(),
+                currencies = bottomSheet.currencies,
+                selectedCurrency = bottomSheet.selectedCurrency,
+                onCurrencySelect = { es.send(AssetAddEvent.CurrencySelect(it)) }
+            )
+        }
+        is AssetAddBottomSheet.Icons -> {
+            IconsBottomSheet(
+                modifier = Modifier.fillMaxHeight(),
+                title = stringResource(id = R.string.select_icon),
+                data = bottomSheet.data,
+                onIconSelect = { es.send(AssetAddEvent.IconSelect(it)) }
+            )
+        }
+        is AssetAddBottomSheet.AssetTypes -> {
+            SelectorBottomSheet(
+                modifier = Modifier.fillMaxHeight(),
+                data = bottomSheet.data,
+                onValueSelect = { es.send(AssetAddEvent.AssetTypeSelect(it)) }
+            )
+        }
+        else -> {}
     }
 }
 

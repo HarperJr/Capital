@@ -1,4 +1,4 @@
-package com.harper.capital.asset.component
+package com.harper.capital.bottomsheet
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -6,27 +6,28 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.harper.capital.R
 import com.harper.capital.domain.model.AssetType
+import com.harper.capital.ext.getText
 import com.harper.core.component.ComposablePreview
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
 @Composable
-fun AssetTypeBottomSheet(
+fun SelectorBottomSheet(
     modifier: Modifier,
-    assetTypes: List<AssetType>,
-    selectedAssetType: AssetType,
-    onAssetTypeSelect: (AssetType) -> Unit
+    data: SelectorBottomSheetData,
+    onValueSelect: (String) -> Unit
 ) {
+    val sbsData = rememberSelectorBottomSheetData(data)
+
     Column(modifier = modifier) {
-        assetTypes.forEach {
-            val color = if (selectedAssetType == it) {
+        sbsData.values.forEach {
+            val color = if (sbsData.selectedValue == it.name) {
                 CapitalColors.DodgerBlue
             } else {
                 CapitalTheme.colors.onBackground
@@ -35,8 +36,8 @@ fun AssetTypeBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .clickable { onAssetTypeSelect.invoke(it) },
-                text = resolveAssetTypeText(it),
+                    .clickable { onValueSelect.invoke(it.name) },
+                text = it.text,
                 color = color,
                 textAlign = TextAlign.Center
             )
@@ -44,22 +45,17 @@ fun AssetTypeBottomSheet(
     }
 }
 
-@Composable
-fun resolveAssetTypeText(assetType: AssetType): String = when (assetType) {
-    AssetType.DEFAULT -> stringResource(id = R.string.type_debet)
-    AssetType.CREDIT -> stringResource(id = R.string.type_credit)
-    AssetType.GOAL -> stringResource(id = R.string.type_goal)
-}
-
 @Preview
 @Composable
 private fun AssetTypeBottomSheetLight() {
     ComposablePreview {
-        AssetTypeBottomSheet(
+        SelectorBottomSheet(
             modifier = Modifier.fillMaxWidth(),
-            assetTypes = AssetType.values().toList(),
-            selectedAssetType = AssetType.CREDIT,
-            onAssetTypeSelect = {}
+            data = SelectorBottomSheetData(
+                values = AssetType.values().map { SelectorBottomSheetData.Value(it.name, it.getText()) },
+                selectedValue = AssetType.CREDIT.name
+            ),
+            onValueSelect = {}
         )
     }
 }
@@ -68,11 +64,21 @@ private fun AssetTypeBottomSheetLight() {
 @Composable
 private fun AssetTypeBottomSheetDark() {
     ComposablePreview {
-        AssetTypeBottomSheet(
+        SelectorBottomSheet(
             modifier = Modifier.fillMaxWidth(),
-            assetTypes = AssetType.values().toList(),
-            selectedAssetType = AssetType.DEFAULT,
-            onAssetTypeSelect = {}
+            data = SelectorBottomSheetData(
+                values = AssetType.values().map { SelectorBottomSheetData.Value(it.name, it.getText()) },
+                selectedValue = AssetType.CREDIT.name
+            ),
+            onValueSelect = {}
         )
     }
+}
+
+@Composable
+private fun rememberSelectorBottomSheetData(data: SelectorBottomSheetData) = remember { data }
+
+class SelectorBottomSheetData(val values: List<Value>, val selectedValue: String? = null) {
+
+    class Value(val name: String, val text: String)
 }

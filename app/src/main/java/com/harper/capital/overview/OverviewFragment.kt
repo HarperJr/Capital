@@ -23,6 +23,7 @@ import com.harper.capital.R
 import com.harper.capital.domain.model.Account
 import com.harper.capital.overview.component.AssetAccountedCard
 import com.harper.capital.overview.component.AssetCard
+import com.harper.capital.overview.component.CardToolbox
 import com.harper.capital.overview.model.OverviewEvent
 import com.harper.capital.overview.model.OverviewState
 import com.harper.capital.overview.model.PreviewStateProvider
@@ -110,6 +111,21 @@ private fun Overview(state: OverviewState.Data, es: EventSender<OverviewEvent>) 
                     .fillMaxWidth()
             )
             Separator(modifier = Modifier.padding(horizontal = 16.dp))
+            Spacer(
+                modifier = Modifier
+                    .height(16.dp)
+                    .fillMaxWidth()
+            )
+            if (state.assets.isNotEmpty()) {
+                CardToolbox(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    onIncomeClick = {},
+                    onExpenseClick = {},
+                    onEditClick = {}
+                )
+            }
         }
     }
 }

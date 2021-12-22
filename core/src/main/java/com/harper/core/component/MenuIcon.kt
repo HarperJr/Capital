@@ -18,9 +18,8 @@ fun MenuIcon(modifier: Modifier = Modifier, @DrawableRes iconRes: Int, hasTint: 
 
 @Composable
 fun MenuIcon(modifier: Modifier = Modifier, imageVector: ImageVector, hasTint: Boolean = true, onClick: () -> Unit = {}) {
-    IconButton(onClick = onClick) {
+    IconButton(modifier = modifier, onClick = onClick) {
         Image(
-            modifier = modifier,
             imageVector = imageVector,
             contentDescription = null,
             alignment = Alignment.Center,

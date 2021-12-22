@@ -13,7 +13,10 @@ data class AssetAddState(
     val color: AssetColor = AssetColor.DARK_TINKOFF,
     val icon: AssetIcon = AssetIcon.TINKOFF,
     val metadata: AssetMetadata = AssetMetadata.Default,
-    val bottomSheetEvent: BottomSheetEvent = BottomSheetEvent()
+    val bottomSheetState: AssetAddBottomSheetState = AssetAddBottomSheetState(isExpended = false)
 )
 
-class BottomSheetEvent(val bottomSheet: AssetAddEventBottomSheet? = null, val isExpended: Boolean = false)
+data class AssetAddBottomSheetState(
+    val bottomSheet: AssetAddBottomSheet? = null,
+    val isExpended: Boolean = true
+)

@@ -27,6 +27,7 @@ import com.harper.capital.R
 import com.harper.capital.domain.model.AssetColor
 import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.domain.model.Currency
+import com.harper.capital.ext.getImageVector
 import com.harper.core.component.AmountTextField
 import com.harper.core.component.CapitalTextField
 import com.harper.core.component.ComposablePreview
@@ -67,7 +68,7 @@ fun AssetEditableCard(
                     width = Dimension.fillToConstraints
                 },
                 value = nameValue.value,
-                placeholder = stringResource(id = R.string.asset_enter_name_hint),
+                placeholder = stringResource(id = R.string.enter_name_hint),
                 textColor = CapitalColors.White,
                 backgroundColor = CapitalColors.CodGray.copy(alpha = fieldAlpha),
                 singleLine = true,

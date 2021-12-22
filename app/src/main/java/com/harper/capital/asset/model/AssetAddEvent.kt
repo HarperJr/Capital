@@ -15,11 +15,11 @@ sealed class AssetAddEvent {
 
     class AmountChange(val amount: Double) : AssetAddEvent()
 
-    class IconSelect(val icon: AssetIcon) : AssetAddEvent()
+    class IconSelect(val iconName: String) : AssetAddEvent()
 
     class IncludeAssetCheckedChange(val isChecked: Boolean) : AssetAddEvent()
 
-    class AssetTypeSelect(val assetType: AssetType) : AssetAddEvent()
+    class AssetTypeSelect(val assetTypeName: String) : AssetAddEvent()
 
     object Apply : AssetAddEvent()
 
