@@ -74,7 +74,7 @@ fun IconsBottomSheet(
                 Image(
                     modifier = Modifier.padding(end = 8.dp),
                     imageVector = CapitalIcons.Search,
-                    colorFilter = ColorFilter.tint(color = CapitalColors.Boulder),
+                    colorFilter = ColorFilter.tint(color = CapitalColors.GreyDark),
                     contentDescription = null
                 )
             },
@@ -108,7 +108,7 @@ fun IconsBottomSheet(
 
 @Composable
 private fun IconItem(modifier: Modifier = Modifier, icon: ImageVector, isSelected: Boolean, onClick: () -> Unit) {
-    val selectorColor = if (isSelected) CapitalColors.Silver else CapitalColors.Transparent
+    val selectorColor = if (isSelected) CapitalColors.GreyLight else CapitalColors.Transparent
     Box(
         modifier = modifier
             .background(

@@ -3,21 +3,24 @@ package com.harper.capital.overview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,10 +37,13 @@ import com.harper.capital.overview.model.OverviewState
 import com.harper.capital.overview.model.PreviewStateProvider
 import com.harper.core.component.AmountText
 import com.harper.core.component.ComposablePreview
-import com.harper.core.component.Separator
+import com.harper.core.component.HorizontalSpacer
+import com.harper.core.component.Menu
+import com.harper.core.component.MenuItem
 import com.harper.core.component.Toolbar
 import com.harper.core.ext.cast
 import com.harper.core.theme.CapitalColors
+import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentFragment
 import com.harper.core.ui.EventSender
@@ -76,12 +82,7 @@ private fun Overview(state: OverviewState.Data, es: EventSender<OverviewEvent>) 
                 .fillMaxSize()
                 .background(CapitalTheme.colors.background)
         ) {
-            Separator(modifier = Modifier.padding(horizontal = 16.dp))
-            Spacer(
-                modifier = Modifier
-                    .height(24.dp)
-                    .fillMaxWidth()
-            )
+            HorizontalSpacer(height = 24.dp)
             Image(
                 modifier = Modifier
                     .align(Alignment.End)
@@ -90,11 +91,7 @@ private fun Overview(state: OverviewState.Data, es: EventSender<OverviewEvent>) 
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_add_asset),
                 contentDescription = null
             )
-            Spacer(
-                modifier = Modifier
-                    .height(16.dp)
-                    .fillMaxWidth()
-            )
+            HorizontalSpacer(height = 16.dp)
             val assetListState = rememberLazyListState()
             LazyRow(
                 modifier = Modifier
@@ -119,11 +116,8 @@ private fun Overview(state: OverviewState.Data, es: EventSender<OverviewEvent>) 
                     )
                 }
             }
-            Spacer(
-                modifier = Modifier
-                    .height(32.dp)
-                    .fillMaxWidth()
-            )
+            HorizontalSpacer(height = 32.dp)
+
             if (state.assets.isNotEmpty()) {
                 CardToolbar(
                     modifier = Modifier
@@ -141,15 +135,18 @@ private fun Overview(state: OverviewState.Data, es: EventSender<OverviewEvent>) 
 
 @Composable
 fun OverviewTopBar(account: Account) {
-    Toolbar(title = {
-        AmountText(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            amount = account.amount,
-            currencyIso = account.currency.name,
-            style = CapitalTheme.typography.title,
-            color = CapitalTheme.colors.onBackground
-        )
-    })
+    Toolbar(
+        title = {
+            AmountText(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                amount = account.amount,
+                currencyIso = account.currency.name,
+                style = CapitalTheme.typography.title,
+                color = CapitalTheme.colors.onBackground
+            )
+        },
+        menu = Menu(listOf(MenuItem(0, CapitalIcons.Settings)))
+    )
 }
 
 @Preview

@@ -6,9 +6,9 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun capitalButtonColors(): ButtonColors = ButtonDefaults.buttonColors(
-    backgroundColor = CapitalColors.DodgerBlue,
+    backgroundColor = CapitalColors.Blue,
     contentColor = CapitalColors.White,
-    disabledBackgroundColor = CapitalColors.CornflowerBlue,
+    disabledBackgroundColor = CapitalColors.BlueLight,
     disabledContentColor = CapitalColors.White
 )
 
@@ -17,5 +17,5 @@ fun capitalButtonBorderlessColors(): ButtonColors = ButtonDefaults.buttonColors(
     backgroundColor = CapitalColors.Transparent,
     contentColor = CapitalColors.Transparent,
     disabledBackgroundColor = CapitalColors.Transparent,
-    disabledContentColor = CapitalColors.Silver
+    disabledContentColor = CapitalColors.GreyLight
 )

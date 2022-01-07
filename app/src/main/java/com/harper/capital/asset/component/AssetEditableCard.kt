@@ -17,10 +17,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -59,8 +62,11 @@ fun AssetEditableCard(
         elevation = 4.dp,
         shape = CapitalTheme.shapes.extraLarge
     ) {
+        val focusManager = LocalFocusManager.current
+
         val amountValue = rememberSaveable(amount) { mutableStateOf(amount) }
         val nameValue = rememberSaveable(name) { mutableStateOf(name) }
+
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (tfName, atfAmount, bCurrency, bIcon) = createRefs()
             CapitalTextField(
@@ -78,7 +84,13 @@ fun AssetEditableCard(
                     nameValue.value = it
                     onNameChange.invoke(it)
                 },
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    capitalization = KeyboardCapitalization.Words,
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(onNext = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                })
             )
             Box(
                 modifier = Modifier
@@ -112,7 +124,10 @@ fun AssetEditableCard(
                     amountValue.value = it
                     onAmountChange.invoke(it)
                 },
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done)
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    focusManager.clearFocus()
+                })
 
             )
             Box(

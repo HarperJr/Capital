@@ -203,7 +203,6 @@ private fun AssetAddTopBar(es: EventSender<AssetAddEvent>) {
     Toolbar(
         title = {
             Text(
-                modifier = Modifier.padding(start = 16.dp),
                 text = stringResource(id = R.string.add_asset_title),
                 style = CapitalTheme.typography.title,
                 color = CapitalTheme.colors.onBackground
@@ -213,8 +212,7 @@ private fun AssetAddTopBar(es: EventSender<AssetAddEvent>) {
             MenuIcon(imageVector = CapitalIcons.Navigation) {
                 es.send(AssetAddEvent.BackClick)
             }
-        },
-        menu = Menu(listOf(MenuItem(0, CapitalIcons.Settings)))
+        }
     )
 }
 

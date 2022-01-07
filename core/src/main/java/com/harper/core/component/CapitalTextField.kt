@@ -49,7 +49,7 @@ fun CapitalTextField(
     textStyle: TextStyle = CapitalTheme.typography.regular,
     textColor: Color = CapitalTheme.colors.onBackground,
     backgroundColor: Color = CapitalTheme.colors.secondary,
-    hintColor: Color = CapitalColors.Boulder,
+    hintColor: Color = CapitalColors.GreyDark,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,

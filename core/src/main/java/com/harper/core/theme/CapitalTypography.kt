@@ -29,50 +29,72 @@ private val Roboto: FontFamily = FontFamily(
 class CapitalTypography internal constructor(
     val header: TextStyle,
     val title: TextStyle,
+    val titleSmall: TextStyle,
+    val bottomSheetTitle: TextStyle,
     val subtitle: TextStyle,
     val regular: TextStyle,
     val regularSmall: TextStyle,
-    val underline: TextStyle
+    val button: TextStyle,
+    val buttonSmall: TextStyle
+
 ) {
     constructor(
         defaultFontFamily: FontFamily = Roboto,
         header: TextStyle = TextStyle(
             fontWeight = FontWeight.Normal,
             fontSize = 24.sp,
-            letterSpacing = 0.sp
+            letterSpacing = 1.25.sp
         ),
         title: TextStyle = TextStyle(
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Normal,
             fontSize = 20.sp,
-            letterSpacing = 0.15.sp
+            letterSpacing = 1.25.sp
+        ),
+        titleSmall: TextStyle = TextStyle(
+            fontWeight = FontWeight.Medium,
+            fontSize = 12.sp,
+            letterSpacing = 0.75.sp
+        ),
+        bottomSheetTitle: TextStyle = TextStyle(
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp,
+            letterSpacing = 0.75.sp
         ),
         subtitle: TextStyle = TextStyle(
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
-            letterSpacing = 0.15.sp
+            letterSpacing = 0.75.sp
         ),
         regular: TextStyle = TextStyle(
             fontWeight = FontWeight.Normal,
-            fontSize = 16.sp,
-            letterSpacing = 0.1.sp
+            fontSize = 14.sp,
+            letterSpacing = 0.75.sp
         ),
         regularSmall: TextStyle = TextStyle(
             fontWeight = FontWeight.Normal,
             fontSize = 12.sp,
-            letterSpacing = 0.1.sp
+            letterSpacing = 0.75.sp
         ),
-        underline: TextStyle = TextStyle(
+        button: TextStyle = TextStyle(
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp,
+            letterSpacing = 0.75.sp
+        ),
+        buttonSmall: TextStyle = TextStyle(
             fontWeight = FontWeight.Medium,
             fontSize = 14.sp,
-            letterSpacing = 0.1.sp
+            letterSpacing = 0.45.sp
         )
     ) : this(
         header = header.withDefaultFontFamily(defaultFontFamily),
         title = title.withDefaultFontFamily(defaultFontFamily),
+        titleSmall = titleSmall.withDefaultFontFamily(defaultFontFamily),
+        bottomSheetTitle = bottomSheetTitle.withDefaultFontFamily(defaultFontFamily),
         subtitle = subtitle.withDefaultFontFamily(defaultFontFamily),
         regular = regular.withDefaultFontFamily(defaultFontFamily),
         regularSmall = regularSmall.withDefaultFontFamily(defaultFontFamily),
-        underline = underline.withDefaultFontFamily(defaultFontFamily)
+        button = button.withDefaultFontFamily(defaultFontFamily),
+        buttonSmall = buttonSmall.withDefaultFontFamily(defaultFontFamily)
     )
 
     /**
@@ -84,14 +106,14 @@ class CapitalTypography internal constructor(
         subtitle: TextStyle = this.subtitle,
         regular: TextStyle = this.regular,
         regularSmall: TextStyle = this.regularSmall,
-        underline: TextStyle = this.underline
+        underline: TextStyle = this.button
     ): CapitalTypography = CapitalTypography(
         header = header,
         title = title,
         subtitle = subtitle,
         regular = regular,
         regularSmall = regularSmall,
-        underline = underline
+        button = underline
     )
 
     override fun equals(other: Any?): Boolean {
@@ -100,10 +122,13 @@ class CapitalTypography internal constructor(
 
         if (header != other.header) return false
         if (title != other.title) return false
+        if (titleSmall != other.titleSmall) return false
+        if (bottomSheetTitle != other.bottomSheetTitle) return false
         if (subtitle != other.subtitle) return false
         if (regular != other.regular) return false
         if (regularSmall != other.regularSmall) return false
-        if (underline != other.underline) return false
+        if (button != other.button) return false
+        if (buttonSmall != other.buttonSmall) return false
 
         return true
     }
@@ -111,16 +136,19 @@ class CapitalTypography internal constructor(
     override fun hashCode(): Int {
         var result = header.hashCode()
         result = 31 * result + title.hashCode()
+        result = 31 * result + titleSmall.hashCode()
+        result = 31 * result + bottomSheetTitle.hashCode()
         result = 31 * result + subtitle.hashCode()
         result = 31 * result + regular.hashCode()
         result = 31 * result + regularSmall.hashCode()
-        result = 31 * result + underline.hashCode()
+        result = 31 * result + button.hashCode()
+        result = 31 * result + buttonSmall.hashCode()
 
         return result
     }
 
     override fun toString(): String {
-        return "Typography(header=$header, title=$title, subtitle=$subtitle, regular=$regular, underline=$underline"
+        return "Typography(header=$header, title=$title, subtitle=$subtitle, regular=$regular, underline=$button"
     }
 }
 

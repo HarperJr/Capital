@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +29,7 @@ fun AssetColorSelector(
     isSelected: Boolean,
     onSelect: () -> Unit
 ) {
-    val selectorColor = if (isSelected) CapitalColors.Silver else CapitalColors.Transparent
+    val selectorColor = if (isSelected) CapitalColors.GreyLight else CapitalColors.Transparent
     Box {
         Box(
             modifier = Modifier

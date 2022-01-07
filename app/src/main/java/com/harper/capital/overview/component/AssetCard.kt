@@ -123,7 +123,7 @@ fun MetadataBlock(modifier: Modifier = Modifier, type: String, info: String) {
     Column(modifier = modifier) {
         Text(
             text = type,
-            color = CapitalColors.Silver,
+            color = CapitalColors.GreyLight,
             style = CapitalTheme.typography.regularSmall
         )
         Text(

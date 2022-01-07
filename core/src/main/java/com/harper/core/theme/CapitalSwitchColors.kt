@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun capitalSwitchColors(): SwitchColors = SwitchDefaults.colors(
-    checkedThumbColor = CapitalColors.DodgerBlue,
+    checkedThumbColor = CapitalColors.Blue,
     uncheckedThumbColor = CapitalColors.White,
-    checkedTrackColor = CapitalColors.CornflowerBlue,
-    uncheckedTrackColor = CapitalColors.Boulder,
+    checkedTrackColor = CapitalColors.BlueLight,
+    uncheckedTrackColor = CapitalColors.GreyDark,
 )

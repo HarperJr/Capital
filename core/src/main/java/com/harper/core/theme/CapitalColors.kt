@@ -9,7 +9,7 @@ private val backgroundLight = Color(0xFFFFFFFF)
 private val onPrimaryLight = Color(0xFF0F0F0F)
 private val onSecondaryLight = Color(0xFF0F0F0F)
 private val onBackgroundLight = Color(0xFF0F0F0F)
-private val errorLight = Color(0xFF9B0000)
+private val errorLight = Color(0xFFFF4848)
 
 private val primaryDark = Color(0xFF444444)
 private val secondaryDark = Color(0xFF202020)
@@ -17,7 +17,7 @@ private val backgroundDark = Color(0xFF000000)
 private val onPrimaryDark = Color(0xFFFFFFFF)
 private val onSecondaryDark = Color(0xFFFFFFFF)
 private val onBackgroundDark = Color(0xFFE7E7E7)
-private val errorDark = Color(0xFF9B0000)
+private val errorDark = Color(0xFFFF4848)
 
 @Stable
 class CapitalColors(
@@ -86,15 +86,15 @@ class CapitalColors(
     companion object {
         val White: Color = Color(0xFFE7E7E7)
         val Black: Color = Color(0xFF000000)
-        val Silver: Color = Color(0xFFBFBFBF)
-        val Boulder: Color = Color(0xFF6D6D6D)
-        val DodgerBlue: Color = Color(0xFF3076FF)
-        val CornflowerBlue: Color = Color(0xFF5374EC)
+        val GreyLight: Color = Color(0xFFE5E5E5)
+        val GreyDark: Color = Color(0xFF7F7F7F)
+        val GreyMedium: Color = Color(0xFFCCCCCC)
+        val Blue: Color = Color(0xFF2186EB)
+        val BlueLight: Color = Color(0xFF8DB3FF)
         val Thunder: Color = Color(0xFF231F20)
-        val CodGray: Color = Color(0xFF151314)
+        val CodGray: Color = Color(0xFF242424)
         val Transparent: Color = Color(0x00000000)
-        val Green: Color = Color(0xFF39D600)
-        val Red: Color = Color(0xFFDA0000)
+        val RedError: Color = Color(0xFFFF4848)
     }
 }
 

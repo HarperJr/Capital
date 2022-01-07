@@ -85,7 +85,7 @@ private fun AmountTextFieldLight() {
                 modifier = Modifier.fillMaxWidth(),
                 amount = 1225.44,
                 textStyle = CapitalTheme.typography.regular,
-                textColor = CapitalColors.DodgerBlue
+                textColor = CapitalColors.Blue
             ) {}
         }
     }
@@ -103,7 +103,7 @@ private fun AmountTextFieldDark() {
             AmountTextField(
                 amount = 1225.0,
                 textStyle = CapitalTheme.typography.regular,
-                textColor = CapitalColors.DodgerBlue
+                textColor = CapitalColors.Blue
             ) {}
         }
     }

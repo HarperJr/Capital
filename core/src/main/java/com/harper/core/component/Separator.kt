@@ -10,7 +10,7 @@ import com.harper.core.theme.CapitalColors
 fun Separator(modifier: Modifier = Modifier) {
     Divider(
         modifier = modifier,
-        color = CapitalColors.Silver,
+        color = CapitalColors.GreyLight,
         thickness = 1.dp
     )
 }

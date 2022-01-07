@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
-import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -29,7 +28,7 @@ fun SelectorBottomSheet(
     Column(modifier = modifier) {
         sbsData.values.forEach {
             val color = if (sbsData.selectedValue == it.name) {
-                CapitalColors.DodgerBlue
+                CapitalColors.Blue
             } else {
                 CapitalTheme.colors.onBackground
             }

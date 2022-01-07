@@ -72,7 +72,7 @@ fun CurrencyBottomSheet(
                 Image(
                     modifier = Modifier.padding(end = 8.dp),
                     imageVector = CapitalIcons.Search,
-                    colorFilter = ColorFilter.tint(color = CapitalColors.Boulder),
+                    colorFilter = ColorFilter.tint(color = CapitalColors.GreyDark),
                     contentDescription = null
                 )
             },
@@ -111,7 +111,7 @@ private fun CurrencyItem(modifier: Modifier = Modifier, currency: Currency, isSe
         } else {
             CapitalTheme.typography.regular
         }
-        val textColor = if (isSelected) CapitalColors.DodgerBlue else CapitalTheme.colors.onBackground
+        val textColor = if (isSelected) CapitalColors.Blue else CapitalTheme.colors.onBackground
 
         Row(
             modifier = Modifier
