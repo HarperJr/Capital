@@ -37,12 +37,10 @@ import com.harper.capital.bottomsheet.CurrencyBottomSheet
 import com.harper.capital.bottomsheet.IconsBottomSheet
 import com.harper.capital.bottomsheet.SelectorBottomSheet
 import com.harper.capital.ext.getText
-import com.harper.core.component.ActionButton
+import com.harper.core.component.CapitalButton
 import com.harper.core.component.ArrowSettingBox
 import com.harper.core.component.ComposablePreview
-import com.harper.core.component.Menu
 import com.harper.core.component.MenuIcon
-import com.harper.core.component.MenuItem
 import com.harper.core.component.Separator
 import com.harper.core.component.SwitchSettingBox
 import com.harper.core.component.Toolbar
@@ -158,7 +156,7 @@ private fun Content(state: AssetAddState, es: EventSender<AssetAddEvent>) {
                     .imePadding()
                     .fillMaxWidth()
             ) {
-                ActionButton(
+                CapitalButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.BottomCenter)

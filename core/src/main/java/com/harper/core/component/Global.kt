@@ -8,12 +8,11 @@ import com.harper.core.theme.CapitalTheme
 
 @Composable
 fun ComposablePreview(
-    modifier: Modifier = Modifier,
     isDark: Boolean = false,
     content: @Composable () -> Unit
 ) {
     CapitalTheme(isDark) {
-        Surface(modifier = modifier.background(color = CapitalTheme.colors.background)) {
+        Surface(color = CapitalTheme.colors.background) {
             content.invoke()
         }
     }

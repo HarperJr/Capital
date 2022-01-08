@@ -8,7 +8,7 @@ class CapitalViewModel(private val router: GlobalRouter) : ViewModel() {
 
     fun start() {
         if (!isStarted) {
-            router.setRoot()
+            router.setSignInAsRoot()
         }
         isStarted = true
     }

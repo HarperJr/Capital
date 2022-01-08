@@ -1,18 +1,18 @@
-package com.harper.capital.overview
+package com.harper.capital.main
 
 import com.harper.capital.asset.AssetAddFragment
 import com.harper.capital.asset.AssetAddViewModel
 import com.harper.capital.asset.domain.AddAssetUseCase
-import com.harper.capital.overview.domain.FetchAssetsUseCase
+import com.harper.capital.main.domain.FetchAssetsUseCase
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val overviewModule
     get() = module {
 
-        scope<OverviewFragment> {
+        scope<MainFragment> {
             scoped { FetchAssetsUseCase(get()) }
-            viewModel { OverviewViewModel(get(), get()) }
+            viewModel { MainViewModel(get(), get()) }
         }
 
         scope<AssetAddFragment> {

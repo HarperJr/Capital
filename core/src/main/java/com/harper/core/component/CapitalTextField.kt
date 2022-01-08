@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.TextStyle
@@ -34,11 +35,12 @@ import com.harper.core.ext.compose.widthOrZero
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
-import kotlin.math.max
 
 private const val placeHolderId = "Placeholder"
 private const val leadingIconId = "LeadingIcon"
 private const val textFieldId = "TextField"
+
+private val minTextFieldHeight = 28.dp
 
 @Composable
 fun CapitalTextField(
@@ -66,13 +68,13 @@ fun CapitalTextField(
         interactionSource = interactionSource,
         keyboardActions = keyboardActions,
         keyboardOptions = keyboardOptions,
-        singleLine = singleLine
+        singleLine = singleLine,
     ) { innerTextField ->
         val text = value.text
         Box(
             modifier = Modifier
                 .background(color = backgroundColor, shape = CapitalTheme.shapes.large)
-                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .padding(horizontal = 8.dp)
         ) {
             Layout(content = {
                 if (text.isEmpty()) {
@@ -122,12 +124,15 @@ fun CapitalTextField(
                             .offset(horizontal = -horizontalOffset)
                     )
                 val width = leadingIconPlaceable.widthOrZero() + textFieldPlaceable.widthOrZero()
-                val height = max(textFieldPlaceable.heightOrZero(), leadingIconPlaceable.heightOrZero())
+                val height = maxOf(
+                    minTextFieldHeight.roundToPx(),
+                    textFieldPlaceable.heightOrZero(),
+                    leadingIconPlaceable.heightOrZero()
+                )
                 layout(width = width, height = height) {
-                    val verticalOffset = (height - textFieldPlaceable.heightOrZero()) / 2
-                    leadingIconPlaceable?.placeRelative(0, 0)
-                    textFieldPlaceable?.placeRelative(horizontalOffset, verticalOffset)
-                    placeholderPlaceable?.placeRelative(horizontalOffset, verticalOffset)
+                    leadingIconPlaceable?.placeRelative(0, (height - leadingIconPlaceable.heightOrZero()) / 2)
+                    textFieldPlaceable?.placeRelative(horizontalOffset, (height - textFieldPlaceable.heightOrZero()) / 2)
+                    placeholderPlaceable?.placeRelative(horizontalOffset, (height - placeholderPlaceable.heightOrZero()) / 2)
                 }
             })
         }
@@ -192,7 +197,8 @@ private fun CapitalTextFieldLight() {
                     Image(
                         modifier = Modifier.padding(end = 8.dp),
                         imageVector = CapitalIcons.Search,
-                        contentDescription = null
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(color = LocalContentColor.current)
                     )
                 }
             ) {}

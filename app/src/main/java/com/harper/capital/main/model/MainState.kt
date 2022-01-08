@@ -1,14 +1,14 @@
-package com.harper.capital.overview.model
+package com.harper.capital.main.model
 
 import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.Asset
 
-sealed class OverviewState {
+sealed class MainState {
 
-    object Loading : OverviewState()
+    object Loading : MainState()
 
     data class Data(
         val account: Account,
         val assets: List<Asset>
-    ) : OverviewState()
+    ) : MainState()
 }

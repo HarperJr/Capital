@@ -1,4 +1,4 @@
-package com.harper.capital.overview.component
+package com.harper.capital.main.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

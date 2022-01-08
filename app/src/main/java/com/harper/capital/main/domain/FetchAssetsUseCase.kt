@@ -1,4 +1,4 @@
-package com.harper.capital.overview.domain
+package com.harper.capital.main.domain
 
 import com.harper.capital.domain.model.Asset
 import com.harper.capital.repository.AssetRepository

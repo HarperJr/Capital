@@ -1,8 +1,9 @@
 package com.harper.capital
 
 import android.app.Application
+import com.harper.capital.auth.authModule
 import com.harper.capital.database.databaseModule
-import com.harper.capital.overview.overviewModule
+import com.harper.capital.main.overviewModule
 import com.harper.capital.repository.repositoryModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -18,7 +19,7 @@ class CapitalApplication : Application() {
 
         Timber.plant(Timber.DebugTree())
         koinApp = startKoin {
-            modules(appModule, overviewModule, databaseModule, repositoryModule)
+            modules(appModule, overviewModule, authModule, databaseModule, repositoryModule)
             androidContext(applicationContext)
             androidLogger()
         }

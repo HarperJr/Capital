@@ -2,7 +2,9 @@ package com.harper.capital.navigation
 
 interface GlobalRouter {
 
-    fun setRoot()
+    fun setSignInAsRoot()
+
+    fun setMainAsRoot()
 
     fun navigateToAddAsset()
 

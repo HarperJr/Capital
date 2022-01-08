@@ -4,7 +4,9 @@ import com.github.terrakok.cicerone.Router
 
 class GlobalRouterImpl : Router(), GlobalRouter {
 
-    override fun setRoot() = newRootScreen(Screens.overview())
+    override fun setSignInAsRoot() = newRootScreen(Screens.signIn())
+
+    override fun setMainAsRoot() = newRootScreen(Screens.main())
 
     override fun navigateToAddAsset() = navigateTo(Screens.assetAdd())
 

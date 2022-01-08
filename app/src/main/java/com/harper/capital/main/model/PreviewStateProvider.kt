@@ -1,4 +1,4 @@
-package com.harper.capital.overview.model
+package com.harper.capital.main.model
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.harper.capital.domain.model.Account
@@ -8,10 +8,10 @@ import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.domain.model.AssetMetadata
 import com.harper.capital.domain.model.Currency
 
-class PreviewStateProvider : PreviewParameterProvider<OverviewState.Data> {
+class PreviewStateProvider : PreviewParameterProvider<MainState.Data> {
 
-    override val values: Sequence<OverviewState.Data> = sequenceOf(
-        OverviewState.Data(
+    override val values: Sequence<MainState.Data> = sequenceOf(
+        MainState.Data(
             account = Account(14241.24, Currency.RUB),
             assets = listOf(
                 Asset(

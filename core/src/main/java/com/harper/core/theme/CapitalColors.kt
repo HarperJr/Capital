@@ -4,7 +4,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 
 private val primaryLight = Color(0xFFFFFFFF)
-private val secondaryLight = Color(0xFFB8B8B8)
+private val secondaryLight = Color(0xFFE5E5E5)
 private val backgroundLight = Color(0xFFFFFFFF)
 private val onPrimaryLight = Color(0xFF0F0F0F)
 private val onSecondaryLight = Color(0xFF0F0F0F)
@@ -16,7 +16,7 @@ private val secondaryDark = Color(0xFF202020)
 private val backgroundDark = Color(0xFF000000)
 private val onPrimaryDark = Color(0xFFFFFFFF)
 private val onSecondaryDark = Color(0xFFFFFFFF)
-private val onBackgroundDark = Color(0xFFE7E7E7)
+private val onBackgroundDark = Color(0xFFFFFFFF)
 private val errorDark = Color(0xFFFF4848)
 
 @Stable
@@ -84,7 +84,7 @@ class CapitalColors(
     }
 
     companion object {
-        val White: Color = Color(0xFFE7E7E7)
+        val White: Color = Color(0xFFFFFFFF)
         val Black: Color = Color(0xFF000000)
         val GreyLight: Color = Color(0xFFE5E5E5)
         val GreyDark: Color = Color(0xFF7F7F7F)
