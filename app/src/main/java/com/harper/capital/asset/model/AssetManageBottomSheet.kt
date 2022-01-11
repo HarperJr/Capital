@@ -9,9 +9,9 @@ import com.harper.capital.domain.model.Currency
 import com.harper.capital.ext.getImageVector
 import com.harper.capital.ext.getText
 
-sealed class AssetAddBottomSheet {
+sealed class AssetManageBottomSheet {
 
-    class Icons(private val selectedIcon: AssetIcon) : AssetAddBottomSheet() {
+    class Icons(private val selectedIcon: AssetIcon) : AssetManageBottomSheet() {
         val data: IconsBottomSheetData
             @Composable
             get() = IconsBottomSheetData(
@@ -22,7 +22,7 @@ sealed class AssetAddBottomSheet {
             )
     }
 
-    class AssetTypes(private val selectedAssetType: AssetType) : AssetAddBottomSheet() {
+    class AssetTypes(private val selectedAssetType: AssetType) : AssetManageBottomSheet() {
         val data: SelectorBottomSheetData
             @Composable
             get() = SelectorBottomSheetData(
@@ -33,5 +33,5 @@ sealed class AssetAddBottomSheet {
             )
     }
 
-    class Currencies(val currencies: List<Currency>, val selectedCurrency: Currency) : AssetAddBottomSheet()
+    class Currencies(val currencies: List<Currency>, val selectedCurrency: Currency) : AssetManageBottomSheet()
 }

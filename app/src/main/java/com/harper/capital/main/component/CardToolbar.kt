@@ -30,6 +30,7 @@ import com.harper.core.theme.CapitalTheme
 fun CardToolbar(
     modifier: Modifier = Modifier,
     color: Color,
+    onHistoryClick: () -> Unit,
     onIncomeClick: () -> Unit,
     onExpenseClick: () -> Unit,
     onEditClick: () -> Unit
@@ -38,13 +39,13 @@ fun CardToolbar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .padding(vertical = 4.dp)
         ) {
             ToolbarItem(
                 modifier = Modifier.weight(1f),
-                icon = CapitalIcons.List,
+                icon = CapitalIcons.History,
                 text = stringResource(id = R.string.history),
-                onClick = onIncomeClick
+                onClick = onHistoryClick
             )
 
             ToolbarItem(
@@ -63,8 +64,8 @@ fun CardToolbar(
 
             ToolbarItem(
                 modifier = Modifier.weight(1f),
-                icon = CapitalIcons.Settings,
-                text = stringResource(id = R.string.settings),
+                icon = CapitalIcons.EditAsset,
+                text = stringResource(id = R.string.edit),
                 onClick = onEditClick
             )
         }
@@ -83,10 +84,8 @@ private fun ToolbarItem(modifier: Modifier = Modifier, icon: ImageVector, text: 
             colorFilter = ColorFilter.tint(color = CapitalColors.White)
         )
         Text(
-            modifier = Modifier
-                .padding(top = 4.dp)
-                .align(Alignment.CenterHorizontally),
-            style = CapitalTheme.typography.regularSmall,
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            style = CapitalTheme.typography.titleSmall,
             text = text,
             color = CapitalColors.White
         )
@@ -100,7 +99,7 @@ private fun CardToolbarLight() {
         Box(modifier = Modifier.background(CapitalTheme.colors.background)) {
             CardToolbar(modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp), color = CapitalColors.CodGray, {}, {}, {})
+                .padding(16.dp), color = CapitalColors.CodGray, {}, {}, {}, {})
         }
     }
 }
@@ -112,7 +111,7 @@ private fun CardbarboxDark() {
         Box(modifier = Modifier.background(CapitalTheme.colors.background)) {
             CardToolbar(modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp), color = CapitalColors.CodGray, {}, {}, {})
+                .padding(16.dp), color = CapitalColors.CodGray, {}, {}, {}, {})
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.harper.capital.main
 
 import com.harper.capital.asset.AssetAddFragment
-import com.harper.capital.asset.AssetAddViewModel
+import com.harper.capital.asset.AssetManageViewModel
 import com.harper.capital.asset.domain.AddAssetUseCase
 import com.harper.capital.main.domain.FetchAssetsUseCase
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -17,6 +17,6 @@ val overviewModule
 
         scope<AssetAddFragment> {
             scoped { AddAssetUseCase(get()) }
-            viewModel { AssetAddViewModel(get(), get()) }
+            viewModel { AssetManageViewModel(get(), get()) }
         }
     }

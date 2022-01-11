@@ -30,8 +30,8 @@ fun SettingBox(modifier: Modifier = Modifier, title: String, subtitle: String, a
             .padding(16.dp)
     ) {
         Column(modifier = Modifier.weight(1f, fill = true)) {
-            Text(text = title, color = CapitalTheme.colors.onBackground)
-            Text(text = subtitle, style = CapitalTheme.typography.button, color = CapitalTheme.colors.onBackground)
+            Text(text = title, style = CapitalTheme.typography.subtitle, color = CapitalTheme.colors.onBackground)
+            Text(text = subtitle, style = CapitalTheme.typography.regular, color = CapitalTheme.colors.onSecondary)
         }
         Box(modifier = Modifier.align(Alignment.CenterVertically)) { action.invoke() }
     }

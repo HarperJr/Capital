@@ -1,10 +1,10 @@
 package com.harper.capital.asset
 
 import com.harper.capital.asset.domain.AddAssetUseCase
-import com.harper.capital.asset.model.AssetAddBottomSheet
-import com.harper.capital.asset.model.AssetAddBottomSheetState
-import com.harper.capital.asset.model.AssetAddEvent
-import com.harper.capital.asset.model.AssetAddState
+import com.harper.capital.asset.model.AssetManageBottomSheet
+import com.harper.capital.asset.model.AssetManageBottomSheetState
+import com.harper.capital.asset.model.AssetManageEvent
+import com.harper.capital.asset.model.AssetManageState
 import com.harper.capital.domain.model.Asset
 import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.domain.model.AssetMetadata
@@ -14,27 +14,27 @@ import com.harper.capital.navigation.GlobalRouter
 import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventObserver
 
-class AssetAddViewModel(
+class AssetManageViewModel(
     private val router: GlobalRouter,
     private val addAssetUseCase: AddAssetUseCase
-) : ComponentViewModel<AssetAddState>(
-    defaultState = AssetAddState()
-), EventObserver<AssetAddEvent> {
+) : ComponentViewModel<AssetManageState>(
+    defaultState = AssetManageState()
+), EventObserver<AssetManageEvent> {
 
-    override fun onEvent(event: AssetAddEvent) {
+    override fun onEvent(event: AssetManageEvent) {
         when (event) {
-            is AssetAddEvent.ColorSelect -> onColorSelect(event)
-            is AssetAddEvent.IconSelect -> onIconSelect(event)
-            is AssetAddEvent.NameChange -> onNameChange(event)
-            is AssetAddEvent.AmountChange -> onAmountChange(event)
-            is AssetAddEvent.CurrencySelect -> onCurrencySelect(event)
-            is AssetAddEvent.CurrencySelectClick -> onCurrencySelectClick()
-            is AssetAddEvent.AssetTypeSelect -> onAssetTypeSelect(event)
-            is AssetAddEvent.AssetTypeSelectClick -> onAssetTypeSelectClick()
-            is AssetAddEvent.IconSelectClick -> onIconSelectClick()
-            is AssetAddEvent.Apply -> onApply()
-            is AssetAddEvent.IncludeAssetCheckedChange -> onIncludeAssetCheckedChange(event)
-            is AssetAddEvent.BackClick -> router.back()
+            is AssetManageEvent.ColorSelect -> onColorSelect(event)
+            is AssetManageEvent.IconSelect -> onIconSelect(event)
+            is AssetManageEvent.NameChange -> onNameChange(event)
+            is AssetManageEvent.AmountChange -> onAmountChange(event)
+            is AssetManageEvent.CurrencySelect -> onCurrencySelect(event)
+            is AssetManageEvent.CurrencySelectClick -> onCurrencySelectClick()
+            is AssetManageEvent.AssetTypeSelect -> onAssetTypeSelect(event)
+            is AssetManageEvent.AssetTypeSelectClick -> onAssetTypeSelectClick()
+            is AssetManageEvent.IconSelectClick -> onIconSelectClick()
+            is AssetManageEvent.Apply -> onApply()
+            is AssetManageEvent.IncludeAssetCheckedChange -> onIncludeAssetCheckedChange(event)
+            is AssetManageEvent.BackClick -> router.back()
         }
     }
 
@@ -56,11 +56,11 @@ class AssetAddViewModel(
         }
     }
 
-    private fun onIncludeAssetCheckedChange(event: AssetAddEvent.IncludeAssetCheckedChange) {
+    private fun onIncludeAssetCheckedChange(event: AssetManageEvent.IncludeAssetCheckedChange) {
         // TODO implement
     }
 
-    private fun onIconSelect(event: AssetAddEvent.IconSelect) {
+    private fun onIconSelect(event: AssetManageEvent.IconSelect) {
         val selectedIcon = AssetIcon.valueOf(event.iconName)
         mutateState {
             it.copy(icon = selectedIcon, bottomSheetState = it.bottomSheetState.copy(isExpended = false))
@@ -70,8 +70,8 @@ class AssetAddViewModel(
     private fun onIconSelectClick() {
         mutateState {
             it.copy(
-                bottomSheetState = AssetAddBottomSheetState(
-                    bottomSheet = AssetAddBottomSheet.Icons(it.icon)
+                bottomSheetState = AssetManageBottomSheetState(
+                    bottomSheet = AssetManageBottomSheet.Icons(it.icon)
                 )
             )
         }
@@ -80,14 +80,14 @@ class AssetAddViewModel(
     private fun onAssetTypeSelectClick() {
         mutateState {
             it.copy(
-                bottomSheetState = AssetAddBottomSheetState(
-                    bottomSheet = AssetAddBottomSheet.AssetTypes(it.metadata.assetType)
+                bottomSheetState = AssetManageBottomSheetState(
+                    bottomSheet = AssetManageBottomSheet.AssetTypes(it.metadata.assetType)
                 )
             )
         }
     }
 
-    private fun onAssetTypeSelect(event: AssetAddEvent.AssetTypeSelect) {
+    private fun onAssetTypeSelect(event: AssetManageEvent.AssetTypeSelect) {
         val selectedAssetType = AssetType.valueOf(event.assetTypeName)
         mutateState {
             val metadata = when (selectedAssetType) {
@@ -102,13 +102,13 @@ class AssetAddViewModel(
         }
     }
 
-    private fun onNameChange(event: AssetAddEvent.NameChange) {
+    private fun onNameChange(event: AssetManageEvent.NameChange) {
         mutateState {
             it.copy(name = event.name)
         }
     }
 
-    private fun onAmountChange(event: AssetAddEvent.AmountChange) {
+    private fun onAmountChange(event: AssetManageEvent.AmountChange) {
         mutateState {
             it.copy(amount = event.amount)
         }
@@ -117,14 +117,14 @@ class AssetAddViewModel(
     private fun onCurrencySelectClick() {
         mutateState {
             it.copy(
-                bottomSheetState = AssetAddBottomSheetState(
-                    bottomSheet = AssetAddBottomSheet.Currencies(Currency.values().toList(), it.currency)
+                bottomSheetState = AssetManageBottomSheetState(
+                    bottomSheet = AssetManageBottomSheet.Currencies(Currency.values().toList(), it.currency)
                 )
             )
         }
     }
 
-    private fun onCurrencySelect(event: AssetAddEvent.CurrencySelect) {
+    private fun onCurrencySelect(event: AssetManageEvent.CurrencySelect) {
         mutateState {
             it.copy(
                 currency = event.currency,
@@ -133,7 +133,7 @@ class AssetAddViewModel(
         }
     }
 
-    private fun onColorSelect(event: AssetAddEvent.ColorSelect) {
+    private fun onColorSelect(event: AssetManageEvent.ColorSelect) {
         mutateState {
             it.copy(color = event.color)
         }

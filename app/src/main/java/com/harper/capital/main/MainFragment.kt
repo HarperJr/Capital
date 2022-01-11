@@ -1,8 +1,6 @@
 package com.harper.capital.main
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,14 +8,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -34,9 +33,11 @@ import com.harper.core.component.AmountText
 import com.harper.core.component.ComposablePreview
 import com.harper.core.component.HorizontalSpacer
 import com.harper.core.component.Menu
+import com.harper.core.component.MenuIcon
 import com.harper.core.component.MenuItem
 import com.harper.core.component.Toolbar
 import com.harper.core.ext.cast
+import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
@@ -52,7 +53,7 @@ class MainFragment : ComponentFragment<MainViewModel>(), EventSender<MainEvent> 
         val state by viewModel.state.collectAsState()
         when (state) {
             is MainState.Loading -> LoadingPlaceholder()
-            is MainState.Data -> Overview(state.cast(), this)
+            is MainState.Data -> Content(state.cast(), this)
         }
     }
 
@@ -69,97 +70,112 @@ private fun LoadingPlaceholder() {
 
 @OptIn(ExperimentalPagerApi::class, dev.chrisbanes.snapper.ExperimentalSnapperApi::class)
 @Composable
-private fun Overview(state: MainState.Data, es: EventSender<MainEvent>) {
+private fun Content(state: MainState.Data, es: EventSender<MainEvent>) {
     Scaffold(
-        topBar = { OverviewTopBar(account = state.account) }) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(CapitalTheme.colors.background)
-        ) {
-            HorizontalSpacer(height = 24.dp)
-            Image(
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(end = 16.dp)
-                    .clickable { es.send(MainEvent.AddAssetClick) },
-                imageVector = ImageVector.vectorResource(id = R.drawable.ic_add_asset),
-                contentDescription = null
-            )
-            HorizontalSpacer(height = 16.dp)
-            val assetListState = rememberLazyListState()
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                state = assetListState,
-                flingBehavior = rememberSnapperFlingBehavior(lazyListState = assetListState)
-            ) {
-                items(state.assets) {
-                    AssetCard(
-                        modifier = Modifier
-                            .fillParentMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        asset = it
-                    )
+        backgroundColor = CapitalTheme.colors.background,
+        topBar = { OverviewTopBar(account = state.account, es) }
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                HorizontalSpacer(height = 24.dp)
+                val assetListState = rememberLazyListState()
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    state = assetListState,
+                    flingBehavior = rememberSnapperFlingBehavior(lazyListState = assetListState)
+                ) {
+                    items(state.assets) {
+                        AssetCard(
+                            modifier = Modifier
+                                .fillParentMaxWidth()
+                                .padding(horizontal = 24.dp),
+                            asset = it
+                        )
+                    }
+                    item {
+                        AssetAccountedCard(
+                            modifier = Modifier
+                                .fillParentMaxWidth()
+                                .padding(horizontal = 24.dp),
+                            account = state.account
+                        )
+                    }
                 }
-                item {
-                    AssetAccountedCard(
+                HorizontalSpacer(height = 24.dp)
+                if (state.assets.isNotEmpty()) {
+                    CardToolbar(
                         modifier = Modifier
-                            .fillParentMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        account = state.account
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp),
+                        color = CapitalColors.Thunder,
+                        onHistoryClick = {},
+                        onIncomeClick = {},
+                        onExpenseClick = {},
+                        onEditClick = {}
                     )
                 }
             }
-            HorizontalSpacer(height = 32.dp)
-
-            if (state.assets.isNotEmpty()) {
-                CardToolbar(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    color = CapitalColors.Thunder,
-                    onIncomeClick = {},
-                    onExpenseClick = {},
-                    onEditClick = {}
-                )
+            FloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(24.dp),
+                onClick = { },
+                backgroundColor = CapitalTheme.colors.background
+            ) {
+                MenuIcon(imageVector = CapitalIcons.NewAsset, color = CapitalColors.Blue)
             }
         }
     }
 }
 
 @Composable
-fun OverviewTopBar(account: Account) {
+fun OverviewTopBar(account: Account, es: EventSender<MainEvent>) {
     Toolbar(
-        title = {
-            AmountText(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                amount = account.amount,
-                currencyIso = account.currency.name,
-                style = CapitalTheme.typography.title,
-                color = CapitalTheme.colors.onBackground
-            )
+        content = {
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                AmountText(
+                    amount = account.amount,
+                    currencyIso = account.currency.name,
+                    style = CapitalTheme.typography.header,
+                    color = CapitalTheme.colors.onBackground
+                )
+                Text(
+                    text = stringResource(
+                        id = R.string.expenses_in_month,
+                        (-23424.42).formatCurrencySymbol(account.currency.name),
+                        "January"
+                    ),
+                    style = CapitalTheme.typography.titleSmall,
+                    color = CapitalColors.Blue
+                )
+            }
         },
-        menu = Menu(listOf(MenuItem(0, CapitalIcons.Settings)))
+        menu = Menu(listOf(MenuItem(0, CapitalIcons.AddAsset), MenuItem(1, CapitalIcons.Settings))),
+        onMenuItemClick = { itemId ->
+            when (itemId) {
+                0 -> es.send(MainEvent.AddAssetClick)
+            }
+        }
     )
 }
 
-@Preview
+@Preview(showBackground = true, name = "Content light")
 @Composable
-private fun OverviewLight(@PreviewParameter(PreviewStateProvider::class) mockState: MainState.Data) {
+private fun ContentLight(@PreviewParameter(PreviewStateProvider::class) mockState: MainState.Data) {
     ComposablePreview {
-        Overview(
+        Content(
             state = mockState,
             MockEventSender()
         )
     }
 }
 
-@Preview
+@Preview(showBackground = true, name = "Content dark")
 @Composable
-private fun OverviewDark(@PreviewParameter(PreviewStateProvider::class) mockState: MainState.Data) {
+private fun ContentDark(@PreviewParameter(PreviewStateProvider::class) mockState: MainState.Data) {
     ComposablePreview(isDark = true) {
-        Overview(
+        Content(
             state = mockState,
             MockEventSender()
         )

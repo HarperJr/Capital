@@ -12,7 +12,7 @@
     <string name="credit_card">Credit card</string>
     <string name="goal">Goal</string>
 
-    <string name="add_asset_title">Add new asset</string>
+    <string name="new_asset_title">New asset</string>
     <string name="enter_name_hint">Enter the name</string>
     <string name="enter_amount_hint">Enter amount</string>
 
@@ -24,8 +24,8 @@
 
     <string name="asset_type">Asset type</string>
 
-    <string name="include_asset">Include asset in balance</string>
-    <string name="include_asset_subtitle">Check this to include in balance</string>
+    <string name="include_asset">Include in balance</string>
+    <string name="include_asset_subtitle">Check to include in balance</string>
 
     <string name="type_debet">Debet asset</string>
     <string name="type_credit">Credit</string>
@@ -41,4 +41,6 @@
     <string name="continue_with_google">Continue with Google</string>
     <string name="dont_have_an_account">I don\'t have an account</string>
     <string name="go_offline">Go offline</string>
+    <string name="edit">Edit</string>
+    <string name="expenses_in_month">%s in %s</string>
 </resources>

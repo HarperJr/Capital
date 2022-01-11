@@ -196,7 +196,7 @@ private fun ExpenseCategoryAddTopBar() {
             )
         },
         navigation = {
-            MenuIcon(imageVector = CapitalIcons.Navigation)
+            MenuIcon(imageVector = CapitalIcons.ArrowLeft)
         }
     )
 }

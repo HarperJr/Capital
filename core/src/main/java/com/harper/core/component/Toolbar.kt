@@ -1,6 +1,7 @@
 package com.harper.core.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
@@ -14,30 +15,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 
 @Composable
 fun Toolbar(
     modifier: Modifier = Modifier,
-    title: @Composable () -> Unit = {},
-    navigation: @Composable () -> Unit = {},
+    title: @Composable (() -> Unit)? = null,
+    content: @Composable (() -> Unit)? = null,
+    navigation: @Composable (() -> Unit)? = null,
     menu: Menu = Menu(),
-    onMenuItemClick: (Int) -> Unit = {}
+    onMenuItemClick: ((Int) -> Unit)? = null
 ) {
     TopAppBar(
         modifier = modifier,
         elevation = 0.dp,
         backgroundColor = CapitalTheme.colors.background
     ) {
-        navigation.invoke()
-        title.invoke()
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
+        navigation?.invoke()
+        Box(modifier = Modifier.weight(1f)) {
+            if (title != null) {
+                title.invoke()
+            } else {
+                content?.invoke()
+            }
+        }
+        Row(horizontalArrangement = Arrangement.End) {
             menu.items.forEach { item ->
-                MenuItem(item, onClick = { onMenuItemClick.invoke(it) })
+                MenuItem(item, onClick = { onMenuItemClick?.invoke(it) })
             }
         }
     }
@@ -90,7 +95,7 @@ private fun ToolbarDark() {
                 )
             },
             navigation = {
-                MenuIcon(imageVector = Icons.Rounded.ArrowBack, onClick = { })
+                MenuIcon(imageVector = CapitalIcons.ArrowLeft, onClick = { })
             },
             menu = Menu(
                 listOf(

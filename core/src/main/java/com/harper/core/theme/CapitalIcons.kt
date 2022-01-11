@@ -36,12 +36,25 @@ object CapitalIcons {
     val List: ImageVector
         @Composable
         get() = ImageVector.vectorResource(id = R.drawable.ic_list)
-    val Navigation
+    val AddAsset
         @Composable
-        get() = ImageVector.vectorResource(id = R.drawable.ic_navigation)
-
+        get() = ImageVector.vectorResource(id = R.drawable.ic_add_asset)
+    val History
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_history)
+    val EditAsset
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_edit_asset)
+    val NewAsset
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_new_asset)
     val ArrowRight
-        get() = Icons.Rounded.ArrowForward
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_arrow_right)
+    val ArrowLeft
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_arrow_left)
+
     val Edit: ImageVector
         get() = Icons.Rounded.Edit
     val Search: ImageVector
@@ -90,14 +103,19 @@ private fun Icons() {
         CapitalIcons.Wallet,
         CapitalIcons.ProductCart,
         CapitalIcons.Mobile,
-        CapitalIcons.Navigation,
         CapitalIcons.Edit,
         CapitalIcons.Search,
         CapitalIcons.ArrowRight,
         CapitalIcons.Income,
         CapitalIcons.Expense,
         CapitalIcons.Settings,
-        CapitalIcons.List
+        CapitalIcons.List,
+        CapitalIcons.AddAsset,
+        CapitalIcons.History,
+        CapitalIcons.EditAsset,
+        CapitalIcons.NewAsset,
+        CapitalIcons.ArrowLeft,
+        CapitalIcons.ArrowRight
     )
     Grid(modifier = Modifier.background(CapitalTheme.colors.background), columns = 6, icons) {
         MenuIcon(imageVector = it)

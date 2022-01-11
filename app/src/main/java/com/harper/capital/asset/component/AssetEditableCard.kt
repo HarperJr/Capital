@@ -11,15 +11,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -31,27 +30,21 @@ import androidx.constraintlayout.compose.Dimension
 import com.harper.capital.R
 import com.harper.capital.domain.model.AssetColor
 import com.harper.capital.domain.model.AssetIcon
-import com.harper.capital.domain.model.Currency
 import com.harper.capital.ext.getImageVector
 import com.harper.core.component.AmountTextField
 import com.harper.core.component.CapitalTextField
 import com.harper.core.component.ComposablePreview
 import com.harper.core.ext.compose.assetCardSize
-import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
-
-private const val fieldAlpha = 0.6f
 
 @Composable
 fun AssetEditableCard(
     modifier: Modifier = Modifier,
     name: String,
     amount: Double,
-    currency: Currency,
     icon: AssetIcon,
     color: AssetColor,
-    onCurrencyClick: () -> Unit,
     onIconClick: () -> Unit,
     onAmountChange: (Double) -> Unit,
     onNameChange: (String) -> Unit
@@ -68,7 +61,7 @@ fun AssetEditableCard(
         val nameValue = rememberSaveable(name) { mutableStateOf(name) }
 
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-            val (tfName, atfAmount, bCurrency, bIcon) = createRefs()
+            val (tfName, atfAmount, bIcon) = createRefs()
             CapitalTextField(
                 modifier = Modifier.constrainAs(tfName) {
                     linkTo(start = bIcon.end, end = parent.end, startMargin = 16.dp, endMargin = 16.dp)
@@ -78,7 +71,7 @@ fun AssetEditableCard(
                 value = nameValue.value,
                 placeholder = stringResource(id = R.string.enter_name_hint),
                 textColor = CapitalColors.White,
-                backgroundColor = CapitalColors.CodGray.copy(alpha = fieldAlpha),
+                backgroundColor = CapitalColors.CodGray.compositeOver(Color(color.value)),
                 singleLine = true,
                 onValueChange = {
                     nameValue.value = it
@@ -95,13 +88,12 @@ fun AssetEditableCard(
             Box(
                 modifier = Modifier
                     .size(44.dp)
-                    .background(color = CapitalColors.CodGray.copy(alpha = fieldAlpha), shape = CircleShape)
-                    .clickable { onCurrencyClick.invoke() }
+                    .background(color = CapitalColors.CodGray.compositeOver(Color(color.value)), shape = CircleShape)
+                    .clickable { onIconClick.invoke() }
                     .constrainAs(bIcon) {
                         start.linkTo(parent.start, margin = 16.dp)
                         top.linkTo(parent.top, margin = 16.dp)
                     }
-                    .clickable { onIconClick.invoke() }
             ) {
                 Image(
                     modifier = Modifier.fillMaxSize(),
@@ -113,13 +105,13 @@ fun AssetEditableCard(
             AmountTextField(
                 modifier = Modifier.constrainAs(atfAmount) {
                     linkTo(start = parent.start, end = parent.end, startMargin = 16.dp, endMargin = 16.dp)
-                    top.linkTo(tfName.bottom, margin = 16.dp)
-                    end.linkTo(bCurrency.start, margin = 16.dp)
+                    top.linkTo(bIcon.bottom, margin = 16.dp)
+                    end.linkTo(parent.end, margin = 16.dp)
                     width = Dimension.fillToConstraints
                 },
                 amount = amountValue.value,
                 textColor = CapitalColors.White,
-                backgroundColor = CapitalColors.CodGray.copy(alpha = fieldAlpha),
+                backgroundColor = CapitalColors.CodGray.compositeOver(Color(color.value)),
                 onValueChange = {
                     amountValue.value = it
                     onAmountChange.invoke(it)
@@ -130,23 +122,6 @@ fun AssetEditableCard(
                 })
 
             )
-            Box(
-                modifier = Modifier
-                    .size(44.dp)
-                    .background(color = CapitalColors.CodGray.copy(alpha = fieldAlpha), shape = CircleShape)
-                    .clickable { onCurrencyClick.invoke() }
-                    .constrainAs(bCurrency) {
-                        end.linkTo(parent.end, margin = 16.dp)
-                        centerVerticallyTo(atfAmount)
-                    }
-            ) {
-                Text(
-                    modifier = Modifier.align(Alignment.Center),
-                    text = currency.name.formatCurrencySymbol(),
-                    style = CapitalTheme.typography.title,
-                    color = CapitalColors.White
-                )
-            }
         }
     }
 }
@@ -163,10 +138,8 @@ private fun AssetEditableCardLight() {
             AssetEditableCard(
                 name = "Tinkoff black",
                 amount = 12444.32,
-                currency = Currency.RUB,
                 icon = AssetIcon.TINKOFF,
                 color = AssetColor.DARK_TINKOFF,
-                onCurrencyClick = {},
                 onIconClick = {},
                 onNameChange = {},
                 onAmountChange = {}
@@ -187,10 +160,8 @@ private fun AssetEditableCardDark() {
             AssetEditableCard(
                 name = "Sberbank",
                 amount = 100000.0,
-                currency = Currency.RUB,
                 icon = AssetIcon.SBER,
                 color = AssetColor.GREEN_SBER,
-                onCurrencyClick = {},
                 onIconClick = {},
                 onNameChange = {},
                 onAmountChange = {}

@@ -13,6 +13,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harper.core.ext.formatCurrencySymbol
+import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
 @Composable
@@ -24,13 +25,7 @@ fun AmountText(modifier: Modifier = Modifier, amount: Double, currencyIso: Strin
             val commaIndex = text.indexOf(',')
             append(text)
             if (commaIndex != -1) {
-                addStyle(SpanStyle(fontSize = style.fontSize), start = 0, end = commaIndex + 1)
-                addStyle(SpanStyle(fontSize = style.fontSize / 2), start = commaIndex + 1, end = text.length - 1)
-                addStyle(
-                    SpanStyle(fontSize = style.fontSize),
-                    start = text.length - 1,
-                    end = text.length
-                )
+                addStyle(SpanStyle(color = CapitalColors.GreyMedium), start = commaIndex + 1, end = text.length - 1)
             }
         },
         color = color,

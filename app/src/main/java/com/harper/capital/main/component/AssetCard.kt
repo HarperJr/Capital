@@ -96,7 +96,7 @@ fun AssetCard(
                 MetadataBlock(
                     modifier = Modifier
                         .constrainAs(description) {
-                            top.linkTo(amount.bottom)
+                            top.linkTo(amount.bottom, margin = 4.dp)
                             start.linkTo(amount.start)
                         },
                     type = type,
@@ -107,12 +107,11 @@ fun AssetCard(
             Text(
                 modifier = Modifier
                     .constrainAs(name) {
-                        bottom.linkTo(parent.bottom, margin = 8.dp)
+                        bottom.linkTo(parent.bottom, margin = 12.dp)
                         start.linkTo(parent.start, margin = 16.dp)
                     },
                 text = asset.name,
-                color = CapitalColors.White,
-                style = CapitalTheme.typography.regular
+                color = CapitalColors.White
             )
         }
     }

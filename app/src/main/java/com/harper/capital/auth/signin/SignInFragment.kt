@@ -160,7 +160,7 @@ private fun Content(state: SignInState, es: EventSender<SignInEvent>) {
     }
 }
 
-@Preview(showBackground = true, name = "SignInLight")
+@Preview(showBackground = true, name = "SignIn light")
 @Composable
 fun ContentLight() {
     ComposablePreview {
@@ -168,7 +168,7 @@ fun ContentLight() {
     }
 }
 
-@Preview(showBackground = true, name = "SignInDark")
+@Preview(showBackground = true, name = "SignIn dark")
 @Composable
 fun ContentDark() {
     ComposablePreview(isDark = true) {
