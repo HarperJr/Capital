@@ -1,4 +1,4 @@
-package com.harper.capital.expense
+package com.harper.capital.category
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,10 +34,10 @@ import androidx.compose.ui.unit.dp
 import com.harper.capital.R
 import com.harper.capital.bottomsheet.CurrencyBottomSheet
 import com.harper.capital.bottomsheet.IconsBottomSheet
-import com.harper.capital.expense.model.ExpenseAddEvent
-import com.harper.capital.expense.model.ExpenseCategoryAddBottomSheet
-import com.harper.capital.expense.model.ExpenseCategoryAddState
-import com.harper.capital.expense.model.ExpenseCategoryAddStateProvider
+import com.harper.capital.category.model.CategoryManageEvent
+import com.harper.capital.category.model.CategoryManageBottomSheet
+import com.harper.capital.category.model.ExpenseCategoryAddState
+import com.harper.capital.category.model.CategoryManageStateProvider
 import com.harper.capital.ext.getImageVector
 import com.harper.core.component.AmountTextField
 import com.harper.core.component.CapitalTextField
@@ -51,8 +51,8 @@ import com.harper.core.ui.ComponentFragment
 import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
 
-class ExpenseCategoryAddFragment : ComponentFragment<ExpenseCategoryAddViewModel>(), EventSender<ExpenseAddEvent> {
-    override val viewModel: ExpenseCategoryAddViewModel by injectViewModel()
+class CategoryManageFragment : ComponentFragment<CategoryManageViewModel>(), EventSender<CategoryManageEvent> {
+    override val viewModel: CategoryManageViewModel by injectViewModel()
 
     override fun content(): @Composable () -> Unit = {
         val state by viewModel.state.collectAsState()
@@ -61,13 +61,13 @@ class ExpenseCategoryAddFragment : ComponentFragment<ExpenseCategoryAddViewModel
 
     companion object {
 
-        fun newInstance(): ExpenseCategoryAddFragment = ExpenseCategoryAddFragment()
+        fun newInstance(): CategoryManageFragment = CategoryManageFragment()
     }
 }
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-private fun Content(state: ExpenseCategoryAddState, es: EventSender<ExpenseAddEvent>) {
+private fun Content(state: ExpenseCategoryAddState, es: EventSender<CategoryManageEvent>) {
     val scaffoldState = rememberBottomSheetScaffoldState()
     val bottomSheet = remember(state.bottomSheetState.bottomSheet) {
         state.bottomSheetState.bottomSheet
@@ -149,7 +149,7 @@ private fun Content(state: ExpenseCategoryAddState, es: EventSender<ExpenseAddEv
                     modifier = Modifier
                         .size(44.dp)
                         .background(color = CapitalTheme.colors.secondary, shape = CircleShape)
-                        .clickable { es.send(ExpenseAddEvent.CurrencySelectClick) }
+                        .clickable { es.send(CategoryManageEvent.CurrencySelectClick) }
                 ) {
                     Text(
                         modifier = Modifier.align(Alignment.Center),
@@ -163,16 +163,16 @@ private fun Content(state: ExpenseCategoryAddState, es: EventSender<ExpenseAddEv
 }
 
 @Composable
-private fun BottomSheetContent(bottomSheet: ExpenseCategoryAddBottomSheet?, es: EventSender<ExpenseAddEvent>) {
+private fun BottomSheetContent(bottomSheet: CategoryManageBottomSheet?, es: EventSender<CategoryManageEvent>) {
     when (bottomSheet) {
-        is ExpenseCategoryAddBottomSheet.Currencies -> {
+        is CategoryManageBottomSheet.Currencies -> {
             CurrencyBottomSheet(
                 currencies = bottomSheet.currencies,
                 selectedCurrency = bottomSheet.selectedCurrency,
-                onCurrencySelect = { es.send(ExpenseAddEvent.CurrencySelect(it)) }
+                onCurrencySelect = { es.send(CategoryManageEvent.CurrencySelect(it)) }
             )
         }
-        is ExpenseCategoryAddBottomSheet.Icons -> {
+        is CategoryManageBottomSheet.Icons -> {
             IconsBottomSheet(
                 modifier = Modifier.fillMaxHeight(),
                 title = stringResource(id = R.string.select_icon),
@@ -203,7 +203,7 @@ private fun ExpenseCategoryAddTopBar() {
 
 @Preview
 @Composable
-private fun ContentLight(@PreviewParameter(ExpenseCategoryAddStateProvider::class) state: ExpenseCategoryAddState) {
+private fun ContentLight(@PreviewParameter(CategoryManageStateProvider::class) state: ExpenseCategoryAddState) {
     ComposablePreview {
         Content(state = state, MockEventSender())
     }
@@ -211,7 +211,7 @@ private fun ContentLight(@PreviewParameter(ExpenseCategoryAddStateProvider::clas
 
 @Preview
 @Composable
-private fun ContentDark(@PreviewParameter(ExpenseCategoryAddStateProvider::class) state: ExpenseCategoryAddState) {
+private fun ContentDark(@PreviewParameter(CategoryManageStateProvider::class) state: ExpenseCategoryAddState) {
     ComposablePreview(isDark = true) {
         Content(state = state, MockEventSender())
     }

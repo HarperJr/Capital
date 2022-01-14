@@ -1,4 +1,4 @@
-package com.harper.capital.expense.model
+package com.harper.capital.category.model
 
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.domain.model.ExpenseIcon
@@ -12,6 +12,6 @@ data class ExpenseCategoryAddState(
 )
 
 data class ExpenseCategoryAddBottomSheetState(
-    val bottomSheet: ExpenseCategoryAddBottomSheet? = null,
+    val bottomSheet: CategoryManageBottomSheet? = null,
     val isExpended: Boolean = true
 )

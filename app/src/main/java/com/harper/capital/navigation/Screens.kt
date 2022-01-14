@@ -4,7 +4,7 @@ import com.github.terrakok.cicerone.Screen
 import com.github.terrakok.cicerone.androidx.FragmentScreen
 import com.harper.capital.asset.AssetAddFragment
 import com.harper.capital.auth.signin.SignInFragment
-import com.harper.capital.expense.ExpenseCategoryAddFragment
+import com.harper.capital.category.CategoryManageFragment
 import com.harper.capital.main.MainFragment
 
 private const val SIGN_IN_KEY = "sign_in"
@@ -20,5 +20,5 @@ object Screens {
 
     fun assetAdd(): Screen = FragmentScreen(ASSET_ADD_KEY) { AssetAddFragment.newInstance() }
 
-    fun expenseCategoryAdd(): Screen = FragmentScreen(EXPENSE_CATEGORY_ADD_KEY) { ExpenseCategoryAddFragment.newInstance() }
+    fun expenseCategoryAdd(): Screen = FragmentScreen(EXPENSE_CATEGORY_ADD_KEY) { CategoryManageFragment.newInstance() }
 }

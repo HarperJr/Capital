@@ -31,7 +31,7 @@ class MainViewModel(
 
     override fun onEvent(event: MainEvent) {
         when (event) {
-            is MainEvent.AddAssetClick -> onAddAsset()
+            is MainEvent.NewAssetClick -> onAddAsset()
             is MainEvent.IncomeClick -> {}
             is MainEvent.ExpenseClick -> {}
         }

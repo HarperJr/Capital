@@ -40,7 +40,7 @@ private const val placeHolderId = "Placeholder"
 private const val leadingIconId = "LeadingIcon"
 private const val textFieldId = "TextField"
 
-private val minTextFieldHeight = 28.dp
+private val minTextFieldHeight = 32.dp
 
 @Composable
 fun CapitalTextField(

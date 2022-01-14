@@ -1,10 +1,16 @@
 package com.harper.capital.main.model
 
+import com.harper.capital.domain.model.Asset
+
 sealed class MainEvent {
 
-    class IncomeClick(val assetId: Long) : MainEvent()
+    class EditClick(val asset: Asset) : MainEvent()
 
-    class ExpenseClick(val assetId: Long) : MainEvent()
+    class IncomeClick(val asset: Asset?) : MainEvent()
 
-    object AddAssetClick : MainEvent()
+    class ExpenseClick(val asset: Asset?) : MainEvent()
+
+    class HistoryClick(val asset: Asset?) : MainEvent()
+
+    object NewAssetClick : MainEvent()
 }

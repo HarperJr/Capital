@@ -27,19 +27,19 @@ import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 
 @Composable
-fun CardToolbar(
+fun AssetToolbar(
     modifier: Modifier = Modifier,
     color: Color,
     onHistoryClick: () -> Unit,
     onIncomeClick: () -> Unit,
     onExpenseClick: () -> Unit,
-    onEditClick: () -> Unit
+    onEditClick: (() -> Unit)? = null
 ) {
     Card(modifier = modifier, elevation = 6.dp, backgroundColor = color, shape = CapitalTheme.shapes.extraLarge) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 4.dp)
+                .padding(vertical = 8.dp)
         ) {
             ToolbarItem(
                 modifier = Modifier.weight(1f),
@@ -62,12 +62,14 @@ fun CardToolbar(
                 onClick = onExpenseClick
             )
 
-            ToolbarItem(
-                modifier = Modifier.weight(1f),
-                icon = CapitalIcons.EditAsset,
-                text = stringResource(id = R.string.edit),
-                onClick = onEditClick
-            )
+            onEditClick?.let {
+                ToolbarItem(
+                    modifier = Modifier.weight(1f),
+                    icon = CapitalIcons.EditAsset,
+                    text = stringResource(id = R.string.edit),
+                    onClick = it
+                )
+            }
         }
     }
 }
@@ -97,7 +99,7 @@ private fun ToolbarItem(modifier: Modifier = Modifier, icon: ImageVector, text: 
 private fun CardToolbarLight() {
     ComposablePreview {
         Box(modifier = Modifier.background(CapitalTheme.colors.background)) {
-            CardToolbar(modifier = Modifier
+            AssetToolbar(modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp), color = CapitalColors.CodGray, {}, {}, {}, {})
         }
@@ -109,7 +111,7 @@ private fun CardToolbarLight() {
 private fun CardbarboxDark() {
     ComposablePreview(isDark = true) {
         Box(modifier = Modifier.background(CapitalTheme.colors.background)) {
-            CardToolbar(modifier = Modifier
+            AssetToolbar(modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp), color = CapitalColors.CodGray, {}, {}, {}, {})
         }

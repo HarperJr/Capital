@@ -1,10 +1,12 @@
 package com.harper.capital.main
 
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListLayoutInfo
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -12,10 +14,14 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -25,7 +31,7 @@ import com.harper.capital.R
 import com.harper.capital.domain.model.Account
 import com.harper.capital.main.component.AssetAccountedCard
 import com.harper.capital.main.component.AssetCard
-import com.harper.capital.main.component.CardToolbar
+import com.harper.capital.main.component.AssetToolbar
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
 import com.harper.capital.main.model.PreviewStateProvider
@@ -38,6 +44,7 @@ import com.harper.core.component.MenuItem
 import com.harper.core.component.Toolbar
 import com.harper.core.ext.cast
 import com.harper.core.ext.formatCurrencySymbol
+import com.harper.core.ext.orElse
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
@@ -45,6 +52,8 @@ import com.harper.core.ui.ComponentFragment
 import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
+import kotlin.math.abs
+import kotlinx.coroutines.launch
 
 class MainFragment : ComponentFragment<MainViewModel>(), EventSender<MainEvent> {
     override val viewModel: MainViewModel by injectViewModel()
@@ -78,7 +87,15 @@ private fun Content(state: MainState.Data, es: EventSender<MainEvent>) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 HorizontalSpacer(height = 24.dp)
+
                 val assetListState = rememberLazyListState()
+                val isDragged by assetListState.interactionSource.collectIsDraggedAsState()
+                val selectedAssetIndex = rememberSaveable { mutableStateOf(-1) }
+                LaunchedEffect(assetListState.isScrollInProgress, isDragged) {
+                    launch {
+                        selectedAssetIndex.value = assetListState.layoutInfo.fullyVisibleItemIndex()
+                    }
+                }
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -103,18 +120,19 @@ private fun Content(state: MainState.Data, es: EventSender<MainEvent>) {
                     }
                 }
                 HorizontalSpacer(height = 24.dp)
-                if (state.assets.isNotEmpty()) {
-                    CardToolbar(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp),
-                        color = CapitalColors.Thunder,
-                        onHistoryClick = {},
-                        onIncomeClick = {},
-                        onExpenseClick = {},
-                        onEditClick = {}
-                    )
-                }
+                val selectedAsset = state.assets.getOrNull(selectedAssetIndex.value)
+                AssetToolbar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                    color = selectedAsset?.color?.let { Color(it.value) }.orElse(CapitalColors.CodGray),
+                    onHistoryClick = { es.send(MainEvent.HistoryClick(selectedAsset)) },
+                    onIncomeClick = { es.send(MainEvent.IncomeClick(selectedAsset)) },
+                    onExpenseClick = { es.send(MainEvent.ExpenseClick(selectedAsset)) },
+                    onEditClick = if (selectedAsset != null) {
+                        { es.send(MainEvent.EditClick(selectedAsset)) }
+                    } else null
+                )
             }
             FloatingActionButton(
                 modifier = Modifier
@@ -154,11 +172,20 @@ fun OverviewTopBar(account: Account, es: EventSender<MainEvent>) {
         menu = Menu(listOf(MenuItem(0, CapitalIcons.AddAsset), MenuItem(1, CapitalIcons.Settings))),
         onMenuItemClick = { itemId ->
             when (itemId) {
-                0 -> es.send(MainEvent.AddAssetClick)
+                0 -> es.send(MainEvent.NewAssetClick)
             }
         }
     )
 }
+
+private fun LazyListLayoutInfo.fullyVisibleItemIndex(): Int {
+    val viewportCenter = (viewportEndOffset + viewportStartOffset) / 2f
+    return visibleItemsInfo
+        .firstOrNull {
+            abs((it.offset + it.size / 2f) - viewportCenter) <= viewportCenter
+        }?.index.orElse(-1)
+}
+
 
 @Preview(showBackground = true, name = "Content light")
 @Composable
