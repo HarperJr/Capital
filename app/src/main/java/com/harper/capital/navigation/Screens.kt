@@ -24,7 +24,9 @@ object Screens {
         AssetManageFragment.newInstance(params)
     }
 
-    fun categoryManage(): Screen = FragmentScreen(CATEGORY_MANAGE_KEY) { CategoryManageFragment.newInstance() }
+    fun categoryManage(params: CategoryManageFragment.Params): Screen = FragmentScreen(CATEGORY_MANAGE_KEY) {
+        CategoryManageFragment.newInstance(params)
+    }
 
     fun transaction(params: TransactionFragment.Params): Screen = FragmentScreen(TRANSACTION_KEY) {
         TransactionFragment.newInstance(params)

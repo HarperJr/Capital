@@ -35,7 +35,7 @@ fun TabBar(
     TabRow(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         backgroundColor = CapitalTheme.colors.background,
         selectedTabIndex = selectedTabIndex,
         indicator = {

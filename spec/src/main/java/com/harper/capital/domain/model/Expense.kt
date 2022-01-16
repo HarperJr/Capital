@@ -2,5 +2,5 @@ package com.harper.capital.domain.model
 
 data class Expense(
     val name: String,
-    val icon: ExpenseIcon
+    val icon: CategoryIcon
 )

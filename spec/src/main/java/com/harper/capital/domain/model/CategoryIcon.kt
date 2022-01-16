@@ -1,6 +1,6 @@
 package com.harper.capital.domain.model
 
-enum class ExpenseIcon {
+enum class CategoryIcon {
     MOBILE,
     PRODUCTS
 }

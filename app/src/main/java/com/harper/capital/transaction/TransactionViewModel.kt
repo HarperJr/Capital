@@ -1,5 +1,7 @@
 package com.harper.capital.transaction
 
+import com.harper.capital.category.CategoryManageFragment
+import com.harper.capital.category.model.CategoryManageType
 import com.harper.capital.domain.model.Asset
 import com.harper.capital.main.domain.FetchAssetsUseCase
 import com.harper.capital.navigation.GlobalRouter
@@ -51,8 +53,13 @@ class TransactionViewModel(
             is TransactionEvent.BackClick -> router.back()
             is TransactionEvent.TabSelect -> onTabSelect(event)
             is TransactionEvent.AssetSourceSelect -> onAssetSourceSelect(event)
-            is TransactionEvent.NewSourceClick -> {}
+            is TransactionEvent.NewSourceClick -> onNewSourceClick(event)
         }
+    }
+
+    private fun onNewSourceClick(event: TransactionEvent.NewSourceClick) {
+        // TODO remove after testing
+        router.navigateToManageCategory(params = CategoryManageFragment.Params(CategoryManageType.EXPENSE))
     }
 
     // TODO I should think how to avoid such cases and update only what is needed not all content

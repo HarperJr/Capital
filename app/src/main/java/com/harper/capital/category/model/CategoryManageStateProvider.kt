@@ -2,9 +2,9 @@ package com.harper.capital.category.model
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 
-class CategoryManageStateProvider : PreviewParameterProvider<ExpenseCategoryAddState> {
-    override val values: Sequence<ExpenseCategoryAddState> =
+class CategoryManageStateProvider : PreviewParameterProvider<CategoryManageState> {
+    override val values: Sequence<CategoryManageState> =
         sequenceOf(
-            ExpenseCategoryAddState()
+            CategoryManageState(selectedPage = 0)
         )
 }

@@ -8,7 +8,7 @@ sealed class TransactionEvent {
 
     class AssetSourceSelect(val section: DataSetSection, val asset: Asset) : TransactionEvent()
 
-    class NewSourceClick(val section: DataSetSection) : TransactionEvent()
+    class NewSourceClick(val pageIndex: Int, val section: DataSetSection) : TransactionEvent()
 
     object BackClick : TransactionEvent()
 }

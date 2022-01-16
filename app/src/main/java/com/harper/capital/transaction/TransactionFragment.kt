@@ -113,7 +113,7 @@ private fun Content(state: TransactionState, es: EventSender<TransactionEvent>) 
                                         es.send(TransactionEvent.AssetSourceSelect(dataSet.section, it))
                                     }
                                 }
-                                NewSource { es.send(TransactionEvent.NewSourceClick(dataSet.section)) }
+                                NewSource { es.send(TransactionEvent.NewSourceClick(pageIndex, dataSet.section)) }
                             }
                         }
                     }
