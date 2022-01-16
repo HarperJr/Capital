@@ -1,5 +1,6 @@
 package com.harper.capital.asset
 
+import android.os.Parcelable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,6 +32,7 @@ import com.harper.capital.asset.component.AssetColorSelector
 import com.harper.capital.asset.component.AssetEditableCard
 import com.harper.capital.asset.model.AssetManageBottomSheet
 import com.harper.capital.asset.model.AssetManageEvent
+import com.harper.capital.asset.model.AssetManageMode
 import com.harper.capital.asset.model.AssetManageState
 import com.harper.capital.asset.model.AssetManageStateProvider
 import com.harper.capital.bottomsheet.CurrencyBottomSheet
@@ -53,8 +55,10 @@ import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentFragment
 import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
+import com.harper.core.ui.withArgs
+import kotlinx.parcelize.Parcelize
 
-class AssetAddFragment : ComponentFragment<AssetManageViewModel>(), EventSender<AssetManageEvent> {
+class AssetManageFragment : ComponentFragment<AssetManageViewModel>(), EventSender<AssetManageEvent> {
     override val viewModel: AssetManageViewModel by injectViewModel()
 
     override fun content(): @Composable () -> Unit = {
@@ -62,9 +66,14 @@ class AssetAddFragment : ComponentFragment<AssetManageViewModel>(), EventSender<
         Content(state, this)
     }
 
-    companion object {
+    @Parcelize
+    class Params(val mode: AssetManageMode, val assetId: Long? = null) : Parcelable
 
-        fun newInstance(): AssetAddFragment = AssetAddFragment()
+    companion object {
+        private const val PARAMS = "asset_manage_params"
+
+        fun newInstance(params: Params): AssetManageFragment =
+            AssetManageFragment().withArgs(PARAMS to params)
     }
 }
 

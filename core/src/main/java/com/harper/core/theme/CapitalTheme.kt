@@ -51,6 +51,7 @@ private fun CapitalTheme(
     CompositionLocalProvider(
         LocalColors provides rememberedColors,
         LocalContentAlpha provides ContentAlpha.high,
+        LocalContentColor provides colors.onBackground,
         LocalIndication provides rippleIndication,
         LocalRippleTheme provides CapitalRippleTheme,
         LocalShapes provides shapes,

@@ -12,7 +12,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.harper.core.ext.formatCurrencySymbol
+import com.harper.core.ext.formatWithCurrencySymbol
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
@@ -21,7 +21,7 @@ fun AmountText(modifier: Modifier = Modifier, amount: Double, currencyIso: Strin
     Text(
         modifier = modifier,
         text = buildAnnotatedString {
-            val text = amount.formatCurrencySymbol(currencyIso)
+            val text = amount.formatWithCurrencySymbol(currencyIso)
             val commaIndex = text.indexOf(',')
             append(text)
             if (commaIndex != -1) {

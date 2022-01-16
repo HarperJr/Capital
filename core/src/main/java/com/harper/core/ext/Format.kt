@@ -7,7 +7,7 @@ import android.icu.util.Currency
 import android.icu.util.ULocale
 import java.util.*
 
-fun Double.formatCurrencySymbol(currencyIso: String): String = NumberFormat.getCurrencyInstance(ULocale("ru"))
+fun Double.formatWithCurrencySymbol(currencyIso: String): String = NumberFormat.getCurrencyInstance(ULocale("ru"))
     .apply { this.currency = Currency.getInstance(currencyIso.uppercase()) }
     .format(this)
 

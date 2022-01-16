@@ -43,7 +43,7 @@ import com.harper.core.component.MenuIcon
 import com.harper.core.component.MenuItem
 import com.harper.core.component.Toolbar
 import com.harper.core.ext.cast
-import com.harper.core.ext.formatCurrencySymbol
+import com.harper.core.ext.formatWithCurrencySymbol
 import com.harper.core.ext.orElse
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
@@ -161,7 +161,7 @@ fun OverviewTopBar(account: Account, es: EventSender<MainEvent>) {
                 Text(
                     text = stringResource(
                         id = R.string.expenses_in_month,
-                        (-23424.42).formatCurrencySymbol(account.currency.name),
+                        (-23424.42).formatWithCurrencySymbol(account.currency.name),
                         "January"
                     ),
                     style = CapitalTheme.typography.titleSmall,

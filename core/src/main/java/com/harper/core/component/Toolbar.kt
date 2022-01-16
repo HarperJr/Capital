@@ -70,7 +70,7 @@ private fun ToolbarLight() {
                 )
             },
             navigation = {
-                MenuIcon(imageVector = Icons.Rounded.ArrowBack, onClick = { })
+                MenuIcon(imageVector = CapitalIcons.ArrowLeft, onClick = { })
             },
             menu = Menu(
                 listOf(

@@ -54,6 +54,9 @@ object CapitalIcons {
     val ArrowLeft
         @Composable
         get() = ImageVector.vectorResource(id = R.drawable.ic_arrow_left)
+    val RoundCheck
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_round_check)
 
     val Edit: ImageVector
         get() = Icons.Rounded.Edit
@@ -115,7 +118,8 @@ private fun Icons() {
         CapitalIcons.EditAsset,
         CapitalIcons.NewAsset,
         CapitalIcons.ArrowLeft,
-        CapitalIcons.ArrowRight
+        CapitalIcons.ArrowRight,
+        CapitalIcons.RoundCheck
     )
     Grid(modifier = Modifier.background(CapitalTheme.colors.background), columns = 6, icons) {
         MenuIcon(imageVector = it)

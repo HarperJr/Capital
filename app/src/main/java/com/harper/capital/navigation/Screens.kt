@@ -2,15 +2,17 @@ package com.harper.capital.navigation
 
 import com.github.terrakok.cicerone.Screen
 import com.github.terrakok.cicerone.androidx.FragmentScreen
-import com.harper.capital.asset.AssetAddFragment
+import com.harper.capital.asset.AssetManageFragment
 import com.harper.capital.auth.signin.SignInFragment
 import com.harper.capital.category.CategoryManageFragment
 import com.harper.capital.main.MainFragment
+import com.harper.capital.transaction.TransactionFragment
 
-private const val SIGN_IN_KEY = "sign_in"
-private const val MAIN_KEY = "main"
-private const val ASSET_ADD_KEY = "asset_add"
-private const val EXPENSE_CATEGORY_ADD_KEY = "expense_category_add"
+private const val SIGN_IN_KEY = "sign_in_key"
+private const val MAIN_KEY = "main_key"
+private const val ASSET_MANAGE_KEY = "asset_manage_key"
+private const val CATEGORY_MANAGE_KEY = "category_manage_key"
+private const val TRANSACTION_KEY = "transaction_key"
 
 object Screens {
 
@@ -18,7 +20,13 @@ object Screens {
 
     fun main(): Screen = FragmentScreen(MAIN_KEY) { MainFragment.newInstance() }
 
-    fun assetAdd(): Screen = FragmentScreen(ASSET_ADD_KEY) { AssetAddFragment.newInstance() }
+    fun assetManage(params: AssetManageFragment.Params): Screen = FragmentScreen(ASSET_MANAGE_KEY) {
+        AssetManageFragment.newInstance(params)
+    }
 
-    fun expenseCategoryAdd(): Screen = FragmentScreen(EXPENSE_CATEGORY_ADD_KEY) { CategoryManageFragment.newInstance() }
+    fun categoryManage(): Screen = FragmentScreen(CATEGORY_MANAGE_KEY) { CategoryManageFragment.newInstance() }
+
+    fun transaction(params: TransactionFragment.Params): Screen = FragmentScreen(TRANSACTION_KEY) {
+        TransactionFragment.newInstance(params)
+    }
 }
