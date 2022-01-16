@@ -1,7 +1,6 @@
 package com.harper.capital.asset
 
 import android.os.Parcelable
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -105,9 +104,7 @@ private fun Content(state: AssetManageState, es: EventSender<AssetManageEvent>) 
         sheetShape = CapitalTheme.shapes.bottomSheet
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(CapitalTheme.colors.background)
+            modifier = Modifier.fillMaxWidth()
         ) {
             Column(
                 modifier = Modifier

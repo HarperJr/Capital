@@ -3,6 +3,7 @@ package com.harper.capital.transaction.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,7 +32,12 @@ import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 
 @Composable
-fun AssetSource(modifier: Modifier = Modifier, asset: Asset, isSelected: Boolean) {
+fun AssetSource(
+    modifier: Modifier = Modifier,
+    asset: Asset,
+    isSelected: Boolean,
+    onSelect: () -> Unit
+) {
     Box(modifier = modifier) {
         val borderColor = if (isSelected) CapitalColors.Blue else CapitalTheme.colors.secondary
         Row(
@@ -41,6 +47,7 @@ fun AssetSource(modifier: Modifier = Modifier, asset: Asset, isSelected: Boolean
                     shape = RoundedCornerShape(50)
                 )
                 .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(50))
+                .clickable { onSelect.invoke() }
         ) {
             Box(
                 modifier = Modifier
@@ -97,7 +104,7 @@ private fun AssetSourceLight() {
                 metadata = AssetMetadata.Default
             ),
             isSelected = false
-        )
+        ) {}
     }
 }
 
@@ -117,6 +124,6 @@ private fun AssetSourceDark() {
                 metadata = AssetMetadata.Default
             ),
             isSelected = true
-        )
+        ) {}
     }
 }

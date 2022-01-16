@@ -25,18 +25,23 @@ import com.harper.core.theme.CapitalTheme
 import kotlinx.parcelize.Parcelize
 
 @Composable
-fun TabBar(modifier: Modifier = Modifier, data: TabBarData, onTabSelect: (Int) -> Unit) {
+fun TabBar(
+    modifier: Modifier = Modifier,
+    selectedTabIndex: Int,
+    data: TabBarData,
+    onTabSelect: (Int) -> Unit
+) {
     val rememberedData = rememberTabBarData(data)
     TabRow(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         backgroundColor = CapitalTheme.colors.background,
-        selectedTabIndex = rememberedData.selectedTabIndex,
+        selectedTabIndex = selectedTabIndex,
         indicator = {
             Box(
                 modifier = Modifier
-                    .tabIndicatorOffset(it[data.selectedTabIndex])
+                    .tabIndicatorOffset(it[selectedTabIndex])
                     .padding(vertical = 2.dp)
                     .fillMaxHeight()
                     .background(color = CapitalColors.Blue, shape = RoundedCornerShape(50))
@@ -45,10 +50,10 @@ fun TabBar(modifier: Modifier = Modifier, data: TabBarData, onTabSelect: (Int) -
         },
         divider = {}
     ) {
-        data.tabs.forEachIndexed { index, tab ->
+        rememberedData.tabs.forEachIndexed { index, tab ->
             Tab(
                 modifier = Modifier.height(32.dp),
-                selected = tab.isSelected,
+                selected = index == selectedTabIndex,
                 selectedContentColor = CapitalColors.White,
                 unselectedContentColor = CapitalColors.GreyDark,
                 onClick = { onTabSelect(index) }
@@ -65,10 +70,10 @@ fun TabBar(modifier: Modifier = Modifier, data: TabBarData, onTabSelect: (Int) -
 }
 
 @Parcelize
-data class TabBarData(val tabs: List<Tab>, val selectedTabIndex: Int) : Parcelable
+data class TabBarData(val tabs: List<Tab>) : Parcelable
 
 @Parcelize
-data class Tab(val title: String, val isSelected: Boolean) : Parcelable
+data class Tab(val title: String) : Parcelable
 
 @Composable
 private fun rememberTabBarData(data: TabBarData) = rememberSaveable { data }
@@ -77,13 +82,13 @@ private fun rememberTabBarData(data: TabBarData) = rememberSaveable { data }
 @Composable
 private fun TabBarLight() {
     val tabs = listOf(
-        Tab(title = "Section1", isSelected = false),
-        Tab(title = "Section2", isSelected = true),
-        Tab(title = "Section3", isSelected = false),
-        Tab(title = "Section4", isSelected = false)
+        Tab(title = "Section1"),
+        Tab(title = "Section2"),
+        Tab(title = "Section3"),
+        Tab(title = "Section4")
     )
     ComposablePreview {
-        TabBar(data = TabBarData(tabs, selectedTabIndex = 1), onTabSelect = {})
+        TabBar(data = TabBarData(tabs), selectedTabIndex = 1, onTabSelect = {})
     }
 }
 
@@ -91,13 +96,13 @@ private fun TabBarLight() {
 @Composable
 private fun TabBarDark() {
     val tabs = listOf(
-        Tab(title = "Section1", isSelected = false),
-        Tab(title = "Section2", isSelected = true),
-        Tab(title = "Section3", isSelected = false),
-        Tab(title = "Section4", isSelected = false)
+        Tab(title = "Section1"),
+        Tab(title = "Section2"),
+        Tab(title = "Section3"),
+        Tab(title = "Section4")
     )
     ComposablePreview(isDark = true) {
-        TabBar(data = TabBarData(tabs, selectedTabIndex = 1), onTabSelect = {})
+        TabBar(data = TabBarData(tabs), selectedTabIndex = 1, onTabSelect = {})
     }
 }
 

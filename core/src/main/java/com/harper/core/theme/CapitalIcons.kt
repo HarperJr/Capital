@@ -2,7 +2,7 @@ package com.harper.core.theme
 
 import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowForward
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
@@ -64,6 +64,8 @@ object CapitalIcons {
         get() = Icons.Rounded.Search
     val Settings: ImageVector
         get() = Icons.Rounded.Settings
+    val Add: ImageVector
+        get() = Icons.Rounded.Add
 
     object Bank {
 
@@ -112,6 +114,7 @@ private fun Icons() {
         CapitalIcons.Income,
         CapitalIcons.Expense,
         CapitalIcons.Settings,
+        CapitalIcons.Add,
         CapitalIcons.List,
         CapitalIcons.AddAsset,
         CapitalIcons.History,

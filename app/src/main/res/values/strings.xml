@@ -46,4 +46,9 @@
     <string name="edit">Edit</string>
     <string name="expenses_in_month">%s in %s</string>
     <string name="new_transaction_title">New transaction</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="next">Next</string>
+    <string name="send">Send</string>
+    <string name="add_new">New</string>
 </resources>

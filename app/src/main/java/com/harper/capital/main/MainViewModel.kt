@@ -13,7 +13,6 @@ import com.harper.capital.transaction.model.TransactionType
 import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventObserver
 import kotlinx.coroutines.flow.collect
-import timber.log.Timber
 
 class MainViewModel(
     private val router: GlobalRouter,
@@ -25,11 +24,12 @@ class MainViewModel(
         super.onFirstStart()
 
         launch {
-            val assetsFlow = fetchAssetsUseCase()
-            assetsFlow.collect { assets ->
-                mutateState { MainState.Data(account = Account(12455.23, Currency.RUB), assets = assets) }
-                Timber.d("Assets were received")
-            }
+            fetchAssetsUseCase()
+                .collect { assets ->
+                    mutateState {
+                        MainState.Data(account = Account(12455.23, Currency.RUB), assets = assets)
+                    }
+                }
         }
     }
 
