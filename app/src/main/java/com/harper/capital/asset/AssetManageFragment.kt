@@ -2,7 +2,6 @@ package com.harper.capital.asset
 
 import android.os.Parcelable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,13 +18,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.imePadding
+import com.google.accompanist.insets.statusBarsPadding
 import com.harper.capital.R
 import com.harper.capital.asset.component.AssetColorSelector
 import com.harper.capital.asset.component.AssetEditableCard
@@ -85,6 +83,7 @@ private fun Content(state: AssetManageState, es: EventSender<AssetManageEvent>) 
     }
 
     BottomSheetScaffold(
+        modifier = Modifier.statusBarsPadding(),
         backgroundColor = CapitalTheme.colors.background,
         topBar = { AssetManageTopBar(es) },
         sheetContent = {
@@ -139,42 +138,35 @@ private fun Content(state: AssetManageState, es: EventSender<AssetManageEvent>) 
                     }
                 }
                 HorizontalSpacer(height = 16.dp)
-                ArrowSettingBox(
-                    modifier = Modifier.fillMaxWidth(),
-                    title = "${state.currency.name} ${state.currency.name.formatCurrencySymbol()}",
-                    subtitle = state.currency.name.formatCurrencyName(),
-                    onClick = { es.send(AssetManageEvent.CurrencySelectClick) })
-                Separator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-                ArrowSettingBox(
-                    modifier = Modifier.fillMaxWidth(),
-                    title = stringResource(id = R.string.asset_type),
-                    subtitle = state.metadata.assetType.getText(),
-                    onClick = { es.send(AssetManageEvent.AssetTypeSelectClick) })
-                SwitchSettingBox(
-                    modifier = Modifier.fillMaxWidth(),
-                    title = stringResource(id = R.string.include_asset),
-                    subtitle = stringResource(id = R.string.include_asset_subtitle),
-                    onCheckedChange = { es.send(AssetManageEvent.IncludeAssetCheckedChange(it)) })
+                SettingsBlock(state, es)
             }
-            Box(
+            CapitalButton(
                 modifier = Modifier
-                    .imePadding()
                     .fillMaxWidth()
-            ) {
-                CapitalButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp),
-                    text = stringResource(id = R.string.add_asset),
-                    onClick = { es.send(AssetManageEvent.Apply) }
-                )
-            }
+                    .padding(16.dp),
+                text = stringResource(id = R.string.add_asset),
+                onClick = { es.send(AssetManageEvent.Apply) }
+            )
         }
+    }
+}
+
+@Composable
+private fun SettingsBlock(state: AssetManageState, es: EventSender<AssetManageEvent>) {
+    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        ArrowSettingBox(
+            title = "${state.currency.name} ${state.currency.name.formatCurrencySymbol()}",
+            subtitle = state.currency.name.formatCurrencyName(),
+            onClick = { es.send(AssetManageEvent.CurrencySelectClick) })
+        Separator()
+        ArrowSettingBox(
+            title = stringResource(id = R.string.asset_type),
+            subtitle = state.metadata.assetType.getText(),
+            onClick = { es.send(AssetManageEvent.AssetTypeSelectClick) })
+        SwitchSettingBox(
+            title = stringResource(id = R.string.include_asset),
+            subtitle = stringResource(id = R.string.include_asset_subtitle),
+            onCheckedChange = { es.send(AssetManageEvent.IncludeAssetCheckedChange(it)) })
     }
 }
 

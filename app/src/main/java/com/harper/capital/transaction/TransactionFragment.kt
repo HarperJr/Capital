@@ -21,12 +21,14 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.insets.imePadding
+import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.harper.capital.R
 import com.harper.capital.transaction.component.AssetSource
 import com.harper.capital.transaction.component.NewSource
+import com.harper.capital.transaction.model.AssetDataSet
 import com.harper.capital.transaction.model.DataSetSection
 import com.harper.capital.transaction.model.TransactionEvent
 import com.harper.capital.transaction.model.TransactionState
@@ -72,6 +74,7 @@ class TransactionFragment : ComponentFragment<TransactionViewModel>(), EventSend
 @Composable
 private fun Content(state: TransactionState, es: EventSender<TransactionEvent>) {
     Scaffold(
+        modifier = Modifier.statusBarsPadding(),
         backgroundColor = CapitalTheme.colors.background,
         topBar = { TransactionTopBar(es) }
     ) {
@@ -94,44 +97,45 @@ private fun Content(state: TransactionState, es: EventSender<TransactionEvent>) 
                     state = pagerState,
                     count = state.pages.size
                 ) { pageIndex ->
-                    val dataSets = state.pages[pageIndex].assetDataSets
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        dataSets.forEach { dataSet ->
-                            HorizontalSpacer(height = 24.dp)
-                            Text(text = dataSet.section.resolveTitle(), style = CapitalTheme.typography.button)
-                            HorizontalSpacer(height = 8.dp)
-                            FlowRow(
-                                mainAxisSpacing = 8.dp,
-                                crossAxisSpacing = 8.dp
-                            ) {
-                                dataSet.assets.forEach {
-                                    AssetSource(asset = it, isSelected = it.id == dataSet.selectedAssetId) {
-                                        es.send(TransactionEvent.AssetSourceSelect(dataSet.section, it))
-                                    }
-                                }
-                                NewSource { es.send(TransactionEvent.NewSourceClick(pageIndex, dataSet.section)) }
-                            }
-                        }
-                    }
+                    DataSetsBlock(
+                        dataSets = state.pages[pageIndex].assetDataSets,
+                        pageIndex = pageIndex,
+                        es = es
+                    )
                 }
             }
-            Box(
+            CapitalButton(
                 modifier = Modifier
-                    .imePadding()
                     .fillMaxWidth()
+                    .padding(16.dp),
+                text = stringResource(id = R.string.next),
+                onClick = { }
+            )
+        }
+    }
+}
+
+@Composable
+private fun DataSetsBlock(dataSets: List<AssetDataSet>, pageIndex: Int, es: EventSender<TransactionEvent>) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+    ) {
+        dataSets.forEach { dataSet ->
+            HorizontalSpacer(height = 24.dp)
+            Text(text = dataSet.section.resolveTitle(), style = CapitalTheme.typography.button)
+            HorizontalSpacer(height = 8.dp)
+            FlowRow(
+                mainAxisSpacing = 8.dp,
+                crossAxisSpacing = 8.dp
             ) {
-                CapitalButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp),
-                    text = stringResource(id = R.string.next),
-                    onClick = { }
-                )
+                dataSet.assets.forEach {
+                    AssetSource(asset = it, isSelected = it.id == dataSet.selectedAssetId) {
+                        es.send(TransactionEvent.AssetSourceSelect(dataSet.section, it))
+                    }
+                }
+                NewSource { es.send(TransactionEvent.NewSourceClick(pageIndex, dataSet.section)) }
             }
         }
     }

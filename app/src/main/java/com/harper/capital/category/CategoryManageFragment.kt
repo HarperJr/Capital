@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.imePadding
+import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.harper.capital.R
@@ -38,6 +39,7 @@ import com.harper.capital.bottomsheet.CurrencyBottomSheet
 import com.harper.capital.bottomsheet.IconsBottomSheet
 import com.harper.capital.category.model.CategoryManageBottomSheet
 import com.harper.capital.category.model.CategoryManageEvent
+import com.harper.capital.category.model.CategoryManagePage
 import com.harper.capital.category.model.CategoryManageState
 import com.harper.capital.category.model.CategoryManageStateProvider
 import com.harper.capital.category.model.CategoryManageType
@@ -92,6 +94,7 @@ private fun Content(state: CategoryManageState, es: EventSender<CategoryManageEv
     }
 
     BottomSheetScaffold(
+        modifier = Modifier.statusBarsPadding(),
         topBar = { ExpenseCategoryAddTopBar(es) },
         backgroundColor = CapitalTheme.colors.background,
         sheetContent = {
@@ -124,59 +127,10 @@ private fun Content(state: CategoryManageState, es: EventSender<CategoryManageEv
                     }
                 }
                 HorizontalPager(state = pagerState, count = state.pages.size) { pageIndex ->
-                    val page = state.pages[pageIndex]
-
-                    val name = remember { mutableStateOf(page.name) }
-                    val amount = remember { mutableStateOf(page.amount) }
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        HorizontalSpacer(height = 32.dp)
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            Box(
-                                modifier = Modifier
-                                    .size(44.dp)
-                                    .background(color = CapitalTheme.colors.secondary, shape = CircleShape)
-                                    .clickable { es.send(CategoryManageEvent.IconSelectClick) }
-                            ) {
-                                Image(
-                                    modifier = Modifier.align(Alignment.Center),
-                                    imageVector = page.icon.getImageVector(),
-                                    contentDescription = null,
-                                    colorFilter = ColorFilter.tint(color = CapitalTheme.colors.onBackground)
-                                )
-                            }
-                            CapitalTextField(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(start = 8.dp)
-                                    .align(Alignment.CenterVertically),
-                                value = name.value,
-                                placeholder = stringResource(id = R.string.enter_name_hint),
-                                onValueChange = { name.value = it },
-                                textColor = CapitalTheme.colors.onBackground
-                            )
-                        }
-                        HorizontalSpacer(height = 24.dp)
-                        AmountTextField(
-                            modifier = Modifier.fillMaxWidth(),
-                            amount = amount.value,
-                            placeholder = stringResource(id = R.string.enter_amount_hint),
-                            onValueChange = { amount.value = it },
-                            textColor = CapitalTheme.colors.onBackground
-                        )
-                        HorizontalSpacer(height = 24.dp)
-                        ArrowSettingBox(
-                            modifier = Modifier.fillMaxWidth(),
-                            title = "${page.currency.name} ${page.currency.name.formatCurrencySymbol()}",
-                            subtitle = page.currency.name.formatCurrencyName()
-                        ) {
-                            es.send(CategoryManageEvent.CurrencySelectClick)
-                        }
-                    }
+                    PageBlock(
+                        page = state.pages[pageIndex],
+                        es = es
+                    )
                 }
             }
             Box(
@@ -193,6 +147,61 @@ private fun Content(state: CategoryManageState, es: EventSender<CategoryManageEv
                     onClick = { }
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
+    val name = remember { mutableStateOf(page.name) }
+    val amount = remember { mutableStateOf(page.amount) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+    ) {
+        HorizontalSpacer(height = 32.dp)
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .background(color = CapitalTheme.colors.secondary, shape = CircleShape)
+                    .clickable { es.send(CategoryManageEvent.IconSelectClick) }
+            ) {
+                Image(
+                    modifier = Modifier.align(Alignment.Center),
+                    imageVector = page.icon.getImageVector(),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(color = CapitalTheme.colors.onBackground)
+                )
+            }
+            CapitalTextField(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp)
+                    .align(Alignment.CenterVertically),
+                value = name.value,
+                placeholder = stringResource(id = R.string.enter_name_hint),
+                onValueChange = { name.value = it },
+                textColor = CapitalTheme.colors.onBackground
+            )
+        }
+        HorizontalSpacer(height = 24.dp)
+        AmountTextField(
+            modifier = Modifier.fillMaxWidth(),
+            amount = amount.value,
+            placeholder = stringResource(id = R.string.enter_amount_hint),
+            onValueChange = { amount.value = it },
+            textColor = CapitalTheme.colors.onBackground
+        )
+        HorizontalSpacer(height = 24.dp)
+        ArrowSettingBox(
+            modifier = Modifier.fillMaxWidth(),
+            title = "${page.currency.name} ${page.currency.name.formatCurrencySymbol()}",
+            subtitle = page.currency.name.formatCurrencyName()
+        ) {
+            es.send(CategoryManageEvent.CurrencySelectClick)
         }
     }
 }

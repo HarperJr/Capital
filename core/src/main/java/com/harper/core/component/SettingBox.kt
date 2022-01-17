@@ -26,6 +26,7 @@ import com.harper.core.theme.capitalSwitchColors
 fun SettingBox(modifier: Modifier = Modifier, title: String, subtitle: String, action: @Composable () -> Unit) {
     Row(
         modifier = modifier
+            .fillMaxWidth()
             .background(color = CapitalTheme.colors.background)
             .padding(vertical = 8.dp)
     ) {
@@ -38,7 +39,7 @@ fun SettingBox(modifier: Modifier = Modifier, title: String, subtitle: String, a
 }
 
 @Composable
-fun ArrowSettingBox(modifier: Modifier, title: String, subtitle: String, onClick: () -> Unit) {
+fun ArrowSettingBox(modifier: Modifier = Modifier, title: String, subtitle: String, onClick: () -> Unit) {
     SettingBox(modifier.clickable { onClick.invoke() }, title = title, subtitle = subtitle) {
         Image(
             imageVector = CapitalIcons.ArrowRight,
@@ -51,7 +52,7 @@ fun ArrowSettingBox(modifier: Modifier, title: String, subtitle: String, onClick
 
 @Composable
 fun SwitchSettingBox(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     title: String,
     subtitle: String,
     isChecked: Boolean = false,

@@ -24,6 +24,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.statusBarsPadding
 import com.harper.capital.R
 import com.harper.capital.auth.signin.model.SignInEvent
 import com.harper.capital.auth.signin.model.SignInState
@@ -63,7 +64,7 @@ val Google
 
 @Composable
 private fun Content(state: SignInState, es: EventSender<SignInEvent>) {
-    Scaffold(backgroundColor = CapitalTheme.colors.background) {
+    Scaffold(modifier = Modifier.statusBarsPadding(), backgroundColor = CapitalTheme.colors.background) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier

@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.harper.capital.R
 import com.harper.capital.domain.model.Account
@@ -74,13 +75,14 @@ class MainFragment : ComponentFragment<MainViewModel>(), EventSender<MainEvent> 
 
 @Composable
 private fun LoadingPlaceholder() {
-
+    // TODO implement
 }
 
 @OptIn(ExperimentalPagerApi::class, dev.chrisbanes.snapper.ExperimentalSnapperApi::class)
 @Composable
 private fun Content(state: MainState.Data, es: EventSender<MainEvent>) {
     Scaffold(
+        modifier = Modifier.statusBarsPadding(),
         backgroundColor = CapitalTheme.colors.background,
         topBar = { OverviewTopBar(account = state.account, es) }
     ) {

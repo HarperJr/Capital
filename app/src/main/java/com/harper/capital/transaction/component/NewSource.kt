@@ -31,9 +31,9 @@ fun NewSource(modifier: Modifier = Modifier, onClick: () -> Unit) {
             modifier = Modifier
                 .background(
                     color = CapitalTheme.colors.background,
-                    shape = RoundedCornerShape(50)
+                    shape = CircleShape
                 )
-                .border(width = 1.dp, color = CapitalTheme.colors.secondary, shape = RoundedCornerShape(50))
+                .border(width = 1.dp, color = CapitalTheme.colors.secondary, shape = CircleShape)
                 .clickable { onClick.invoke() }
         ) {
             Box(

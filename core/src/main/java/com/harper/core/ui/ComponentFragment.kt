@@ -7,14 +7,17 @@ import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.harper.core.ext.cast
 import com.harper.core.ext.tryCast
+import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 import org.koin.androidx.scope.fragmentScope
 import org.koin.androidx.viewmodel.ViewModelOwner
@@ -36,6 +39,14 @@ abstract class ComponentFragment<VM : ComponentViewModel<*>> : Fragment() {
     ): View = ComposeView(inflater.context)
         .apply {
             setContent {
+                val systemUiController = rememberSystemUiController()
+                val useDarkIcons = CapitalTheme.colors.isLight
+                SideEffect {
+                    systemUiController.setSystemBarsColor(
+                        color = CapitalColors.Transparent,
+                        darkIcons = useDarkIcons
+                    )
+                }
                 CapitalTheme {
                     ProvideWindowInsets {
                         Surface(modifier = Modifier.background(CapitalTheme.colors.background)) {

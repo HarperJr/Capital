@@ -3,6 +3,7 @@ package com.harper.capital.ui
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import com.github.terrakok.cicerone.Navigator
 import com.github.terrakok.cicerone.NavigatorHolder
@@ -23,6 +24,7 @@ class CapitalActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         val navHostView = FrameLayout(this)
             .apply { id = NAV_HOST_VIEW_ID }
         setContentView(

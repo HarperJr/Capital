@@ -3,6 +3,7 @@ package com.harper.buildsrc
 object Version {
     const val jvmTarget = "1.8"
     const val kotlin = "1.5.31"
+    const val detekt = "1.19.0"
 
     object App {
         const val minSdk = 27
@@ -23,5 +24,6 @@ object Version {
         const val accompanist = "0.20.2"
         const val koin = "3.1.2"
         const val room = "2.3.0"
+        const val ktLint = "0.38.0"
     }
 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,7 +21,7 @@ import com.harper.core.theme.CapitalTheme
 fun Chip(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, text: @Composable () -> Unit) {
     Box(
         modifier = modifier
-            .background(CapitalColors.Blue, shape = RoundedCornerShape(percent = 50))
+            .background(CapitalColors.Blue, shape = CircleShape)
             .defaultMinSize(minHeight = 26.dp)
             .padding(horizontal = 16.dp)
             .clickable { onClick?.invoke() }

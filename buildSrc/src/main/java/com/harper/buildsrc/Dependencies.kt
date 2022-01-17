@@ -1,6 +1,7 @@
 package com.harper.buildsrc
 
 import org.gradle.kotlin.dsl.DependencyHandlerScope
+import org.gradle.kotlin.dsl.PluginDependenciesSpecScope
 
 fun DependencyHandlerScope.core() {
     project(":core")

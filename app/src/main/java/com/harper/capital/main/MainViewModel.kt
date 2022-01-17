@@ -48,7 +48,7 @@ class MainViewModel(
     }
 
     private fun onHistoryClick(event: MainEvent.HistoryClick) {
-
+        // TODO implement
     }
 
     private fun onIncomeClick(event: MainEvent.IncomeClick) {

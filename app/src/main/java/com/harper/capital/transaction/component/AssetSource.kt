@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -44,9 +43,9 @@ fun AssetSource(
             modifier = Modifier
                 .background(
                     color = CapitalTheme.colors.background,
-                    shape = RoundedCornerShape(50)
+                    shape = CircleShape
                 )
-                .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(50))
+                .border(width = 1.dp, color = borderColor, shape = CircleShape)
                 .clickable { onSelect.invoke() }
         ) {
             Box(
