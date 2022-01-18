@@ -1,5 +1,17 @@
 import com.harper.buildsrc.Version
+import com.harper.buildsrc.accompanist
+import com.harper.buildsrc.android
 import com.harper.buildsrc.capitalAppDefaultConfig
+import com.harper.buildsrc.cicerone
+import com.harper.buildsrc.compose
+import com.harper.buildsrc.composeConstraintLayout
+import com.harper.buildsrc.core
+import com.harper.buildsrc.database
+import com.harper.buildsrc.koin
+import com.harper.buildsrc.kotlin
+import com.harper.buildsrc.repository
+import com.harper.buildsrc.spec
+import com.harper.buildsrc.timber
 
 plugins {
     id("com.android.application")

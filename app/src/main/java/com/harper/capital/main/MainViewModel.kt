@@ -40,7 +40,12 @@ class MainViewModel(
             is MainEvent.IncomeClick -> onIncomeClick(event)
             is MainEvent.ExpenseClick -> onExpenseClick(event)
             is MainEvent.EditClick -> onEditClick(event)
+            MainEvent.SettingsClick -> onSettingsClick()
         }
+    }
+
+    private fun onSettingsClick() {
+        router.navigateToSettings()
     }
 
     private fun onNewAssetClick() {

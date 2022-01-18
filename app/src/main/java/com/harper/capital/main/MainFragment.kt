@@ -56,6 +56,9 @@ import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 import kotlin.math.abs
 import kotlinx.coroutines.launch
 
+private const val ADD_ASSET_MENU_ITEM_ID = 0
+private const val SETTINGS_MENU_ITEM_ID = 1
+
 class MainFragment : ComponentFragment<MainViewModel>(), EventSender<MainEvent> {
     override val viewModel: MainViewModel by injectViewModel()
 
@@ -171,10 +174,16 @@ fun OverviewTopBar(account: Account, es: EventSender<MainEvent>) {
                 )
             }
         },
-        menu = Menu(listOf(MenuItem(0, CapitalIcons.AddAsset), MenuItem(1, CapitalIcons.Settings))),
+        menu = Menu(
+            listOf(
+                MenuItem(ADD_ASSET_MENU_ITEM_ID, CapitalIcons.AddAsset),
+                MenuItem(SETTINGS_MENU_ITEM_ID, CapitalIcons.Settings)
+            )
+        ),
         onMenuItemClick = { itemId ->
             when (itemId) {
-                0 -> es.send(MainEvent.NewAssetClick)
+                ADD_ASSET_MENU_ITEM_ID -> es.send(MainEvent.NewAssetClick)
+                SETTINGS_MENU_ITEM_ID -> es.send(MainEvent.SettingsClick)
             }
         }
     )

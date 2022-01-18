@@ -35,7 +35,7 @@ import com.harper.capital.asset.model.AssetManageStateProvider
 import com.harper.capital.bottomsheet.CurrencyBottomSheet
 import com.harper.capital.bottomsheet.IconsBottomSheet
 import com.harper.capital.bottomsheet.SelectorBottomSheet
-import com.harper.capital.ext.getText
+import com.harper.capital.ext.resolveText
 import com.harper.core.component.ArrowSettingBox
 import com.harper.core.component.CapitalButton
 import com.harper.core.component.ComposablePreview
@@ -161,7 +161,7 @@ private fun SettingsBlock(state: AssetManageState, es: EventSender<AssetManageEv
         Separator()
         ArrowSettingBox(
             title = stringResource(id = R.string.asset_type),
-            subtitle = state.metadata.assetType.getText(),
+            subtitle = state.metadata.assetType.resolveText(),
             onClick = { es.send(AssetManageEvent.AssetTypeSelectClick) })
         SwitchSettingBox(
             title = stringResource(id = R.string.include_asset),

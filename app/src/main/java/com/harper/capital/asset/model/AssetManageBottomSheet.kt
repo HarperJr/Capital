@@ -7,7 +7,7 @@ import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.domain.model.AssetType
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.ext.getImageVector
-import com.harper.capital.ext.getText
+import com.harper.capital.ext.resolveText
 
 sealed class AssetManageBottomSheet {
 
@@ -27,7 +27,7 @@ sealed class AssetManageBottomSheet {
             @Composable
             get() = SelectorBottomSheetData(
                 values = AssetType.values().map {
-                    SelectorBottomSheetData.Value(it.name, it.getText())
+                    SelectorBottomSheetData.Value(it.name, it.resolveText())
                 },
                 selectedValue = selectedAssetType.name
             )

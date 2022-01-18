@@ -6,6 +6,7 @@ import com.harper.capital.category.categoryModule
 import com.harper.capital.database.databaseModule
 import com.harper.capital.main.mainModule
 import com.harper.capital.repository.repositoryModule
+import com.harper.capital.settings.settingsModule
 import com.harper.capital.transaction.transactionModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -27,6 +28,7 @@ class CapitalApplication : Application() {
                 authModule,
                 transactionModule,
                 categoryModule,
+                settingsModule,
                 databaseModule,
                 repositoryModule
             )

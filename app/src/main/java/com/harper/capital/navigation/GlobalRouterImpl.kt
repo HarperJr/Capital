@@ -18,5 +18,7 @@ class GlobalRouterImpl : Router(), GlobalRouter {
     override fun navigateToManageCategory(params: CategoryManageFragment.Params) =
         navigateTo(Screens.categoryManage(params))
 
+    override fun navigateToSettings() = navigateTo(Screens.settings())
+
     override fun back() = exit()
 }

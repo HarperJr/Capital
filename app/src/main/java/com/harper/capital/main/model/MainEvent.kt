@@ -13,4 +13,6 @@ sealed class MainEvent {
     class HistoryClick(val asset: Asset?) : MainEvent()
 
     object NewAssetClick : MainEvent()
+
+    object SettingsClick : MainEvent()
 }

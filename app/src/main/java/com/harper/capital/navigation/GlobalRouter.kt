@@ -16,5 +16,7 @@ interface GlobalRouter {
 
     fun navigateToManageCategory(params: CategoryManageFragment.Params)
 
+    fun navigateToSettings()
+
     fun back()
 }

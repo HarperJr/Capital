@@ -52,4 +52,12 @@
     <string name="send">Send</string>
     <string name="add_new">New</string>
     <string name="create_new_category">Create new category</string>
+    <string name="log_out">Log out</string>
+    <string name="system">System</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="color_theme">Color theme</string>
+    <string name="default_currency">Default currency</string>
+    <string name="notifications">Notifications</string>
+    <string name="help">Help</string>
 </resources>
