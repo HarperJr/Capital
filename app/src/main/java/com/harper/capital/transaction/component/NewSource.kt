@@ -58,6 +58,7 @@ fun NewSource(modifier: Modifier = Modifier, onClick: () -> Unit) {
                     .padding(end = 24.dp),
                 text = stringResource(id = R.string.add_new),
                 style = CapitalTheme.typography.regular,
+                color = CapitalTheme.colors.onBackground
             )
         }
     }

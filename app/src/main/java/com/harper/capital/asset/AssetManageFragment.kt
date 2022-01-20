@@ -3,16 +3,18 @@ package com.harper.capital.asset
 import android.os.Parcelable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
-import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,7 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.insets.navigationBarsHeight
+import com.google.accompanist.insets.ui.Scaffold
 import com.harper.capital.R
 import com.harper.capital.asset.component.AssetColorSelector
 import com.harper.capital.asset.component.AssetEditableCard
@@ -36,7 +39,9 @@ import com.harper.capital.bottomsheet.CurrencyBottomSheet
 import com.harper.capital.bottomsheet.IconsBottomSheet
 import com.harper.capital.bottomsheet.SelectorBottomSheet
 import com.harper.capital.ext.resolveText
+import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.ArrowSettingBox
+import com.harper.core.component.CapitalBottomSheet
 import com.harper.core.component.CapitalButton
 import com.harper.core.component.ComposablePreview
 import com.harper.core.component.HorizontalSpacer
@@ -54,13 +59,17 @@ import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
 import com.harper.core.ui.withArgs
 import kotlinx.parcelize.Parcelize
+import org.koin.core.parameter.parametersOf
 
 class AssetManageFragment : ComponentFragment<AssetManageViewModel>(), EventSender<AssetManageEvent> {
-    override val viewModel: AssetManageViewModel by injectViewModel()
+    override val viewModel: AssetManageViewModel by injectViewModel { parametersOf(params) }
+    private val params: Params by requireArg(PARAMS)
 
     override fun content(): @Composable () -> Unit = {
-        val state by viewModel.state.collectAsState()
-        Content(state, this)
+        ScreenLayout {
+            val state by viewModel.state.collectAsState()
+            Content(state, this)
+        }
     }
 
     @Parcelize
@@ -77,76 +86,87 @@ class AssetManageFragment : ComponentFragment<AssetManageViewModel>(), EventSend
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
 private fun Content(state: AssetManageState, es: EventSender<AssetManageEvent>) {
-    val scaffoldState = rememberBottomSheetScaffoldState()
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val bottomSheet = remember(state.bottomSheetState.bottomSheet) {
         state.bottomSheetState.bottomSheet
     }
 
-    BottomSheetScaffold(
-        modifier = Modifier.statusBarsPadding(),
-        backgroundColor = CapitalTheme.colors.background,
-        topBar = { AssetManageTopBar(es) },
+    ModalBottomSheetLayout(
         sheetContent = {
-            BottomSheetContent(bottomSheet, es)
+            CapitalBottomSheet {
+                BottomSheetContent(bottomSheet, es)
+            }
             LaunchedEffect(state.bottomSheetState) {
                 if (state.bottomSheetState.isExpended) {
-                    scaffoldState.bottomSheetState.expand()
+                    sheetState.show()
                 } else {
-                    scaffoldState.bottomSheetState.collapse()
+                    sheetState.hide()
                 }
             }
         },
-        scaffoldState = scaffoldState,
-        sheetBackgroundColor = CapitalTheme.colors.background,
-        sheetElevation = 6.dp,
-        sheetPeekHeight = 0.dp,
-        sheetShape = CapitalTheme.shapes.bottomSheet
+        sheetState = sheetState,
+        sheetShape = CapitalTheme.shapes.bottomSheet,
+        sheetBackgroundColor = CapitalTheme.colors.background
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        Scaffold(
+            backgroundColor = CapitalTheme.colors.background,
+            topBar = { AssetManageTopBar(es) },
+            bottomBar = {
+                Spacer(
+                    modifier = Modifier
+                        .navigationBarsHeight()
+                        .fillMaxWidth()
+                )
+            }
+        ) { paddingValues ->
             Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth()
+                    .padding(paddingValues)
             ) {
-                AssetEditableCard(
+                Column(
                     modifier = Modifier
-                        .assetCardSize()
-                        .padding(horizontal = 32.dp, vertical = 16.dp),
-                    name = state.name,
-                    amount = state.amount,
-                    icon = state.icon,
-                    color = state.color,
-                    onNameChange = { es.send(AssetManageEvent.NameChange(it)) },
-                    onAmountChange = { es.send(AssetManageEvent.AmountChange(it)) },
-                    onIconClick = { es.send(AssetManageEvent.IconSelectClick) }
-                )
-                HorizontalSpacer(height = 8.dp)
-                LazyRow(
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    AssetEditableCard(
+                        modifier = Modifier
+                            .assetCardSize()
+                            .padding(horizontal = 32.dp, vertical = 16.dp),
+                        name = state.name,
+                        amount = state.amount,
+                        icon = state.icon,
+                        color = state.color,
+                        onNameChange = { es.send(AssetManageEvent.NameChange(it)) },
+                        onAmountChange = { es.send(AssetManageEvent.AmountChange(it)) },
+                        onIconClick = { es.send(AssetManageEvent.IconSelectClick) }
+                    )
+                    HorizontalSpacer(height = 8.dp)
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp, vertical = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        items(state.colors) { item ->
+                            AssetColorSelector(
+                                color = item,
+                                isSelected = state.color == item,
+                                onSelect = { es.send(AssetManageEvent.ColorSelect(color = item)) }
+                            )
+                        }
+                    }
+                    HorizontalSpacer(height = 16.dp)
+                    SettingsBlock(state, es)
+                }
+                CapitalButton(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    items(state.colors) { item ->
-                        AssetColorSelector(
-                            color = item,
-                            isSelected = state.color == item,
-                            onSelect = { es.send(AssetManageEvent.ColorSelect(color = item)) }
-                        )
-                    }
-                }
-                HorizontalSpacer(height = 16.dp)
-                SettingsBlock(state, es)
+                        .padding(16.dp),
+                    text = stringResource(id = R.string.add_asset),
+                    onClick = { es.send(AssetManageEvent.Apply) }
+                )
             }
-            CapitalButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                text = stringResource(id = R.string.add_asset),
-                onClick = { es.send(AssetManageEvent.Apply) }
-            )
         }
     }
 }
@@ -182,7 +202,6 @@ private fun BottomSheetContent(bottomSheet: AssetManageBottomSheet?, es: EventSe
         }
         is AssetManageBottomSheet.Icons -> {
             IconsBottomSheet(
-                title = stringResource(id = R.string.select_icon),
                 data = bottomSheet.data,
                 onIconSelect = { es.send(AssetManageEvent.IconSelect(it)) }
             )
@@ -200,11 +219,10 @@ private fun BottomSheetContent(bottomSheet: AssetManageBottomSheet?, es: EventSe
 @Composable
 private fun AssetManageTopBar(es: EventSender<AssetManageEvent>) {
     Toolbar(
-        title = {
+        content = {
             Text(
                 text = stringResource(id = R.string.new_asset_title),
-                style = CapitalTheme.typography.title,
-                color = CapitalTheme.colors.onBackground
+                style = CapitalTheme.typography.title
             )
         },
         navigation = {

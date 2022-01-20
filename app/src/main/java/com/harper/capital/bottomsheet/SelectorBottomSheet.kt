@@ -1,5 +1,6 @@
 package com.harper.capital.bottomsheet
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.harper.capital.domain.model.AssetType
 import com.harper.capital.ext.resolveText
 import com.harper.core.component.ComposablePreview
+import com.harper.core.component.HorizontalSpacer
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
@@ -26,17 +28,25 @@ fun SelectorBottomSheet(
     val sbsData = rememberSelectorBottomSheetData(data)
 
     Column(modifier = modifier) {
+        HorizontalSpacer(height = 8.dp)
         sbsData.values.forEach {
             val color = if (sbsData.selectedValue == it.name) {
                 CapitalColors.Blue
             } else {
                 CapitalTheme.colors.onBackground
             }
+            val selectorColor = if (sbsData.selectedValue == it.name) {
+                CapitalColors.GreyLight
+            } else {
+                CapitalColors.Transparent
+            }
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
-                    .clickable { onValueSelect.invoke(it.name) },
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .background(color = selectorColor, shape = CapitalTheme.shapes.large)
+                    .clickable { onValueSelect.invoke(it.name) }
+                    .padding(vertical = 8.dp),
                 text = it.text,
                 color = color,
                 textAlign = TextAlign.Center

@@ -1,4 +1,4 @@
-package com.harper.capital.settings.model
+package com.harper.capital.ui.model
 
 enum class ColorTheme {
     LIGHT,

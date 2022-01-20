@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +30,7 @@ import com.harper.capital.ext.getImageVector
 import com.harper.core.component.CapitalTextField
 import com.harper.core.component.ComposablePreview
 import com.harper.core.component.Grid
+import com.harper.core.component.HorizontalSpacer
 import com.harper.core.component.Separator
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
@@ -39,7 +39,6 @@ import com.harper.core.theme.CapitalTheme
 @Composable
 fun IconsBottomSheet(
     modifier: Modifier = Modifier,
-    title: String,
     data: IconsBottomSheetData,
     onIconSelect: (String) -> Unit
 ) {
@@ -56,14 +55,7 @@ fun IconsBottomSheet(
             .fillMaxWidth()
             .imePadding()
     ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            text = title,
-            style = CapitalTheme.typography.title,
-            color = CapitalTheme.colors.onBackground
-        )
+        HorizontalSpacer(height = 8.dp)
         CapitalTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -108,7 +100,7 @@ fun IconsBottomSheet(
 
 @Composable
 private fun IconItem(modifier: Modifier = Modifier, icon: ImageVector, isSelected: Boolean, onClick: () -> Unit) {
-    val selectorColor = if (isSelected) CapitalColors.GreyLight else CapitalColors.Transparent
+    val selectorColor = if (isSelected) CapitalTheme.colors.secondary else CapitalColors.Transparent
     Box(
         modifier = modifier
             .background(
@@ -131,7 +123,6 @@ fun IconsBottomSheetLight() {
     ComposablePreview {
         Box(modifier = Modifier.background(color = CapitalTheme.colors.background)) {
             IconsBottomSheet(
-                title = stringResource(id = R.string.select_icon),
                 data = IconsBottomSheetData(
                     icons = AssetIcon.values().map { IconsBottomSheetData.Icon(it.name, it.getImageVector()) },
                     selectedIcon = AssetIcon.ALPHA.name
@@ -148,7 +139,6 @@ private fun IconsBottomSheetDark() {
     ComposablePreview(isDark = true) {
         Box(modifier = Modifier.background(color = CapitalTheme.colors.background)) {
             IconsBottomSheet(
-                title = stringResource(id = R.string.select_icon),
                 data = IconsBottomSheetData(
                     icons = AssetIcon.values().map { IconsBottomSheetData.Icon(it.name, it.getImageVector()) },
                     selectedIcon = AssetIcon.ALPHA.name

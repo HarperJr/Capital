@@ -26,6 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.harper.capital.R
@@ -36,6 +38,7 @@ import com.harper.capital.main.component.AssetToolbar
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
 import com.harper.capital.main.model.PreviewStateProvider
+import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.AmountText
 import com.harper.core.component.ComposablePreview
 import com.harper.core.component.HorizontalSpacer
@@ -63,10 +66,12 @@ class MainFragment : ComponentFragment<MainViewModel>(), EventSender<MainEvent> 
     override val viewModel: MainViewModel by injectViewModel()
 
     override fun content(): @Composable () -> Unit = {
-        val state by viewModel.state.collectAsState()
-        when (state) {
-            is MainState.Loading -> LoadingPlaceholder()
-            is MainState.Data -> Content(state.cast(), this)
+        ScreenLayout {
+            val state by viewModel.state.collectAsState()
+            when (state) {
+                is MainState.Loading -> LoadingPlaceholder()
+                is MainState.Data -> Content(state.cast(), this)
+            }
         }
     }
 
@@ -85,11 +90,10 @@ private fun LoadingPlaceholder() {
 @Composable
 private fun Content(state: MainState.Data, es: EventSender<MainEvent>) {
     Scaffold(
-        modifier = Modifier.statusBarsPadding(),
         backgroundColor = CapitalTheme.colors.background,
         topBar = { OverviewTopBar(account = state.account, es) }
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+    ) { paddingValues ->
+        Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 HorizontalSpacer(height = 24.dp)
 

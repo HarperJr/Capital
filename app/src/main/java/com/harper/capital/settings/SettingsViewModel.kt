@@ -2,16 +2,22 @@ package com.harper.capital.settings
 
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.navigation.GlobalRouter
-import com.harper.capital.settings.model.ColorTheme
+import com.harper.capital.settings.domain.ChangeColorThemeUseCase
+import com.harper.capital.settings.domain.GetColorThemeUseCase
 import com.harper.capital.settings.model.SettingsBottomSheet
 import com.harper.capital.settings.model.SettingsBottomSheetState
 import com.harper.capital.settings.model.SettingsEvent
 import com.harper.capital.settings.model.SettingsState
+import com.harper.capital.ui.model.ColorTheme
 import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventObserver
 
-class SettingsViewModel(private val router: GlobalRouter) : ComponentViewModel<SettingsState>(
-    defaultState = SettingsState()
+class SettingsViewModel(
+    private val router: GlobalRouter,
+    private val changeColorThemeUseCase: ChangeColorThemeUseCase,
+    private val getColorThemeUseCase: GetColorThemeUseCase
+) : ComponentViewModel<SettingsState>(
+    defaultState = SettingsState(colorTheme = getColorThemeUseCase())
 ), EventObserver<SettingsEvent> {
 
     override fun onEvent(event: SettingsEvent) {
@@ -35,6 +41,7 @@ class SettingsViewModel(private val router: GlobalRouter) : ComponentViewModel<S
             val selectedColorTheme = ColorTheme.valueOf(event.colorThemeName)
             it.copy(colorTheme = selectedColorTheme, bottomSheetState = it.bottomSheetState.copy(isExpended = false))
         }
+        changeColorThemeUseCase(state.value.colorTheme)
     }
 
     private fun onColorThemeSelectClick() {

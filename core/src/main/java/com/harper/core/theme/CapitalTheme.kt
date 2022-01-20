@@ -2,11 +2,18 @@ package com.harper.core.theme
 
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.*
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 
 object CapitalTheme {
 
@@ -51,7 +58,7 @@ private fun CapitalTheme(
     CompositionLocalProvider(
         LocalColors provides rememberedColors,
         LocalContentAlpha provides ContentAlpha.high,
-        LocalContentColor provides colors.onBackground,
+        LocalContentColor provides colors.onBackground.copy(alpha = LocalContentAlpha.current),
         LocalIndication provides rippleIndication,
         LocalRippleTheme provides CapitalRippleTheme,
         LocalShapes provides shapes,

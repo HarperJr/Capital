@@ -69,11 +69,15 @@ fun AssetSource(
                     .align(Alignment.CenterVertically)
                     .padding(end = 24.dp)
             ) {
-                Text(text = asset.name, style = CapitalTheme.typography.regular)
+                Text(
+                    text = asset.name,
+                    style = CapitalTheme.typography.regular,
+                    color = CapitalTheme.colors.onBackground
+                )
                 Text(
                     text = asset.amount.formatWithCurrencySymbol(asset.currency.name),
                     style = CapitalTheme.typography.regularSmall,
-                    color = CapitalTheme.colors.onPrimary
+                    color = CapitalTheme.colors.secondary
                 )
             }
         }

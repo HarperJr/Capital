@@ -3,11 +3,9 @@ package com.harper.core.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.runtime.Composable
@@ -15,13 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 
 @Composable
 fun Toolbar(
     modifier: Modifier = Modifier,
-    title: @Composable (() -> Unit)? = null,
     content: @Composable (() -> Unit)? = null,
     navigation: @Composable (() -> Unit)? = null,
     menu: Menu = Menu(),
@@ -30,15 +29,15 @@ fun Toolbar(
     TopAppBar(
         modifier = modifier,
         elevation = 0.dp,
-        backgroundColor = CapitalTheme.colors.background
+        backgroundColor = CapitalTheme.colors.background,
+        contentPadding = rememberInsetsPaddingValues(
+            LocalWindowInsets.current.statusBars,
+            applyBottom = false,
+        )
     ) {
         navigation?.invoke()
         Box(modifier = Modifier.weight(1f)) {
-            if (title != null) {
-                title.invoke()
-            } else {
-                content?.invoke()
-            }
+            content?.invoke()
         }
         Row(horizontalArrangement = Arrangement.End) {
             menu.items.forEach { item ->
@@ -62,7 +61,7 @@ data class MenuItem(val id: Int, val imageVector: ImageVector)
 private fun ToolbarLight() {
     ComposablePreview {
         Toolbar(
-            title = {
+            content = {
                 Text(
                     text = "Capital toolbar",
                     style = CapitalTheme.typography.title,
@@ -87,7 +86,7 @@ private fun ToolbarLight() {
 private fun ToolbarDark() {
     ComposablePreview(isDark = true) {
         Toolbar(
-            title = {
+            content = {
                 Text(
                     text = "Capital toolbar",
                     style = CapitalTheme.typography.title,

@@ -16,7 +16,7 @@ import com.harper.core.ui.EventObserver
 import kotlinx.coroutines.flow.collect
 
 class TransactionViewModel(
-    params: TransactionFragment.Params,
+    private val params: TransactionFragment.Params,
     private val router: GlobalRouter,
     private val fetchAssetsUseCase: FetchAssetsUseCase,
     private val fetchCategoriesUseCase: FetchCategoriesUseCase
@@ -40,7 +40,8 @@ class TransactionViewModel(
     private fun createExpenseDataSet(assets: List<Asset>): List<AssetDataSet> = listOf(
         AssetDataSet(
             section = DataSetSection.FROM,
-            assets = assets
+            assets = assets,
+            selectedAssetId = params.assetId
         ),
         AssetDataSet(
             section = DataSetSection.TO,

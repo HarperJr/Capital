@@ -4,6 +4,7 @@ import com.harper.buildsrc.android
 import com.harper.buildsrc.capitalLibBuildFeatures
 import com.harper.buildsrc.capitalLibDefaultConfig
 import com.harper.buildsrc.compose
+import com.harper.buildsrc.gson
 import com.harper.buildsrc.koin
 import com.harper.buildsrc.kotlin
 

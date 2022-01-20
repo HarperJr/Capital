@@ -5,10 +5,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,10 +24,14 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.navigationBarsHeight
+import com.google.accompanist.insets.statusBarsHeight
 import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.insets.ui.Scaffold
 import com.harper.capital.R
 import com.harper.capital.auth.signin.model.SignInEvent
 import com.harper.capital.auth.signin.model.SignInState
+import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CapitalButton
 import com.harper.core.component.CapitalTextField
 import com.harper.core.component.Chip
@@ -45,8 +49,10 @@ class SignInFragment : ComponentFragment<SignInViewModel>(), EventSender<SignInE
     override val viewModel: SignInViewModel by injectViewModel()
 
     override fun content(): @Composable () -> Unit = {
-        val state by viewModel.state.collectAsState()
-        Content(state, this)
+        ScreenLayout {
+            val state by viewModel.state.collectAsState()
+            Content(state, this)
+        }
     }
 
     companion object {
@@ -64,8 +70,29 @@ val Google
 
 @Composable
 private fun Content(state: SignInState, es: EventSender<SignInEvent>) {
-    Scaffold(modifier = Modifier.statusBarsPadding(), backgroundColor = CapitalTheme.colors.background) {
-        Box(modifier = Modifier.fillMaxSize()) {
+    Scaffold(
+        modifier = Modifier.statusBarsPadding(),
+        backgroundColor = CapitalTheme.colors.background,
+        topBar = {
+            Spacer(
+                modifier = Modifier
+                    .statusBarsHeight()
+                    .fillMaxWidth()
+            )
+        },
+        bottomBar = {
+            Spacer(
+                modifier = Modifier
+                    .navigationBarsHeight()
+                    .fillMaxWidth()
+            )
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -115,32 +142,7 @@ private fun Content(state: SignInState, es: EventSender<SignInEvent>) {
                     )
                 }
                 HorizontalSpacer(height = 16.dp)
-                CapitalButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(id = R.string.continue_with_apple),
-                    textColor = CapitalTheme.colors.background,
-                    buttonColors = capitalButtonColors(backgroundColor = CapitalTheme.colors.onBackground),
-                    leadingIcon = {
-                        Image(
-                            imageVector = Apple,
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(color = CapitalTheme.colors.background)
-                        )
-                    }
-                ) {
-
-                }
-                HorizontalSpacer(height = 16.dp)
-                CapitalButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(id = R.string.continue_with_google),
-                    textColor = CapitalColors.Black,
-                    buttonColors = capitalButtonColors(backgroundColor = CapitalColors.White),
-                    border = BorderStroke(width = 1.dp, color = CapitalColors.GreyLight),
-                    leadingIcon = { Image(imageVector = Google, contentDescription = null) }
-                ) {
-
-                }
+                ServiceSignBlock(es)
                 HorizontalSpacer(height = 16.dp)
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -158,6 +160,36 @@ private fun Content(state: SignInState, es: EventSender<SignInEvent>) {
                 Text(text = stringResource(id = R.string.go_offline), color = CapitalColors.White)
             }
         }
+    }
+}
+
+@Composable
+private fun ServiceSignBlock(es: EventSender<SignInEvent>) {
+    CapitalButton(
+        modifier = Modifier.fillMaxWidth(),
+        text = stringResource(id = R.string.continue_with_apple),
+        textColor = CapitalTheme.colors.background,
+        buttonColors = capitalButtonColors(backgroundColor = CapitalTheme.colors.onBackground),
+        leadingIcon = {
+            Image(
+                imageVector = Apple,
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(color = CapitalTheme.colors.background)
+            )
+        }
+    ) {
+
+    }
+    HorizontalSpacer(height = 16.dp)
+    CapitalButton(
+        modifier = Modifier.fillMaxWidth(),
+        text = stringResource(id = R.string.continue_with_google),
+        textColor = CapitalColors.Black,
+        buttonColors = capitalButtonColors(backgroundColor = CapitalColors.White),
+        border = BorderStroke(width = 1.dp, color = CapitalColors.GreyLight),
+        leadingIcon = { Image(imageVector = Google, contentDescription = null) }
+    ) {
+
     }
 }
 

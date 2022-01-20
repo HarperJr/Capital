@@ -8,8 +8,8 @@ import androidx.compose.ui.unit.dp
 
 @Immutable
 class CapitalShapes(
-    val small: CornerBasedShape = RoundedCornerShape(4.dp),
-    val medium: CornerBasedShape = RoundedCornerShape(6.dp),
+    val small: CornerBasedShape = RoundedCornerShape(2.dp),
+    val medium: CornerBasedShape = RoundedCornerShape(4.dp),
     val large: CornerBasedShape = RoundedCornerShape(8.dp),
     val extraLarge: CornerBasedShape = RoundedCornerShape(12.dp),
     val bottomSheet: CornerBasedShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)

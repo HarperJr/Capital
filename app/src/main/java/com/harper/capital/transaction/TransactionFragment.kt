@@ -1,27 +1,25 @@
 package com.harper.capital.transaction
 
 import android.os.Parcelable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.insets.imePadding
-import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.insets.navigationBarsHeight
+import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -34,6 +32,7 @@ import com.harper.capital.transaction.model.TransactionEvent
 import com.harper.capital.transaction.model.TransactionState
 import com.harper.capital.transaction.model.TransactionStateProvider
 import com.harper.capital.transaction.model.TransactionType
+import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CapitalButton
 import com.harper.core.component.ComposablePreview
 import com.harper.core.component.HorizontalSpacer
@@ -55,8 +54,10 @@ class TransactionFragment : ComponentFragment<TransactionViewModel>(), EventSend
     private val params by requireArg<Params>(PARAMS)
 
     override fun content(): @Composable () -> Unit = {
-        val state by viewModel.state.collectAsState()
-        Content(state, this)
+        ScreenLayout {
+            val state by viewModel.state.collectAsState()
+            Content(state, this)
+        }
     }
 
     @Parcelize
@@ -74,11 +75,21 @@ class TransactionFragment : ComponentFragment<TransactionViewModel>(), EventSend
 @Composable
 private fun Content(state: TransactionState, es: EventSender<TransactionEvent>) {
     Scaffold(
-        modifier = Modifier.statusBarsPadding(),
         backgroundColor = CapitalTheme.colors.background,
-        topBar = { TransactionTopBar(es) }
-    ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        topBar = { TransactionTopBar(es) },
+        bottomBar = {
+            Spacer(
+                Modifier
+                    .navigationBarsHeight()
+                    .fillMaxWidth()
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues)
+        ) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -150,7 +161,7 @@ private fun DataSetSection.resolveTitle(): String = when (this) {
 @Composable
 private fun TransactionTopBar(es: EventSender<TransactionEvent>) {
     Toolbar(
-        title = {
+        content = {
             Text(
                 text = stringResource(id = R.string.new_transaction_title),
                 style = CapitalTheme.typography.title,

@@ -7,15 +7,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
-import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,7 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.imePadding
-import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.insets.navigationBarsHeight
+import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.harper.capital.R
@@ -44,8 +47,10 @@ import com.harper.capital.category.model.CategoryManageState
 import com.harper.capital.category.model.CategoryManageStateProvider
 import com.harper.capital.category.model.CategoryManageType
 import com.harper.capital.ext.getImageVector
+import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.AmountTextField
 import com.harper.core.component.ArrowSettingBox
+import com.harper.core.component.CapitalBottomSheet
 import com.harper.core.component.CapitalButton
 import com.harper.core.component.CapitalTextField
 import com.harper.core.component.ComposablePreview
@@ -70,8 +75,10 @@ class CategoryManageFragment : ComponentFragment<CategoryManageViewModel>(), Eve
     private val params by requireArg<Params>(PARAMS)
 
     override fun content(): @Composable () -> Unit = {
-        val state by viewModel.state.collectAsState()
-        Content(state, this)
+        ScreenLayout {
+            val state by viewModel.state.collectAsState()
+            Content(state, this)
+        }
     }
 
     @Parcelize
@@ -88,64 +95,77 @@ class CategoryManageFragment : ComponentFragment<CategoryManageViewModel>(), Eve
 @Composable
 @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
 private fun Content(state: CategoryManageState, es: EventSender<CategoryManageEvent>) {
-    val scaffoldState = rememberBottomSheetScaffoldState()
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val bottomSheet = remember(state.bottomSheetState.bottomSheet) {
         state.bottomSheetState.bottomSheet
     }
 
-    BottomSheetScaffold(
-        modifier = Modifier.statusBarsPadding(),
-        topBar = { ExpenseCategoryAddTopBar(es) },
-        backgroundColor = CapitalTheme.colors.background,
+    ModalBottomSheetLayout(
         sheetContent = {
-            BottomSheetContent(bottomSheet, es)
+            CapitalBottomSheet {
+                BottomSheetContent(bottomSheet, es)
+            }
             LaunchedEffect(state.bottomSheetState) {
                 if (state.bottomSheetState.isExpended) {
-                    scaffoldState.bottomSheetState.expand()
+                    sheetState.show()
                 } else {
-                    scaffoldState.bottomSheetState.collapse()
+                    sheetState.hide()
                 }
             }
         },
-        scaffoldState = scaffoldState,
-        sheetBackgroundColor = CapitalTheme.colors.background,
-        sheetElevation = 6.dp,
-        sheetPeekHeight = 0.dp,
-        sheetShape = CapitalTheme.shapes.bottomSheet
+        sheetState = sheetState,
+        sheetShape = CapitalTheme.shapes.bottomSheet,
+        sheetBackgroundColor = CapitalTheme.colors.background
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.weight(1f)) {
-                val pagerState = rememberPagerState(initialPage = state.selectedPage)
-                TabBar(
-                    data = state.tabBarData,
-                    selectedTabIndex = pagerState.currentPage,
-                    onTabSelect = {}
+        Scaffold(
+            backgroundColor = CapitalTheme.colors.background,
+            topBar = { CategoryManageTopBar(es) },
+            bottomBar = {
+                Spacer(
+                    modifier = Modifier
+                        .navigationBarsHeight()
+                        .fillMaxWidth()
                 )
-                LaunchedEffect(pagerState) {
-                    snapshotFlow { pagerState.currentPage }.collect {
-                        es.send(CategoryManageEvent.TabSelect(it))
+            }
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(paddingValues)
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    val pagerState = rememberPagerState(initialPage = state.selectedPage)
+                    TabBar(
+                        data = state.tabBarData,
+                        selectedTabIndex = pagerState.currentPage,
+                        onTabSelect = {}
+                    )
+                    LaunchedEffect(pagerState) {
+                        snapshotFlow { pagerState.currentPage }.collect {
+                            es.send(CategoryManageEvent.TabSelect(it))
+                        }
+                    }
+                    HorizontalPager(state = pagerState, count = state.pages.size) { pageIndex ->
+                        PageBlock(
+                            page = state.pages[pageIndex],
+                            es = es
+                        )
                     }
                 }
-                HorizontalPager(state = pagerState, count = state.pages.size) { pageIndex ->
-                    PageBlock(
-                        page = state.pages[pageIndex],
-                        es = es
+                Box(
+                    modifier = Modifier
+                        .imePadding()
+                        .fillMaxWidth()
+                ) {
+                    CapitalButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter)
+                            .padding(16.dp),
+                        text = stringResource(id = R.string.create_new_category),
+                        onClick = { }
                     )
                 }
-            }
-            Box(
-                modifier = Modifier
-                    .imePadding()
-                    .fillMaxWidth()
-            ) {
-                CapitalButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp),
-                    text = stringResource(id = R.string.create_new_category),
-                    onClick = { }
-                )
             }
         }
     }
@@ -218,7 +238,6 @@ private fun BottomSheetContent(bottomSheet: CategoryManageBottomSheet?, es: Even
         }
         is CategoryManageBottomSheet.Icons -> {
             IconsBottomSheet(
-                title = stringResource(id = R.string.select_icon),
                 data = bottomSheet.data,
                 onIconSelect = { es.send(CategoryManageEvent.IconSelect(it)) }
             )
@@ -228,9 +247,9 @@ private fun BottomSheetContent(bottomSheet: CategoryManageBottomSheet?, es: Even
 }
 
 @Composable
-private fun ExpenseCategoryAddTopBar(es: EventSender<CategoryManageEvent>) {
+private fun CategoryManageTopBar(es: EventSender<CategoryManageEvent>) {
     Toolbar(
-        title = {
+        content = {
             Text(
                 modifier = Modifier.padding(start = 16.dp),
                 text = stringResource(id = R.string.new_category),

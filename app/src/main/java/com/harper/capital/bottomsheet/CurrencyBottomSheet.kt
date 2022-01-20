@@ -28,6 +28,7 @@ import com.harper.capital.R
 import com.harper.capital.domain.model.Currency
 import com.harper.core.component.CapitalTextField
 import com.harper.core.component.ComposablePreview
+import com.harper.core.component.HorizontalSpacer
 import com.harper.core.component.Separator
 import com.harper.core.ext.formatCurrencyName
 import com.harper.core.ext.formatCurrencySymbol
@@ -54,14 +55,7 @@ fun CurrencyBottomSheet(
             .fillMaxWidth()
             .imePadding()
     ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            text = stringResource(id = R.string.select_currency),
-            style = CapitalTheme.typography.title,
-            color = CapitalTheme.colors.onBackground
-        )
+        HorizontalSpacer(height = 8.dp)
         CapitalTextField(
             modifier = Modifier
                 .fillMaxWidth()
