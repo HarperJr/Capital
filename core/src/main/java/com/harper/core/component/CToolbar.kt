@@ -49,7 +49,7 @@ fun Toolbar(
 
 @Composable
 private fun MenuItem(menuItem: MenuItem, onClick: (Int) -> Unit) {
-    MenuIcon(imageVector = menuItem.imageVector, onClick = { onClick.invoke(menuItem.id) })
+    CIcon(imageVector = menuItem.imageVector, onClick = { onClick.invoke(menuItem.id) })
 }
 
 data class Menu(val items: List<MenuItem> = emptyList())
@@ -59,7 +59,7 @@ data class MenuItem(val id: Int, val imageVector: ImageVector)
 @Preview
 @Composable
 private fun ToolbarLight() {
-    ComposablePreview {
+    CPreview {
         Toolbar(
             content = {
                 Text(
@@ -69,7 +69,7 @@ private fun ToolbarLight() {
                 )
             },
             navigation = {
-                MenuIcon(imageVector = CapitalIcons.ArrowLeft, onClick = { })
+                CIcon(imageVector = CapitalIcons.ArrowLeft, onClick = { })
             },
             menu = Menu(
                 listOf(
@@ -84,7 +84,7 @@ private fun ToolbarLight() {
 @Preview
 @Composable
 private fun ToolbarDark() {
-    ComposablePreview(isDark = true) {
+    CPreview(isDark = true) {
         Toolbar(
             content = {
                 Text(
@@ -94,7 +94,7 @@ private fun ToolbarDark() {
                 )
             },
             navigation = {
-                MenuIcon(imageVector = CapitalIcons.ArrowLeft, onClick = { })
+                CIcon(imageVector = CapitalIcons.ArrowLeft, onClick = { })
             },
             menu = Menu(
                 listOf(

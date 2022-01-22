@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -32,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import com.harper.core.ext.compose.heightOrZero
 import com.harper.core.ext.compose.widthOrZero
-import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 
@@ -43,19 +43,19 @@ private const val textFieldId = "TextField"
 private val minTextFieldHeight = 32.dp
 
 @Composable
-fun CapitalTextField(
+private fun CBasicTextField(
     modifier: Modifier = Modifier,
     value: TextFieldValue,
-    placeholder: String = "",
+    placeholder: String,
     leadingIcon: @Composable (() -> Unit)? = null,
-    textStyle: TextStyle = CapitalTheme.typography.regular,
-    textColor: Color = CapitalTheme.colors.onBackground,
-    backgroundColor: Color = CapitalTheme.colors.secondary,
-    hintColor: Color = CapitalColors.GreyDark,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    singleLine: Boolean = false,
+    textStyle: TextStyle,
+    textColor: Color,
+    backgroundColor: Color,
+    placeholderColor: Color,
+    visualTransformation: VisualTransformation,
+    keyboardActions: KeyboardActions,
+    keyboardOptions: KeyboardOptions,
+    singleLine: Boolean,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onValueChange: (TextFieldValue) -> Unit
 ) {
@@ -82,7 +82,7 @@ fun CapitalTextField(
                         modifier = Modifier.layoutId(placeHolderId),
                         text = placeholder,
                         style = textStyle,
-                        color = hintColor
+                        color = placeholderColor
                     )
                 }
                 if (leadingIcon != null) {
@@ -92,7 +92,7 @@ fun CapitalTextField(
                             .defaultMinSize(24.dp, 24.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        CompositionLocalProvider(LocalContentColor provides hintColor) {
+                        CompositionLocalProvider(LocalContentColor provides placeholderColor) {
                             leadingIcon.invoke()
                         }
                     }
@@ -131,8 +131,14 @@ fun CapitalTextField(
                 )
                 layout(width = width, height = height) {
                     leadingIconPlaceable?.placeRelative(0, (height - leadingIconPlaceable.heightOrZero()) / 2)
-                    textFieldPlaceable?.placeRelative(horizontalOffset, (height - textFieldPlaceable.heightOrZero()) / 2)
-                    placeholderPlaceable?.placeRelative(horizontalOffset, (height - placeholderPlaceable.heightOrZero()) / 2)
+                    textFieldPlaceable?.placeRelative(
+                        horizontalOffset,
+                        (height - textFieldPlaceable.heightOrZero()) / 2
+                    )
+                    placeholderPlaceable?.placeRelative(
+                        horizontalOffset,
+                        (height - placeholderPlaceable.heightOrZero()) / 2
+                    )
                 }
             })
         }
@@ -140,14 +146,15 @@ fun CapitalTextField(
 }
 
 @Composable
-fun CapitalTextField(
+fun CTextField(
     modifier: Modifier = Modifier,
     value: String,
     placeholder: String = "",
     leadingIcon: @Composable (() -> Unit)? = null,
-    textStyle: TextStyle = CapitalTheme.typography.regular,
-    textColor: Color = CapitalTheme.colors.onBackground,
-    backgroundColor: Color = CapitalTheme.colors.secondary,
+    textStyle: TextStyle = LocalTextStyle.current,
+    textColor: Color = LocalContentColor.current,
+    placeholderColor: Color = CapitalTheme.colors.textSecondary,
+    backgroundColor: Color = CapitalTheme.colors.primaryVariant,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -157,13 +164,14 @@ fun CapitalTextField(
 ) {
     var textFieldValueState by remember { mutableStateOf(TextFieldValue(text = value)) }
     val textFieldValue = textFieldValueState.copy(text = value)
-    CapitalTextField(
+    CBasicTextField(
         modifier = modifier,
         value = textFieldValue,
         placeholder = placeholder,
         leadingIcon = leadingIcon,
         textStyle = textStyle,
         textColor = textColor,
+        placeholderColor = placeholderColor,
         backgroundColor = backgroundColor,
         visualTransformation = visualTransformation,
         keyboardActions = keyboardActions,
@@ -182,14 +190,14 @@ fun CapitalTextField(
 @Preview
 @Composable
 private fun CapitalTextFieldLight() {
-    ComposablePreview {
+    CPreview {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(CapitalTheme.colors.background)
                 .padding(16.dp)
         ) {
-            CapitalTextField(
+            CTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = "",
                 placeholder = "Enter some text here",
@@ -209,13 +217,13 @@ private fun CapitalTextFieldLight() {
 @Preview
 @Composable
 private fun CapitalTextFieldDark() {
-    ComposablePreview(isDark = true) {
+    CPreview(isDark = true) {
         Box(
             modifier = Modifier
                 .background(CapitalTheme.colors.background)
                 .padding(16.dp)
         ) {
-            CapitalTextField(
+            CTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = "TextField"
             ) {}

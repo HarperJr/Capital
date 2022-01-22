@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import com.harper.core.theme.CapitalTheme
 
 @Composable
-fun ComposablePreview(
+fun CPreview(
     isDark: Boolean = false,
     content: @Composable () -> Unit
 ) {

@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.harper.capital.ui.ColorThemeProvider
 import com.harper.capital.ui.model.ColorTheme
@@ -26,21 +25,20 @@ fun ScreenLayout(content: @Composable () -> Unit) {
     }
 
     CapitalTheme(isDark = isDark) {
-        val useDarkIcons = CapitalTheme.colors.isLight
         val systemUiController = rememberSystemUiController()
+        val useDarkIcons = CapitalTheme.colors.isLight
         SideEffect {
             systemUiController.setSystemBarsColor(
                 color = CapitalColors.Transparent,
                 darkIcons = useDarkIcons
             )
         }
-        ProvideWindowInsets(windowInsetsAnimationsEnabled = false) {
-            Surface(
-                color = CapitalTheme.colors.background,
-                contentColor = LocalContentColor.current
-            ) {
-                content.invoke()
-            }
+
+        Surface(
+            color = CapitalTheme.colors.background,
+            contentColor = LocalContentColor.current
+        ) {
+            content.invoke()
         }
     }
 }

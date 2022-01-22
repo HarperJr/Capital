@@ -12,14 +12,14 @@ import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harper.capital.R
 import com.harper.capital.domain.model.AssetColor
-import com.harper.core.component.ComposablePreview
+import com.harper.capital.ext.assetBackgroundColor
+import com.harper.core.component.CPreview
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
@@ -40,7 +40,7 @@ fun AssetColorSelector(
                 modifier = Modifier
                     .size(width = 46.dp, height = 28.dp)
                     .clickable { onSelect.invoke() },
-                backgroundColor = Color(color.value)
+                backgroundColor = assetBackgroundColor(color)
             ) {
                 Image(
                     modifier = Modifier
@@ -57,14 +57,14 @@ fun AssetColorSelector(
 @Preview
 @Composable
 fun AssetColorSelectorLight() {
-    ComposablePreview {
+    CPreview {
         Box(
             modifier = Modifier
                 .background(color = CapitalTheme.colors.background)
                 .padding(16.dp)
         ) {
             AssetColorSelector(
-                color = AssetColor.DARK_TINKOFF,
+                color = AssetColor.TINKOFF,
                 isSelected = false,
                 {}
             )
@@ -75,14 +75,14 @@ fun AssetColorSelectorLight() {
 @Preview
 @Composable
 fun AssetColorSelectorDark() {
-    ComposablePreview(isDark = true) {
+    CPreview(isDark = true) {
         Box(
             modifier = Modifier
                 .background(color = CapitalTheme.colors.background)
                 .padding(16.dp)
         ) {
             AssetColorSelector(
-                color = AssetColor.DARK_TINKOFF,
+                color = AssetColor.TINKOFF,
                 isSelected = false,
                 {}
             )

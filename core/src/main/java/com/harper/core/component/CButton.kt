@@ -1,7 +1,6 @@
 package com.harper.core.component
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,11 +29,13 @@ private val borderlessButtonColors: ButtonColors
     @Composable
     get() = capitalButtonColors(
         backgroundColor = CapitalColors.Transparent,
-        disabledBackgroundColor = CapitalColors.Transparent
+        disabledBackgroundColor = CapitalColors.Transparent,
+        contentColor = CapitalTheme.colors.secondary,
+        disabledContentColor = CapitalTheme.colors.textSecondary
     )
 
 @Composable
-fun CapitalButton(
+fun CButton(
     modifier: Modifier = Modifier,
     text: String,
     textColor: Color = CapitalColors.White,
@@ -63,7 +65,7 @@ fun CapitalButton(
                 modifier = Modifier.align(Alignment.Center),
                 text = text,
                 style = CapitalTheme.typography.button,
-                color = if (borderless) CapitalColors.Blue else textColor
+                color = if (borderless) LocalContentColor.current else textColor
             )
         }
     }
@@ -71,22 +73,26 @@ fun CapitalButton(
 
 @Preview(showBackground = true)
 @Composable
-private fun ActionButtonLight() {
-    ComposablePreview {
+private fun CButtonLight() {
+    CPreview {
         Column {
-            CapitalButton(modifier = Modifier.padding(16.dp), text = "Push me") {}
-            CapitalButton(modifier = Modifier.padding(16.dp), borderless = true, text = "Push me") {}
+            CButton(modifier = Modifier.padding(16.dp), text = "Push me") {}
+            CButton(modifier = Modifier.padding(16.dp), enabled = false, text = "Push me") {}
+            CButton(modifier = Modifier.padding(16.dp), borderless = true, text = "Push me") {}
+            CButton(modifier = Modifier.padding(16.dp), enabled = false, borderless = true, text = "Push me") {}
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ActionButtonDark() {
-    ComposablePreview(isDark = true) {
+private fun CButtonDark() {
+    CPreview(isDark = true) {
         Column {
-            CapitalButton(modifier = Modifier.padding(16.dp), text = "Push me") {}
-            CapitalButton(modifier = Modifier.padding(16.dp), borderless = true, text = "Push me") {}
+            CButton(modifier = Modifier.padding(16.dp), text = "Push me") {}
+            CButton(modifier = Modifier.padding(16.dp), enabled = false, text = "Push me") {}
+            CButton(modifier = Modifier.padding(16.dp), borderless = true, text = "Push me") {}
+            CButton(modifier = Modifier.padding(16.dp), enabled = false, borderless = true, text = "Push me") {}
         }
     }
 }

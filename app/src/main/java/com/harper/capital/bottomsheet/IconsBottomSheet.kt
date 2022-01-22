@@ -27,11 +27,11 @@ import com.google.accompanist.insets.imePadding
 import com.harper.capital.R
 import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.ext.getImageVector
-import com.harper.core.component.CapitalTextField
-import com.harper.core.component.ComposablePreview
-import com.harper.core.component.Grid
-import com.harper.core.component.HorizontalSpacer
-import com.harper.core.component.Separator
+import com.harper.core.component.CTextField
+import com.harper.core.component.CPreview
+import com.harper.core.component.CWrappedGrid
+import com.harper.core.component.CHorizontalSpacer
+import com.harper.core.component.CSeparator
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
@@ -55,8 +55,8 @@ fun IconsBottomSheet(
             .fillMaxWidth()
             .imePadding()
     ) {
-        HorizontalSpacer(height = 8.dp)
-        CapitalTextField(
+        CHorizontalSpacer(height = 8.dp)
+        CTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -77,12 +77,12 @@ fun IconsBottomSheet(
                 .fillMaxWidth()
                 .height(16.dp)
         )
-        Separator(
+        CSeparator(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         )
-        Grid(modifier = Modifier.padding(horizontal = 16.dp), columns = 4, items = filteredIcons) {
+        CWrappedGrid(modifier = Modifier.padding(horizontal = 16.dp), columns = 4, items = filteredIcons) {
             Box(modifier = Modifier.padding(4.dp)) {
                 IconItem(
                     modifier = Modifier
@@ -120,7 +120,7 @@ private fun IconItem(modifier: Modifier = Modifier, icon: ImageVector, isSelecte
 @Preview
 @Composable
 fun IconsBottomSheetLight() {
-    ComposablePreview {
+    CPreview {
         Box(modifier = Modifier.background(color = CapitalTheme.colors.background)) {
             IconsBottomSheet(
                 data = IconsBottomSheetData(
@@ -136,7 +136,7 @@ fun IconsBottomSheetLight() {
 @Preview
 @Composable
 private fun IconsBottomSheetDark() {
-    ComposablePreview(isDark = true) {
+    CPreview(isDark = true) {
         Box(modifier = Modifier.background(color = CapitalTheme.colors.background)) {
             IconsBottomSheet(
                 data = IconsBottomSheetData(

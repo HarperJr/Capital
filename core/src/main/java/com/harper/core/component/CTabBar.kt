@@ -43,7 +43,7 @@ fun TabBar(
                     .tabIndicatorOffset(it[selectedTabIndex])
                     .padding(vertical = 2.dp)
                     .fillMaxHeight()
-                    .background(color = CapitalColors.Blue, shape = CircleShape)
+                    .background(color = CapitalTheme.colors.secondary, shape = CircleShape)
                     .zIndex(-1f)
             )
         },
@@ -55,7 +55,7 @@ fun TabBar(
                 selected = index == selectedTabIndex,
                 selectedContentColor = CapitalColors.White,
                 unselectedContentColor = CapitalColors.GreyDark,
-                onClick = { onTabSelect(index) }
+                onClick = { onTabSelect.invoke(index) }
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -85,7 +85,7 @@ private fun TabBarLight() {
         Tab(title = "Section3"),
         Tab(title = "Section4")
     )
-    ComposablePreview {
+    CPreview {
         TabBar(data = TabBarData(tabs), selectedTabIndex = 1, onTabSelect = {})
     }
 }
@@ -99,7 +99,7 @@ private fun TabBarDark() {
         Tab(title = "Section3"),
         Tab(title = "Section4")
     )
-    ComposablePreview(isDark = true) {
+    CPreview(isDark = true) {
         TabBar(data = TabBarData(tabs), selectedTabIndex = 1, onTabSelect = {})
     }
 }

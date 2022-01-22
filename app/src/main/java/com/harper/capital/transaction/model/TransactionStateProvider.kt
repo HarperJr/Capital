@@ -47,7 +47,7 @@ class TransactionStateProvider : PreviewParameterProvider<TransactionState> {
                         name = "Tinkoff Black",
                         amount = 1500.0,
                         currency = Currency.RUB,
-                        color = AssetColor.DARK_TINKOFF,
+                        color = AssetColor.TINKOFF,
                         icon = AssetIcon.TINKOFF,
                         metadata = AssetMetadata.Default
                     ),
@@ -56,7 +56,7 @@ class TransactionStateProvider : PreviewParameterProvider<TransactionState> {
                         name = "Sberbank",
                         amount = 2500.50,
                         currency = Currency.RUB,
-                        color = AssetColor.GREEN_SBER,
+                        color = AssetColor.SBER,
                         icon = AssetIcon.SBER,
                         metadata = AssetMetadata.Default
                     ),
@@ -65,7 +65,7 @@ class TransactionStateProvider : PreviewParameterProvider<TransactionState> {
                         name = "Raiffeisen",
                         amount = 100000.00,
                         currency = Currency.RUB,
-                        color = AssetColor.YELLOW_RAIFFEIZEN,
+                        color = AssetColor.RAIFFEIZEN,
                         icon = AssetIcon.RAIFFEISEN,
                         metadata = AssetMetadata.Default
                     ),
@@ -74,7 +74,7 @@ class TransactionStateProvider : PreviewParameterProvider<TransactionState> {
                         name = "VTB USD",
                         amount = 100.50,
                         currency = Currency.USD,
-                        color = AssetColor.LIGHT_BLUE_VTB,
+                        color = AssetColor.VTB,
                         icon = AssetIcon.VTB,
                         metadata = AssetMetadata.Default
                     )
@@ -89,7 +89,7 @@ class TransactionStateProvider : PreviewParameterProvider<TransactionState> {
                         name = "Products",
                         amount = 1500.0,
                         currency = Currency.RUB,
-                        color = AssetColor.YELLOW_RAIFFEIZEN,
+                        color = AssetColor.RAIFFEIZEN,
                         icon = AssetIcon.BITCOIN,
                         metadata = AssetMetadata.Default
                     ),
@@ -98,7 +98,7 @@ class TransactionStateProvider : PreviewParameterProvider<TransactionState> {
                         name = "Phone",
                         amount = 2500.50,
                         currency = Currency.RUB,
-                        color = AssetColor.DARK_TINKOFF,
+                        color = AssetColor.TINKOFF,
                         icon = AssetIcon.ETHERIUM,
                         metadata = AssetMetadata.Default
                     )

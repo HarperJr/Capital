@@ -9,7 +9,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 
 @Composable
-fun <T> Grid(modifier: Modifier = Modifier, columns: Int, items: List<T>, item: @Composable (T) -> Unit) = Layout(
+fun <T> CWrappedGrid(modifier: Modifier = Modifier, columns: Int, items: List<T>, item: @Composable (T) -> Unit) = Layout(
     content = {
         items.forEach {
             item.invoke(it)

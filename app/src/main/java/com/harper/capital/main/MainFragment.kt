@@ -11,52 +11,51 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
-import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.harper.capital.R
 import com.harper.capital.domain.model.Account
+import com.harper.capital.domain.model.AssetColor
+import com.harper.capital.ext.assetBackgroundColor
 import com.harper.capital.main.component.AssetAccountedCard
 import com.harper.capital.main.component.AssetCard
-import com.harper.capital.main.component.AssetToolbar
+import com.harper.capital.main.component.AssetMenu
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
-import com.harper.capital.main.model.PreviewStateProvider
 import com.harper.capital.ui.base.ScreenLayout
-import com.harper.core.component.AmountText
-import com.harper.core.component.ComposablePreview
-import com.harper.core.component.HorizontalSpacer
+import com.harper.core.component.CHorizontalSpacer
+import com.harper.core.component.CIcon
+import com.harper.core.component.CScaffold
+import com.harper.core.component.CPreview
 import com.harper.core.component.Menu
-import com.harper.core.component.MenuIcon
 import com.harper.core.component.MenuItem
 import com.harper.core.component.Toolbar
-import com.harper.core.ext.cast
+import com.harper.core.component.CAmountText
 import com.harper.core.ext.formatWithCurrencySymbol
 import com.harper.core.ext.orElse
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentFragment
+import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 import kotlin.math.abs
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 private const val ADD_ASSET_MENU_ITEM_ID = 0
@@ -67,11 +66,7 @@ class MainFragment : ComponentFragment<MainViewModel>(), EventSender<MainEvent> 
 
     override fun content(): @Composable () -> Unit = {
         ScreenLayout {
-            val state by viewModel.state.collectAsState()
-            when (state) {
-                is MainState.Loading -> LoadingPlaceholder()
-                is MainState.Data -> Content(state.cast(), this)
-            }
+            MainScreenScreen(viewModel, this)
         }
     }
 
@@ -82,28 +77,24 @@ class MainFragment : ComponentFragment<MainViewModel>(), EventSender<MainEvent> 
 }
 
 @Composable
-private fun LoadingPlaceholder() {
-    // TODO implement
-}
-
 @OptIn(ExperimentalPagerApi::class, dev.chrisbanes.snapper.ExperimentalSnapperApi::class)
-@Composable
-private fun Content(state: MainState.Data, es: EventSender<MainEvent>) {
-    Scaffold(
-        backgroundColor = CapitalTheme.colors.background,
+private fun MainScreenScreen(viewModel: ComponentViewModel<MainState>, es: EventSender<MainEvent>) {
+    val state by viewModel.state.collectAsState()
+
+    CScaffold(
         topBar = { OverviewTopBar(account = state.account, es) }
-    ) { paddingValues ->
-        Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxWidth()) {
-                HorizontalSpacer(height = 24.dp)
+                CHorizontalSpacer(height = 24.dp)
 
                 val assetListState = rememberLazyListState()
-                val isDragged by assetListState.interactionSource.collectIsDraggedAsState()
                 val selectedAssetIndex = rememberSaveable { mutableStateOf(-1) }
-                LaunchedEffect(assetListState.isScrollInProgress, isDragged) {
-                    launch {
-                        selectedAssetIndex.value = assetListState.layoutInfo.fullyVisibleItemIndex()
-                    }
+                LaunchedEffect(assetListState) {
+                    snapshotFlow { assetListState.layoutInfo }
+                        .collect {
+                            selectedAssetIndex.value = it.fullyVisibleItemIndex()
+                        }
                 }
                 LazyRow(
                     modifier = Modifier
@@ -128,13 +119,13 @@ private fun Content(state: MainState.Data, es: EventSender<MainEvent>) {
                         )
                     }
                 }
-                HorizontalSpacer(height = 24.dp)
+                CHorizontalSpacer(height = 24.dp)
                 val selectedAsset = state.assets.getOrNull(selectedAssetIndex.value)
-                AssetToolbar(
+                AssetMenu(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp),
-                    color = selectedAsset?.color?.let { Color(it.value) }.orElse(CapitalColors.CodGray),
+                    color = selectedAsset?.color.orElse(AssetColor.TINKOFF_PLATINUM),
                     onHistoryClick = { es.send(MainEvent.HistoryClick(selectedAsset)) },
                     onIncomeClick = { es.send(MainEvent.IncomeClick(selectedAsset)) },
                     onExpenseClick = { es.send(MainEvent.ExpenseClick(selectedAsset)) },
@@ -150,7 +141,7 @@ private fun Content(state: MainState.Data, es: EventSender<MainEvent>) {
                 onClick = { },
                 backgroundColor = CapitalTheme.colors.background
             ) {
-                MenuIcon(imageVector = CapitalIcons.NewAsset, color = CapitalColors.Blue)
+                CIcon(imageVector = CapitalIcons.NewAsset, color = CapitalColors.Blue)
             }
         }
     }
@@ -161,7 +152,7 @@ fun OverviewTopBar(account: Account, es: EventSender<MainEvent>) {
     Toolbar(
         content = {
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                AmountText(
+                CAmountText(
                     amount = account.amount,
                     currencyIso = account.currency.name,
                     style = CapitalTheme.typography.header,
@@ -204,22 +195,16 @@ private fun LazyListLayoutInfo.fullyVisibleItemIndex(): Int {
 
 @Preview(showBackground = true, name = "Content light")
 @Composable
-private fun ContentLight(@PreviewParameter(PreviewStateProvider::class) mockState: MainState.Data) {
-    ComposablePreview {
-        Content(
-            state = mockState,
-            MockEventSender()
-        )
+private fun ContentLight() {
+    CPreview {
+        MainScreenScreen(MainMockViewModel(), MockEventSender())
     }
 }
 
 @Preview(showBackground = true, name = "Content dark")
 @Composable
-private fun ContentDark(@PreviewParameter(PreviewStateProvider::class) mockState: MainState.Data) {
-    ComposablePreview(isDark = true) {
-        Content(
-            state = mockState,
-            MockEventSender()
-        )
+private fun MainScreenDark() {
+    CPreview(isDark = true) {
+        MainScreenScreen(MainMockViewModel(), MockEventSender())
     }
 }

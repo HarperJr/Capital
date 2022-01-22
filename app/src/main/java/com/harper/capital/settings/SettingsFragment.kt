@@ -2,11 +2,9 @@ package com.harper.capital.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
@@ -19,8 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.navigationBarsHeight
-import com.google.accompanist.insets.ui.Scaffold
 import com.harper.capital.R
 import com.harper.capital.bottomsheet.CurrencyBottomSheet
 import com.harper.capital.bottomsheet.SelectorBottomSheet
@@ -29,18 +25,19 @@ import com.harper.capital.settings.model.SettingsBottomSheet
 import com.harper.capital.settings.model.SettingsEvent
 import com.harper.capital.settings.model.SettingsState
 import com.harper.capital.ui.base.ScreenLayout
-import com.harper.core.component.ArrowSettingBox
-import com.harper.core.component.CapitalBottomSheet
-import com.harper.core.component.ComposablePreview
-import com.harper.core.component.HorizontalSpacer
-import com.harper.core.component.MenuIcon
-import com.harper.core.component.SwitchSettingBox
+import com.harper.core.component.CBottomSheetScaffold
+import com.harper.core.component.CHorizontalSpacer
+import com.harper.core.component.CIcon
+import com.harper.core.component.CPreferenceArrow
+import com.harper.core.component.CPreferenceSwitch
+import com.harper.core.component.CPreview
 import com.harper.core.component.Toolbar
 import com.harper.core.ext.formatCurrencyName
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentFragment
+import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
 
@@ -49,8 +46,7 @@ class SettingsFragment : ComponentFragment<SettingsViewModel>(), EventSender<Set
 
     override fun content(): @Composable () -> Unit = {
         ScreenLayout {
-            val state by viewModel.state.collectAsState()
-            Content(state, this)
+            SettingsScreen(viewModel, this)
         }
     }
 
@@ -60,19 +56,18 @@ class SettingsFragment : ComponentFragment<SettingsViewModel>(), EventSender<Set
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun Content(state: SettingsState, es: EventSender<SettingsEvent>) {
+@OptIn(ExperimentalMaterialApi::class)
+private fun SettingsScreen(viewModel: ComponentViewModel<SettingsState>, es: EventSender<SettingsEvent>) {
+    val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    val bottomSheet = remember(state.bottomSheetState.bottomSheet) {
-        state.bottomSheetState.bottomSheet
-    }
 
-    ModalBottomSheetLayout(
+    CBottomSheetScaffold(
         sheetContent = {
-            CapitalBottomSheet {
-                BottomSheetContent(bottomSheet = bottomSheet, es = es)
+            val bottomSheet = remember(state.bottomSheetState) {
+                state.bottomSheetState.bottomSheet
             }
+            BottomSheetContent(bottomSheet = bottomSheet, es = es)
             LaunchedEffect(state.bottomSheetState) {
                 if (state.bottomSheetState.isExpended) {
                     sheetState.show()
@@ -81,65 +76,43 @@ private fun Content(state: SettingsState, es: EventSender<SettingsEvent>) {
                 }
             }
         },
-        sheetState = sheetState,
-        sheetShape = CapitalTheme.shapes.bottomSheet,
-        sheetBackgroundColor = CapitalTheme.colors.background
+        topBar = { SettingsTopBar(es) },
+        sheetState = sheetState
     ) {
-        Scaffold(
-            backgroundColor = CapitalTheme.colors.background,
-            topBar = {
-                SettingsTopBar(es)
-            },
-            bottomBar = {
-                Spacer(
-                    Modifier
-                        .navigationBarsHeight()
-                        .fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
+            CHorizontalSpacer(height = 24.dp)
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = state.email,
+                    style = CapitalTheme.typography.subtitle,
+                    color = CapitalColors.BlueLight
+                )
+                Text(
+                    text = stringResource(id = R.string.log_out),
+                    style = CapitalTheme.typography.buttonSmall,
+                    color = CapitalColors.Blue
                 )
             }
-        ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(paddingValues)
-                    .padding(horizontal = 16.dp)
+            CHorizontalSpacer(height = 32.dp)
+            CPreferenceArrow(
+                title = stringResource(id = R.string.color_theme),
+                subtitle = state.colorTheme.resolveText()
             ) {
-                HorizontalSpacer(height = 24.dp)
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        modifier = Modifier.weight(1f),
-                        text = state.email,
-                        style = CapitalTheme.typography.subtitle,
-                        color = CapitalColors.BlueLight
-                    )
-                    Text(
-                        text = stringResource(id = R.string.log_out),
-                        style = CapitalTheme.typography.buttonSmall,
-                        color = CapitalColors.Blue
-                    )
-                }
-                HorizontalSpacer(height = 32.dp)
-                ArrowSettingBox(
-                    title = stringResource(id = R.string.color_theme),
-                    subtitle = state.colorTheme.resolveText()
-                ) {
-                    es.send(SettingsEvent.ColorThemeSelectClick)
-                }
-                ArrowSettingBox(
-                    title = stringResource(id = R.string.default_currency),
-                    subtitle = state.currency.name.formatCurrencyName()
-                ) {
-                    es.send(SettingsEvent.CurrencySelectClick)
-                }
-                ArrowSettingBox(
-                    title = stringResource(id = R.string.help),
-                    subtitle = ""
-                ) {}
-                SwitchSettingBox(
-                    title = stringResource(id = R.string.notifications),
-                    subtitle = ""
-                ) {}
+                es.send(SettingsEvent.ColorThemeSelectClick)
             }
+            CPreferenceArrow(
+                title = stringResource(id = R.string.default_currency),
+                subtitle = state.currency.name.formatCurrencyName()
+            ) {
+                es.send(SettingsEvent.CurrencySelectClick)
+            }
+            CPreferenceArrow(title = stringResource(id = R.string.help)) {}
+            CPreferenceSwitch(title = stringResource(id = R.string.notifications)) {}
         }
     }
 }
@@ -177,25 +150,28 @@ private fun SettingsTopBar(es: EventSender<SettingsEvent>) {
             )
         },
         navigation = {
-            MenuIcon(imageVector = CapitalIcons.ArrowLeft, onClick = {
-                es.send(SettingsEvent.BackClick)
-            })
+            CIcon(
+                imageVector = CapitalIcons.ArrowLeft,
+                onClick = {
+                    es.send(SettingsEvent.BackClick)
+                }
+            )
         }
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ContentLight() {
-    ComposablePreview(isDark = true) {
-        Content(SettingsState(), MockEventSender())
+private fun SettingsScreenLight() {
+    CPreview(isDark = true) {
+        SettingsScreen(SettingsMockViewModel(), MockEventSender())
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ContentDark() {
-    ComposablePreview(isDark = true) {
-        Content(SettingsState(), MockEventSender())
+private fun SettingsScreenDark() {
+    CPreview(isDark = true) {
+        SettingsScreen(SettingsMockViewModel(), MockEventSender())
     }
 }

@@ -31,6 +31,11 @@ object CapitalTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalTypography.current
+
+    val dimensions: CapitalDimensions
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalDimensions.current
 }
 
 @Composable
@@ -38,6 +43,7 @@ fun CapitalTheme(isDark: Boolean = isSystemInDarkTheme(), content: @Composable (
     CapitalTheme(
         colors = if (isDark) darkColors() else lightColors(),
         shapes = CapitalShapes(),
+        dimensions = dimensions(),
         typography = CapitalTypography(),
         content
     )
@@ -46,6 +52,7 @@ fun CapitalTheme(isDark: Boolean = isSystemInDarkTheme(), content: @Composable (
 private fun CapitalTheme(
     colors: CapitalColors,
     shapes: CapitalShapes,
+    dimensions: CapitalDimensions,
     typography: CapitalTypography,
     content: @Composable () -> Unit
 ) {
@@ -62,7 +69,8 @@ private fun CapitalTheme(
         LocalIndication provides rippleIndication,
         LocalRippleTheme provides CapitalRippleTheme,
         LocalShapes provides shapes,
-        LocalTypography provides typography
+        LocalTypography provides typography,
+        LocalDimensions provides dimensions
     ) {
         ProvideTextStyle(value = typography.regular, content = content)
     }

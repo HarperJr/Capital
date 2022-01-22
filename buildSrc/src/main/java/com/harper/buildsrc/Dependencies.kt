@@ -67,9 +67,10 @@ fun DependencyHandlerScope.compose() {
     implementation("androidx.compose.material:material:${Version.Library.compose}")
     implementation("androidx.compose.foundation:foundation:${Version.Library.compose}")
     implementation("androidx.compose.foundation:foundation-layout:${Version.Library.compose}")
-    debugImplementation("androidx.compose.ui:ui-tooling:${Version.Library.compose}")
     implementation("androidx.compose.animation:animation:${Version.Library.compose}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
+    implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
+    debugImplementation("androidx.compose.ui:ui-tooling:${Version.Library.compose}")
 }
 
 fun DependencyHandlerScope.accompanist() {
@@ -83,6 +84,8 @@ fun DependencyHandlerScope.accompanist() {
     implementation("com.google.accompanist:accompanist-flowlayout:${Version.Library.accompanist}")
     implementation("com.google.accompanist:accompanist-permissions:${Version.Library.accompanist}")
     implementation("com.google.accompanist:accompanist-drawablepainter:${Version.Library.accompanist}")
+    implementation("com.google.accompanist:accompanist-navigation-material:${Version.Library.accompanist}")
+    implementation("com.google.accompanist:accompanist-navigation-animation:${Version.Library.accompanist}")
 }
 
 fun DependencyHandlerScope.composeConstraintLayout() {

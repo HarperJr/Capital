@@ -24,6 +24,6 @@ data class AssetEntity(
     @ColumnInfo(name = AssetTable.currencyId) val currencyId: Int,
     @ColumnInfo(name = AssetTable.amount) val amount: Double,
     @ColumnInfo(name = AssetTable.type) val type: AssetEntityType,
-    @ColumnInfo(name = AssetTable.color) val color: Long,
+    @ColumnInfo(name = AssetTable.color) val color: String,
     @ColumnInfo(name = AssetTable.icon) val icon: String
 )

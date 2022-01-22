@@ -5,12 +5,13 @@ import androidx.compose.material.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.harper.core.theme.CapitalTheme
 
 @Composable
-fun Separator(modifier: Modifier = Modifier) {
+fun CSeparator(modifier: Modifier = Modifier) {
     Divider(
         modifier = modifier,
-        color = LocalContentColor.current.copy(alpha = 0.5f),
+        color = CapitalTheme.colors.primaryVariant,
         thickness = 1.dp
     )
 }

@@ -7,14 +7,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
@@ -33,8 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.imePadding
-import com.google.accompanist.insets.navigationBarsHeight
-import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.harper.capital.R
@@ -48,14 +44,14 @@ import com.harper.capital.category.model.CategoryManageStateProvider
 import com.harper.capital.category.model.CategoryManageType
 import com.harper.capital.ext.getImageVector
 import com.harper.capital.ui.base.ScreenLayout
-import com.harper.core.component.AmountTextField
-import com.harper.core.component.ArrowSettingBox
-import com.harper.core.component.CapitalBottomSheet
-import com.harper.core.component.CapitalButton
-import com.harper.core.component.CapitalTextField
-import com.harper.core.component.ComposablePreview
-import com.harper.core.component.HorizontalSpacer
-import com.harper.core.component.MenuIcon
+import com.harper.core.component.CAmountTextField
+import com.harper.core.component.CBottomSheetScaffold
+import com.harper.core.component.CButton
+import com.harper.core.component.CHorizontalSpacer
+import com.harper.core.component.CIcon
+import com.harper.core.component.CPreferenceArrow
+import com.harper.core.component.CTextField
+import com.harper.core.component.CPreview
 import com.harper.core.component.TabBar
 import com.harper.core.component.Toolbar
 import com.harper.core.ext.formatCurrencyName
@@ -63,6 +59,7 @@ import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentFragment
+import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
 import com.harper.core.ui.withArgs
@@ -76,8 +73,7 @@ class CategoryManageFragment : ComponentFragment<CategoryManageViewModel>(), Eve
 
     override fun content(): @Composable () -> Unit = {
         ScreenLayout {
-            val state by viewModel.state.collectAsState()
-            Content(state, this)
+            CategoryManageScreen(viewModel, this)
         }
     }
 
@@ -94,17 +90,19 @@ class CategoryManageFragment : ComponentFragment<CategoryManageViewModel>(), Eve
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
-private fun Content(state: CategoryManageState, es: EventSender<CategoryManageEvent>) {
+private fun CategoryManageScreen(
+    viewModel: ComponentViewModel<CategoryManageState>,
+    es: EventSender<CategoryManageEvent>
+) {
+    val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    val bottomSheet = remember(state.bottomSheetState.bottomSheet) {
-        state.bottomSheetState.bottomSheet
-    }
 
-    ModalBottomSheetLayout(
+    CBottomSheetScaffold(
         sheetContent = {
-            CapitalBottomSheet {
-                BottomSheetContent(bottomSheet, es)
+            val bottomSheet = remember(state.bottomSheetState) {
+                state.bottomSheetState.bottomSheet
             }
+            BottomSheetContent(bottomSheet, es)
             LaunchedEffect(state.bottomSheetState) {
                 if (state.bottomSheetState.isExpended) {
                     sheetState.show()
@@ -113,59 +111,45 @@ private fun Content(state: CategoryManageState, es: EventSender<CategoryManageEv
                 }
             }
         },
+        topBar = { CategoryManageTopBar(es) },
         sheetState = sheetState,
-        sheetShape = CapitalTheme.shapes.bottomSheet,
-        sheetBackgroundColor = CapitalTheme.colors.background
     ) {
-        Scaffold(
-            backgroundColor = CapitalTheme.colors.background,
-            topBar = { CategoryManageTopBar(es) },
-            bottomBar = {
-                Spacer(
-                    modifier = Modifier
-                        .navigationBarsHeight()
-                        .fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                val pagerState = rememberPagerState(initialPage = state.selectedPage)
+                TabBar(
+                    data = state.tabBarData,
+                    selectedTabIndex = pagerState.currentPage,
+                    onTabSelect = {}
                 )
+                LaunchedEffect(pagerState) {
+                    snapshotFlow { pagerState.currentPage }.collect {
+                        es.send(CategoryManageEvent.TabSelect(it))
+                    }
+                }
+                LaunchedEffect(state.selectedPage) {
+                    pagerState.animateScrollToPage(state.selectedPage)
+                }
+                HorizontalPager(state = pagerState, count = state.pages.size) { pageIndex ->
+                    PageBlock(page = state.pages[pageIndex], es = es)
+                }
             }
-        ) { paddingValues ->
-            Column(
+            Box(
                 modifier = Modifier
+                    .imePadding()
                     .fillMaxWidth()
-                    .padding(paddingValues)
             ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    val pagerState = rememberPagerState(initialPage = state.selectedPage)
-                    TabBar(
-                        data = state.tabBarData,
-                        selectedTabIndex = pagerState.currentPage,
-                        onTabSelect = {}
-                    )
-                    LaunchedEffect(pagerState) {
-                        snapshotFlow { pagerState.currentPage }.collect {
-                            es.send(CategoryManageEvent.TabSelect(it))
-                        }
-                    }
-                    HorizontalPager(state = pagerState, count = state.pages.size) { pageIndex ->
-                        PageBlock(
-                            page = state.pages[pageIndex],
-                            es = es
-                        )
-                    }
-                }
-                Box(
+                CButton(
                     modifier = Modifier
-                        .imePadding()
                         .fillMaxWidth()
-                ) {
-                    CapitalButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.BottomCenter)
-                            .padding(16.dp),
-                        text = stringResource(id = R.string.create_new_category),
-                        onClick = { }
-                    )
-                }
+                        .align(Alignment.BottomCenter)
+                        .padding(16.dp),
+                    text = stringResource(id = R.string.create_new_category),
+                    onClick = { }
+                )
             }
         }
     }
@@ -181,12 +165,12 @@ fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
-        HorizontalSpacer(height = 32.dp)
+        CHorizontalSpacer(height = 32.dp)
         Row(modifier = Modifier.fillMaxWidth()) {
             Box(
                 modifier = Modifier
                     .size(44.dp)
-                    .background(color = CapitalTheme.colors.secondary, shape = CircleShape)
+                    .background(color = CapitalTheme.colors.primaryVariant, shape = CircleShape)
                     .clickable { es.send(CategoryManageEvent.IconSelectClick) }
             ) {
                 Image(
@@ -196,7 +180,7 @@ fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
                     colorFilter = ColorFilter.tint(color = CapitalTheme.colors.onBackground)
                 )
             }
-            CapitalTextField(
+            CTextField(
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 8.dp)
@@ -207,16 +191,16 @@ fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
                 textColor = CapitalTheme.colors.onBackground
             )
         }
-        HorizontalSpacer(height = 24.dp)
-        AmountTextField(
+        CHorizontalSpacer(height = 24.dp)
+        CAmountTextField(
             modifier = Modifier.fillMaxWidth(),
             amount = amount.value,
             placeholder = stringResource(id = R.string.enter_amount_hint),
             onValueChange = { amount.value = it },
             textColor = CapitalTheme.colors.onBackground
         )
-        HorizontalSpacer(height = 24.dp)
-        ArrowSettingBox(
+        CHorizontalSpacer(height = 24.dp)
+        CPreferenceArrow(
             modifier = Modifier.fillMaxWidth(),
             title = "${page.currency.name} ${page.currency.name.formatCurrencySymbol()}",
             subtitle = page.currency.name.formatCurrencyName()
@@ -253,12 +237,11 @@ private fun CategoryManageTopBar(es: EventSender<CategoryManageEvent>) {
             Text(
                 modifier = Modifier.padding(start = 16.dp),
                 text = stringResource(id = R.string.new_category),
-                style = CapitalTheme.typography.title,
-                color = CapitalTheme.colors.onBackground
+                style = CapitalTheme.typography.title
             )
         },
         navigation = {
-            MenuIcon(
+            CIcon(
                 imageVector = CapitalIcons.ArrowLeft,
                 onClick = { es.send(CategoryManageEvent.BlackClick) }
             )
@@ -268,16 +251,16 @@ private fun CategoryManageTopBar(es: EventSender<CategoryManageEvent>) {
 
 @Preview
 @Composable
-private fun ContentLight(@PreviewParameter(CategoryManageStateProvider::class) state: CategoryManageState) {
-    ComposablePreview {
-        Content(state = state, MockEventSender())
+private fun CategoryManageScreenLight(@PreviewParameter(CategoryManageStateProvider::class) state: CategoryManageState) {
+    CPreview {
+        CategoryManageScreen(CategoryManageMockViewModel(), MockEventSender())
     }
 }
 
 @Preview
 @Composable
-private fun ContentDark(@PreviewParameter(CategoryManageStateProvider::class) state: CategoryManageState) {
-    ComposablePreview(isDark = true) {
-        Content(state = state, MockEventSender())
+private fun CategoryManageScreenDark(@PreviewParameter(CategoryManageStateProvider::class) state: CategoryManageState) {
+    CPreview(isDark = true) {
+        CategoryManageScreen(CategoryManageMockViewModel(), MockEventSender())
     }
 }

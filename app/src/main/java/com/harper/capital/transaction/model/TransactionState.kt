@@ -7,7 +7,7 @@ import com.harper.core.component.Tab
 import com.harper.core.component.TabBarData
 
 data class TransactionState(
-    val selectedPage: Int = 0,
+    val selectedPage: Int,
     val pages: List<TransactionPage> = emptyPages()
 ) {
     val tabBarData: TabBarData

@@ -4,11 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.ViewWindowInsetObserver
 import com.harper.core.ext.cast
 import com.harper.core.ext.tryCast
 import org.koin.androidx.scope.fragmentScope
@@ -30,8 +34,12 @@ abstract class ComponentFragment<VM : ComponentViewModel<*>> : Fragment() {
         savedInstanceState: Bundle?
     ): View = ComposeView(inflater.context)
         .apply {
+            layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+            val windowInsets = ViewWindowInsetObserver(this).start()
             setContent {
-                content().invoke()
+                CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
+                    content().invoke()
+                }
             }
         }
 

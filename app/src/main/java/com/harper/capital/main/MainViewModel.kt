@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.collect
 class MainViewModel(
     private val router: GlobalRouter,
     private val fetchAssetsUseCase: FetchAssetsUseCase
-) : ComponentViewModel<MainState>(MainState.Loading),
+) : ComponentViewModel<MainState>(defaultState = MainState()),
     EventObserver<MainEvent> {
 
     override fun onFirstStart() {
@@ -27,7 +27,7 @@ class MainViewModel(
             fetchAssetsUseCase()
                 .collect { assets ->
                     mutateState {
-                        MainState.Data(account = Account(12455.23, Currency.RUB), assets = assets)
+                        MainState(account = Account(12455.23, Currency.RUB), assets = assets)
                     }
                 }
         }

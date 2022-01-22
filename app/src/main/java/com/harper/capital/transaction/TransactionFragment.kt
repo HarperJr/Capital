@@ -2,7 +2,6 @@ package com.harper.capital.transaction
 
 import android.os.Parcelable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,30 +17,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.insets.navigationBarsHeight
-import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.harper.capital.R
 import com.harper.capital.transaction.component.AssetSource
 import com.harper.capital.transaction.component.NewSource
-import com.harper.capital.transaction.model.AssetDataSet
 import com.harper.capital.transaction.model.DataSetSection
 import com.harper.capital.transaction.model.TransactionEvent
+import com.harper.capital.transaction.model.TransactionPage
 import com.harper.capital.transaction.model.TransactionState
 import com.harper.capital.transaction.model.TransactionStateProvider
 import com.harper.capital.transaction.model.TransactionType
 import com.harper.capital.ui.base.ScreenLayout
-import com.harper.core.component.CapitalButton
-import com.harper.core.component.ComposablePreview
-import com.harper.core.component.HorizontalSpacer
-import com.harper.core.component.MenuIcon
+import com.harper.core.component.CButton
+import com.harper.core.component.CHorizontalSpacer
+import com.harper.core.component.CIcon
+import com.harper.core.component.CScaffold
+import com.harper.core.component.CPreview
 import com.harper.core.component.TabBar
 import com.harper.core.component.Toolbar
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentFragment
+import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
 import com.harper.core.ui.withArgs
@@ -55,8 +54,7 @@ class TransactionFragment : ComponentFragment<TransactionViewModel>(), EventSend
 
     override fun content(): @Composable () -> Unit = {
         ScreenLayout {
-            val state by viewModel.state.collectAsState()
-            Content(state, this)
+            TransactionScreen(viewModel, this)
         }
     }
 
@@ -71,30 +69,23 @@ class TransactionFragment : ComponentFragment<TransactionViewModel>(), EventSend
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Composable
-private fun Content(state: TransactionState, es: EventSender<TransactionEvent>) {
-    Scaffold(
-        backgroundColor = CapitalTheme.colors.background,
+@OptIn(ExperimentalPagerApi::class)
+private fun TransactionScreen(viewModel: ComponentViewModel<TransactionState>, es: EventSender<TransactionEvent>) {
+    val state by viewModel.state.collectAsState()
+
+    CScaffold(
         topBar = { TransactionTopBar(es) },
-        bottomBar = {
-            Spacer(
-                Modifier
-                    .navigationBarsHeight()
-                    .fillMaxWidth()
-            )
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingValues)
-        ) {
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
                 val pagerState = rememberPagerState(initialPage = state.selectedPage)
-                LaunchedEffect(state) {
+                LaunchedEffect(state.selectedPage) {
+                    pagerState.animateScrollToPage(state.selectedPage)
+                }
+                LaunchedEffect(pagerState) {
                     snapshotFlow { pagerState.currentPage }.collect { page ->
                         es.send(TransactionEvent.TabSelect(page))
                     }
@@ -108,14 +99,14 @@ private fun Content(state: TransactionState, es: EventSender<TransactionEvent>) 
                     state = pagerState,
                     count = state.pages.size
                 ) { pageIndex ->
-                    DataSetsBlock(
-                        dataSets = state.pages[pageIndex].assetDataSets,
+                    PageBlock(
+                        page = state.pages[pageIndex],
                         pageIndex = pageIndex,
                         es = es
                     )
                 }
             }
-            CapitalButton(
+            CButton(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
@@ -127,16 +118,16 @@ private fun Content(state: TransactionState, es: EventSender<TransactionEvent>) 
 }
 
 @Composable
-private fun DataSetsBlock(dataSets: List<AssetDataSet>, pageIndex: Int, es: EventSender<TransactionEvent>) {
+private fun PageBlock(page: TransactionPage, pageIndex: Int, es: EventSender<TransactionEvent>) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
-        dataSets.forEach { dataSet ->
-            HorizontalSpacer(height = 24.dp)
+        page.assetDataSets.forEach { dataSet ->
+            CHorizontalSpacer(height = 24.dp)
             Text(text = dataSet.section.resolveTitle(), style = CapitalTheme.typography.button)
-            HorizontalSpacer(height = 8.dp)
+            CHorizontalSpacer(height = 8.dp)
             FlowRow(
                 mainAxisSpacing = 8.dp,
                 crossAxisSpacing = 8.dp
@@ -169,7 +160,7 @@ private fun TransactionTopBar(es: EventSender<TransactionEvent>) {
             )
         },
         navigation = {
-            MenuIcon(imageVector = CapitalIcons.ArrowLeft, onClick = {
+            CIcon(imageVector = CapitalIcons.ArrowLeft, onClick = {
                 es.send(TransactionEvent.BackClick)
             })
         }
@@ -178,10 +169,8 @@ private fun TransactionTopBar(es: EventSender<TransactionEvent>) {
 
 @Preview(showBackground = true)
 @Composable
-private fun ContentLight(
-    @PreviewParameter(TransactionStateProvider::class) transactionState: TransactionState
-) {
-    Content(state = transactionState, es = MockEventSender())
+private fun ContentLight() {
+    TransactionScreen(TransactionMockViewModel(), es = MockEventSender())
 }
 
 @Preview(showBackground = true)
@@ -189,7 +178,7 @@ private fun ContentLight(
 private fun ContentDark(
     @PreviewParameter(TransactionStateProvider::class) transactionState: TransactionState
 ) {
-    ComposablePreview(isDark = true) {
-        Content(state = transactionState, es = MockEventSender())
+    CPreview(isDark = true) {
+        TransactionScreen(TransactionMockViewModel(), es = MockEventSender())
     }
 }

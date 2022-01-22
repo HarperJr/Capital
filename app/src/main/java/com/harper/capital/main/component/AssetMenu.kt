@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Card
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,21 +22,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harper.capital.R
-import com.harper.core.component.ComposablePreview
+import com.harper.capital.domain.model.AssetColor
+import com.harper.capital.ext.assetBackgroundColor
+import com.harper.capital.ext.assetContentColorFor
+import com.harper.core.component.CPreview
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 
 @Composable
-fun AssetToolbar(
+fun AssetMenu(
     modifier: Modifier = Modifier,
-    color: Color,
+    color: AssetColor,
     onHistoryClick: () -> Unit,
     onIncomeClick: () -> Unit,
     onExpenseClick: () -> Unit,
     onEditClick: (() -> Unit)? = null
 ) {
-    Card(modifier = modifier, elevation = 6.dp, backgroundColor = color, shape = CapitalTheme.shapes.extraLarge) {
+    val cardBackgroundColor = assetBackgroundColor(color)
+    Card(
+        modifier = modifier,
+        elevation = 6.dp,
+        backgroundColor = cardBackgroundColor,
+        contentColor = assetContentColorFor(cardBackgroundColor),
+        shape = CapitalTheme.shapes.extraLarge
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -83,13 +94,12 @@ private fun ToolbarItem(modifier: Modifier = Modifier, icon: ImageVector, text: 
                 .align(Alignment.CenterHorizontally),
             imageVector = icon,
             contentDescription = null,
-            colorFilter = ColorFilter.tint(color = CapitalColors.White)
+            colorFilter = ColorFilter.tint(color = LocalContentColor.current)
         )
         Text(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             style = CapitalTheme.typography.titleSmall,
             text = text,
-            color = CapitalColors.White
         )
     }
 }
@@ -97,11 +107,11 @@ private fun ToolbarItem(modifier: Modifier = Modifier, icon: ImageVector, text: 
 @Preview
 @Composable
 private fun CardToolbarLight() {
-    ComposablePreview {
+    CPreview {
         Box(modifier = Modifier.background(CapitalTheme.colors.background)) {
-            AssetToolbar(modifier = Modifier
+            AssetMenu(modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp), color = CapitalColors.CodGray, {}, {}, {}, {})
+                .padding(16.dp), color = AssetColor.RAIFFEIZEN, {}, {}, {}, {})
         }
     }
 }
@@ -109,11 +119,11 @@ private fun CardToolbarLight() {
 @Preview
 @Composable
 private fun CardbarboxDark() {
-    ComposablePreview(isDark = true) {
+    CPreview(isDark = true) {
         Box(modifier = Modifier.background(CapitalTheme.colors.background)) {
-            AssetToolbar(modifier = Modifier
+            AssetMenu(modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp), color = CapitalColors.CodGray, {}, {}, {}, {})
+                .padding(16.dp), color = AssetColor.SBER, {}, {}, {}, {})
         }
     }
 }

@@ -26,10 +26,10 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.imePadding
 import com.harper.capital.R
 import com.harper.capital.domain.model.Currency
-import com.harper.core.component.CapitalTextField
-import com.harper.core.component.ComposablePreview
-import com.harper.core.component.HorizontalSpacer
-import com.harper.core.component.Separator
+import com.harper.core.component.CTextField
+import com.harper.core.component.CPreview
+import com.harper.core.component.CHorizontalSpacer
+import com.harper.core.component.CSeparator
 import com.harper.core.ext.formatCurrencyName
 import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalColors
@@ -55,8 +55,8 @@ fun CurrencyBottomSheet(
             .fillMaxWidth()
             .imePadding()
     ) {
-        HorizontalSpacer(height = 8.dp)
-        CapitalTextField(
+        CHorizontalSpacer(height = 8.dp)
+        CTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -77,7 +77,7 @@ fun CurrencyBottomSheet(
                 .fillMaxWidth()
                 .height(16.dp)
         )
-        Separator(
+        CSeparator(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -134,7 +134,7 @@ private fun CurrencyItem(modifier: Modifier = Modifier, currency: Currency, isSe
 @Preview
 @Composable
 private fun CurrencyBottomSheetLight() {
-    ComposablePreview {
+    CPreview {
         Box(modifier = Modifier.background(color = CapitalTheme.colors.background)) {
             CurrencyBottomSheet(
                 currencies = Currency.values().toList(),
@@ -148,7 +148,7 @@ private fun CurrencyBottomSheetLight() {
 @Preview
 @Composable
 private fun CurrencyBottomSheetDark() {
-    ComposablePreview(isDark = true) {
+    CPreview(isDark = true) {
         Box(modifier = Modifier.background(color = CapitalTheme.colors.background)) {
             CurrencyBottomSheet(
                 currencies = Currency.values().toList(),

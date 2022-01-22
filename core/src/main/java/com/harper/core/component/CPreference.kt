@@ -23,24 +23,30 @@ import com.harper.core.theme.CapitalTheme
 import com.harper.core.theme.capitalSwitchColors
 
 @Composable
-fun SettingBox(modifier: Modifier = Modifier, title: String, subtitle: String, action: @Composable () -> Unit) {
+private fun CPreference(
+    modifier: Modifier = Modifier,
+    title: String,
+    subtitle: String?,
+    action: @Composable () -> Unit
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = CapitalTheme.colors.background)
-            .padding(vertical = 8.dp)
+            .padding(vertical = if (subtitle == null) 16.dp else 8.dp)
     ) {
-        Column(modifier = Modifier.weight(1f, fill = true)) {
+        Column(modifier = Modifier.weight(1f).align(Alignment.CenterVertically)) {
             Text(text = title, style = CapitalTheme.typography.subtitle)
-            Text(text = subtitle, style = CapitalTheme.typography.regular)
+            subtitle?.let {
+                Text(text = it, style = CapitalTheme.typography.regular, color = CapitalTheme.colors.textSecondary)
+            }
         }
         Box(modifier = Modifier.align(Alignment.CenterVertically)) { action.invoke() }
     }
 }
 
 @Composable
-fun ArrowSettingBox(modifier: Modifier = Modifier, title: String, subtitle: String, onClick: () -> Unit) {
-    SettingBox(modifier.clickable { onClick.invoke() }, title = title, subtitle = subtitle) {
+fun CPreferenceArrow(modifier: Modifier = Modifier, title: String, subtitle: String? = null, onClick: () -> Unit) {
+    CPreference(modifier.clickable { onClick.invoke() }, title = title, subtitle = subtitle) {
         Image(
             imageVector = CapitalIcons.ArrowRight,
             contentDescription = null,
@@ -51,15 +57,15 @@ fun ArrowSettingBox(modifier: Modifier = Modifier, title: String, subtitle: Stri
 
 
 @Composable
-fun SwitchSettingBox(
+fun CPreferenceSwitch(
     modifier: Modifier = Modifier,
     title: String,
-    subtitle: String,
+    subtitle: String? = null,
     isChecked: Boolean = false,
     onCheckedChange: (Boolean) -> Unit
 ) {
     val isSwitchChecked = remember(isChecked) { mutableStateOf(isChecked) }
-    SettingBox(
+    CPreference(
         modifier.clickable {
             isSwitchChecked.value = !isSwitchChecked.value
             onCheckedChange.invoke(isSwitchChecked.value)
@@ -81,18 +87,18 @@ fun SwitchSettingBox(
 @Preview
 @Composable
 private fun SettingBoxLight() {
-    ComposablePreview {
+    CPreview {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(color = CapitalTheme.colors.background)
         ) {
-            ArrowSettingBox(
+            CPreferenceArrow(
                 modifier = Modifier.fillMaxWidth(),
                 title = "Arrow setting",
                 subtitle = "Use this setting"
             ) {}
-            SwitchSettingBox(
+            CPreferenceSwitch(
                 modifier = Modifier.fillMaxWidth(),
                 title = "Checkbox setting",
                 subtitle = "Use this setting"
@@ -104,18 +110,18 @@ private fun SettingBoxLight() {
 @Preview
 @Composable
 private fun SettingBoxDark() {
-    ComposablePreview(isDark = true) {
+    CPreview(isDark = true) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(color = CapitalTheme.colors.background)
         ) {
-            ArrowSettingBox(
+            CPreferenceArrow(
                 modifier = Modifier.fillMaxWidth(),
                 title = "Arrow setting",
                 subtitle = "Use this setting"
             ) {}
-            SwitchSettingBox(
+            CPreferenceSwitch(
                 modifier = Modifier.fillMaxWidth(),
                 title = "Checkbox setting",
                 subtitle = "Use this setting"

@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,24 +23,22 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.navigationBarsHeight
-import com.google.accompanist.insets.statusBarsHeight
-import com.google.accompanist.insets.statusBarsPadding
-import com.google.accompanist.insets.ui.Scaffold
 import com.harper.capital.R
 import com.harper.capital.auth.signin.model.SignInEvent
 import com.harper.capital.auth.signin.model.SignInState
 import com.harper.capital.ui.base.ScreenLayout
-import com.harper.core.component.CapitalButton
-import com.harper.core.component.CapitalTextField
-import com.harper.core.component.Chip
-import com.harper.core.component.ComposablePreview
-import com.harper.core.component.HorizontalSpacer
-import com.harper.core.component.Separator
+import com.harper.core.component.CButton
+import com.harper.core.component.CChip
+import com.harper.core.component.CHorizontalSpacer
+import com.harper.core.component.CScaffold
+import com.harper.core.component.CSeparator
+import com.harper.core.component.CTextField
+import com.harper.core.component.CPreview
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.theme.capitalButtonColors
 import com.harper.core.ui.ComponentFragment
+import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
 
@@ -50,8 +47,7 @@ class SignInFragment : ComponentFragment<SignInViewModel>(), EventSender<SignInE
 
     override fun content(): @Composable () -> Unit = {
         ScreenLayout {
-            val state by viewModel.state.collectAsState()
-            Content(state, this)
+            SignInScreen(viewModel, this)
         }
     }
 
@@ -69,30 +65,10 @@ val Google
     get() = ImageVector.vectorResource(id = R.drawable.ic_google)
 
 @Composable
-private fun Content(state: SignInState, es: EventSender<SignInEvent>) {
-    Scaffold(
-        modifier = Modifier.statusBarsPadding(),
-        backgroundColor = CapitalTheme.colors.background,
-        topBar = {
-            Spacer(
-                modifier = Modifier
-                    .statusBarsHeight()
-                    .fillMaxWidth()
-            )
-        },
-        bottomBar = {
-            Spacer(
-                modifier = Modifier
-                    .navigationBarsHeight()
-                    .fillMaxWidth()
-            )
-        }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
+private fun SignInScreen(viewModel: ComponentViewModel<SignInState>, es: EventSender<SignInEvent>) {
+    val state by viewModel.state.collectAsState()
+    CScaffold {
+        Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -100,38 +76,37 @@ private fun Content(state: SignInState, es: EventSender<SignInEvent>) {
                     .align(Alignment.Center)
             ) {
                 val username = rememberSaveable { mutableStateOf(state.username) }
-                CapitalTextField(
+                CTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = username.value,
                     placeholder = stringResource(id = R.string.username_or_email_hint),
                     onValueChange = { es.send(SignInEvent.UsernameChange(it)) })
-                HorizontalSpacer(height = 24.dp)
-
+                CHorizontalSpacer(height = 24.dp)
                 val password = rememberSaveable { mutableStateOf(state.password) }
-                CapitalTextField(
+                CTextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = password.value,
                     placeholder = stringResource(id = R.string.password_hint),
                     visualTransformation = PasswordVisualTransformation(),
                     onValueChange = { es.send(SignInEvent.PasswordChange(it)) }
                 )
-                HorizontalSpacer(height = 8.dp)
+                CHorizontalSpacer(height = 8.dp)
                 Text(
                     modifier = Modifier.align(Alignment.End),
                     text = stringResource(id = R.string.forgot_password),
                     style = CapitalTheme.typography.buttonSmall,
                     color = CapitalColors.Blue
                 )
-                HorizontalSpacer(height = 16.dp)
-                CapitalButton(
+                CHorizontalSpacer(height = 16.dp)
+                CButton(
                     modifier = Modifier.fillMaxWidth(),
                     text = stringResource(id = R.string.sign_in)
                 ) {
 
                 }
-                HorizontalSpacer(height = 16.dp)
+                CHorizontalSpacer(height = 16.dp)
                 Box(modifier = Modifier.fillMaxWidth()) {
-                    Separator(modifier = Modifier.align(Alignment.Center))
+                    CSeparator(modifier = Modifier.align(Alignment.Center))
                     Text(
                         modifier = Modifier
                             .background(color = CapitalTheme.colors.background)
@@ -141,9 +116,9 @@ private fun Content(state: SignInState, es: EventSender<SignInEvent>) {
                         color = CapitalTheme.colors.onBackground
                     )
                 }
-                HorizontalSpacer(height = 16.dp)
+                CHorizontalSpacer(height = 16.dp)
                 ServiceSignBlock(es)
-                HorizontalSpacer(height = 16.dp)
+                CHorizontalSpacer(height = 16.dp)
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = stringResource(id = R.string.dont_have_an_account),
@@ -151,7 +126,7 @@ private fun Content(state: SignInState, es: EventSender<SignInEvent>) {
                     color = CapitalColors.Blue
                 )
             }
-            Chip(
+            CChip(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(16.dp),
@@ -165,7 +140,7 @@ private fun Content(state: SignInState, es: EventSender<SignInEvent>) {
 
 @Composable
 private fun ServiceSignBlock(es: EventSender<SignInEvent>) {
-    CapitalButton(
+    CButton(
         modifier = Modifier.fillMaxWidth(),
         text = stringResource(id = R.string.continue_with_apple),
         textColor = CapitalTheme.colors.background,
@@ -180,8 +155,8 @@ private fun ServiceSignBlock(es: EventSender<SignInEvent>) {
     ) {
 
     }
-    HorizontalSpacer(height = 16.dp)
-    CapitalButton(
+    CHorizontalSpacer(height = 16.dp)
+    CButton(
         modifier = Modifier.fillMaxWidth(),
         text = stringResource(id = R.string.continue_with_google),
         textColor = CapitalColors.Black,
@@ -193,19 +168,18 @@ private fun ServiceSignBlock(es: EventSender<SignInEvent>) {
     }
 }
 
-@Preview(showBackground = true, name = "SignIn light")
+@Preview(showBackground = true, name = "SignIn Light")
 @Composable
-fun ContentLight() {
-    ComposablePreview {
-        Content(SignInState(), MockEventSender())
+fun SignInScreenLight() {
+    CPreview {
+        SignInScreen(SignInMockViewModel(), MockEventSender())
     }
 }
 
-@Preview(showBackground = true, name = "SignIn dark")
+@Preview(showBackground = true, name = "SignIn Dark")
 @Composable
-fun ContentDark() {
-    ComposablePreview(isDark = true) {
-        Content(SignInState(), MockEventSender())
+fun SignInScreenDark() {
+    CPreview(isDark = true) {
+        SignInScreen(SignInMockViewModel(), MockEventSender())
     }
 }
-

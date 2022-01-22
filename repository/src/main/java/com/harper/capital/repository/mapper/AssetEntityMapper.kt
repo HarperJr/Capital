@@ -13,7 +13,7 @@ internal object AssetEntityMapper : (Asset) -> AssetEntity {
             amount = amount,
             type = metadata.let(AssetTypeEntityMapper),
             icon = model.icon.name,
-            color = model.color.value
+            color = model.color.name
         )
     }
 }

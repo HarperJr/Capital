@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -26,9 +25,11 @@ import com.harper.capital.domain.model.AssetColor
 import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.domain.model.AssetMetadata
 import com.harper.capital.domain.model.Currency
+import com.harper.capital.ext.assetBackgroundColor
 import com.harper.capital.ext.getImageVector
-import com.harper.core.component.AmountText
-import com.harper.core.component.ComposablePreview
+import com.harper.capital.ext.assetContentColorFor
+import com.harper.core.component.CAmountText
+import com.harper.core.component.CPreview
 import com.harper.core.ext.compose.assetCardSize
 import com.harper.core.ext.formatWithCurrencySymbol
 import com.harper.core.theme.CapitalColors
@@ -39,9 +40,11 @@ fun AssetCard(
     modifier: Modifier = Modifier,
     asset: Asset
 ) {
+    val cardBackgroundColor = assetBackgroundColor(asset.color)
     Card(
         modifier = modifier.assetCardSize(),
-        backgroundColor = Color(asset.color.value),
+        backgroundColor = cardBackgroundColor,
+        contentColor = assetContentColorFor(cardBackgroundColor),
         elevation = 6.dp,
         shape = CapitalTheme.shapes.extraLarge
     ) {
@@ -65,9 +68,9 @@ fun AssetCard(
                     },
                 imageVector = asset.icon.getImageVector(),
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(color = CapitalColors.White)
+                colorFilter = ColorFilter.tint(color = assetContentColorFor(cardBackgroundColor))
             )
-            AmountText(
+            CAmountText(
                 modifier = Modifier
                     .constrainAs(amount) {
                         start.linkTo(parent.start, margin = 16.dp)
@@ -75,7 +78,6 @@ fun AssetCard(
                     },
                 amount = asset.amount,
                 currencyIso = asset.currency.name,
-                color = CapitalColors.White,
                 style = CapitalTheme.typography.header
             )
 
@@ -110,8 +112,7 @@ fun AssetCard(
                         bottom.linkTo(parent.bottom, margin = 12.dp)
                         start.linkTo(parent.start, margin = 16.dp)
                     },
-                text = asset.name,
-                color = CapitalColors.White
+                text = asset.name
             )
         }
     }
@@ -122,13 +123,13 @@ fun MetadataBlock(modifier: Modifier = Modifier, type: String, info: String) {
     Column(modifier = modifier) {
         Text(
             text = type,
-            color = CapitalColors.GreyLight,
+            color = CapitalTheme.colors.textSecondary,
             style = CapitalTheme.typography.regularSmall
         )
         Text(
             modifier = Modifier.padding(top = 4.dp),
             text = info,
-            color = CapitalColors.White,
+            color = CapitalTheme.colors.textSecondary,
             style = CapitalTheme.typography.regularSmall
         )
     }
@@ -137,7 +138,7 @@ fun MetadataBlock(modifier: Modifier = Modifier, type: String, info: String) {
 @Preview
 @Composable
 private fun AssetCardLight() {
-    ComposablePreview {
+    CPreview {
         Box(
             modifier = Modifier
                 .background(CapitalTheme.colors.background)
@@ -151,7 +152,7 @@ private fun AssetCardLight() {
                     Currency.RUB,
                     metadata = AssetMetadata.Credit(limit = 75000.00),
                     icon = AssetIcon.TINKOFF,
-                    color = AssetColor.DARK_TINKOFF
+                    color = AssetColor.TINKOFF
                 )
             )
         }
@@ -161,7 +162,7 @@ private fun AssetCardLight() {
 @Preview
 @Composable
 private fun AssetCardDark() {
-    ComposablePreview(isDark = true) {
+    CPreview(isDark = true) {
         Box(
             modifier = Modifier
                 .background(CapitalTheme.colors.background)
@@ -175,7 +176,7 @@ private fun AssetCardDark() {
                     Currency.EUR,
                     icon = AssetIcon.TINKOFF,
                     metadata = AssetMetadata.Goal(goal = 100000.00),
-                    color = AssetColor.DARK_TINKOFF
+                    color = AssetColor.TINKOFF
                 )
             )
         }

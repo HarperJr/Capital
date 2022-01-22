@@ -12,9 +12,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.harper.core.R
-import com.harper.core.component.ComposablePreview
-import com.harper.core.component.Grid
-import com.harper.core.component.MenuIcon
+import com.harper.core.component.CPreview
+import com.harper.core.component.CWrappedGrid
+import com.harper.core.component.CIcon
 
 object CapitalIcons {
 
@@ -124,8 +124,8 @@ private fun Icons() {
         CapitalIcons.ArrowRight,
         CapitalIcons.RoundCheck
     )
-    Grid(modifier = Modifier.background(CapitalTheme.colors.background), columns = 6, icons) {
-        MenuIcon(imageVector = it)
+    CWrappedGrid(modifier = Modifier.background(CapitalTheme.colors.background), columns = 6, icons) {
+        CIcon(imageVector = it)
     }
 }
 
@@ -143,15 +143,15 @@ private fun BankIcons() {
         CapitalIcons.Bank.Bitcoin,
         CapitalIcons.Bank.PiggyBank
     )
-    Grid(modifier = Modifier.background(CapitalTheme.colors.background), columns = 6, icons) {
-        MenuIcon(imageVector = it)
+    CWrappedGrid(modifier = Modifier.background(CapitalTheme.colors.background), columns = 6, icons) {
+        CIcon(imageVector = it)
     }
 }
 
 @Preview
 @Composable
 private fun IconsLight() {
-    ComposablePreview {
+    CPreview {
         Icons()
     }
 }
@@ -159,7 +159,7 @@ private fun IconsLight() {
 @Preview
 @Composable
 private fun IconsDark() {
-    ComposablePreview(isDark = true) {
+    CPreview(isDark = true) {
         Icons()
     }
 }
@@ -167,7 +167,7 @@ private fun IconsDark() {
 @Preview
 @Composable
 private fun BankIconsLight() {
-    ComposablePreview {
+    CPreview {
         BankIcons()
     }
 }
@@ -175,7 +175,7 @@ private fun BankIconsLight() {
 @Preview
 @Composable
 private fun BankIconsDark() {
-    ComposablePreview(isDark = true) {
+    CPreview(isDark = true) {
         BankIcons()
     }
 }

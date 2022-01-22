@@ -7,12 +7,13 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun capitalButtonColors(
-    backgroundColor: Color = CapitalColors.Blue,
-    disabledBackgroundColor: Color = CapitalColors.BlueLight,
-    contentColor: Color = CapitalColors.White
+    backgroundColor: Color = CapitalTheme.colors.secondary,
+    disabledBackgroundColor: Color = CapitalTheme.colors.secondaryVariant,
+    contentColor: Color = CapitalTheme.colors.onSecondary,
+    disabledContentColor: Color = CapitalTheme.colors.onSecondary
 ): ButtonColors = ButtonDefaults.buttonColors(
     backgroundColor = backgroundColor,
     contentColor = contentColor,
     disabledBackgroundColor = disabledBackgroundColor,
-    disabledContentColor = CapitalColors.White
+    disabledContentColor = disabledContentColor
 )

@@ -14,8 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harper.capital.domain.model.AssetType
 import com.harper.capital.ext.resolveText
-import com.harper.core.component.ComposablePreview
-import com.harper.core.component.HorizontalSpacer
+import com.harper.core.component.CPreview
+import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
@@ -28,7 +28,7 @@ fun SelectorBottomSheet(
     val sbsData = rememberSelectorBottomSheetData(data)
 
     Column(modifier = modifier) {
-        HorizontalSpacer(height = 8.dp)
+        CHorizontalSpacer(height = 8.dp)
         sbsData.values.forEach {
             val color = if (sbsData.selectedValue == it.name) {
                 CapitalColors.Blue
@@ -58,7 +58,7 @@ fun SelectorBottomSheet(
 @Preview
 @Composable
 private fun AssetTypeBottomSheetLight() {
-    ComposablePreview {
+    CPreview {
         SelectorBottomSheet(
             modifier = Modifier.fillMaxWidth(),
             data = SelectorBottomSheetData(
@@ -73,7 +73,7 @@ private fun AssetTypeBottomSheetLight() {
 @Preview
 @Composable
 private fun AssetTypeBottomSheetDark() {
-    ComposablePreview {
+    CPreview {
         SelectorBottomSheet(
             modifier = Modifier.fillMaxWidth(),
             data = SelectorBottomSheetData(
