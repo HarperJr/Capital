@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-abstract class ComponentViewModel<S : Any>(private val defaultState: S) : ViewModel() {
+abstract class ComponentViewModel<S : Any>(defaultState: S, isLoading: Boolean = false) : ViewModel() {
     val state: StateFlow<S>
         get() = _state
     private val _state: MutableStateFlow<S> = MutableStateFlow(defaultState)

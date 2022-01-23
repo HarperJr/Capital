@@ -105,19 +105,19 @@ class CapitalColors(
 
     override fun toString(): String {
         return "Colors(" +
-                "primary=$primary, " +
-                "primaryVariant=$primaryVariant, " +
-                "secondary=$secondary, " +
-                "secondaryVariant=$secondaryVariant, " +
-                "textPrimary=$textPrimary, " +
-                "textSecondary=$textSecondary, " +
-                "background=$background, " +
-                "error=$error, " +
-                "onPrimary=$onPrimary, " +
-                "onSecondary=$onSecondary, " +
-                "onBackground=$onBackground, " +
-                "isLight=$isLight" +
-                ")"
+            "primary=$primary, " +
+            "primaryVariant=$primaryVariant, " +
+            "secondary=$secondary, " +
+            "secondaryVariant=$secondaryVariant, " +
+            "textPrimary=$textPrimary, " +
+            "textSecondary=$textSecondary, " +
+            "background=$background, " +
+            "error=$error, " +
+            "onPrimary=$onPrimary, " +
+            "onSecondary=$onSecondary, " +
+            "onBackground=$onBackground, " +
+            "isLight=$isLight" +
+            ")"
     }
 
     companion object {
@@ -165,7 +165,7 @@ fun darkColors(
     primary: Color = primaryDark,
     primaryVariant: Color = primaryVariantDark,
     secondary: Color = secondaryDark,
-    accent: Color = secondaryVariantDark,
+    secondaryVariant: Color = secondaryVariantDark,
     textPrimary: Color = textPrimaryDark,
     textSecondary: Color = textSecondaryDark,
     background: Color = backgroundDark,
@@ -177,7 +177,7 @@ fun darkColors(
     primary,
     primaryVariant,
     secondary,
-    accent,
+    secondaryVariant,
     textPrimary,
     textSecondary,
     background,
@@ -190,7 +190,11 @@ fun darkColors(
 
 fun CapitalColors.updateColorsFrom(other: CapitalColors) {
     primary = other.primary
+    primaryVariant = other.primaryVariant
     secondary = other.secondary
+    secondaryVariant = other.secondaryVariant
+    textPrimary = other.textPrimary
+    textSecondary = other.textSecondary
     background = other.background
     error = other.error
     onPrimary = other.onPrimary

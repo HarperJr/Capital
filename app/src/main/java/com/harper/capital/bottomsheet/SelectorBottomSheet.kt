@@ -14,8 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harper.capital.domain.model.AssetType
 import com.harper.capital.ext.resolveText
-import com.harper.core.component.CPreview
 import com.harper.core.component.CHorizontalSpacer
+import com.harper.core.component.CPreview
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
@@ -26,20 +26,13 @@ fun SelectorBottomSheet(
     onValueSelect: (String) -> Unit
 ) {
     val sbsData = rememberSelectorBottomSheetData(data)
-
     Column(modifier = modifier) {
         CHorizontalSpacer(height = 8.dp)
         sbsData.values.forEach {
-            val color = if (sbsData.selectedValue == it.name) {
-                CapitalColors.Blue
-            } else {
-                CapitalTheme.colors.onBackground
-            }
-            val selectorColor = if (sbsData.selectedValue == it.name) {
-                CapitalColors.GreyLight
-            } else {
-                CapitalColors.Transparent
-            }
+            val contentColor =
+                if (sbsData.selectedValue == it.name) CapitalTheme.colors.secondary else CapitalTheme.colors.textPrimary
+            val selectorColor = if (sbsData.selectedValue == it.name)
+                CapitalTheme.colors.primaryVariant else CapitalColors.Transparent
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -48,7 +41,7 @@ fun SelectorBottomSheet(
                     .clickable { onValueSelect.invoke(it.name) }
                     .padding(vertical = 8.dp),
                 text = it.text,
-                color = color,
+                color = contentColor,
                 textAlign = TextAlign.Center
             )
         }
@@ -62,7 +55,8 @@ private fun AssetTypeBottomSheetLight() {
         SelectorBottomSheet(
             modifier = Modifier.fillMaxWidth(),
             data = SelectorBottomSheetData(
-                values = AssetType.values().map { SelectorBottomSheetData.Value(it.name, it.resolveText()) },
+                values = AssetType.values()
+                    .map { SelectorBottomSheetData.Value(it.name, it.resolveText()) },
                 selectedValue = AssetType.CREDIT.name
             ),
             onValueSelect = {}
@@ -77,7 +71,8 @@ private fun AssetTypeBottomSheetDark() {
         SelectorBottomSheet(
             modifier = Modifier.fillMaxWidth(),
             data = SelectorBottomSheetData(
-                values = AssetType.values().map { SelectorBottomSheetData.Value(it.name, it.resolveText()) },
+                values = AssetType.values()
+                    .map { SelectorBottomSheetData.Value(it.name, it.resolveText()) },
                 selectedValue = AssetType.CREDIT.name
             ),
             onValueSelect = {}

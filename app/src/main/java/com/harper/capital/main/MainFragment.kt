@@ -1,6 +1,5 @@
 package com.harper.capital.main
 
-import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,13 +13,11 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,21 +26,21 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.harper.capital.R
 import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.ext.assetBackgroundColor
 import com.harper.capital.main.component.AssetAccountedCard
 import com.harper.capital.main.component.AssetCard
 import com.harper.capital.main.component.AssetMenu
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
 import com.harper.capital.ui.base.ScreenLayout
+import com.harper.core.component.CAmountText
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CIcon
-import com.harper.core.component.CScaffold
+import com.harper.core.component.CLoaderLayout
 import com.harper.core.component.CPreview
+import com.harper.core.component.CScaffold
 import com.harper.core.component.Menu
 import com.harper.core.component.MenuItem
 import com.harper.core.component.Toolbar
-import com.harper.core.component.CAmountText
 import com.harper.core.ext.formatWithCurrencySymbol
 import com.harper.core.ext.orElse
 import com.harper.core.theme.CapitalColors
@@ -54,9 +51,8 @@ import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
-import kotlin.math.abs
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 private const val ADD_ASSET_MENU_ITEM_ID = 0
 private const val SETTINGS_MENU_ITEM_ID = 1
@@ -81,67 +77,70 @@ class MainFragment : ComponentFragment<MainViewModel>(), EventSender<MainEvent> 
 private fun MainScreenScreen(viewModel: ComponentViewModel<MainState>, es: EventSender<MainEvent>) {
     val state by viewModel.state.collectAsState()
 
-    CScaffold(
-        topBar = { OverviewTopBar(account = state.account, es) }
-    ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                CHorizontalSpacer(height = 24.dp)
-
-                val assetListState = rememberLazyListState()
-                val selectedAssetIndex = rememberSaveable { mutableStateOf(-1) }
-                LaunchedEffect(assetListState) {
-                    snapshotFlow { assetListState.layoutInfo }
-                        .collect {
-                            selectedAssetIndex.value = it.fullyVisibleItemIndex()
-                        }
-                }
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    state = assetListState,
-                    flingBehavior = rememberSnapperFlingBehavior(lazyListState = assetListState)
+    CLoaderLayout(isLoading = state.assets.isEmpty(), loaderContent = {}) {
+        CScaffold(
+            topBar = { OverviewTopBar(account = state.account, es) },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = { },
+                    contentColor = CapitalTheme.colors.secondary,
+                    backgroundColor = CapitalTheme.colors.background
                 ) {
-                    items(state.assets) {
-                        AssetCard(
-                            modifier = Modifier
-                                .fillParentMaxWidth()
-                                .padding(horizontal = 24.dp),
-                            asset = it
-                        )
-                    }
-                    item {
-                        AssetAccountedCard(
-                            modifier = Modifier
-                                .fillParentMaxWidth()
-                                .padding(horizontal = 24.dp),
-                            account = state.account
-                        )
-                    }
+                    CIcon(imageVector = CapitalIcons.NewAsset)
                 }
-                CHorizontalSpacer(height = 24.dp)
-                val selectedAsset = state.assets.getOrNull(selectedAssetIndex.value)
-                AssetMenu(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp),
-                    color = selectedAsset?.color.orElse(AssetColor.TINKOFF_PLATINUM),
-                    onHistoryClick = { es.send(MainEvent.HistoryClick(selectedAsset)) },
-                    onIncomeClick = { es.send(MainEvent.IncomeClick(selectedAsset)) },
-                    onExpenseClick = { es.send(MainEvent.ExpenseClick(selectedAsset)) },
-                    onEditClick = if (selectedAsset != null) {
-                        { es.send(MainEvent.EditClick(selectedAsset)) }
-                    } else null
-                )
             }
-            FloatingActionButton(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(24.dp),
-                onClick = { },
-                backgroundColor = CapitalTheme.colors.background
-            ) {
-                CIcon(imageVector = CapitalIcons.NewAsset, color = CapitalColors.Blue)
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    CHorizontalSpacer(height = 24.dp)
+
+                    val assetListState = rememberLazyListState()
+                    val selectedAssetIndex =
+                        rememberSaveable { mutableStateOf(assetListState.firstVisibleItemIndex) }
+                    LaunchedEffect(assetListState) {
+                        snapshotFlow { assetListState.layoutInfo }
+                            .collect {
+                                selectedAssetIndex.value = it.fullyVisibleItemIndex()
+                            }
+                    }
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        state = assetListState,
+                        flingBehavior = rememberSnapperFlingBehavior(lazyListState = assetListState)
+                    ) {
+                        items(state.assets) {
+                            AssetCard(
+                                modifier = Modifier
+                                    .fillParentMaxWidth()
+                                    .padding(horizontal = 24.dp),
+                                asset = it
+                            )
+                        }
+                        item {
+                            AssetAccountedCard(
+                                modifier = Modifier
+                                    .fillParentMaxWidth()
+                                    .padding(horizontal = 24.dp),
+                                account = state.account
+                            )
+                        }
+                    }
+                    CHorizontalSpacer(height = 24.dp)
+                    val selectedAsset = state.assets.getOrNull(selectedAssetIndex.value)
+                    AssetMenu(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp),
+                        color = selectedAsset?.color.orElse(AssetColor.TINKOFF_PLATINUM),
+                        onHistoryClick = { es.send(MainEvent.HistoryClick(selectedAsset)) },
+                        onIncomeClick = { es.send(MainEvent.IncomeClick(selectedAsset)) },
+                        onExpenseClick = { es.send(MainEvent.ExpenseClick(selectedAsset)) },
+                        onEditClick = if (selectedAsset != null) {
+                            { es.send(MainEvent.EditClick(selectedAsset)) }
+                        } else null
+                    )
+                }
             }
         }
     }
