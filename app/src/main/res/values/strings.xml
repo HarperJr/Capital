@@ -29,9 +29,8 @@
     <string name="include_asset">Include in balance</string>
     <string name="include_asset_subtitle">Check to include in balance</string>
 
-    <string name="type_debet">Debet asset</string>
-    <string name="type_credit">Credit</string>
-    <string name="type_goal">Goal</string>
+    <string name="debet">Debet</string>
+    <string name="credit">Credit</string>
     <string name="new_category">New category</string>
     <string name="settings">Settings</string>
     <string name="forgot_password">I forgot password</string>

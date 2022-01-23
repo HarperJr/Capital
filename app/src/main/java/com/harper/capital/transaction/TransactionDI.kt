@@ -1,7 +1,6 @@
 package com.harper.capital.transaction
 
-import com.harper.capital.main.domain.FetchAssetsUseCase
-import com.harper.capital.transaction.domain.FetchCategoriesUseCase
+import com.harper.capital.transaction.domain.FetchAssetsUseCase
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -10,9 +9,8 @@ val transactionModule
 
         scope<TransactionFragment> {
             scoped { FetchAssetsUseCase(get()) }
-            scoped { FetchCategoriesUseCase() }
             viewModel { (params: TransactionFragment.Params) ->
-                TransactionViewModel(params, get(), get(), get())
+                TransactionViewModel(params, get(), get())
             }
         }
     }

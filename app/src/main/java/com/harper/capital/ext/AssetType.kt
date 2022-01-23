@@ -7,7 +7,9 @@ import com.harper.capital.domain.model.AssetType
 
 @Composable
 fun AssetType.resolveText(): String = when (this) {
-    AssetType.DEFAULT -> stringResource(id = R.string.type_debet)
-    AssetType.CREDIT -> stringResource(id = R.string.type_credit)
-    AssetType.GOAL -> stringResource(id = R.string.type_goal)
+    AssetType.DEBET -> stringResource(id = R.string.debet)
+    AssetType.CREDIT -> stringResource(id = R.string.credit)
+    AssetType.GOAL -> stringResource(id = R.string.goal)
+    AssetType.INCOME -> stringResource(id = R.string.income)
+    AssetType.EXPENSE -> stringResource(id = R.string.expense)
 }

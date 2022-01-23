@@ -8,11 +8,17 @@ sealed class CategoryManageEvent {
 
     object IconSelectClick : CategoryManageEvent()
 
-    object BlackClick : CategoryManageEvent()
+    object BackClick : CategoryManageEvent()
+
+    object Apply : CategoryManageEvent()
 
     class CurrencySelect(val currency: Currency) : CategoryManageEvent()
 
     class IconSelect(val iconName: String) : CategoryManageEvent()
+
+    class NameChange(val name: String) : CategoryManageEvent()
+
+    class AmountChange(val amount: Double) : CategoryManageEvent()
 
     class TabSelect(val tabIndex: Int) : CategoryManageEvent()
 }

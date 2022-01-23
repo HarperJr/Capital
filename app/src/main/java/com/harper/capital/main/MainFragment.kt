@@ -77,7 +77,7 @@ class MainFragment : ComponentFragment<MainViewModel>(), EventSender<MainEvent> 
 private fun MainScreenScreen(viewModel: ComponentViewModel<MainState>, es: EventSender<MainEvent>) {
     val state by viewModel.state.collectAsState()
 
-    CLoaderLayout(isLoading = state.assets.isEmpty(), loaderContent = {}) {
+    CLoaderLayout(isLoading = state.isLoading, loaderContent = {}) {
         CScaffold(
             topBar = { OverviewTopBar(account = state.account, es) },
             floatingActionButton = {

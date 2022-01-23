@@ -2,7 +2,11 @@ package com.harper.capital.domain.model
 
 sealed class AssetMetadata(val assetType: AssetType) {
 
-    object Default : AssetMetadata(AssetType.DEFAULT)
+    object Debet : AssetMetadata(AssetType.DEBET)
+
+    object Income : AssetMetadata(AssetType.INCOME)
+
+    object Expense : AssetMetadata(AssetType.EXPENSE)
 
     data class Credit(val limit: Double) : AssetMetadata(AssetType.CREDIT)
 

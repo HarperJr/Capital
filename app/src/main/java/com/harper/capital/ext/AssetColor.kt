@@ -11,6 +11,7 @@ val alpha: Color = Color(0xFFEE3124)
 val vtbOld: Color = Color(0xFF244480)
 val vtb: Color = Color(0xFF1ABAEF)
 val raiffeizen: Color = Color(0xFFFDF41F)
+val category: Color = Color(0xFF41E6CD)
 
 val onTinkoff: Color = Color(0xFF141414)
 val onTinkoffPlatinum: Color = Color(0xFF797979)
@@ -19,8 +20,9 @@ val onAlpha: Color = Color(0xFFA31F16)
 val onVtbOld: Color = Color(0xFF122955)
 val onVtb: Color = Color(0xFF117EA1)
 val onRaiffeizen: Color = Color(0xFFAFA800)
+val onCategory: Color = Color(0xFF28B6A0)
 
-fun assetBackgroundColor(color: AssetColor) = when(color) {
+fun assetBackgroundColor(color: AssetColor) = when (color) {
     AssetColor.TINKOFF -> tinkoff
     AssetColor.TINKOFF_PLATINUM -> tinkoffPlatinum
     AssetColor.SBER -> sber
@@ -28,9 +30,10 @@ fun assetBackgroundColor(color: AssetColor) = when(color) {
     AssetColor.VTB_OLD -> vtbOld
     AssetColor.VTB -> vtb
     AssetColor.RAIFFEIZEN -> raiffeizen
+    AssetColor.CATEGORY -> category
 }
 
-fun assetOnBackgroundColorFor(color: Color) = when(color) {
+fun assetOnBackgroundColorFor(color: Color) = when (color) {
     tinkoff -> onTinkoff
     tinkoffPlatinum -> onTinkoffPlatinum
     sber -> onSber
@@ -38,10 +41,11 @@ fun assetOnBackgroundColorFor(color: Color) = when(color) {
     vtbOld -> onVtbOld
     vtb -> onVtb
     raiffeizen -> onRaiffeizen
+    category -> onCategory
     else -> Color.Unspecified
 }
 
-fun assetContentColorFor(color: Color): Color = when(color) {
+fun assetContentColorFor(color: Color): Color = when (color) {
     tinkoff -> CapitalColors.White
     tinkoffPlatinum -> CapitalColors.White
     sber -> CapitalColors.White
@@ -49,5 +53,6 @@ fun assetContentColorFor(color: Color): Color = when(color) {
     vtbOld -> CapitalColors.White
     vtb -> CapitalColors.White
     raiffeizen -> CapitalColors.Black
+    category -> CapitalColors.White
     else -> Color.Unspecified
 }

@@ -17,4 +17,7 @@ fun AssetIcon.getImageVector(): ImageVector = when (this) {
     AssetIcon.USD -> CapitalIcons.Bank.Dollar
     AssetIcon.EUR -> CapitalIcons.Bank.Euro
     AssetIcon.PIGGY_BANK -> CapitalIcons.Bank.PiggyBank
+    AssetIcon.MOBILE -> CapitalIcons.Mobile
+    AssetIcon.PRODUCTS -> CapitalIcons.ProductCart
+    AssetIcon.WALLET -> CapitalIcons.Wallet
 }

@@ -1,7 +1,9 @@
 package com.harper.capital.database.entity
 
 enum class AssetEntityType {
-    DEFAULT,
+    DEBET,
     CREDIT,
-    GOAL
+    GOAL,
+    EXPENSE,
+    INCOME
 }

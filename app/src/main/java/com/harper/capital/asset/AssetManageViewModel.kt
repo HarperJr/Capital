@@ -63,7 +63,10 @@ class AssetManageViewModel(
     private fun onIconSelect(event: AssetManageEvent.IconSelect) {
         val selectedIcon = AssetIcon.valueOf(event.iconName)
         mutateState {
-            it.copy(icon = selectedIcon, bottomSheetState = it.bottomSheetState.copy(isExpended = false))
+            it.copy(
+                icon = selectedIcon,
+                bottomSheetState = it.bottomSheetState.copy(isExpended = false)
+            )
         }
     }
 
@@ -91,9 +94,10 @@ class AssetManageViewModel(
         val selectedAssetType = AssetType.valueOf(event.assetTypeName)
         mutateState {
             val metadata = when (selectedAssetType) {
-                AssetType.DEFAULT -> AssetMetadata.Default
+                AssetType.DEBET -> AssetMetadata.Debet
                 AssetType.CREDIT -> AssetMetadata.Credit(limit = 0.0)
                 AssetType.GOAL -> AssetMetadata.Goal(goal = 0.0)
+                else -> return@mutateState it
             }
             it.copy(
                 metadata = metadata,
@@ -118,7 +122,10 @@ class AssetManageViewModel(
         mutateState {
             it.copy(
                 bottomSheetState = AssetManageBottomSheetState(
-                    bottomSheet = AssetManageBottomSheet.Currencies(Currency.values().toList(), it.currency)
+                    bottomSheet = AssetManageBottomSheet.Currencies(
+                        Currency.values().toList(),
+                        it.currency
+                    )
                 )
             )
         }

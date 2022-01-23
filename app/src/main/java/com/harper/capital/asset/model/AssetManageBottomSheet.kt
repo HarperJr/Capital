@@ -26,12 +26,13 @@ sealed class AssetManageBottomSheet {
         val data: SelectorBottomSheetData
             @Composable
             get() = SelectorBottomSheetData(
-                values = AssetType.values().map {
+                values = AssetType.assetValues().map {
                     SelectorBottomSheetData.Value(it.name, it.resolveText())
                 },
                 selectedValue = selectedAssetType.name
             )
     }
 
-    class Currencies(val currencies: List<Currency>, val selectedCurrency: Currency) : AssetManageBottomSheet()
+    class Currencies(val currencies: List<Currency>, val selectedCurrency: Currency) :
+        AssetManageBottomSheet()
 }

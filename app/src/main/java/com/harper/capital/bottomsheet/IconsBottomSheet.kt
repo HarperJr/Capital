@@ -1,6 +1,5 @@
 package com.harper.capital.bottomsheet
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -12,13 +11,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,11 +26,11 @@ import com.google.accompanist.insets.imePadding
 import com.harper.capital.R
 import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.ext.getImageVector
-import com.harper.core.component.CTextField
-import com.harper.core.component.CPreview
-import com.harper.core.component.CWrappedGrid
 import com.harper.core.component.CHorizontalSpacer
+import com.harper.core.component.CPreview
 import com.harper.core.component.CSeparator
+import com.harper.core.component.CTextField
+import com.harper.core.component.CWrappedGrid
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
@@ -47,7 +46,7 @@ fun IconsBottomSheet(
     val filteredIcons = remember(ibsData.icons, searchQuery.value) {
         ibsData.icons.filter {
             searchQuery.value.isEmpty() ||
-                    it.name.contains(searchQuery.value, ignoreCase = true)
+                it.name.contains(searchQuery.value, ignoreCase = true)
         }
     }
     Column(
@@ -63,10 +62,9 @@ fun IconsBottomSheet(
             value = searchQuery.value,
             placeholder = stringResource(id = R.string.search),
             leadingIcon = {
-                Image(
+                Icon(
                     modifier = Modifier.padding(end = 8.dp),
                     imageVector = CapitalIcons.Search,
-                    colorFilter = ColorFilter.tint(color = CapitalColors.GreyDark),
                     contentDescription = null
                 )
             },
@@ -82,7 +80,11 @@ fun IconsBottomSheet(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         )
-        CWrappedGrid(modifier = Modifier.padding(horizontal = 16.dp), columns = 4, items = filteredIcons) {
+        CWrappedGrid(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            columns = 4,
+            items = filteredIcons
+        ) {
             Box(modifier = Modifier.padding(4.dp)) {
                 IconItem(
                     modifier = Modifier
@@ -99,8 +101,14 @@ fun IconsBottomSheet(
 }
 
 @Composable
-private fun IconItem(modifier: Modifier = Modifier, icon: ImageVector, isSelected: Boolean, onClick: () -> Unit) {
-    val selectorColor = if (isSelected) CapitalTheme.colors.secondary else CapitalColors.Transparent
+private fun IconItem(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    val selectorColor =
+        if (isSelected) CapitalTheme.colors.primaryVariant else CapitalColors.Transparent
     Box(
         modifier = modifier
             .background(
@@ -108,11 +116,10 @@ private fun IconItem(modifier: Modifier = Modifier, icon: ImageVector, isSelecte
             )
             .clickable { onClick.invoke() }
     ) {
-        Image(
+        Icon(
             modifier = Modifier.fillMaxSize(),
             imageVector = icon,
-            contentDescription = null,
-            colorFilter = ColorFilter.tint(color = CapitalTheme.colors.onBackground)
+            contentDescription = null
         )
     }
 }
@@ -124,7 +131,8 @@ fun IconsBottomSheetLight() {
         Box(modifier = Modifier.background(color = CapitalTheme.colors.background)) {
             IconsBottomSheet(
                 data = IconsBottomSheetData(
-                    icons = AssetIcon.values().map { IconsBottomSheetData.Icon(it.name, it.getImageVector()) },
+                    icons = AssetIcon.values()
+                        .map { IconsBottomSheetData.Icon(it.name, it.getImageVector()) },
                     selectedIcon = AssetIcon.ALPHA.name
                 ),
                 onIconSelect = {}
@@ -140,7 +148,8 @@ private fun IconsBottomSheetDark() {
         Box(modifier = Modifier.background(color = CapitalTheme.colors.background)) {
             IconsBottomSheet(
                 data = IconsBottomSheetData(
-                    icons = AssetIcon.values().map { IconsBottomSheetData.Icon(it.name, it.getImageVector()) },
+                    icons = AssetIcon.values()
+                        .map { IconsBottomSheetData.Icon(it.name, it.getImageVector()) },
                     selectedIcon = AssetIcon.ALPHA.name
                 ),
                 onIconSelect = {}

@@ -10,5 +10,16 @@ enum class AssetIcon {
     ETHERIUM,
     USD,
     EUR,
-    PIGGY_BANK
+    PIGGY_BANK,
+    MOBILE,
+    PRODUCTS,
+    WALLET;
+
+    companion object {
+        private val bankIncons = listOf(
+            TINKOFF, ALPHA, VTB, SBER, RAIFFEISEN
+        )
+
+        fun categoryValues(): List<AssetIcon> = values().filter { it !in bankIncons }
+    }
 }

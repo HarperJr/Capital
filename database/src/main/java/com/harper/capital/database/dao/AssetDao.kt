@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.harper.capital.database.entity.AssetEntity
+import com.harper.capital.database.entity.AssetEntityType
 import com.harper.capital.database.entity.AssetTable
 import com.harper.capital.database.entity.CreditEntity
 import com.harper.capital.database.entity.CreditTable
@@ -29,6 +30,9 @@ interface AssetDao {
 
     @Query("SELECT * FROM ${AssetTable.tableName}")
     fun selectAll(): Flow<List<AssetEntity>>
+
+    @Query("SELECT * FROM ${AssetTable.tableName} WHERE ${AssetTable.type} IN (:types)")
+    fun selectByTypes(types: List<AssetEntityType>): Flow<List<AssetEntity>>
 
     @Query("SELECT * FROM ${CreditTable.tableName} WHERE ${CreditTable.assetId} = :assetId")
     suspend fun selectCreditByAssetId(assetId: Long): CreditEntity

@@ -27,7 +27,11 @@ class MainViewModel(
             fetchAssetsUseCase()
                 .collect { assets ->
                     mutateState {
-                        MainState(account = Account(12455.23, Currency.RUB), assets = assets)
+                        MainState(
+                            account = Account(12455.23, Currency.RUB),
+                            assets = assets,
+                            isLoading = false
+                        )
                     }
                 }
         }
@@ -57,14 +61,29 @@ class MainViewModel(
     }
 
     private fun onIncomeClick(event: MainEvent.IncomeClick) {
-        router.navigateToTransaction(TransactionFragment.Params(assetId = event.asset?.id, TransactionType.INCOME))
+        router.navigateToTransaction(
+            TransactionFragment.Params(
+                assetId = event.asset?.id,
+                TransactionType.INCOME
+            )
+        )
     }
 
     private fun onExpenseClick(event: MainEvent.ExpenseClick) {
-        router.navigateToTransaction(TransactionFragment.Params(assetId = event.asset?.id, TransactionType.EXPENSE))
+        router.navigateToTransaction(
+            TransactionFragment.Params(
+                assetId = event.asset?.id,
+                TransactionType.EXPENSE
+            )
+        )
     }
 
     private fun onEditClick(event: MainEvent.EditClick) {
-        router.navigateToManageAsset(AssetManageFragment.Params(AssetManageMode.EDIT, assetId = event.asset.id))
+        router.navigateToManageAsset(
+            AssetManageFragment.Params(
+                AssetManageMode.EDIT,
+                assetId = event.asset.id
+            )
+        )
     }
 }

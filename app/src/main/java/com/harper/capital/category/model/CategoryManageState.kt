@@ -14,7 +14,7 @@ data class CategoryManageState(
     val tabBarData: TabBarData
         @Composable
         get() {
-            return TabBarData(tabs = pages.map { Tab(title = stringResource(id = it.titleRes)) })
+            return TabBarData(tabs = pages.map { Tab(title = stringResource(id = it.type.resolveTitleRes())) })
         }
 }
 
@@ -25,7 +25,7 @@ data class CategoryManageBottomSheetState(
 
 private fun emptyPages(): List<CategoryManagePage> =
     CategoryManageType.values().map {
-        CategoryManagePage(titleRes = it.resolveTitleRes(), name = "", amount = 0.0)
+        CategoryManagePage(type = it, name = "", amount = 0.0)
     }
 
 private fun CategoryManageType.resolveTitleRes(): Int = when (this) {

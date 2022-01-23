@@ -1,7 +1,6 @@
 package com.harper.capital.transaction.model
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import com.harper.capital.R
 import com.harper.capital.domain.model.Asset
 import com.harper.capital.domain.model.AssetColor
 import com.harper.capital.domain.model.AssetIcon
@@ -15,23 +14,23 @@ class TransactionStateProvider : PreviewParameterProvider<TransactionState> {
                 selectedPage = TransactionType.EXPENSE.ordinal,
                 pages = listOf(
                     TransactionPage(
-                        titleRes = R.string.expense,
+                        type = TransactionType.EXPENSE,
                         assetDataSets = assetDataSets
                     ),
                     TransactionPage(
-                        titleRes = R.string.income,
+                        type = TransactionType.INCOME,
                         assetDataSets = assetDataSets
                     ),
                     TransactionPage(
-                        titleRes = R.string.send,
+                        type = TransactionType.SEND,
                         assetDataSets = assetDataSets
                     ),
                     TransactionPage(
-                        titleRes = R.string.goal,
+                        type = TransactionType.GOAL,
                         assetDataSets = assetDataSets
                     ),
                     TransactionPage(
-                        titleRes = R.string.duty,
+                        type = TransactionType.DUTY,
                         assetDataSets = assetDataSets
                     )
                 )
@@ -49,7 +48,7 @@ class TransactionStateProvider : PreviewParameterProvider<TransactionState> {
                         currency = Currency.RUB,
                         color = AssetColor.TINKOFF,
                         icon = AssetIcon.TINKOFF,
-                        metadata = AssetMetadata.Default
+                        metadata = AssetMetadata.Debet
                     ),
                     Asset(
                         id = 1L,
@@ -58,7 +57,7 @@ class TransactionStateProvider : PreviewParameterProvider<TransactionState> {
                         currency = Currency.RUB,
                         color = AssetColor.SBER,
                         icon = AssetIcon.SBER,
-                        metadata = AssetMetadata.Default
+                        metadata = AssetMetadata.Debet
                     ),
                     Asset(
                         id = 2L,
@@ -67,7 +66,7 @@ class TransactionStateProvider : PreviewParameterProvider<TransactionState> {
                         currency = Currency.RUB,
                         color = AssetColor.RAIFFEIZEN,
                         icon = AssetIcon.RAIFFEISEN,
-                        metadata = AssetMetadata.Default
+                        metadata = AssetMetadata.Debet
                     ),
                     Asset(
                         id = 3L,
@@ -76,7 +75,7 @@ class TransactionStateProvider : PreviewParameterProvider<TransactionState> {
                         currency = Currency.USD,
                         color = AssetColor.VTB,
                         icon = AssetIcon.VTB,
-                        metadata = AssetMetadata.Default
+                        metadata = AssetMetadata.Debet
                     )
                 ),
                 selectedAssetId = 1
@@ -91,7 +90,7 @@ class TransactionStateProvider : PreviewParameterProvider<TransactionState> {
                         currency = Currency.RUB,
                         color = AssetColor.RAIFFEIZEN,
                         icon = AssetIcon.BITCOIN,
-                        metadata = AssetMetadata.Default
+                        metadata = AssetMetadata.Debet
                     ),
                     Asset(
                         id = 1L,
@@ -100,7 +99,7 @@ class TransactionStateProvider : PreviewParameterProvider<TransactionState> {
                         currency = Currency.RUB,
                         color = AssetColor.TINKOFF,
                         icon = AssetIcon.ETHERIUM,
-                        metadata = AssetMetadata.Default
+                        metadata = AssetMetadata.Debet
                     )
                 ),
                 selectedAssetId = null

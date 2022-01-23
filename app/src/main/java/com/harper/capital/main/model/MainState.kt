@@ -6,5 +6,6 @@ import com.harper.capital.domain.model.Currency
 
 data class MainState(
     val account: Account = Account(0.0, Currency.RUB),
-    val assets: List<Asset> = emptyList()
+    val assets: List<Asset> = emptyList(),
+    val isLoading: Boolean = true
 )

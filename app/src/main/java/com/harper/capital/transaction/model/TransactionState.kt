@@ -14,13 +14,13 @@ data class TransactionState(
         @Composable
         get() {
             return TabBarData(
-                tabs = pages.map { Tab(title = stringResource(id = it.titleRes)) }
+                tabs = pages.map { Tab(title = stringResource(id = it.type.resolveTitleRes())) }
             )
         }
 }
 
 private fun emptyPages(): List<TransactionPage> = TransactionType.values().map {
-    TransactionPage(titleRes = it.resolveTitleRes(), assetDataSets = emptyList())
+    TransactionPage(type = it, assetDataSets = emptyList())
 }
 
 private fun TransactionType.resolveTitleRes(): Int = when (this) {

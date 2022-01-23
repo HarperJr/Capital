@@ -7,5 +7,6 @@ enum class AssetColor {
     ALPHA,
     VTB_OLD,
     VTB,
-    RAIFFEIZEN
+    RAIFFEIZEN,
+    CATEGORY
 }

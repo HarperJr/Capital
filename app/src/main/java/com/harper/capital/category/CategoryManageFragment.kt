@@ -1,7 +1,6 @@
 package com.harper.capital.category
 
 import android.os.Parcelable
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
@@ -25,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -50,8 +49,8 @@ import com.harper.core.component.CButton
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CIcon
 import com.harper.core.component.CPreferenceArrow
-import com.harper.core.component.CTextField
 import com.harper.core.component.CPreview
+import com.harper.core.component.CTextField
 import com.harper.core.component.TabBar
 import com.harper.core.component.Toolbar
 import com.harper.core.ext.formatCurrencyName
@@ -67,7 +66,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.parcelize.Parcelize
 import org.koin.core.parameter.parametersOf
 
-class CategoryManageFragment : ComponentFragment<CategoryManageViewModel>(), EventSender<CategoryManageEvent> {
+class CategoryManageFragment : ComponentFragment<CategoryManageViewModel>(),
+    EventSender<CategoryManageEvent> {
     override val viewModel: CategoryManageViewModel by injectViewModel { parametersOf(params) }
     private val params by requireArg<Params>(PARAMS)
 
@@ -148,7 +148,7 @@ private fun CategoryManageScreen(
                         .align(Alignment.BottomCenter)
                         .padding(16.dp),
                     text = stringResource(id = R.string.create_new_category),
-                    onClick = { }
+                    onClick = { es.send(CategoryManageEvent.Apply) }
                 )
             }
         }
@@ -173,11 +173,10 @@ fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
                     .background(color = CapitalTheme.colors.primaryVariant, shape = CircleShape)
                     .clickable { es.send(CategoryManageEvent.IconSelectClick) }
             ) {
-                Image(
+                Icon(
                     modifier = Modifier.align(Alignment.Center),
                     imageVector = page.icon.getImageVector(),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(color = CapitalTheme.colors.onBackground)
+                    contentDescription = null
                 )
             }
             CTextField(
@@ -187,7 +186,10 @@ fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
                     .align(Alignment.CenterVertically),
                 value = name.value,
                 placeholder = stringResource(id = R.string.enter_name_hint),
-                onValueChange = { name.value = it },
+                onValueChange = {
+                    name.value = it
+                    es.send(CategoryManageEvent.NameChange(it))
+                },
                 textColor = CapitalTheme.colors.onBackground
             )
         }
@@ -196,7 +198,10 @@ fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
             modifier = Modifier.fillMaxWidth(),
             amount = amount.value,
             placeholder = stringResource(id = R.string.enter_amount_hint),
-            onValueChange = { amount.value = it },
+            onValueChange = {
+                amount.value = it
+                es.send(CategoryManageEvent.AmountChange(it))
+            },
             textColor = CapitalTheme.colors.onBackground
         )
         CHorizontalSpacer(height = 24.dp)
@@ -211,7 +216,10 @@ fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
 }
 
 @Composable
-private fun BottomSheetContent(bottomSheet: CategoryManageBottomSheet?, es: EventSender<CategoryManageEvent>) {
+private fun BottomSheetContent(
+    bottomSheet: CategoryManageBottomSheet?,
+    es: EventSender<CategoryManageEvent>
+) {
     when (bottomSheet) {
         is CategoryManageBottomSheet.Currencies -> {
             CurrencyBottomSheet(
@@ -226,7 +234,8 @@ private fun BottomSheetContent(bottomSheet: CategoryManageBottomSheet?, es: Even
                 onIconSelect = { es.send(CategoryManageEvent.IconSelect(it)) }
             )
         }
-        else -> {}
+        else -> {
+        }
     }
 }
 
@@ -243,7 +252,7 @@ private fun CategoryManageTopBar(es: EventSender<CategoryManageEvent>) {
         navigation = {
             CIcon(
                 imageVector = CapitalIcons.ArrowLeft,
-                onClick = { es.send(CategoryManageEvent.BlackClick) }
+                onClick = { es.send(CategoryManageEvent.BackClick) }
             )
         }
     )
@@ -251,7 +260,7 @@ private fun CategoryManageTopBar(es: EventSender<CategoryManageEvent>) {
 
 @Preview
 @Composable
-private fun CategoryManageScreenLight(@PreviewParameter(CategoryManageStateProvider::class) state: CategoryManageState) {
+private fun CategoryManageScreenLight() {
     CPreview {
         CategoryManageScreen(CategoryManageMockViewModel(), MockEventSender())
     }
@@ -259,7 +268,7 @@ private fun CategoryManageScreenLight(@PreviewParameter(CategoryManageStateProvi
 
 @Preview
 @Composable
-private fun CategoryManageScreenDark(@PreviewParameter(CategoryManageStateProvider::class) state: CategoryManageState) {
+private fun CategoryManageScreenDark() {
     CPreview(isDark = true) {
         CategoryManageScreen(CategoryManageMockViewModel(), MockEventSender())
     }

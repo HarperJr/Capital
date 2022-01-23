@@ -24,8 +24,8 @@ import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.domain.model.AssetMetadata
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.ext.assetBackgroundColor
-import com.harper.capital.ext.getImageVector
 import com.harper.capital.ext.assetContentColorFor
+import com.harper.capital.ext.getImageVector
 import com.harper.core.component.CPreview
 import com.harper.core.ext.formatWithCurrencySymbol
 import com.harper.core.theme.CapitalIcons
@@ -39,7 +39,8 @@ fun AssetSource(
     isSelected: Boolean,
     onSelect: () -> Unit
 ) {
-    val borderColor = if (isSelected) CapitalTheme.colors.secondary else CapitalTheme.colors.primaryVariant
+    val borderColor =
+        if (isSelected) CapitalTheme.colors.secondary else CapitalTheme.colors.primaryVariant
     Box(modifier = modifier) {
         Surface(
             color = CapitalTheme.colors.background,
@@ -106,7 +107,7 @@ private fun AssetSourceLight() {
                 currency = Currency.RUB,
                 color = AssetColor.TINKOFF,
                 icon = AssetIcon.TINKOFF,
-                metadata = AssetMetadata.Default
+                metadata = AssetMetadata.Debet
             ),
             isSelected = false
         ) {}
@@ -126,7 +127,7 @@ private fun AssetSourceDark() {
                 currency = Currency.RUB,
                 color = AssetColor.TINKOFF,
                 icon = AssetIcon.TINKOFF,
-                metadata = AssetMetadata.Default
+                metadata = AssetMetadata.Debet
             ),
             isSelected = true
         ) {}

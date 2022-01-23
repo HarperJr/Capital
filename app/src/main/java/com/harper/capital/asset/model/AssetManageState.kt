@@ -14,7 +14,7 @@ data class AssetManageState(
     val colors: List<AssetColor> = AssetColor.values().toList(),
     val color: AssetColor = AssetColor.TINKOFF,
     val icon: AssetIcon = AssetIcon.TINKOFF,
-    val metadata: AssetMetadata = AssetMetadata.Default,
+    val metadata: AssetMetadata = AssetMetadata.Debet,
     val bottomSheetState: AssetManageBottomSheetState = AssetManageBottomSheetState(isExpended = false)
 )
 
