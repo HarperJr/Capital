@@ -59,4 +59,9 @@
     <string name="default_currency">Default currency</string>
     <string name="notifications">Notifications</string>
     <string name="help">Help</string>
+    <string name="schedule_transaction">Schedule transaction</string>
+    <string name="comment">Comment</string>
+    <string name="optional">Optional</string>
+    <string name="enter_comment_hint">Enter comment</string>
+    <string name="amount">Amount</string>
 </resources>

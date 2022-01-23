@@ -3,6 +3,7 @@ package com.harper.capital.navigation
 import com.harper.capital.asset.AssetManageFragment
 import com.harper.capital.category.CategoryManageFragment
 import com.harper.capital.transaction.TransactionFragment
+import com.harper.capital.transaction.manage.TransactionManageFragment
 
 interface GlobalRouter {
 
@@ -15,6 +16,8 @@ interface GlobalRouter {
     fun navigateToTransaction(params: TransactionFragment.Params)
 
     fun navigateToManageCategory(params: CategoryManageFragment.Params)
+
+    fun navigateToManageTransaction(params: TransactionManageFragment.Params)
 
     fun navigateToSettings()
 

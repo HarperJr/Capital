@@ -34,11 +34,11 @@ class CategoryManageViewModel(
             CategoryManageEvent.CurrencySelectClick -> onCurrencyClick()
             CategoryManageEvent.IconSelectClick -> onIconSelectClick()
             CategoryManageEvent.BackClick -> router.back()
-            CategoryManageEvent.Apply -> onAcceptClick()
+            CategoryManageEvent.Apply -> onApply()
         }
     }
 
-    private fun onAcceptClick() {
+    private fun onApply() {
         launch {
             val category = with(state.value) {
                 val currentPage = pages[selectedPage]

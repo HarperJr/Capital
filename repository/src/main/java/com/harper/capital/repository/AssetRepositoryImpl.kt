@@ -40,13 +40,16 @@ internal class AssetRepositoryImpl(
 
     override fun fetchByTypes(types: List<AssetType>): Flow<List<Asset>> =
         assetDao.selectByTypes(types.map(AssetTypeEntityMapper))
-            .map(::mapToAssets)
+            .map { entities -> entities.map { mapToAsset(it) } }
 
     override fun fetchAll(): Flow<List<Asset>> =
         assetDao.selectAll()
-            .map(::mapToAssets)
+            .map { entities -> entities.map { mapToAsset(it) } }
 
-    private suspend fun mapToAssets(entities: List<AssetEntity>): List<Asset> = entities.map {
+    override suspend fun fetchById(id: Long): Asset =
+        mapToAsset(assetDao.selectById(id))
+
+    private suspend fun mapToAsset(entity: AssetEntity): Asset = entity.let {
         val metadata = when (it.type) {
             AssetEntityType.DEBET -> AssetMetadata.Debet
             AssetEntityType.CREDIT -> {

@@ -8,12 +8,14 @@ import com.harper.capital.category.CategoryManageFragment
 import com.harper.capital.main.MainFragment
 import com.harper.capital.settings.SettingsFragment
 import com.harper.capital.transaction.TransactionFragment
+import com.harper.capital.transaction.manage.TransactionManageFragment
 
 private const val SIGN_IN_KEY = "sign_in_key"
 private const val MAIN_KEY = "main_key"
 private const val ASSET_MANAGE_KEY = "asset_manage_key"
 private const val CATEGORY_MANAGE_KEY = "category_manage_key"
 private const val TRANSACTION_KEY = "transaction_key"
+private const val TRANSACTION_MANAGE_KEY = "transaction_manage_key"
 private const val SETTINGS_KEY = "settings_key"
 
 object Screens {
@@ -26,13 +28,19 @@ object Screens {
         AssetManageFragment.newInstance(params)
     }
 
-    fun categoryManage(params: CategoryManageFragment.Params): Screen = FragmentScreen(CATEGORY_MANAGE_KEY) {
-        CategoryManageFragment.newInstance(params)
-    }
+    fun categoryManage(params: CategoryManageFragment.Params): Screen =
+        FragmentScreen(CATEGORY_MANAGE_KEY) {
+            CategoryManageFragment.newInstance(params)
+        }
 
     fun transaction(params: TransactionFragment.Params): Screen = FragmentScreen(TRANSACTION_KEY) {
         TransactionFragment.newInstance(params)
     }
+
+    fun transactionManage(params: TransactionManageFragment.Params): Screen =
+        FragmentScreen(TRANSACTION_MANAGE_KEY) {
+            TransactionManageFragment.newInstance(params)
+        }
 
     fun settings(): Screen = FragmentScreen(SETTINGS_KEY) {
         SettingsFragment.newInstance()

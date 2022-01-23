@@ -11,7 +11,7 @@ val alpha: Color = Color(0xFFEE3124)
 val vtbOld: Color = Color(0xFF244480)
 val vtb: Color = Color(0xFF1ABAEF)
 val raiffeizen: Color = Color(0xFFFDF41F)
-val category: Color = Color(0xFF41E6CD)
+val category: Color = Color(0xFFE9E9E9)
 
 val onTinkoff: Color = Color(0xFF141414)
 val onTinkoffPlatinum: Color = Color(0xFF797979)
@@ -20,7 +20,7 @@ val onAlpha: Color = Color(0xFFA31F16)
 val onVtbOld: Color = Color(0xFF122955)
 val onVtb: Color = Color(0xFF117EA1)
 val onRaiffeizen: Color = Color(0xFFAFA800)
-val onCategory: Color = Color(0xFF28B6A0)
+val onCategory: Color = Color(0xFFA5A5A5)
 
 fun assetBackgroundColor(color: AssetColor) = when (color) {
     AssetColor.TINKOFF -> tinkoff
@@ -53,6 +53,6 @@ fun assetContentColorFor(color: Color): Color = when (color) {
     vtbOld -> CapitalColors.White
     vtb -> CapitalColors.White
     raiffeizen -> CapitalColors.Black
-    category -> CapitalColors.White
+    category -> CapitalColors.Black
     else -> Color.Unspecified
 }

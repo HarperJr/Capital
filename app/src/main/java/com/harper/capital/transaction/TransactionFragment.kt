@@ -113,7 +113,8 @@ private fun TransactionScreen(
                     .fillMaxWidth()
                     .padding(16.dp),
                 text = stringResource(id = R.string.next),
-                onClick = { }
+                enabled = state.isApplyButtonEnabled,
+                onClick = { es.send(TransactionEvent.Apply) }
             )
         }
     }

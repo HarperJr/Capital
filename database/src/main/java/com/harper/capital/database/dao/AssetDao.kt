@@ -41,5 +41,5 @@ interface AssetDao {
     suspend fun selectGoalByAssetId(assetId: Long): GoalEntity
 
     @Query("SELECT * FROM ${AssetTable.tableName} WHERE ${AssetTable.id} = :id")
-    suspend fun selectById(id: Long): AssetEntity?
+    suspend fun selectById(id: Long): AssetEntity
 }

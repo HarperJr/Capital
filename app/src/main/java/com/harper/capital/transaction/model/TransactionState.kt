@@ -8,7 +8,8 @@ import com.harper.core.component.TabBarData
 
 data class TransactionState(
     val selectedPage: Int,
-    val pages: List<TransactionPage> = emptyPages()
+    val pages: List<TransactionPage> = emptyPages(),
+    val isApplyButtonEnabled: Boolean = false
 ) {
     val tabBarData: TabBarData
         @Composable

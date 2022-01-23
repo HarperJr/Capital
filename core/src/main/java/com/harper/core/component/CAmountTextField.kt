@@ -27,6 +27,7 @@ fun CAmountTextField(
     modifier: Modifier = Modifier,
     amount: Double,
     placeholder: String = "",
+    title: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     textStyle: TextStyle = LocalTextStyle.current,
     textColor: Color = LocalContentColor.current,
@@ -40,6 +41,7 @@ fun CAmountTextField(
         modifier = modifier,
         value = amount.formatWithoutZeroDecimal(),
         placeholder = placeholder,
+        title = title,
         leadingIcon = leadingIcon,
         onValueChange = { value ->
             if (value.isEmpty()) {
@@ -54,7 +56,8 @@ fun CAmountTextField(
         keyboardOptions = keyboardOptions.copy(keyboardType = KeyboardType.Number),
         singleLine = true,
         visualTransformation = { annotatedString ->
-            val transformedText = AnnotatedString(text = annotatedString.text.toDouble().formatAmount())
+            val transformedText =
+                AnnotatedString(text = annotatedString.text.toDouble().formatAmount())
             val offsetDiff = transformedText.length - annotatedString.length
             TransformedText(
                 text = transformedText,

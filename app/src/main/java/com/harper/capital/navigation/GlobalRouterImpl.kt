@@ -4,6 +4,7 @@ import com.github.terrakok.cicerone.Router
 import com.harper.capital.asset.AssetManageFragment
 import com.harper.capital.category.CategoryManageFragment
 import com.harper.capital.transaction.TransactionFragment
+import com.harper.capital.transaction.manage.TransactionManageFragment
 
 class GlobalRouterImpl : Router(), GlobalRouter {
 
@@ -17,6 +18,9 @@ class GlobalRouterImpl : Router(), GlobalRouter {
 
     override fun navigateToManageCategory(params: CategoryManageFragment.Params) =
         navigateTo(Screens.categoryManage(params))
+
+    override fun navigateToManageTransaction(params: TransactionManageFragment.Params) =
+        navigateTo(Screens.transactionManage(params))
 
     override fun navigateToSettings() = navigateTo(Screens.settings())
 

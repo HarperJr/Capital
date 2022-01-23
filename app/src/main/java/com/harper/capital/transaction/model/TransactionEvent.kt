@@ -16,4 +16,6 @@ sealed class TransactionEvent {
         TransactionEvent()
 
     object BackClick : TransactionEvent()
+
+    object Apply : TransactionEvent()
 }

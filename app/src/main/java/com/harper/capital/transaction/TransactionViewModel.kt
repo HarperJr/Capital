@@ -7,6 +7,8 @@ import com.harper.capital.category.model.CategoryManageType
 import com.harper.capital.domain.model.Asset
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.domain.FetchAssetsUseCase
+import com.harper.capital.transaction.manage.TransactionManageFragment
+import com.harper.capital.transaction.model.DataSetSection
 import com.harper.capital.transaction.model.DataSetType
 import com.harper.capital.transaction.model.TransactionEvent
 import com.harper.capital.transaction.model.TransactionPage
@@ -51,6 +53,24 @@ class TransactionViewModel(
             is TransactionEvent.TabSelect -> onTabSelect(event)
             is TransactionEvent.AssetSourceSelect -> onAssetSourceSelect(event)
             is TransactionEvent.NewSourceClick -> onNewSourceClick(event)
+            TransactionEvent.Apply -> onApply()
+        }
+    }
+
+    private fun onApply() {
+        val page = state.value.pages[state.value.selectedPage]
+        val assetFromId =
+            page.assetDataSets.first { it.section == DataSetSection.FROM }.selectedAssetId
+        val assetToId =
+            page.assetDataSets.first { it.section == DataSetSection.TO }.selectedAssetId
+        if (assetFromId != null && assetToId != null) {
+            router.navigateToManageTransaction(
+                TransactionManageFragment.Params(
+                    transactionType = page.type,
+                    assetFromId = assetFromId,
+                    assetToId = assetToId
+                )
+            )
         }
     }
 
@@ -93,7 +113,7 @@ class TransactionViewModel(
 
     private fun onTabSelect(event: TransactionEvent.TabSelect) {
         mutateState {
-            it.copy(selectedPage = event.tabIndex)
+            it.copy(selectedPage = event.tabIndex, isApplyButtonEnabled = true)
         }
     }
 }

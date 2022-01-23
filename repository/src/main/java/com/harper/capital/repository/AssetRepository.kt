@@ -11,4 +11,6 @@ interface AssetRepository {
     fun fetchByTypes(types: List<AssetType>): Flow<List<Asset>>
 
     fun fetchAll(): Flow<List<Asset>>
+
+    suspend fun fetchById(id: Long): Asset
 }

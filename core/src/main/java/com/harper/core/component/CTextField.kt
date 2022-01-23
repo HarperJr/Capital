@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -130,7 +131,10 @@ private fun CBasicTextField(
                     leadingIconPlaceable.heightOrZero()
                 )
                 layout(width = width, height = height) {
-                    leadingIconPlaceable?.placeRelative(0, (height - leadingIconPlaceable.heightOrZero()) / 2)
+                    leadingIconPlaceable?.placeRelative(
+                        0,
+                        (height - leadingIconPlaceable.heightOrZero()) / 2
+                    )
                     textFieldPlaceable?.placeRelative(
                         horizontalOffset,
                         (height - textFieldPlaceable.heightOrZero()) / 2
@@ -150,6 +154,7 @@ fun CTextField(
     modifier: Modifier = Modifier,
     value: String,
     placeholder: String = "",
+    title: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     textStyle: TextStyle = LocalTextStyle.current,
     textColor: Color = LocalContentColor.current,
@@ -162,29 +167,39 @@ fun CTextField(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onValueChange: (String) -> Unit
 ) {
-    var textFieldValueState by remember { mutableStateOf(TextFieldValue(text = value)) }
-    val textFieldValue = textFieldValueState.copy(text = value)
-    CBasicTextField(
-        modifier = modifier,
-        value = textFieldValue,
-        placeholder = placeholder,
-        leadingIcon = leadingIcon,
-        textStyle = textStyle,
-        textColor = textColor,
-        placeholderColor = placeholderColor,
-        backgroundColor = backgroundColor,
-        visualTransformation = visualTransformation,
-        keyboardActions = keyboardActions,
-        keyboardOptions = keyboardOptions,
-        singleLine = singleLine,
-        interactionSource = interactionSource,
-        onValueChange = {
-            textFieldValueState = it
-            if (value != it.text) {
-                onValueChange(it.text)
+    val textField: @Composable (Modifier) -> Unit = { textFieldModifier ->
+        var textFieldValueState by remember { mutableStateOf(TextFieldValue(text = value)) }
+        CBasicTextField(
+            modifier = textFieldModifier,
+            value = textFieldValueState,
+            placeholder = placeholder,
+            leadingIcon = leadingIcon,
+            textStyle = textStyle,
+            textColor = textColor,
+            placeholderColor = placeholderColor,
+            backgroundColor = backgroundColor,
+            visualTransformation = visualTransformation,
+            keyboardActions = keyboardActions,
+            keyboardOptions = keyboardOptions,
+            singleLine = singleLine,
+            interactionSource = interactionSource,
+            onValueChange = {
+                textFieldValueState = it
+                if (value != it.text) {
+                    onValueChange(it.text)
+                }
             }
+        )
+    }
+    if (title != null) {
+        Column(modifier = modifier) {
+            title.invoke()
+            CHorizontalSpacer(height = CapitalTheme.dimensions.tiny)
+            textField.invoke(Modifier.fillMaxWidth())
         }
-    )
+    } else {
+        textField.invoke(modifier)
+    }
 }
 
 @Preview
