@@ -14,7 +14,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -27,14 +26,13 @@ import com.harper.capital.transaction.model.DataSetSection
 import com.harper.capital.transaction.model.TransactionEvent
 import com.harper.capital.transaction.model.TransactionPage
 import com.harper.capital.transaction.model.TransactionState
-import com.harper.capital.transaction.model.TransactionStateProvider
 import com.harper.capital.transaction.model.TransactionType
 import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CButton
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CIcon
-import com.harper.core.component.CScaffold
 import com.harper.core.component.CPreview
+import com.harper.core.component.CScaffold
 import com.harper.core.component.TabBar
 import com.harper.core.component.Toolbar
 import com.harper.core.theme.CapitalIcons
@@ -48,7 +46,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.parcelize.Parcelize
 import org.koin.core.parameter.parametersOf
 
-class TransactionFragment : ComponentFragment<TransactionViewModel>(), EventSender<TransactionEvent> {
+class TransactionFragment : ComponentFragment<TransactionViewModel>(),
+    EventSender<TransactionEvent> {
     override val viewModel: TransactionViewModel by injectViewModel { parametersOf(params) }
     private val params by requireArg<Params>(PARAMS)
 
@@ -71,7 +70,10 @@ class TransactionFragment : ComponentFragment<TransactionViewModel>(), EventSend
 
 @Composable
 @OptIn(ExperimentalPagerApi::class)
-private fun TransactionScreen(viewModel: ComponentViewModel<TransactionState>, es: EventSender<TransactionEvent>) {
+private fun TransactionScreen(
+    viewModel: ComponentViewModel<TransactionState>,
+    es: EventSender<TransactionEvent>
+) {
     val state by viewModel.state.collectAsState()
 
     CScaffold(
@@ -134,10 +136,10 @@ private fun PageBlock(page: TransactionPage, pageIndex: Int, es: EventSender<Tra
             ) {
                 dataSet.assets.forEach {
                     AssetSource(asset = it, isSelected = it.id == dataSet.selectedAssetId) {
-                        es.send(TransactionEvent.AssetSourceSelect(dataSet.section, it))
+                        es.send(TransactionEvent.AssetSourceSelect(page.type, dataSet.section, it))
                     }
                 }
-                NewSource { es.send(TransactionEvent.NewSourceClick(pageIndex, dataSet.section)) }
+                NewSource { es.send(TransactionEvent.NewSourceClick(page.type, dataSet.type)) }
             }
         }
     }
@@ -175,9 +177,7 @@ private fun ContentLight() {
 
 @Preview(showBackground = true)
 @Composable
-private fun ContentDark(
-    @PreviewParameter(TransactionStateProvider::class) transactionState: TransactionState
-) {
+private fun ContentDark() {
     CPreview(isDark = true) {
         TransactionScreen(TransactionMockViewModel(), es = MockEventSender())
     }
