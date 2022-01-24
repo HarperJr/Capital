@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +40,6 @@ import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
 import com.harper.core.ui.withArgs
-import kotlinx.coroutines.flow.collect
 import kotlinx.parcelize.Parcelize
 import org.koin.core.parameter.parametersOf
 
@@ -84,28 +81,16 @@ private fun TransactionScreen(
                 modifier = Modifier.weight(1f)
             ) {
                 val pagerState = rememberPagerState(initialPage = state.selectedPage)
-                LaunchedEffect(state.selectedPage) {
-                    pagerState.animateScrollToPage(state.selectedPage)
-                }
-                LaunchedEffect(pagerState) {
-                    snapshotFlow { pagerState.currentPage }.collect { page ->
-                        es.send(TransactionEvent.TabSelect(page))
-                    }
-                }
                 TabBar(
                     data = state.tabBarData,
-                    selectedTabIndex = pagerState.currentPage,
+                    pagerState = pagerState,
                     onTabSelect = { es.send(TransactionEvent.TabSelect(it)) }
                 )
                 HorizontalPager(
                     state = pagerState,
                     count = state.pages.size
                 ) { pageIndex ->
-                    PageBlock(
-                        page = state.pages[pageIndex],
-                        pageIndex = pageIndex,
-                        es = es
-                    )
+                    PageBlock(page = state.pages[pageIndex], es = es)
                 }
             }
             CButton(
@@ -121,7 +106,7 @@ private fun TransactionScreen(
 }
 
 @Composable
-private fun PageBlock(page: TransactionPage, pageIndex: Int, es: EventSender<TransactionEvent>) {
+private fun PageBlock(page: TransactionPage, es: EventSender<TransactionEvent>) {
     Column(
         modifier = Modifier
             .fillMaxSize()

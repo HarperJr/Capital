@@ -22,12 +22,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.imePadding
 import com.google.accompanist.pager.HorizontalPager
@@ -39,7 +37,6 @@ import com.harper.capital.category.model.CategoryManageBottomSheet
 import com.harper.capital.category.model.CategoryManageEvent
 import com.harper.capital.category.model.CategoryManagePage
 import com.harper.capital.category.model.CategoryManageState
-import com.harper.capital.category.model.CategoryManageStateProvider
 import com.harper.capital.category.model.CategoryManageType
 import com.harper.capital.ext.getImageVector
 import com.harper.capital.ui.base.ScreenLayout
@@ -62,7 +59,6 @@ import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
 import com.harper.core.ui.withArgs
-import kotlinx.coroutines.flow.collect
 import kotlinx.parcelize.Parcelize
 import org.koin.core.parameter.parametersOf
 
@@ -122,17 +118,9 @@ private fun CategoryManageScreen(
                 val pagerState = rememberPagerState(initialPage = state.selectedPage)
                 TabBar(
                     data = state.tabBarData,
-                    selectedTabIndex = pagerState.currentPage,
-                    onTabSelect = {}
+                    pagerState = pagerState,
+                    onTabSelect = { es.send(CategoryManageEvent.TabSelect(it)) }
                 )
-                LaunchedEffect(pagerState) {
-                    snapshotFlow { pagerState.currentPage }.collect {
-                        es.send(CategoryManageEvent.TabSelect(it))
-                    }
-                }
-                LaunchedEffect(state.selectedPage) {
-                    pagerState.animateScrollToPage(state.selectedPage)
-                }
                 HorizontalPager(state = pagerState, count = state.pages.size) { pageIndex ->
                     PageBlock(page = state.pages[pageIndex], es = es)
                 }

@@ -1,7 +1,6 @@
 package com.harper.capital.transaction.manage.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,17 +29,15 @@ import com.harper.core.theme.CapitalTheme
 @Composable
 fun AssetPair(modifier: Modifier = Modifier, assetFrom: Asset, assetTo: Asset) {
     Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Box {
+        Box(contentAlignment = Alignment.CenterStart) {
             AssetIcon(
                 modifier = Modifier.padding(start = CapitalTheme.dimensions.imageMedium * 0.75f),
                 asset = assetTo
             )
             AssetIcon(
-                modifier = Modifier.border(
-                    width = 1.dp,
-                    color = CapitalTheme.colors.background,
-                    shape = CircleShape
-                ),
+                modifier = Modifier
+                    .background(color = CapitalTheme.colors.background, shape = CircleShape)
+                    .padding(1.dp),
                 asset = assetFrom
             )
         }
