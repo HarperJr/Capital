@@ -12,9 +12,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.harper.core.R
+import com.harper.core.component.CIcon
 import com.harper.core.component.CPreview
 import com.harper.core.component.CWrappedGrid
-import com.harper.core.component.CIcon
 
 object CapitalIcons {
 
@@ -54,6 +54,9 @@ object CapitalIcons {
     val ArrowLeft
         @Composable
         get() = ImageVector.vectorResource(id = R.drawable.ic_arrow_left)
+    val Calendar
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_calendar)
     val RoundCheck
         @Composable
         get() = ImageVector.vectorResource(id = R.drawable.ic_round_check)
@@ -122,9 +125,14 @@ private fun Icons() {
         CapitalIcons.NewAsset,
         CapitalIcons.ArrowLeft,
         CapitalIcons.ArrowRight,
-        CapitalIcons.RoundCheck
+        CapitalIcons.RoundCheck,
+        CapitalIcons.Calendar
     )
-    CWrappedGrid(modifier = Modifier.background(CapitalTheme.colors.background), columns = 6, icons) {
+    CWrappedGrid(
+        modifier = Modifier.background(CapitalTheme.colors.background),
+        columns = 6,
+        icons
+    ) {
         CIcon(imageVector = it)
     }
 }
@@ -143,7 +151,11 @@ private fun BankIcons() {
         CapitalIcons.Bank.Bitcoin,
         CapitalIcons.Bank.PiggyBank
     )
-    CWrappedGrid(modifier = Modifier.background(CapitalTheme.colors.background), columns = 6, icons) {
+    CWrappedGrid(
+        modifier = Modifier.background(CapitalTheme.colors.background),
+        columns = 6,
+        icons
+    ) {
         CIcon(imageVector = it)
     }
 }

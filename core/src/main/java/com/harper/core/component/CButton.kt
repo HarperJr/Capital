@@ -55,7 +55,7 @@ fun CButton(
         border = border,
         onClick = onClick
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
+        Box {
             if (leadingIcon != null) {
                 Box(modifier = Modifier.align(Alignment.CenterStart)) {
                     leadingIcon.invoke()

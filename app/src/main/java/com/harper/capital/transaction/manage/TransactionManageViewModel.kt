@@ -3,6 +3,7 @@ package com.harper.capital.transaction.manage
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.manage.domain.FetchAssetUseCase
 import com.harper.capital.transaction.manage.model.AssetPair
+import com.harper.capital.transaction.manage.model.DatePickerDialogState
 import com.harper.capital.transaction.manage.model.TransactionManageEvent
 import com.harper.capital.transaction.manage.model.TransactionManageState
 import com.harper.core.ui.ComponentViewModel
@@ -19,6 +20,13 @@ class TransactionManageViewModel(
     override fun onEvent(event: TransactionManageEvent) {
         when (event) {
             TransactionManageEvent.BackClick -> router.back()
+            is TransactionManageEvent.AmountChange -> onAmountChange(event)
+            is TransactionManageEvent.CommentChange -> onCommentChange(event)
+            is TransactionManageEvent.DateSelect -> onDateSelect(event)
+            is TransactionManageEvent.DateSelectClick -> onDateSelectClick(event)
+            is TransactionManageEvent.ScheduledCheckChange -> onScheduledCheckChange(event)
+            TransactionManageEvent.HideDialog -> onHideDialog()
+            TransactionManageEvent.Apply -> onApply()
         }
     }
 
@@ -31,5 +39,43 @@ class TransactionManageViewModel(
                 it.copy(assetPair = AssetPair(assetFrom, assetTo), isLoading = false)
             }
         }
+    }
+
+    private fun onHideDialog() {
+        mutateState {
+            it.copy(datePickerDialogState = DatePickerDialogState(isVisible = false))
+        }
+    }
+
+    private fun onAmountChange(event: TransactionManageEvent.AmountChange) {
+        mutateState {
+            it.copy(amount = event.amount)
+        }
+    }
+
+    private fun onCommentChange(event: TransactionManageEvent.CommentChange) {
+        mutateState {
+            it.copy(comment = event.comment.takeIf { comment -> comment.isNotEmpty() })
+        }
+    }
+
+    private fun onDateSelect(event: TransactionManageEvent.DateSelect) {
+        mutateState {
+            it.copy(date = event.date)
+        }
+    }
+
+    private fun onDateSelectClick(event: TransactionManageEvent.DateSelectClick) {
+        mutateState {
+            it.copy(datePickerDialogState = DatePickerDialogState(event.date, isVisible = true))
+        }
+    }
+
+    private fun onScheduledCheckChange(event: TransactionManageEvent.ScheduledCheckChange) {
+        mutateState { it.copy(isScheduled = event.isChecked) }
+    }
+
+    private fun onApply() {
+
     }
 }

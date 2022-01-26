@@ -10,8 +10,9 @@ data class TransactionManageState(
     val transactionType: TransactionType,
     val assetPair: AssetPair? = null,
     val amount: Double = 0.0,
-    val data: LocalDate = LocalDate.now(),
+    val date: LocalDate = LocalDate.now(),
     val comment: String? = null,
     val isScheduled: Boolean = false,
+    val datePickerDialogState: DatePickerDialogState = DatePickerDialogState(isVisible = false),
     val isLoading: Boolean = true
 )

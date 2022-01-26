@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListLayoutInfo
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -41,6 +40,7 @@ import com.harper.core.component.CScaffold
 import com.harper.core.component.Menu
 import com.harper.core.component.MenuItem
 import com.harper.core.component.Toolbar
+import com.harper.core.ext.compose.fullyVisibleItemIndex
 import com.harper.core.ext.formatWithCurrencySymbol
 import com.harper.core.ext.orElse
 import com.harper.core.theme.CapitalColors
@@ -52,7 +52,6 @@ import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 import kotlinx.coroutines.flow.collect
-import kotlin.math.abs
 
 private const val ADD_ASSET_MENU_ITEM_ID = 0
 private const val SETTINGS_MENU_ITEM_ID = 1
@@ -182,15 +181,6 @@ fun OverviewTopBar(account: Account, es: EventSender<MainEvent>) {
         }
     )
 }
-
-private fun LazyListLayoutInfo.fullyVisibleItemIndex(): Int {
-    val viewportCenter = (viewportEndOffset + viewportStartOffset) / 2f
-    return visibleItemsInfo
-        .firstOrNull {
-            abs((it.offset + it.size / 2f) - viewportCenter) <= viewportCenter
-        }?.index.orElse(-1)
-}
-
 
 @Preview(showBackground = true, name = "Content light")
 @Composable

@@ -15,9 +15,7 @@ import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsHeight
-import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.Scaffold
 import com.harper.core.theme.CapitalTheme
 

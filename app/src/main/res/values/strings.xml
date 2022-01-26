@@ -64,4 +64,6 @@
     <string name="optional">Optional</string>
     <string name="enter_comment_hint">Enter comment</string>
     <string name="amount">Amount</string>
+    <string name="create_new_transaction">Create new transaction</string>
+    <string name="date">Date</string>
 </resources>

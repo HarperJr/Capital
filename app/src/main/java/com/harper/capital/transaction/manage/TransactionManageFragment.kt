@@ -21,6 +21,8 @@ import com.harper.capital.transaction.model.TransactionType
 import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CAmountTextField
 import com.harper.core.component.CButton
+import com.harper.core.component.CDatePicker
+import com.harper.core.component.CDatePickerDialog
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CIcon
 import com.harper.core.component.CLoaderLayout
@@ -38,6 +40,7 @@ import com.harper.core.ui.MockEventSender
 import com.harper.core.ui.withArgs
 import kotlinx.parcelize.Parcelize
 import org.koin.core.parameter.parametersOf
+import java.time.LocalDate
 
 class TransactionManageFragment : ComponentFragment<TransactionManageViewModel>(),
     EventSender<TransactionManageEvent> {
@@ -68,10 +71,17 @@ private fun TransactionManageScreen(
     es: EventSender<TransactionManageEvent>
 ) {
     val state by viewModel.state.collectAsState()
-    CScaffold(
-        topBar = { TransactionManageTopBar(state, es) }
-    ) {
+    CScaffold(topBar = { TransactionManageTopBar(state, es) }) {
         CLoaderLayout(isLoading = state.isLoading, loaderContent = {}) {
+            if (state.datePickerDialogState.isVisible) {
+                CDatePickerDialog(
+                    date = state.datePickerDialogState.date,
+                    onDismiss = {
+                        es.send(TransactionManageEvent.HideDialog)
+                    },
+                    onDateSelect = { es.send(TransactionManageEvent.DateSelect(it)) }
+                )
+            }
             Column(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier
@@ -91,9 +101,16 @@ private fun TransactionManageScreen(
                         title = {
                             Text(text = stringResource(id = R.string.amount))
                         },
-                        onValueChange = {
-
-                        }
+                        onValueChange = { es.send(TransactionManageEvent.AmountChange(it)) }
+                    )
+                    CHorizontalSpacer(height = CapitalTheme.dimensions.large)
+                    Text(text = stringResource(id = R.string.date))
+                    CDatePicker(
+                        dateStart = LocalDate.now().minusDays(30),
+                        dateEnd = LocalDate.now(),
+                        date = state.date,
+                        onDateSelectClick = { es.send(TransactionManageEvent.DateSelectClick(it)) },
+                        onDateSelect = { es.send(TransactionManageEvent.DateSelect(it)) }
                     )
                     CHorizontalSpacer(height = CapitalTheme.dimensions.large)
                     CTextField(
@@ -101,21 +118,21 @@ private fun TransactionManageScreen(
                         value = state.comment.orEmpty(),
                         placeholder = stringResource(id = R.string.enter_comment_hint),
                         title = { OptionalCommentTitle() },
-                        onValueChange = {}
+                        onValueChange = { es.send(TransactionManageEvent.CommentChange(it)) }
                     )
                     CHorizontalSpacer(height = CapitalTheme.dimensions.large)
                     CPreferenceSwitch(
                         title = stringResource(id = R.string.schedule_transaction),
                         isChecked = state.isScheduled,
-                        onCheckedChange = {}
+                        onCheckedChange = { es.send(TransactionManageEvent.ScheduledCheckChange(it)) }
                     )
                 }
                 CButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(CapitalTheme.dimensions.side),
-                    text = stringResource(id = R.string.next),
-                    onClick = { }
+                    text = stringResource(id = R.string.create_new_transaction),
+                    onClick = { es.send(TransactionManageEvent.Apply) }
                 )
             }
         }
