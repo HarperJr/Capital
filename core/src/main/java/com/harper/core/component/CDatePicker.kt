@@ -64,7 +64,7 @@ fun CDatePicker(
         lazyListState = dateListState,
         snapOffsetForItem = SnapOffsets.End
     )
-    LaunchedEffect(dateListState) {
+    LaunchedEffect(dateListState.isScrollInProgress) {
         snapshotFlow {
             dateListState.layoutInfo.fullyVisibleItemIndex {
                 viewportEndOffset - ((viewportEndOffset - viewportStartOffset) / 2f) * 0.25f
