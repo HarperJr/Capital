@@ -3,7 +3,7 @@ package com.harper.capital.repository.mapper
 import com.harper.capital.database.entity.AssetEntityType
 import com.harper.capital.domain.model.AssetType
 
-internal object AssetTypeEntityMapper : (AssetType) -> AssetEntityType {
+internal object AssetEntityTypeMapper : (AssetType) -> AssetEntityType {
 
     override fun invoke(model: AssetType): AssetEntityType = when (model) {
         AssetType.DEBET -> AssetEntityType.DEBET

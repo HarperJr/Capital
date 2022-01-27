@@ -35,11 +35,8 @@ abstract class ComponentFragment<VM : ComponentViewModel<*>> : Fragment() {
     ): View = ComposeView(inflater.context)
         .apply {
             layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-            val windowInsets = ViewWindowInsetObserver(this).start()
             setContent {
-                CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
-                    content().invoke()
-                }
+                content().invoke()
             }
         }
 

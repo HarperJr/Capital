@@ -15,7 +15,7 @@ plugins {
 android {
     capitalLibDefaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("int", "DATABASE_VERSION", "1")
+        buildConfigField("int", "DATABASE_VERSION", "2")
         buildConfigField("String", "DATABASE_NAME", "\"capital_db\"")
     }
 

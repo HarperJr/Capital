@@ -7,17 +7,18 @@ import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.domain.model.AssetMetadata
 import com.harper.capital.domain.model.Currency
 
-internal object AssetMapper : (AssetEntity, AssetMetadata) -> Asset {
+internal object AssetMapper : (AssetEntity, AssetMetadata?) -> Asset {
 
-    override fun invoke(entity: AssetEntity, metadata: AssetMetadata): Asset = with(entity) {
-        Asset(
-            id = id,
-            name = name,
-            currency = Currency.of(currencyId),
-            amount = amount,
-            metadata = metadata,
-            color = AssetColor.valueOf(color),
-            icon = AssetIcon.valueOf(icon)
-        )
-    }
+    override fun invoke(entity: AssetEntity, metadata: AssetMetadata?): Asset =
+        with(entity) {
+            Asset(
+                id = id,
+                name = name,
+                currency = Currency.of(currencyId),
+                amount = amount,
+                metadata = metadata,
+                color = AssetColor.valueOf(color),
+                icon = AssetIcon.valueOf(icon)
+            )
+        }
 }

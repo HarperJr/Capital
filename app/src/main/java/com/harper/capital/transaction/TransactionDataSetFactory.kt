@@ -28,13 +28,13 @@ class TransactionDataSetFactory {
         AssetDataSet(
             type = DataSetType.ASSET,
             section = DataSetSection.FROM,
-            assets = assets.filter { it.metadata.assetType in AssetType.assetValues() },
+            assets = assets.filter { it.metadata?.assetType in AssetType.assetValues() },
             selectedAssetId = selectedAssetId
         ),
         AssetDataSet(
             type = DataSetType.CATEGORY,
             section = DataSetSection.TO,
-            assets = assets.filter { it.metadata.assetType == AssetType.EXPENSE }
+            assets = assets.filter { it.metadata?.assetType == AssetType.EXPENSE }
         )
     )
 
@@ -45,12 +45,12 @@ class TransactionDataSetFactory {
         AssetDataSet(
             type = DataSetType.CATEGORY,
             section = DataSetSection.FROM,
-            assets = assets.filter { it.metadata.assetType == AssetType.INCOME }
+            assets = assets.filter { it.metadata?.assetType == AssetType.INCOME }
         ),
         AssetDataSet(
             type = DataSetType.ASSET,
             section = DataSetSection.TO,
-            assets = assets.filter { it.metadata.assetType in AssetType.assetValues() },
+            assets = assets.filter { it.metadata?.assetType in AssetType.assetValues() },
             selectedAssetId = selectedAssetId
         )
     )
@@ -62,13 +62,13 @@ class TransactionDataSetFactory {
         AssetDataSet(
             type = DataSetType.ASSET,
             section = DataSetSection.FROM,
-            assets = assets.filter { it.metadata.assetType in AssetType.assetValues() },
+            assets = assets.filter { it.metadata?.assetType in AssetType.assetValues() },
             selectedAssetId = selectedAssetId
         ),
         AssetDataSet(
             type = DataSetType.ASSET,
             section = DataSetSection.TO,
-            assets = assets.filter { it.metadata.assetType in AssetType.assetValues() }
+            assets = assets.filter { it.metadata?.assetType in AssetType.assetValues() }
         ),
     )
 }

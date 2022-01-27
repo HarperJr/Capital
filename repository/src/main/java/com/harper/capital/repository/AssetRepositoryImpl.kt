@@ -10,8 +10,8 @@ import com.harper.capital.domain.model.Asset
 import com.harper.capital.domain.model.AssetMetadata
 import com.harper.capital.domain.model.AssetType
 import com.harper.capital.repository.mapper.AssetEntityMapper
+import com.harper.capital.repository.mapper.AssetEntityTypeMapper
 import com.harper.capital.repository.mapper.AssetMapper
-import com.harper.capital.repository.mapper.AssetTypeEntityMapper
 import com.harper.core.ext.cast
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -39,7 +39,7 @@ internal class AssetRepositoryImpl(
     }
 
     override fun fetchByTypes(types: List<AssetType>): Flow<List<Asset>> =
-        assetDao.selectByTypes(types.map(AssetTypeEntityMapper))
+        assetDao.selectByTypes(types.map(AssetEntityTypeMapper))
             .map { entities -> entities.map { mapToAsset(it) } }
 
     override fun fetchAll(): Flow<List<Asset>> =

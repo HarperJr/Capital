@@ -6,4 +6,6 @@ val repositoryModule
     get() = module {
 
         factory<AssetRepository> { AssetRepositoryImpl(get(), get()) }
+
+        factory<TransactionRepository> { TransactionRepositoryImpl(get()) }
     }
