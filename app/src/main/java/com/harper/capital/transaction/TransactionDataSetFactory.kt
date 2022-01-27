@@ -2,10 +2,10 @@ package com.harper.capital.transaction
 
 import com.harper.capital.domain.model.Asset
 import com.harper.capital.domain.model.AssetType
+import com.harper.capital.domain.model.TransactionType
 import com.harper.capital.transaction.model.AssetDataSet
 import com.harper.capital.transaction.model.DataSetSection
 import com.harper.capital.transaction.model.DataSetType
-import com.harper.capital.transaction.model.TransactionType
 
 class TransactionDataSetFactory {
 

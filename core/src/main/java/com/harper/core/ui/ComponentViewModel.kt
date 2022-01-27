@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-abstract class ComponentViewModel<S : Any>(defaultState: S, isLoading: Boolean = false) : ViewModel() {
+abstract class ComponentViewModel<S : Any>(defaultState: S) : ViewModel() {
     val state: StateFlow<S>
         get() = _state
     private val _state: MutableStateFlow<S> = MutableStateFlow(defaultState)
@@ -35,7 +35,8 @@ abstract class ComponentViewModel<S : Any>(defaultState: S, isLoading: Boolean =
         stateMutation.newState?.let { _state.value = it }
     }
 
-    protected fun launch(closure: suspend CoroutineScope.() -> Unit) = viewModelScope.launch { closure.invoke(this) }
+    protected fun launch(closure: suspend CoroutineScope.() -> Unit) =
+        viewModelScope.launch { closure.invoke(this) }
 
     class StateMutation<S : Any>(private val stateFlow: StateFlow<S>) {
         val state: S

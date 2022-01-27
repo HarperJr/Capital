@@ -6,39 +6,37 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.harper.capital.component.AssetIconRound
 import com.harper.capital.domain.model.Asset
 import com.harper.capital.domain.model.AssetColor
 import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.domain.model.AssetMetadata
 import com.harper.capital.domain.model.Currency
-import com.harper.capital.ext.assetBackgroundColor
-import com.harper.capital.ext.assetContentColorFor
-import com.harper.capital.ext.getImageVector
 import com.harper.core.component.CPreview
 import com.harper.core.theme.CapitalTheme
 
 @Composable
-fun AssetPair(modifier: Modifier = Modifier, assetFrom: Asset, assetTo: Asset) {
+fun TransactionHeader(modifier: Modifier = Modifier, assetFrom: Asset, assetTo: Asset) {
     Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Box(contentAlignment = Alignment.CenterStart) {
-            AssetIcon(
+            AssetIconRound(
                 modifier = Modifier.padding(start = CapitalTheme.dimensions.imageMedium * 0.75f),
-                asset = assetTo
+                color = assetTo.color,
+                icon = assetTo.icon
             )
-            AssetIcon(
+            AssetIconRound(
                 modifier = Modifier
                     .background(color = CapitalTheme.colors.background, shape = CircleShape)
                     .padding(1.dp),
-                asset = assetFrom
+                color = assetFrom.color,
+                icon = assetFrom.icon
             )
         }
         Column(
@@ -60,31 +58,11 @@ fun AssetPair(modifier: Modifier = Modifier, assetFrom: Asset, assetTo: Asset) {
     }
 }
 
-@Composable
-private fun AssetIcon(modifier: Modifier = Modifier, asset: Asset) {
-    val circleColor = assetBackgroundColor(asset.color)
-    Box(
-        modifier = modifier
-            .size(CapitalTheme.dimensions.imageMedium)
-            .background(
-                color = circleColor,
-                shape = CircleShape
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = asset.icon.getImageVector(),
-            contentDescription = null,
-            tint = assetContentColorFor(circleColor)
-        )
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
-private fun AssetPairLight() {
+private fun TransactionHeaderLight() {
     CPreview {
-        AssetPair(
+        TransactionHeader(
             modifier = Modifier.padding(CapitalTheme.dimensions.side),
             assetFrom = Asset(
                 id = 0L,
@@ -110,9 +88,9 @@ private fun AssetPairLight() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AssetPairDark() {
+private fun TransactionHeaderDark() {
     CPreview(isDark = true) {
-        AssetPair(
+        TransactionHeader(
             modifier = Modifier.padding(CapitalTheme.dimensions.side),
             assetFrom = Asset(
                 id = 0L,

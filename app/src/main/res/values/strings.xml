@@ -66,4 +66,5 @@
     <string name="amount">Amount</string>
     <string name="create_new_transaction">Create new transaction</string>
     <string name="date">Date</string>
+    <string name="history_title">History</string>
 </resources>

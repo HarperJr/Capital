@@ -5,6 +5,7 @@ import com.github.terrakok.cicerone.androidx.FragmentScreen
 import com.harper.capital.asset.AssetManageFragment
 import com.harper.capital.auth.signin.SignInFragment
 import com.harper.capital.category.CategoryManageFragment
+import com.harper.capital.history.HistoryListFragment
 import com.harper.capital.main.MainFragment
 import com.harper.capital.settings.SettingsFragment
 import com.harper.capital.transaction.TransactionFragment
@@ -16,6 +17,7 @@ private const val ASSET_MANAGE_KEY = "asset_manage_key"
 private const val CATEGORY_MANAGE_KEY = "category_manage_key"
 private const val TRANSACTION_KEY = "transaction_key"
 private const val TRANSACTION_MANAGE_KEY = "transaction_manage_key"
+private const val HISTORY_LIST_KEY = "history_list_key"
 private const val SETTINGS_KEY = "settings_key"
 
 object Screens {
@@ -40,6 +42,11 @@ object Screens {
     fun transactionManage(params: TransactionManageFragment.Params): Screen =
         FragmentScreen(TRANSACTION_MANAGE_KEY) {
             TransactionManageFragment.newInstance(params)
+        }
+
+    fun historyList(params: HistoryListFragment.Params): Screen =
+        FragmentScreen(HISTORY_LIST_KEY) {
+            HistoryListFragment.newInstance(params)
         }
 
     fun settings(): Screen = FragmentScreen(SETTINGS_KEY) {

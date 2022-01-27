@@ -1,7 +1,7 @@
 package com.harper.capital.transaction.manage.model
 
 import com.harper.capital.domain.model.Asset
-import com.harper.capital.transaction.model.TransactionType
+import com.harper.capital.domain.model.TransactionType
 import java.time.LocalDate
 
 typealias AssetPair = Pair<Asset, Asset>

@@ -4,6 +4,7 @@ import android.app.Application
 import com.harper.capital.auth.authModule
 import com.harper.capital.category.categoryModule
 import com.harper.capital.database.databaseModule
+import com.harper.capital.history.historyModule
 import com.harper.capital.main.mainModule
 import com.harper.capital.repository.repositoryModule
 import com.harper.capital.settings.settingsModule
@@ -28,6 +29,7 @@ class CapitalApplication : Application() {
                 authModule,
                 transactionModule,
                 categoryModule,
+                historyModule,
                 settingsModule,
                 databaseModule,
                 repositoryModule

@@ -5,6 +5,7 @@ import com.harper.capital.asset.model.AssetManageMode
 import com.harper.capital.category.CategoryManageFragment
 import com.harper.capital.category.model.CategoryManageType
 import com.harper.capital.domain.model.Asset
+import com.harper.capital.domain.model.TransactionType
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.domain.FetchAssetsUseCase
 import com.harper.capital.transaction.manage.TransactionManageFragment
@@ -13,7 +14,6 @@ import com.harper.capital.transaction.model.DataSetType
 import com.harper.capital.transaction.model.TransactionEvent
 import com.harper.capital.transaction.model.TransactionPage
 import com.harper.capital.transaction.model.TransactionState
-import com.harper.capital.transaction.model.TransactionType
 import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventObserver
 import kotlinx.coroutines.flow.collect

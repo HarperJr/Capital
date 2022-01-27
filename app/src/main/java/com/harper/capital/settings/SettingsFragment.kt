@@ -31,7 +31,7 @@ import com.harper.core.component.CIcon
 import com.harper.core.component.CPreferenceArrow
 import com.harper.core.component.CPreferenceSwitch
 import com.harper.core.component.CPreview
-import com.harper.core.component.Toolbar
+import com.harper.core.component.CToolbar
 import com.harper.core.ext.formatCurrencyName
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
@@ -58,7 +58,10 @@ class SettingsFragment : ComponentFragment<SettingsViewModel>(), EventSender<Set
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-private fun SettingsScreen(viewModel: ComponentViewModel<SettingsState>, es: EventSender<SettingsEvent>) {
+private fun SettingsScreen(
+    viewModel: ComponentViewModel<SettingsState>,
+    es: EventSender<SettingsEvent>
+) {
     val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
@@ -135,13 +138,14 @@ private fun BottomSheetContent(bottomSheet: SettingsBottomSheet?, es: EventSende
                 onCurrencySelect = { es.send(SettingsEvent.CurrencySelectClick) }
             )
         }
-        else -> {}
+        else -> {
+        }
     }
 }
 
 @Composable
 private fun SettingsTopBar(es: EventSender<SettingsEvent>) {
-    Toolbar(
+    CToolbar(
         content = {
             Text(
                 text = stringResource(id = R.string.settings),

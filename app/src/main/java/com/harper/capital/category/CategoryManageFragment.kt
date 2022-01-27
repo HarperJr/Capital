@@ -48,8 +48,8 @@ import com.harper.core.component.CIcon
 import com.harper.core.component.CPreferenceArrow
 import com.harper.core.component.CPreview
 import com.harper.core.component.CTextField
+import com.harper.core.component.CToolbar
 import com.harper.core.component.TabBar
-import com.harper.core.component.Toolbar
 import com.harper.core.ext.formatCurrencyName
 import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalIcons
@@ -229,7 +229,7 @@ private fun BottomSheetContent(
 
 @Composable
 private fun CategoryManageTopBar(es: EventSender<CategoryManageEvent>) {
-    Toolbar(
+    CToolbar(
         content = {
             Text(
                 modifier = Modifier.padding(start = 16.dp),

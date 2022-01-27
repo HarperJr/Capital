@@ -14,10 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.harper.capital.R
-import com.harper.capital.transaction.manage.component.AssetPair
+import com.harper.capital.domain.model.TransactionType
+import com.harper.capital.transaction.manage.component.TransactionHeader
 import com.harper.capital.transaction.manage.model.TransactionManageEvent
 import com.harper.capital.transaction.manage.model.TransactionManageState
-import com.harper.capital.transaction.model.TransactionType
 import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CAmountTextField
 import com.harper.core.component.CButton
@@ -30,7 +30,7 @@ import com.harper.core.component.CPreferenceSwitch
 import com.harper.core.component.CPreview
 import com.harper.core.component.CScaffold
 import com.harper.core.component.CTextField
-import com.harper.core.component.Toolbar
+import com.harper.core.component.CToolbar
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentFragment
@@ -91,7 +91,7 @@ private fun TransactionManageScreen(
                     CHorizontalSpacer(height = CapitalTheme.dimensions.medium)
                     val assetPair = state.assetPair
                     if (assetPair != null) {
-                        AssetPair(assetFrom = assetPair.first, assetTo = assetPair.second)
+                        TransactionHeader(assetFrom = assetPair.first, assetTo = assetPair.second)
                     }
                     CHorizontalSpacer(height = CapitalTheme.dimensions.medium)
                     CAmountTextField(
@@ -160,7 +160,7 @@ private fun TransactionManageTopBar(
     state: TransactionManageState,
     es: EventSender<TransactionManageEvent>
 ) {
-    Toolbar(
+    CToolbar(
         content = {
             Text(
                 text = state.transactionType.resolveTitle(),

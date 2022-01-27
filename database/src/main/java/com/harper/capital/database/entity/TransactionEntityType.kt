@@ -4,5 +4,6 @@ enum class TransactionEntityType {
     EXPENSE,
     INCOME,
     SEND,
+    GOAL,
     DUTY
 }

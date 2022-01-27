@@ -5,10 +5,11 @@ import com.harper.capital.domain.model.TransactionType
 
 internal object TransactionEntityTypeMapper : (TransactionType) -> TransactionEntityType {
 
-    override fun invoke(model: TransactionType): TransactionEntityType = when(model) {
+    override fun invoke(model: TransactionType): TransactionEntityType = when (model) {
         TransactionType.INCOME -> TransactionEntityType.INCOME
         TransactionType.EXPENSE -> TransactionEntityType.EXPENSE
         TransactionType.SEND -> TransactionEntityType.SEND
         TransactionType.DUTY -> TransactionEntityType.DUTY
+        TransactionType.GOAL -> TransactionEntityType.GOAL
     }
 }

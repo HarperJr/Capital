@@ -1,6 +1,8 @@
 package com.harper.capital.transaction.manage
 
+import com.harper.capital.domain.model.Transaction
 import com.harper.capital.navigation.GlobalRouter
+import com.harper.capital.transaction.manage.domain.AddTransactionUseCase
 import com.harper.capital.transaction.manage.domain.FetchAssetUseCase
 import com.harper.capital.transaction.manage.model.AssetPair
 import com.harper.capital.transaction.manage.model.DatePickerDialogState
@@ -8,11 +10,13 @@ import com.harper.capital.transaction.manage.model.TransactionManageEvent
 import com.harper.capital.transaction.manage.model.TransactionManageState
 import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventObserver
+import java.time.LocalTime
 
 class TransactionManageViewModel(
     private val params: TransactionManageFragment.Params,
     private val router: GlobalRouter,
-    private val fetchAssetUseCase: FetchAssetUseCase
+    private val fetchAssetUseCase: FetchAssetUseCase,
+    private val addTransactionUseCase: AddTransactionUseCase
 ) : ComponentViewModel<TransactionManageState>(
     defaultState = TransactionManageState(transactionType = params.transactionType)
 ), EventObserver<TransactionManageEvent> {
@@ -76,6 +80,26 @@ class TransactionManageViewModel(
     }
 
     private fun onApply() {
-
+        with(state.value) {
+            if (assetPair != null) {
+                val (assetFrom, assetTo) = assetPair
+                val transaction = Transaction(
+                    id = 0L,
+                    type = transactionType,
+                    assetFrom = assetFrom,
+                    assetTo = assetTo,
+                    amount = amount,
+                    currency = assetFrom.currency,
+                    dateTime = date.atTime(LocalTime.now()),
+                    comment = comment,
+                    isScheduled = isScheduled,
+                    isIncluded = true //If asset from is included set variable
+                )
+                launch {
+                    addTransactionUseCase(transaction)
+                    router.back()
+                }
+            }
+        }
     }
 }

@@ -18,21 +18,21 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.harper.capital.R
+import com.harper.capital.domain.model.TransactionType
 import com.harper.capital.transaction.component.AssetSource
 import com.harper.capital.transaction.component.NewSource
 import com.harper.capital.transaction.model.DataSetSection
 import com.harper.capital.transaction.model.TransactionEvent
 import com.harper.capital.transaction.model.TransactionPage
 import com.harper.capital.transaction.model.TransactionState
-import com.harper.capital.transaction.model.TransactionType
 import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CButton
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CIcon
 import com.harper.core.component.CPreview
 import com.harper.core.component.CScaffold
+import com.harper.core.component.CToolbar
 import com.harper.core.component.TabBar
-import com.harper.core.component.Toolbar
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentFragment
@@ -139,7 +139,7 @@ private fun DataSetSection.resolveTitle(): String = when (this) {
 
 @Composable
 private fun TransactionTopBar(es: EventSender<TransactionEvent>) {
-    Toolbar(
+    CToolbar(
         content = {
             Text(
                 text = stringResource(id = R.string.new_transaction_title),

@@ -5,10 +5,10 @@ import com.harper.capital.domain.model.AssetColor
 import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.domain.model.AssetMetadata
 import com.harper.capital.domain.model.Currency
+import com.harper.capital.domain.model.TransactionType
 import com.harper.capital.transaction.manage.model.AssetPair
 import com.harper.capital.transaction.manage.model.TransactionManageEvent
 import com.harper.capital.transaction.manage.model.TransactionManageState
-import com.harper.capital.transaction.model.TransactionType
 import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventObserver
 

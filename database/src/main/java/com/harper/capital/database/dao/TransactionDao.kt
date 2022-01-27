@@ -19,6 +19,10 @@ interface TransactionDao {
     @Query("SELECT * FROM ${TransactionTable.tableName}")
     fun selectAll(): Flow<List<TransactionEntityEmbedded>>
 
+    @Transaction
+    @Query("SELECT * FROM ${TransactionTable.tableName} WHERE ${TransactionTable.assetFromId} = :assetId OR ${TransactionTable.assetToId} = :assetId")
+    fun selectByAssetId(assetId: Long): Flow<List<TransactionEntityEmbedded>>
+
     @Query("DELETE FROM ${TransactionTable.tableName} WHERE ${TransactionTable.id} = :id")
     suspend fun deleteById(id: Long)
 }

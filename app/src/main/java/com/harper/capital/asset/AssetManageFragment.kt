@@ -41,9 +41,9 @@ import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CIcon
 import com.harper.core.component.CPreferenceArrow
 import com.harper.core.component.CPreferenceSwitch
-import com.harper.core.component.CSeparator
 import com.harper.core.component.CPreview
-import com.harper.core.component.Toolbar
+import com.harper.core.component.CSeparator
+import com.harper.core.component.CToolbar
 import com.harper.core.ext.compose.assetCardSize
 import com.harper.core.ext.formatCurrencyName
 import com.harper.core.ext.formatCurrencySymbol
@@ -57,7 +57,8 @@ import com.harper.core.ui.withArgs
 import kotlinx.parcelize.Parcelize
 import org.koin.core.parameter.parametersOf
 
-class AssetManageFragment : ComponentFragment<AssetManageViewModel>(), EventSender<AssetManageEvent> {
+class AssetManageFragment : ComponentFragment<AssetManageViewModel>(),
+    EventSender<AssetManageEvent> {
     override val viewModel: AssetManageViewModel by injectViewModel { parametersOf(params) }
     private val params: Params by requireArg(PARAMS)
 
@@ -80,7 +81,10 @@ class AssetManageFragment : ComponentFragment<AssetManageViewModel>(), EventSend
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-private fun AssetManageScreen(viewModel: ComponentViewModel<AssetManageState>, es: EventSender<AssetManageEvent>) {
+private fun AssetManageScreen(
+    viewModel: ComponentViewModel<AssetManageState>,
+    es: EventSender<AssetManageEvent>
+) {
     val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
@@ -172,7 +176,10 @@ private fun SettingsBlock(state: AssetManageState, es: EventSender<AssetManageEv
 }
 
 @Composable
-private fun BottomSheetContent(bottomSheet: AssetManageBottomSheet?, es: EventSender<AssetManageEvent>) {
+private fun BottomSheetContent(
+    bottomSheet: AssetManageBottomSheet?,
+    es: EventSender<AssetManageEvent>
+) {
     when (bottomSheet) {
         is AssetManageBottomSheet.Currencies -> {
             CurrencyBottomSheet(
@@ -193,13 +200,14 @@ private fun BottomSheetContent(bottomSheet: AssetManageBottomSheet?, es: EventSe
                 onValueSelect = { es.send(AssetManageEvent.AssetTypeSelect(it)) }
             )
         }
-        else -> {}
+        else -> {
+        }
     }
 }
 
 @Composable
 private fun AssetManageTopBar(es: EventSender<AssetManageEvent>) {
-    Toolbar(
+    CToolbar(
         content = {
             Text(
                 text = stringResource(id = R.string.new_asset_title),

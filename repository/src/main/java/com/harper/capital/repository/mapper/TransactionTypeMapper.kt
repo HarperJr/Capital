@@ -10,5 +10,6 @@ internal object TransactionTypeMapper : (TransactionEntityType) -> TransactionTy
         TransactionEntityType.INCOME -> TransactionType.INCOME
         TransactionEntityType.SEND -> TransactionType.SEND
         TransactionEntityType.DUTY -> TransactionType.DUTY
+        TransactionEntityType.GOAL -> TransactionType.GOAL
     }
 }

@@ -1,6 +1,7 @@
 package com.harper.capital.transaction.model
 
 import com.harper.capital.domain.model.Asset
+import com.harper.capital.domain.model.TransactionType
 
 sealed class TransactionEvent {
 

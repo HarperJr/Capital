@@ -19,7 +19,7 @@ import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 
 @Composable
-fun Toolbar(
+fun CToolbar(
     modifier: Modifier = Modifier,
     content: @Composable (() -> Unit)? = null,
     navigation: @Composable (() -> Unit)? = null,
@@ -48,6 +48,32 @@ fun Toolbar(
 }
 
 @Composable
+fun CToolbarCommon(
+    modifier: Modifier = Modifier,
+    title: String,
+    menu: Menu = Menu(),
+    onNavigationClick: () -> Unit,
+    onMenuItemClick: ((Int) -> Unit)? = null
+) {
+    CToolbar(
+        modifier = modifier,
+        content = {
+            Text(
+                text = title,
+                style = CapitalTheme.typography.title
+            )
+        },
+        navigation = {
+            CIcon(imageVector = CapitalIcons.ArrowLeft) {
+                onNavigationClick.invoke()
+            }
+        },
+        menu = menu,
+        onMenuItemClick = onMenuItemClick
+    )
+}
+
+@Composable
 private fun MenuItem(menuItem: MenuItem, onClick: (Int) -> Unit) {
     CIcon(imageVector = menuItem.imageVector, onClick = { onClick.invoke(menuItem.id) })
 }
@@ -60,7 +86,7 @@ data class MenuItem(val id: Int, val imageVector: ImageVector)
 @Composable
 private fun ToolbarLight() {
     CPreview {
-        Toolbar(
+        CToolbar(
             content = {
                 Text(
                     text = "Capital toolbar",
@@ -85,7 +111,7 @@ private fun ToolbarLight() {
 @Composable
 private fun ToolbarDark() {
     CPreview(isDark = true) {
-        Toolbar(
+        CToolbar(
             content = {
                 Text(
                     text = "Capital toolbar",

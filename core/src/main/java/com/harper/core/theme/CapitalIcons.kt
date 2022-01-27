@@ -60,6 +60,9 @@ object CapitalIcons {
     val RoundCheck
         @Composable
         get() = ImageVector.vectorResource(id = R.drawable.ic_round_check)
+    val Filter
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_filter)
 
     val Edit: ImageVector
         get() = Icons.Rounded.Edit
@@ -113,7 +116,6 @@ private fun Icons() {
         CapitalIcons.Mobile,
         CapitalIcons.Edit,
         CapitalIcons.Search,
-        CapitalIcons.ArrowRight,
         CapitalIcons.Income,
         CapitalIcons.Expense,
         CapitalIcons.Settings,
@@ -126,7 +128,8 @@ private fun Icons() {
         CapitalIcons.ArrowLeft,
         CapitalIcons.ArrowRight,
         CapitalIcons.RoundCheck,
-        CapitalIcons.Calendar
+        CapitalIcons.Calendar,
+        CapitalIcons.Filter
     )
     CWrappedGrid(
         modifier = Modifier.background(CapitalTheme.colors.background),

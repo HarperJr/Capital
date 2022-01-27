@@ -11,7 +11,7 @@ data class TransactionEntityEmbedded(
     @Embedded
     val transaction: TransactionEntity,
     @Relation(
-        parentColumn = TransactionTable.assetToId,
+        parentColumn = TransactionTable.assetFromId,
         entityColumn = AssetTable.id
     )
     val assetFrom: AssetEntity,

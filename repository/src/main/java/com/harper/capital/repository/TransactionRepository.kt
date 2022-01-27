@@ -10,4 +10,6 @@ interface TransactionRepository {
     suspend fun deleteById(id: Long)
 
     fun fetchAll(): Flow<List<Transaction>>
+
+    fun fetchByAssetId(assetId: Long): Flow<List<Transaction>>
 }

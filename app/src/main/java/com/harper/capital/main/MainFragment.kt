@@ -37,9 +37,9 @@ import com.harper.core.component.CIcon
 import com.harper.core.component.CLoaderLayout
 import com.harper.core.component.CPreview
 import com.harper.core.component.CScaffold
+import com.harper.core.component.CToolbar
 import com.harper.core.component.Menu
 import com.harper.core.component.MenuItem
-import com.harper.core.component.Toolbar
 import com.harper.core.ext.compose.fullyVisibleItemIndex
 import com.harper.core.ext.formatWithCurrencySymbol
 import com.harper.core.ext.orElse
@@ -147,7 +147,7 @@ private fun MainScreenScreen(viewModel: ComponentViewModel<MainState>, es: Event
 
 @Composable
 fun OverviewTopBar(account: Account, es: EventSender<MainEvent>) {
-    Toolbar(
+    CToolbar(
         content = {
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 CAmountText(

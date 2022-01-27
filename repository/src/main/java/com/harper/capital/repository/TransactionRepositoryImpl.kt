@@ -18,4 +18,8 @@ internal class TransactionRepositoryImpl(private val transactionDao: Transaction
     override fun fetchAll(): Flow<List<Transaction>> =
         transactionDao.selectAll()
             .map { it.map(TransactionMapper) }
+
+    override fun fetchByAssetId(assetId: Long): Flow<List<Transaction>> =
+        transactionDao.selectByAssetId(assetId)
+            .map { it.map(TransactionMapper) }
 }

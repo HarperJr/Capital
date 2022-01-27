@@ -1,15 +1,16 @@
 package com.harper.capital.database.converter
 
 import androidx.room.TypeConverter
+import java.time.Instant
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.time.ZoneOffset
 
 class LocalDateTimeConverter {
-    private val formatter = DateTimeFormatter.ISO_DATE
 
     @TypeConverter
-    fun toEntity(model: LocalDateTime): String = model.format(formatter)
+    fun toEntity(model: LocalDateTime): Long = model.toInstant(ZoneOffset.UTC).toEpochMilli()
 
     @TypeConverter
-    fun toModel(entity: String): LocalDateTime = LocalDateTime.parse(entity)
+    fun toModel(entity: Long): LocalDateTime =
+        LocalDateTime.ofInstant(Instant.ofEpochMilli(entity), ZoneOffset.UTC)
 }
