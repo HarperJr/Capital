@@ -1,11 +1,11 @@
 package com.harper.capital.main
 
-import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.Asset
 import com.harper.capital.domain.model.AssetColor
 import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.domain.model.AssetMetadata
 import com.harper.capital.domain.model.Currency
+import com.harper.capital.main.domain.model.Summary
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
 import com.harper.core.ui.ComponentViewModel
@@ -13,7 +13,7 @@ import com.harper.core.ui.EventObserver
 
 class MainMockViewModel : ComponentViewModel<MainState>(
     defaultState = MainState(
-        account = Account(14241.24, Currency.RUB),
+        summary = Summary(debet = 14241.24, amount = 10000.0, Currency.RUB),
         assets = listOf(
             Asset(
                 0L,

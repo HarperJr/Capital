@@ -5,28 +5,28 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-object CreditTable {
-    const val tableName = "credit"
+object AssetGoalMetadataTable {
+    const val tableName = "goal"
 
     const val id = "id"
     const val assetId = "asset_id"
-    const val limit = "limit"
+    const val goal = "goal"
 }
 
 @Entity(
-    tableName = CreditTable.tableName,
+    tableName = AssetGoalMetadataTable.tableName,
     foreignKeys = [
         ForeignKey(
             entity = AssetEntity::class,
-            childColumns = [CreditTable.assetId],
+            childColumns = [AssetGoalMetadataTable.assetId],
             parentColumns = [AssetTable.id],
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
-data class CreditEntity(
+data class AssetGoalMetadataEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = CreditTable.id) val id: Long = 0L,
-    @ColumnInfo(name = CreditTable.assetId) val assetId: Long,
-    @ColumnInfo(name = CreditTable.limit) val limit: Double
+    @ColumnInfo(name = AssetGoalMetadataTable.id) val id: Long = 0L,
+    @ColumnInfo(name = AssetGoalMetadataTable.assetId) val assetId: Long,
+    @ColumnInfo(name = AssetGoalMetadataTable.goal) val goal: Double
 )

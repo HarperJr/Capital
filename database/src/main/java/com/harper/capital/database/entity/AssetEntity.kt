@@ -10,7 +10,6 @@ object AssetTable {
     const val id = "id"
     const val name = "name"
     const val currencyId = "currency_id"
-    const val amount = "amount"
     const val type = "type"
     const val icon = "icon"
     const val color = "color"
@@ -22,7 +21,6 @@ data class AssetEntity(
     @ColumnInfo(name = AssetTable.id) val id: Long = 0L,
     @ColumnInfo(name = AssetTable.name) val name: String,
     @ColumnInfo(name = AssetTable.currencyId) val currencyId: Int,
-    @ColumnInfo(name = AssetTable.amount) val amount: Double,
     @ColumnInfo(name = AssetTable.type) val type: AssetEntityType,
     @ColumnInfo(name = AssetTable.color) val color: String,
     @ColumnInfo(name = AssetTable.icon) val icon: String

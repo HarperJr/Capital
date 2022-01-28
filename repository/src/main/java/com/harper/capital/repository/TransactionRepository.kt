@@ -12,4 +12,8 @@ interface TransactionRepository {
     fun fetchAll(): Flow<List<Transaction>>
 
     fun fetchByAssetId(assetId: Long): Flow<List<Transaction>>
+
+    fun fetchDebet(): Flow<Double>
+
+    fun fetchCredit(): Flow<Double>
 }

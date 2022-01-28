@@ -23,11 +23,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.harper.capital.R
-import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.main.component.AssetAccountedCard
+import com.harper.capital.main.component.AssetSummaryCard
 import com.harper.capital.main.component.AssetCard
 import com.harper.capital.main.component.AssetMenu
+import com.harper.capital.main.domain.model.Summary
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
 import com.harper.capital.ui.base.ScreenLayout
@@ -52,9 +52,13 @@ import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 import kotlinx.coroutines.flow.collect
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 private const val ADD_ASSET_MENU_ITEM_ID = 0
 private const val SETTINGS_MENU_ITEM_ID = 1
+
+private val MMMMDateTimeFormatter = DateTimeFormatter.ofPattern("MMMM")
 
 class MainFragment : ComponentFragment<MainViewModel>(), EventSender<MainEvent> {
     override val viewModel: MainViewModel by injectViewModel()
@@ -78,7 +82,7 @@ private fun MainScreenScreen(viewModel: ComponentViewModel<MainState>, es: Event
 
     CLoaderLayout(isLoading = state.isLoading, loaderContent = {}) {
         CScaffold(
-            topBar = { OverviewTopBar(account = state.account, es) },
+            topBar = { OverviewTopBar(summary = state.summary, es) },
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = { },
@@ -117,11 +121,11 @@ private fun MainScreenScreen(viewModel: ComponentViewModel<MainState>, es: Event
                             )
                         }
                         item {
-                            AssetAccountedCard(
+                            AssetSummaryCard(
                                 modifier = Modifier
                                     .fillParentMaxWidth()
                                     .padding(horizontal = 24.dp),
-                                account = state.account
+                                summary = state.summary
                             )
                         }
                     }
@@ -146,21 +150,21 @@ private fun MainScreenScreen(viewModel: ComponentViewModel<MainState>, es: Event
 }
 
 @Composable
-fun OverviewTopBar(account: Account, es: EventSender<MainEvent>) {
+fun OverviewTopBar(summary: Summary, es: EventSender<MainEvent>) {
     CToolbar(
         content = {
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 CAmountText(
-                    amount = account.amount,
-                    currencyIso = account.currency.name,
+                    amount = summary.amount,
+                    currencyIso = summary.currency.name,
                     style = CapitalTheme.typography.header,
                     color = CapitalTheme.colors.onBackground
                 )
                 Text(
                     text = stringResource(
                         id = R.string.expenses_in_month,
-                        (-23424.42).formatWithCurrencySymbol(account.currency.name),
-                        "January"
+                        summary.debet.formatWithCurrencySymbol(summary.currency.name),
+                        LocalDate.now().format(MMMMDateTimeFormatter)
                     ),
                     style = CapitalTheme.typography.titleSmall,
                     color = CapitalColors.Blue

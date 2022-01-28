@@ -13,20 +13,20 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harper.capital.R
-import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.AssetColor
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.ext.assetBackgroundColor
 import com.harper.capital.ext.assetContentColorFor
+import com.harper.capital.main.domain.model.Summary
 import com.harper.core.component.CAmountText
 import com.harper.core.component.CPreview
 import com.harper.core.ext.compose.assetCardSize
 import com.harper.core.theme.CapitalTheme
 
 @Composable
-fun AssetAccountedCard(
+fun AssetSummaryCard(
     modifier: Modifier = Modifier,
-    account: Account
+    summary: Summary
 ) {
     val cardBackgroundColor = assetBackgroundColor(AssetColor.TINKOFF_PLATINUM)
     Card(
@@ -50,8 +50,8 @@ fun AssetAccountedCard(
             CAmountText(
                 modifier = Modifier
                     .align(Alignment.Center),
-                amount = account.amount,
-                currencyIso = account.currency.name,
+                amount = summary.amount,
+                currencyIso = summary.currency.name,
                 style = CapitalTheme.typography.header
             )
         }
@@ -62,7 +62,10 @@ fun AssetAccountedCard(
 @Composable
 private fun AssetAccountedCardLight() {
     CPreview {
-        AssetAccountedCard(modifier = Modifier.padding(16.dp), account = Account(45000.00, Currency.RUB))
+        AssetSummaryCard(
+            modifier = Modifier.padding(16.dp),
+            summary = Summary(debet = 12000.0, amount = 10000.0, Currency.EUR)
+        )
     }
 }
 
@@ -70,6 +73,9 @@ private fun AssetAccountedCardLight() {
 @Composable
 private fun AssetAccountedCardDark() {
     CPreview(isDark = true) {
-        AssetAccountedCard(modifier = Modifier.padding(16.dp), account = Account(75000.00, Currency.EUR))
+        AssetSummaryCard(
+            modifier = Modifier.padding(16.dp),
+            summary = Summary(debet = 12000.0, amount = 10000.0, Currency.EUR)
+        )
     }
 }

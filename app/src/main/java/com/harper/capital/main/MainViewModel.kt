@@ -2,11 +2,10 @@ package com.harper.capital.main
 
 import com.harper.capital.asset.AssetManageFragment
 import com.harper.capital.asset.model.AssetManageMode
-import com.harper.capital.domain.model.Account
-import com.harper.capital.domain.model.Currency
 import com.harper.capital.domain.model.TransactionType
 import com.harper.capital.history.HistoryListFragment
 import com.harper.capital.main.domain.FetchAssetsUseCase
+import com.harper.capital.main.domain.FetchSummaryUseCase
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
 import com.harper.capital.navigation.GlobalRouter
@@ -17,7 +16,8 @@ import kotlinx.coroutines.flow.collect
 
 class MainViewModel(
     private val router: GlobalRouter,
-    private val fetchAssetsUseCase: FetchAssetsUseCase
+    private val fetchAssetsUseCase: FetchAssetsUseCase,
+    private val fetchSummaryUseCase: FetchSummaryUseCase
 ) : ComponentViewModel<MainState>(defaultState = MainState()),
     EventObserver<MainEvent> {
 
@@ -29,10 +29,17 @@ class MainViewModel(
                 .collect { assets ->
                     mutateState {
                         it.copy(
-                            account = Account(12455.23, Currency.RUB),
                             assets = assets,
                             isLoading = false
                         )
+                    }
+                }
+        }
+        launch {
+            fetchSummaryUseCase()
+                .collect { summary ->
+                    mutateState {
+                        it.copy(summary = summary)
                     }
                 }
         }

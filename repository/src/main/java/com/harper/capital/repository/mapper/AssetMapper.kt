@@ -15,7 +15,7 @@ internal object AssetMapper : (AssetEntity, AssetMetadata?) -> Asset {
                 id = id,
                 name = name,
                 currency = Currency.of(currencyId),
-                amount = amount,
+                amount = 0.0,
                 metadata = metadata,
                 color = AssetColor.valueOf(color),
                 icon = AssetIcon.valueOf(icon)
