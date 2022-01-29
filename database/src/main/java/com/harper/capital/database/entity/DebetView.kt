@@ -15,8 +15,7 @@ object DebetViewTable {
     value = """
     SELECT ${TransactionTable.assetFromId} AS ${DebetViewTable.assetId},
     ${TransactionTable.amount} AS ${DebetViewTable.amount}
-    FROM ${TransactionTable.tableName} 
-    WHERE ${TransactionTable.type} = "EXPENSE"
+    FROM ${TransactionTable.tableName}
     """
 )
 class DebetView(

@@ -14,8 +14,7 @@ object CreditViewTable {
     viewName = CreditViewTable.viewName,
     value = """
     SELECT ${TransactionTable.assetToId} AS ${CreditViewTable.assetId}, ${TransactionTable.amount} AS ${CreditViewTable.amount}
-    FROM ${TransactionTable.tableName} 
-    WHERE ${TransactionTable.type} = "INCOME"
+    FROM ${TransactionTable.tableName}
     """
 )
 data class CreditView(
