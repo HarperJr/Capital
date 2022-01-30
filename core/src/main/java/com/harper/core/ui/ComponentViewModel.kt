@@ -7,6 +7,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class ComponentViewModel<S : Any>(defaultState: S) : ViewModel() {
     val state: StateFlow<S>
@@ -35,8 +37,11 @@ abstract class ComponentViewModel<S : Any>(defaultState: S) : ViewModel() {
         stateMutation.newState?.let { _state.value = it }
     }
 
-    protected fun launch(closure: suspend CoroutineScope.() -> Unit) =
-        viewModelScope.launch { closure.invoke(this) }
+    protected fun launch(
+        context: CoroutineContext = EmptyCoroutineContext,
+        closure: suspend CoroutineScope.() -> Unit
+    ) =
+        viewModelScope.launch(context) { closure.invoke(this) }
 
     class StateMutation<S : Any>(private val stateFlow: StateFlow<S>) {
         val state: S

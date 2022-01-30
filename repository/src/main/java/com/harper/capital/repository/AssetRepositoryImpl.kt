@@ -63,6 +63,9 @@ internal class AssetRepositoryImpl(
     override suspend fun fetchById(id: Long): Asset =
         mapToAsset(assetDao.selectById(id))
 
+    override suspend fun update(asset: Asset) =
+        assetDao.update(AssetEntityMapper(asset))
+
     private suspend fun mapToAsset(entity: AssetEntityEmbedded): Asset = entity.let {
         val metadata = when (it.asset.type) {
             AssetEntityType.DEBET -> AssetMetadata.Debet

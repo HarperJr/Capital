@@ -8,6 +8,7 @@ import com.harper.capital.category.CategoryManageFragment
 import com.harper.capital.history.HistoryListFragment
 import com.harper.capital.main.MainFragment
 import com.harper.capital.settings.SettingsFragment
+import com.harper.capital.shelter.ShelterFragment
 import com.harper.capital.transaction.TransactionFragment
 import com.harper.capital.transaction.manage.TransactionManageFragment
 
@@ -19,6 +20,7 @@ private const val TRANSACTION_KEY = "transaction_key"
 private const val TRANSACTION_MANAGE_KEY = "transaction_manage_key"
 private const val HISTORY_LIST_KEY = "history_list_key"
 private const val SETTINGS_KEY = "settings_key"
+private const val SHELTER_KEY = "shelter_key"
 
 object Screens {
 
@@ -51,5 +53,9 @@ object Screens {
 
     fun settings(): Screen = FragmentScreen(SETTINGS_KEY) {
         SettingsFragment.newInstance()
+    }
+
+    fun shelter(): Screen = FragmentScreen(SHELTER_KEY) {
+        ShelterFragment.newInstance()
     }
 }

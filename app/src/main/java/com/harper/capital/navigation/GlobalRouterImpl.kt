@@ -31,4 +31,6 @@ class GlobalRouterImpl : Router(), GlobalRouter {
     override fun navigateToSettings() = navigateTo(Screens.settings())
 
     override fun back() = exit()
+
+    override fun shelter() = navigateTo(Screens.shelter())
 }

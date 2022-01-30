@@ -102,7 +102,7 @@ private fun AssetManageScreen(
                 }
             }
         },
-        topBar = { AssetManageTopBar(es) },
+        topBar = { AssetManageTopBar(state, es) },
         sheetState = sheetState
     ) {
         Column(
@@ -145,11 +145,16 @@ private fun AssetManageScreen(
                 CHorizontalSpacer(height = 16.dp)
                 SettingsBlock(state, es)
             }
+            val applyButtonText = if (state.mode == AssetManageMode.ADD) {
+                stringResource(id = R.string.add_asset)
+            } else {
+                stringResource(id = R.string.save)
+            }
             CButton(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                text = stringResource(id = R.string.add_asset),
+                text = applyButtonText,
                 onClick = { es.send(AssetManageEvent.Apply) }
             )
         }
@@ -166,12 +171,20 @@ private fun SettingsBlock(state: AssetManageState, es: EventSender<AssetManageEv
         CSeparator()
         CPreferenceArrow(
             title = stringResource(id = R.string.asset_type),
-            subtitle = state.metadata.assetType.resolveText(),
+            subtitle = state.assetType.resolveText(),
             onClick = { es.send(AssetManageEvent.AssetTypeSelectClick) })
         CPreferenceSwitch(
             title = stringResource(id = R.string.include_asset),
             subtitle = stringResource(id = R.string.include_asset_subtitle),
-            onCheckedChange = { es.send(AssetManageEvent.IncludeAssetCheckedChange(it)) })
+            onCheckedChange = { es.send(AssetManageEvent.IncludeAssetCheckedChange(it)) }
+        )
+        if (state.mode == AssetManageMode.EDIT) {
+            CPreferenceSwitch(
+                title = stringResource(id = R.string.is_active_asset),
+                subtitle = stringResource(id = R.string.is_active_asset_subtitle),
+                onCheckedChange = { es.send(AssetManageEvent.ActivateAssetCheckedChange(it)) }
+            )
+        }
     }
 }
 
@@ -206,11 +219,16 @@ private fun BottomSheetContent(
 }
 
 @Composable
-private fun AssetManageTopBar(es: EventSender<AssetManageEvent>) {
+private fun AssetManageTopBar(state: AssetManageState, es: EventSender<AssetManageEvent>) {
+    val title = if (state.mode == AssetManageMode.ADD) {
+        stringResource(id = R.string.new_asset_title)
+    } else {
+        stringResource(id = R.string.edit_asset_title)
+    }
     CToolbar(
         content = {
             Text(
-                text = stringResource(id = R.string.new_asset_title),
+                text = title,
                 style = CapitalTheme.typography.title
             )
         },

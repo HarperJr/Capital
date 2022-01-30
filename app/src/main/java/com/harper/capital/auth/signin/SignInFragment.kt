@@ -128,6 +128,14 @@ private fun SignInScreen(viewModel: ComponentViewModel<SignInState>, es: EventSe
             }
             CChip(
                 modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(16.dp),
+                onClick = { es.send(SignInEvent.ToShelterClick) }
+            ) {
+                Text(text = stringResource(id = R.string.to_shelter), color = CapitalColors.White)
+            }
+            CChip(
+                modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(16.dp),
                 onClick = { es.send(SignInEvent.GoOfflineClick) }

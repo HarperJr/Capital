@@ -9,9 +9,10 @@ import com.harper.capital.domain.model.Currency
 import com.harper.capital.repository.AssetRepository
 import kotlinx.coroutines.coroutineScope
 
-class AddAssetUseCase(private val assetRepository: AssetRepository) {
+class UpdateAssetUseCase(private val assetRepository: AssetRepository) {
 
     suspend operator fun invoke(
+        id: Long,
         name: String,
         amount: Double,
         currency: Currency,
@@ -19,9 +20,9 @@ class AddAssetUseCase(private val assetRepository: AssetRepository) {
         icon: AssetIcon,
         type: AssetType
     ) = coroutineScope {
-        assetRepository.insert(
+        assetRepository.update(
             Asset(
-                id = 0L,
+                id = id,
                 name = name,
                 amount = amount,
                 currency = currency,
@@ -29,8 +30,8 @@ class AddAssetUseCase(private val assetRepository: AssetRepository) {
                 icon = icon,
                 metadata = when (type) {
                     AssetType.DEBET -> AssetMetadata.Debet
-                    AssetType.CREDIT -> AssetMetadata.Credit(limit = 0.0)
-                    AssetType.GOAL -> AssetMetadata.Goal(goal = 0.0)
+                    AssetType.CREDIT -> AssetMetadata.Credit(0.0)
+                    AssetType.GOAL -> AssetMetadata.Goal(0.0)
                     AssetType.INCOME -> AssetMetadata.Income
                     AssetType.EXPENSE -> AssetMetadata.Expense
                 }

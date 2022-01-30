@@ -10,6 +10,7 @@ import com.harper.buildsrc.database
 import com.harper.buildsrc.koin
 import com.harper.buildsrc.kotlin
 import com.harper.buildsrc.repository
+import com.harper.buildsrc.shelter
 import com.harper.buildsrc.spec
 import com.harper.buildsrc.timber
 
@@ -63,4 +64,5 @@ dependencies {
     database()
     repository()
     spec()
+    shelter()
 }

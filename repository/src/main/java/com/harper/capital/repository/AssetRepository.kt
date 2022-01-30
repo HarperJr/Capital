@@ -13,4 +13,6 @@ interface AssetRepository {
     fun fetchAll(): Flow<List<Asset>>
 
     suspend fun fetchById(id: Long): Asset
+
+    suspend fun update(asset: Asset)
 }

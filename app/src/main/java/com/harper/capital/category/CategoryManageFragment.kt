@@ -61,6 +61,7 @@ import com.harper.core.ui.MockEventSender
 import com.harper.core.ui.withArgs
 import kotlinx.parcelize.Parcelize
 import org.koin.core.parameter.parametersOf
+import timber.log.Timber
 
 class CategoryManageFragment : ComponentFragment<CategoryManageViewModel>(),
     EventSender<CategoryManageEvent> {
@@ -110,6 +111,7 @@ private fun CategoryManageScreen(
         topBar = { CategoryManageTopBar(es) },
         sheetState = sheetState,
     ) {
+        Timber.d("Recomposition")
         Column(
             modifier = Modifier
                 .fillMaxWidth()

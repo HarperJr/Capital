@@ -67,4 +67,9 @@
     <string name="create_new_transaction">Create new transaction</string>
     <string name="date">Date</string>
     <string name="history_title">History</string>
+    <string name="edit_asset_title">Edit asset</string>
+    <string name="save">Save</string>
+    <string name="to_shelter">To shelter</string>
+    <string name="is_active_asset">Is active asset</string>
+    <string name="is_active_asset_subtitle">Check this to clean this up</string>
 </resources>

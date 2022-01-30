@@ -19,6 +19,8 @@ sealed class AssetManageEvent {
 
     class AssetTypeSelect(val assetTypeName: String) : AssetManageEvent()
 
+    class ActivateAssetCheckedChange(val isActive: Boolean) : AssetManageEvent()
+
     object Apply : AssetManageEvent()
 
     object CurrencySelectClick : AssetManageEvent()

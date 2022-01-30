@@ -19,7 +19,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,7 +45,7 @@ private val minTextFieldHeight = 32.dp
 @Composable
 private fun CBasicTextField(
     modifier: Modifier = Modifier,
-    value: TextFieldValue,
+    value: String,
     placeholder: String,
     leadingIcon: @Composable (() -> Unit)? = null,
     textStyle: TextStyle,
@@ -58,7 +57,7 @@ private fun CBasicTextField(
     keyboardOptions: KeyboardOptions,
     singleLine: Boolean,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    onValueChange: (TextFieldValue) -> Unit
+    onValueChange: (String) -> Unit
 ) {
     BasicTextField(
         modifier = modifier,
@@ -71,14 +70,13 @@ private fun CBasicTextField(
         keyboardOptions = keyboardOptions,
         singleLine = singleLine,
     ) { innerTextField ->
-        val text = value.text
         Box(
             modifier = Modifier
                 .background(color = backgroundColor, shape = CapitalTheme.shapes.large)
                 .padding(horizontal = 8.dp)
         ) {
             Layout(content = {
-                if (text.isEmpty()) {
+                if (value.isEmpty()) {
                     Text(
                         modifier = Modifier.layoutId(placeHolderId),
                         text = placeholder,
@@ -167,11 +165,14 @@ fun CTextField(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onValueChange: (String) -> Unit
 ) {
-    val textField: @Composable (Modifier) -> Unit = { textFieldModifier ->
-        var textFieldValueState by remember { mutableStateOf(TextFieldValue(text = value)) }
+    Column(modifier = modifier) {
+        if (title != null) {
+            title.invoke()
+            CHorizontalSpacer(height = CapitalTheme.dimensions.tiny)
+        }
         CBasicTextField(
-            modifier = textFieldModifier,
-            value = textFieldValueState,
+            modifier = Modifier.fillMaxWidth(),
+            value = value,
             placeholder = placeholder,
             leadingIcon = leadingIcon,
             textStyle = textStyle,
@@ -184,21 +185,11 @@ fun CTextField(
             singleLine = singleLine,
             interactionSource = interactionSource,
             onValueChange = {
-                textFieldValueState = it
-                if (value != it.text) {
-                    onValueChange(it.text)
+                if (value != it) {
+                    onValueChange(it)
                 }
             }
         )
-    }
-    if (title != null) {
-        Column(modifier = modifier) {
-            title.invoke()
-            CHorizontalSpacer(height = CapitalTheme.dimensions.tiny)
-            textField.invoke(Modifier.fillMaxWidth())
-        }
-    } else {
-        textField.invoke(modifier)
     }
 }
 

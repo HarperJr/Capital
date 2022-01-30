@@ -1,24 +1,31 @@
 package com.harper.capital.asset
 
 import com.harper.capital.asset.domain.AddAssetUseCase
+import com.harper.capital.asset.domain.UpdateAssetUseCase
 import com.harper.capital.asset.model.AssetManageBottomSheet
 import com.harper.capital.asset.model.AssetManageBottomSheetState
 import com.harper.capital.asset.model.AssetManageEvent
+import com.harper.capital.asset.model.AssetManageMode
 import com.harper.capital.asset.model.AssetManageState
-import com.harper.capital.domain.model.Asset
 import com.harper.capital.domain.model.AssetIcon
-import com.harper.capital.domain.model.AssetMetadata
 import com.harper.capital.domain.model.AssetType
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.navigation.GlobalRouter
+import com.harper.capital.transaction.manage.domain.FetchAssetUseCase
+import com.harper.core.ext.orElse
 import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventObserver
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class AssetManageViewModel(
+    private val params: AssetManageFragment.Params,
     private val router: GlobalRouter,
-    private val addAssetUseCase: AddAssetUseCase
+    private val addAssetUseCase: AddAssetUseCase,
+    private val updateAssetUseCase: UpdateAssetUseCase,
+    private val fetchAssetUseCase: FetchAssetUseCase
 ) : ComponentViewModel<AssetManageState>(
-    defaultState = AssetManageState()
+    defaultState = AssetManageState(mode = params.mode)
 ), EventObserver<AssetManageEvent> {
 
     override fun onEvent(event: AssetManageEvent) {
@@ -35,24 +42,44 @@ class AssetManageViewModel(
             is AssetManageEvent.Apply -> onApply()
             is AssetManageEvent.IncludeAssetCheckedChange -> onIncludeAssetCheckedChange(event)
             is AssetManageEvent.BackClick -> router.back()
+            is AssetManageEvent.ActivateAssetCheckedChange -> {
+            }
+        }
+    }
+
+    override fun onFirstStart() {
+        super.onFirstStart()
+        params.assetId?.let { assetId ->
+            launch {
+                val asset = fetchAssetUseCase(assetId)
+                mutateState {
+                    it.copy(
+                        name = asset.name,
+                        amount = asset.amount,
+                        currency = asset.currency,
+                        color = asset.color,
+                        icon = asset.icon,
+                        assetType = asset.metadata?.assetType.orElse(it.assetType)
+                    )
+                }
+            }
         }
     }
 
     private fun onApply() {
-        launch {
-            val asset = with(state.value) {
-                Asset(
-                    id = 0L,
-                    name = name,
-                    amount = amount,
-                    currency = currency,
-                    color = color,
-                    icon = icon,
-                    metadata = metadata
-                )
+        launch(context = Dispatchers.IO) {
+            with(state.value) {
+                if (mode == AssetManageMode.ADD) {
+                    addAssetUseCase(name, amount, currency, color, icon, assetType)
+                } else {
+                    params.assetId?.let { assetId ->
+                        updateAssetUseCase(assetId, name, amount, currency, color, icon, assetType)
+                    }
+                }
             }
-            addAssetUseCase(asset)
-            router.back()
+            withContext(context = Dispatchers.Main) {
+                router.back()
+            }
         }
     }
 
@@ -84,7 +111,7 @@ class AssetManageViewModel(
         mutateState {
             it.copy(
                 bottomSheetState = AssetManageBottomSheetState(
-                    bottomSheet = AssetManageBottomSheet.AssetTypes(it.metadata.assetType)
+                    bottomSheet = AssetManageBottomSheet.AssetTypes(it.assetType)
                 )
             )
         }
@@ -93,14 +120,8 @@ class AssetManageViewModel(
     private fun onAssetTypeSelect(event: AssetManageEvent.AssetTypeSelect) {
         val selectedAssetType = AssetType.valueOf(event.assetTypeName)
         mutateState {
-            val metadata = when (selectedAssetType) {
-                AssetType.DEBET -> AssetMetadata.Debet
-                AssetType.CREDIT -> AssetMetadata.Credit(limit = 0.0)
-                AssetType.GOAL -> AssetMetadata.Goal(goal = 0.0)
-                else -> return@mutateState it
-            }
             it.copy(
-                metadata = metadata,
+                assetType = selectedAssetType,
                 bottomSheetState = it.bottomSheetState.copy(isExpended = false)
             )
         }

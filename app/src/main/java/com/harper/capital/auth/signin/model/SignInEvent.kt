@@ -7,4 +7,6 @@ sealed class SignInEvent {
     class PasswordChange(val password: String) : SignInEvent()
 
     object GoOfflineClick : SignInEvent()
+
+    object ToShelterClick : SignInEvent()
 }

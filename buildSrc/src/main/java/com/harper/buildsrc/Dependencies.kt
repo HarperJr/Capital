@@ -3,6 +3,10 @@ package com.harper.buildsrc
 import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.gradle.kotlin.dsl.PluginDependenciesSpecScope
 
+fun DependencyHandlerScope.shelter() {
+    project(":shelter")
+}
+
 fun DependencyHandlerScope.core() {
     project(":core")
 }

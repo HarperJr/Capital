@@ -8,6 +8,7 @@ import com.harper.capital.history.historyModule
 import com.harper.capital.main.mainModule
 import com.harper.capital.repository.repositoryModule
 import com.harper.capital.settings.settingsModule
+import com.harper.capital.shelter.shelterModule
 import com.harper.capital.transaction.transactionModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -32,7 +33,8 @@ class CapitalApplication : Application() {
                 historyModule,
                 settingsModule,
                 databaseModule,
-                repositoryModule
+                repositoryModule,
+                shelterModule
             )
             androidContext(applicationContext)
             androidLogger()

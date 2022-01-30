@@ -25,4 +25,6 @@ interface GlobalRouter {
     fun navigateToSettings()
 
     fun back()
+
+    fun shelter()
 }

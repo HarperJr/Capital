@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.harper.capital.database.entity.AssetEntity
 import com.harper.capital.database.entity.AssetEntityType
 import com.harper.capital.database.entity.AssetTable
@@ -41,6 +42,9 @@ interface AssetDao {
 
     @Delete
     suspend fun delete(entity: AssetEntity)
+
+    @Update
+    fun update(entity: AssetEntity)
 
     @Transaction
     @Query(assetsEmbeddedRequest)
