@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.map
 
 class FetchSummaryUseCase(private val transactionRepository: TransactionRepository) {
 
-    operator fun invoke(): Flow<Summary> = transactionRepository.fetchDebet()
-        .zipWith(transactionRepository.fetchCredit())
-        .map { (debet, credit) -> Summary(debet = -debet, amount = credit - debet) }
+    operator fun invoke(): Flow<Summary> = transactionRepository.fetchBalance()
+        .zipWith(transactionRepository.fetchExpense())
+        .map { (balance, expenses) -> Summary(expenses = expenses, balance = balance) }
 }

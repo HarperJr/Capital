@@ -32,7 +32,6 @@ import com.harper.core.component.CAmountText
 import com.harper.core.component.CPreview
 import com.harper.core.ext.compose.assetCardSize
 import com.harper.core.ext.formatWithCurrencySymbol
-import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
 @Composable
@@ -76,7 +75,7 @@ fun AssetCard(
                         start.linkTo(parent.start, margin = 16.dp)
                         top.linkTo(parent.top, margin = 16.dp)
                     },
-                amount = asset.amount,
+                amount = asset.balance,
                 currencyIso = asset.currency.name,
                 style = CapitalTheme.typography.header
             )
@@ -85,7 +84,7 @@ fun AssetCard(
             val (type, info) = when (metadata) {
                 is AssetMetadata.Credit -> {
                     stringResource(id = R.string.credit_card) to
-                            (asset.amount - metadata.limit).formatWithCurrencySymbol(asset.currency.name)
+                        (asset.balance - metadata.limit).formatWithCurrencySymbol(asset.currency.name)
                 }
                 is AssetMetadata.Goal -> {
                     stringResource(id = R.string.goal) to

@@ -85,15 +85,12 @@ class TransactionManageViewModel(
                 val (assetFrom, assetTo) = assetPair
                 val transaction = Transaction(
                     id = 0L,
-                    type = transactionType,
-                    assetFrom = assetFrom,
-                    assetTo = assetTo,
+                    source = assetFrom,
+                    receiver = assetTo,
                     amount = amount,
-                    currency = assetFrom.currency,
                     dateTime = date.atTime(LocalTime.now()),
                     comment = comment,
-                    isScheduled = isScheduled,
-                    isIncluded = true //If asset from is included set variable
+                    isScheduled = isScheduled
                 )
                 launch {
                     addTransactionUseCase(transaction)

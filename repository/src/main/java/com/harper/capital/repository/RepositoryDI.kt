@@ -7,5 +7,5 @@ val repositoryModule
 
         factory<AssetRepository> { AssetRepositoryImpl(get(), get()) }
 
-        factory<TransactionRepository> { TransactionRepositoryImpl(get()) }
+        factory<TransactionRepository> { TransactionRepositoryImpl(get(), get()) }
     }

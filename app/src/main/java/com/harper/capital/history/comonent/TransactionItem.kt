@@ -41,28 +41,28 @@ fun TransactionItem(modifier: Modifier = Modifier, transaction: Transaction) {
         Box(contentAlignment = Alignment.CenterStart) {
             AssetIconRound(
                 modifier = Modifier.padding(start = CapitalTheme.dimensions.imageMedium * 0.75f),
-                color = transaction.assetTo.color,
-                icon = transaction.assetTo.icon
+                color = transaction.receiver.color,
+                icon = transaction.receiver.icon
             )
             AssetIconRound(
                 modifier = Modifier
                     .background(color = CapitalTheme.colors.background, shape = CircleShape)
                     .padding(1.dp),
-                color = transaction.assetFrom.color,
-                icon = transaction.assetFrom.icon
+                color = transaction.source.color,
+                icon = transaction.source.icon
             )
         }
         CVerticalSpacer(width = CapitalTheme.dimensions.medium)
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = transaction.assetFrom.name)
+            Text(text = transaction.source.name)
             Text(
-                text = transaction.assetTo.name,
+                text = transaction.receiver.name,
                 style = CapitalTheme.typography.regularSmall,
                 color = CapitalTheme.colors.textSecondary
             )
         }
         Text(
-            text = transaction.amount.formatWithCurrencySymbol(transaction.currency.name),
+            text = transaction.amount.formatWithCurrencySymbol(transaction.source.currency.name),
             style = CapitalTheme.typography.buttonSmall
         )
     }
@@ -74,7 +74,7 @@ fun TransactionItemLight() {
     val assetFrom = Asset(
         id = 0L,
         name = "Tinkoff Black",
-        amount = 1000.0,
+        balance = 1000.0,
         currency = Currency.RUB,
         color = AssetColor.TINKOFF,
         icon = AssetIcon.TINKOFF,
@@ -83,7 +83,7 @@ fun TransactionItemLight() {
     val assetTo = Asset(
         id = 1L,
         name = "Products",
-        amount = 100.0,
+        balance = 100.0,
         currency = Currency.RUB,
         color = AssetColor.CATEGORY,
         icon = AssetIcon.PRODUCTS,
@@ -91,15 +91,12 @@ fun TransactionItemLight() {
     )
     val transaction = Transaction(
         id = 0L,
-        type = TransactionType.EXPENSE,
-        assetFrom = assetFrom,
-        assetTo = assetTo,
+        source = assetFrom,
+        receiver = assetTo,
         amount = 2400.0,
-        currency = assetFrom.currency,
         dateTime = LocalDateTime.now(),
         comment = null,
-        isScheduled = false,
-        isIncluded = true
+        isScheduled = false
     )
     CPreview {
         TransactionItem(transaction = transaction)
@@ -112,7 +109,7 @@ fun TransactionItemDark() {
     val assetFrom = Asset(
         id = 0L,
         name = "Tinkoff Black",
-        amount = 1000.0,
+        balance = 1000.0,
         currency = Currency.RUB,
         color = AssetColor.TINKOFF,
         icon = AssetIcon.TINKOFF,
@@ -121,7 +118,7 @@ fun TransactionItemDark() {
     val assetTo = Asset(
         id = 1L,
         name = "Products",
-        amount = 100.0,
+        balance = 100.0,
         currency = Currency.RUB,
         color = AssetColor.CATEGORY,
         icon = AssetIcon.PRODUCTS,
@@ -129,15 +126,12 @@ fun TransactionItemDark() {
     )
     val transaction = Transaction(
         id = 0L,
-        type = TransactionType.EXPENSE,
-        assetFrom = assetFrom,
-        assetTo = assetTo,
+        source = assetFrom,
+        receiver = assetTo,
         amount = 2400.0,
-        currency = assetFrom.currency,
         dateTime = LocalDateTime.now(),
         comment = null,
-        isScheduled = false,
-        isIncluded = true
+        isScheduled = false
     )
     CPreview(isDark = true) {
         TransactionItem(transaction = transaction)

@@ -55,7 +55,7 @@ class AssetManageViewModel(
                 mutateState {
                     it.copy(
                         name = asset.name,
-                        amount = asset.amount,
+                        amount = asset.balance,
                         currency = asset.currency,
                         color = asset.color,
                         icon = asset.icon,

@@ -13,7 +13,7 @@ import com.harper.core.ui.EventObserver
 
 class MainMockViewModel : ComponentViewModel<MainState>(
     defaultState = MainState(
-        summary = Summary(debet = 14241.24, amount = 10000.0, Currency.RUB),
+        summary = Summary(expenses = 14241.24, balance = 10000.0, Currency.RUB),
         assets = listOf(
             Asset(
                 0L,

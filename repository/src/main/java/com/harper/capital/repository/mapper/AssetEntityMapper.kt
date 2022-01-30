@@ -14,7 +14,9 @@ internal object AssetEntityMapper : (Asset) -> AssetEntity {
             currencyId = currency.ordinal,
             type = metadata?.assetType?.let(AssetEntityTypeMapper).orElse(AssetEntityType.DEBET),
             icon = model.icon.name,
-            color = model.color.name
+            color = model.color.name,
+            isIncluded = true,
+            isArchived = false
         )
     }
 }

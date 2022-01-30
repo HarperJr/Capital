@@ -21,7 +21,7 @@ class HistoryListMockViewModel : ComponentViewModel<HistoryListState>(
     private val assetFrom = Asset(
         id = 0L,
         name = "Tinkoff Black",
-        amount = 1000.0,
+        balance = 1000.0,
         currency = Currency.RUB,
         color = AssetColor.TINKOFF,
         icon = AssetIcon.TINKOFF,
@@ -30,7 +30,7 @@ class HistoryListMockViewModel : ComponentViewModel<HistoryListState>(
     private val assetTo = Asset(
         id = 1L,
         name = "Products",
-        amount = 100.0,
+        balance = 100.0,
         currency = Currency.RUB,
         color = AssetColor.CATEGORY,
         icon = AssetIcon.PRODUCTS,
@@ -51,15 +51,12 @@ class HistoryListMockViewModel : ComponentViewModel<HistoryListState>(
         return (0..count).map {
             Transaction(
                 id = it.toLong(),
-                type = if (it % 2 == 0) TransactionType.INCOME else TransactionType.EXPENSE,
-                assetFrom = assetFrom,
-                assetTo = assetTo,
+                source = assetFrom,
+                receiver = assetTo,
                 amount = Math.random() * 100,
-                currency = assetFrom.currency,
                 dateTime = LocalDateTime.now(),
                 comment = null,
-                isScheduled = false,
-                isIncluded = true
+                isScheduled = false
             )
         }
     }

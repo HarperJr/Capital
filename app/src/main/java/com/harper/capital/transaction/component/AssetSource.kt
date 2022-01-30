@@ -77,7 +77,7 @@ fun AssetSource(
                         color = CapitalTheme.colors.textPrimary
                     )
                     Text(
-                        text = asset.amount.formatWithCurrencySymbol(asset.currency.name),
+                        text = asset.balance.formatWithCurrencySymbol(asset.currency.name),
                         style = CapitalTheme.typography.regularSmall,
                         color = CapitalTheme.colors.textSecondary
                     )
@@ -103,7 +103,7 @@ private fun AssetSourceLight() {
             asset = Asset(
                 id = 0L,
                 name = "Tinkoff Black",
-                amount = 1500.0,
+                balance = 1500.0,
                 currency = Currency.RUB,
                 color = AssetColor.TINKOFF,
                 icon = AssetIcon.TINKOFF,
@@ -123,7 +123,7 @@ private fun AssetSourceDark() {
             asset = Asset(
                 id = 0L,
                 name = "Tinkoff Black",
-                amount = 1500.0,
+                balance = 1500.0,
                 currency = Currency.RUB,
                 color = AssetColor.TINKOFF,
                 icon = AssetIcon.TINKOFF,

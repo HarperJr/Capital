@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-object AssetTable {
-    const val tableName = "asset"
+internal object AssetTable {
+    const val tableName = "assets"
 
     const val id = "id"
     const val name = "name"
@@ -13,6 +13,8 @@ object AssetTable {
     const val type = "type"
     const val icon = "icon"
     const val color = "color"
+    const val isIncluded = "is_included"
+    const val isArchived = "is_archived"
 }
 
 @Entity(tableName = AssetTable.tableName)
@@ -23,5 +25,7 @@ data class AssetEntity(
     @ColumnInfo(name = AssetTable.currencyId) val currencyId: Int,
     @ColumnInfo(name = AssetTable.type) val type: AssetEntityType,
     @ColumnInfo(name = AssetTable.color) val color: String,
-    @ColumnInfo(name = AssetTable.icon) val icon: String
+    @ColumnInfo(name = AssetTable.icon) val icon: String,
+    @ColumnInfo(name = AssetTable.isIncluded) val isIncluded: Boolean,
+    @ColumnInfo(name = AssetTable.isArchived) val isArchived: Boolean
 )

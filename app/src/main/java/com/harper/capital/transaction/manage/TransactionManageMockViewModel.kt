@@ -19,7 +19,7 @@ class TransactionManageMockViewModel : ComponentViewModel<TransactionManageState
             Asset(
                 id = 0L,
                 name = "Tinkoff",
-                amount = 1000.0,
+                balance = 1000.0,
                 currency = Currency.RUB,
                 color = AssetColor.TINKOFF,
                 icon = AssetIcon.TINKOFF,
@@ -28,7 +28,7 @@ class TransactionManageMockViewModel : ComponentViewModel<TransactionManageState
             Asset(
                 id = 0L,
                 name = "Products",
-                amount = 1000.0,
+                balance = 1000.0,
                 currency = Currency.RUB,
                 color = AssetColor.CATEGORY,
                 icon = AssetIcon.PRODUCTS,

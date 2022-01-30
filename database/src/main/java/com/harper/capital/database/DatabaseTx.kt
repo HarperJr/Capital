@@ -6,7 +6,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.util.concurrent.Callable
 
-class Transaction(private val database: Database) {
+class DatabaseTx(private val database: Database) {
 
     fun <T> run(transaction: () -> T): T = database.runInTransaction(Callable(transaction))
 

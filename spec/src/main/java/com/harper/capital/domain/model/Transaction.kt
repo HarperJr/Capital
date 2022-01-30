@@ -4,13 +4,10 @@ import java.time.LocalDateTime
 
 class Transaction(
     val id: Long,
-    val type: TransactionType,
-    val assetFrom: Asset,
-    val assetTo: Asset,
+    val source: Asset,
+    val receiver: Asset,
     val amount: Double,
-    val currency: Currency,
     val dateTime: LocalDateTime,
     val comment: String?,
-    val isScheduled: Boolean,
-    val isIncluded: Boolean
+    val isScheduled: Boolean
 )

@@ -3,7 +3,7 @@ package com.harper.capital.domain.model
 data class Asset(
     val id: Long,
     val name: String,
-    val amount: Double,
+    val balance: Double,
     val currency: Currency,
     val color: AssetColor,
     val icon: AssetIcon,

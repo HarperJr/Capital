@@ -50,7 +50,7 @@ fun AssetSummaryCard(
             CAmountText(
                 modifier = Modifier
                     .align(Alignment.Center),
-                amount = summary.amount,
+                amount = summary.balance,
                 currencyIso = summary.currency.name,
                 style = CapitalTheme.typography.header
             )
@@ -64,7 +64,7 @@ private fun AssetAccountedCardLight() {
     CPreview {
         AssetSummaryCard(
             modifier = Modifier.padding(16.dp),
-            summary = Summary(debet = 12000.0, amount = 10000.0, Currency.EUR)
+            summary = Summary(expenses = 12000.0, balance = 10000.0, Currency.EUR)
         )
     }
 }
@@ -75,7 +75,7 @@ private fun AssetAccountedCardDark() {
     CPreview(isDark = true) {
         AssetSummaryCard(
             modifier = Modifier.padding(16.dp),
-            summary = Summary(debet = 12000.0, amount = 10000.0, Currency.EUR)
+            summary = Summary(expenses = 12000.0, balance = 10000.0, Currency.EUR)
         )
     }
 }

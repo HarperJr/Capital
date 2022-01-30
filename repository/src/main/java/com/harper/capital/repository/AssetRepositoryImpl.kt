@@ -1,10 +1,10 @@
 package com.harper.capital.repository
 
-import com.harper.capital.database.Transaction
+import com.harper.capital.database.DatabaseTx
 import com.harper.capital.database.dao.AssetDao
 import com.harper.capital.database.entity.AssetEntityType
-import com.harper.capital.database.entity.AssetCreditMetadataEntity
-import com.harper.capital.database.entity.AssetGoalMetadataEntity
+import com.harper.capital.database.entity.CreditEntity
+import com.harper.capital.database.entity.GoalEntity
 import com.harper.capital.database.entity.embedded.AssetEntityEmbedded
 import com.harper.capital.domain.model.Asset
 import com.harper.capital.domain.model.AssetMetadata
@@ -20,18 +20,18 @@ import kotlinx.coroutines.flow.map
 
 internal class AssetRepositoryImpl(
     private val assetDao: AssetDao,
-    private val transaction: Transaction
+    private val databaseTx: DatabaseTx
 ) :
     AssetRepository {
 
-    override suspend fun insert(asset: Asset) = transaction.runSuspended {
+    override suspend fun insert(asset: Asset) = databaseTx.runSuspended {
         val assetEntity = AssetEntityMapper(asset)
         val assetId = assetDao.insert(assetEntity)
         when (assetEntity.type) {
             AssetEntityType.CREDIT -> {
                 val metadata = asset.metadata.cast<AssetMetadata.Credit>()
                 assetDao.insertCredit(
-                    AssetCreditMetadataEntity(
+                    CreditEntity(
                         assetId = assetId,
                         limit = metadata.limit
                     )
@@ -40,7 +40,7 @@ internal class AssetRepositoryImpl(
             AssetEntityType.GOAL -> {
                 val metadata = asset.metadata.cast<AssetMetadata.Goal>()
                 assetDao.insertGoal(
-                    AssetGoalMetadataEntity(
+                    GoalEntity(
                         assetId = assetId,
                         goal = metadata.goal
                     )
@@ -81,6 +81,6 @@ internal class AssetRepositoryImpl(
             AssetEntityType.INCOME -> AssetMetadata.Income
         }
         AssetMapper(it.asset, metadata)
-            .copy(amount = it.credit.orElse(0.0) - it.debet.orElse(0.0))
+            .copy(balance = it.balance.orElse(0.0))
     }
 }

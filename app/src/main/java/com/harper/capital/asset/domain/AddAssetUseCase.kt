@@ -13,7 +13,7 @@ class AddAssetUseCase(private val assetRepository: AssetRepository) {
 
     suspend operator fun invoke(
         name: String,
-        amount: Double,
+        balance: Double,
         currency: Currency,
         color: AssetColor,
         icon: AssetIcon,
@@ -23,7 +23,7 @@ class AddAssetUseCase(private val assetRepository: AssetRepository) {
             Asset(
                 id = 0L,
                 name = name,
-                amount = amount,
+                balance = balance,
                 currency = currency,
                 color = color,
                 icon = icon,

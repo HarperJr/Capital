@@ -1,7 +1,6 @@
 package com.harper.capital.database.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
@@ -9,24 +8,13 @@ import androidx.room.Update
 import com.harper.capital.database.entity.AssetEntity
 import com.harper.capital.database.entity.AssetEntityType
 import com.harper.capital.database.entity.AssetTable
-import com.harper.capital.database.entity.AssetCreditMetadataEntity
-import com.harper.capital.database.entity.AssetCreditMetadataTable
-import com.harper.capital.database.entity.AssetGoalMetadataEntity
-import com.harper.capital.database.entity.AssetGoalMetadataTable
-import com.harper.capital.database.entity.CreditViewTable
-import com.harper.capital.database.entity.DebetViewTable
-import com.harper.capital.database.entity.TransactionTable
+import com.harper.capital.database.entity.CreditEntity
+import com.harper.capital.database.entity.CreditTable
+import com.harper.capital.database.entity.GoalEntity
+import com.harper.capital.database.entity.GoalTable
 import com.harper.capital.database.entity.embedded.AssetEntityEmbedded
+import com.harper.capital.database.view.AssetBalanceTable
 import kotlinx.coroutines.flow.Flow
-
-private const val assetsEmbeddedRequest = """
-    SELECT A.*, 
-    (SELECT SUM(${CreditViewTable.amount}) FROM ${CreditViewTable.viewName}
-    WHERE ${CreditViewTable.assetId} = A.${AssetTable.id}) AS credit,
-    (SELECT SUM(${DebetViewTable.amount}) FROM ${DebetViewTable.viewName}
-    WHERE ${DebetViewTable.assetId} = A.${AssetTable.id}) AS debet
-    FROM ${AssetTable.tableName} A
-"""
 
 @Dao
 interface AssetDao {
@@ -35,32 +23,29 @@ interface AssetDao {
     suspend fun insert(entity: AssetEntity): Long
 
     @Insert
-    suspend fun insertCredit(entity: AssetCreditMetadataEntity)
+    suspend fun insertCredit(entity: CreditEntity)
 
     @Insert
-    suspend fun insertGoal(entity: AssetGoalMetadataEntity)
-
-    @Delete
-    suspend fun delete(entity: AssetEntity)
+    suspend fun insertGoal(entity: GoalEntity)
 
     @Update
     fun update(entity: AssetEntity)
 
     @Transaction
-    @Query(assetsEmbeddedRequest)
+    @Query("SELECT * FROM ${AssetBalanceTable.tableName}")
     fun selectAll(): Flow<List<AssetEntityEmbedded>>
 
     @Transaction
-    @Query("$assetsEmbeddedRequest WHERE ${AssetTable.type} IN (:types)")
+    @Query("SELECT * FROM ${AssetBalanceTable.tableName} WHERE ${AssetTable.type} IN (:types)")
     fun selectByTypes(types: List<AssetEntityType>): Flow<List<AssetEntityEmbedded>>
 
     @Transaction
-    @Query("$assetsEmbeddedRequest WHERE ${AssetTable.id} = :id")
+    @Query("SELECT * FROM ${AssetBalanceTable.tableName} WHERE ${AssetTable.id} = :id")
     suspend fun selectById(id: Long): AssetEntityEmbedded
 
-    @Query("SELECT * FROM ${AssetCreditMetadataTable.tableName} WHERE ${AssetCreditMetadataTable.assetId} = :assetId")
-    suspend fun selectCreditByAssetId(assetId: Long): AssetCreditMetadataEntity
+    @Query("SELECT * FROM ${CreditTable.tableName} WHERE ${CreditTable.assetId} = :assetId")
+    suspend fun selectCreditByAssetId(assetId: Long): CreditEntity
 
-    @Query("SELECT * FROM ${AssetGoalMetadataTable.tableName} WHERE ${AssetGoalMetadataTable.assetId} = :assetId")
-    suspend fun selectGoalByAssetId(assetId: Long): AssetGoalMetadataEntity
+    @Query("SELECT * FROM ${GoalTable.tableName} WHERE ${GoalTable.assetId} = :assetId")
+    suspend fun selectGoalByAssetId(assetId: Long): GoalEntity
 }

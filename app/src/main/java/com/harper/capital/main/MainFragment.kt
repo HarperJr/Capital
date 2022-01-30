@@ -155,7 +155,7 @@ fun OverviewTopBar(summary: Summary, es: EventSender<MainEvent>) {
         content = {
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 CAmountText(
-                    amount = summary.amount,
+                    amount = summary.balance,
                     currencyIso = summary.currency.name,
                     style = CapitalTheme.typography.header,
                     color = CapitalTheme.colors.onBackground
@@ -163,7 +163,7 @@ fun OverviewTopBar(summary: Summary, es: EventSender<MainEvent>) {
                 Text(
                     text = stringResource(
                         id = R.string.expenses_in_month,
-                        summary.debet.formatWithCurrencySymbol(summary.currency.name),
+                        summary.expenses.formatWithCurrencySymbol(summary.currency.name),
                         LocalDate.now().format(MMMMDateTimeFormatter)
                     ),
                     style = CapitalTheme.typography.titleSmall,

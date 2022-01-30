@@ -50,7 +50,7 @@ class CategoryManageViewModel(
                 Asset(
                     id = 0L,
                     name = currentPage.name,
-                    amount = currentPage.amount,
+                    balance = currentPage.amount,
                     currency = currentPage.currency,
                     icon = currentPage.icon,
                     color = AssetColor.CATEGORY,

@@ -2,6 +2,8 @@ package com.harper.capital.repository
 
 import com.harper.capital.domain.model.Transaction
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 interface TransactionRepository {
 
@@ -9,11 +11,9 @@ interface TransactionRepository {
 
     suspend fun deleteById(id: Long)
 
-    fun fetchAll(): Flow<List<Transaction>>
+    fun fetchBalance(): Flow<Double>
 
-    fun fetchByAssetId(assetId: Long): Flow<List<Transaction>>
+    fun fetchExpense(): Flow<Double>
 
-    fun fetchDebet(): Flow<Double>
-
-    fun fetchCredit(): Flow<Double>
+    fun fetchTransactions(assetId: Long? = null): Flow<List<Transaction>>
 }

@@ -14,5 +14,5 @@ data class ShelterState(
 }
 
 class AssetState(val asset: Asset) {
-    var amount: Double by mutableStateOf(asset.amount)
+    var amount: Double by mutableStateOf(asset.balance)
 }

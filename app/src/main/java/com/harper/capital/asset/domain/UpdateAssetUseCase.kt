@@ -24,7 +24,7 @@ class UpdateAssetUseCase(private val assetRepository: AssetRepository) {
             Asset(
                 id = id,
                 name = name,
-                amount = amount,
+                balance = amount,
                 currency = currency,
                 color = color,
                 icon = icon,

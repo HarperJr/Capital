@@ -12,7 +12,7 @@ val databaseModule
                 .build()
         }
 
-        factory { Transaction(get()) }
+        factory { DatabaseTx(get()) }
 
         factory { get<Database>().assetDao() }
 
