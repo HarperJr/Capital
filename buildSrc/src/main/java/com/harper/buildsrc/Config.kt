@@ -47,7 +47,7 @@ fun BaseAppModuleExtension.capitalAppDefaultConfig(configClosure: ApplicationDef
     buildFeatures {
         viewBinding = true
         compose = true
-        buildConfig = false
+        buildConfig = true
         aidl = false
         renderScript = false
         resValues = false

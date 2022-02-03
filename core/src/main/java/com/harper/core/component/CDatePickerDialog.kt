@@ -69,7 +69,7 @@ private fun CDatePickerDialogContent(
         val state = rememberDatePickerDiaogState(date)
         Column {
             CDatePickerHeader(state)
-            CHorizontalSpacer(height = CapitalTheme.dimensions.tiny)
+            CHorizontalSpacer(height = CapitalTheme.dimensions.small)
             Column(modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     CIcon(imageVector = CapitalIcons.ArrowLeft) {
@@ -85,7 +85,7 @@ private fun CDatePickerDialogContent(
                         state.toNextMonth()
                     }
                 }
-                CHorizontalSpacer(height = CapitalTheme.dimensions.tiny)
+                CHorizontalSpacer(height = CapitalTheme.dimensions.small)
 
                 Layout(
                     modifier = Modifier.background(color = CapitalTheme.colors.primaryVariant),
@@ -132,12 +132,12 @@ private fun CDatePickerDialogContent(
             Row(
                 modifier = Modifier
                     .align(Alignment.End)
-                    .padding(CapitalTheme.dimensions.medium)
+                    .padding(CapitalTheme.dimensions.side)
             ) {
                 CButton(text = stringResource(id = R.string.cancel), borderless = true) {
                     onNegativeClick.invoke()
                 }
-                CVerticalSpacer(width = CapitalTheme.dimensions.medium)
+                CVerticalSpacer(width = CapitalTheme.dimensions.side)
                 CButton(text = stringResource(id = R.string.ok), borderless = true) {
                     onPositiveClick.invoke(state.selectedDate)
                 }
@@ -185,7 +185,7 @@ private fun CDatePickerHeader(state: DatePickerDialogState) {
         modifier = Modifier
             .fillMaxWidth()
             .background(color = CapitalTheme.colors.secondary)
-            .padding(CapitalTheme.dimensions.medium)
+            .padding(CapitalTheme.dimensions.side)
     ) {
         CompositionLocalProvider(LocalContentColor provides CapitalTheme.colors.onSecondary) {
             Text(

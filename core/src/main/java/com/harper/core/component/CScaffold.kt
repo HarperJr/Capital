@@ -10,9 +10,11 @@ import androidx.compose.material.FabPosition
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.google.accompanist.insets.navigationBarsHeight
@@ -28,6 +30,7 @@ fun CScaffold(
     floatingActionButton: @Composable () -> Unit = {},
     floatingActionButtonPosition: FabPosition = FabPosition.End,
     isFloatingActionButtonDocked: Boolean = false,
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
     content: @Composable () -> Unit
 ) {
     Scaffold(
@@ -47,7 +50,8 @@ fun CScaffold(
         snackbarHost = snackbarHost,
         floatingActionButton = floatingActionButton,
         floatingActionButtonPosition = floatingActionButtonPosition,
-        isFloatingActionButtonDocked = isFloatingActionButtonDocked
+        isFloatingActionButtonDocked = isFloatingActionButtonDocked,
+        scaffoldState = scaffoldState
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             content.invoke()
@@ -67,6 +71,7 @@ fun CBottomSheetScaffold(
     floatingActionButton: @Composable () -> Unit = {},
     floatingActionButtonPosition: FabPosition = FabPosition.End,
     isFloatingActionButtonDocked: Boolean = false,
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
     content: @Composable () -> Unit
 ) {
     ModalBottomSheetLayout(
@@ -86,7 +91,8 @@ fun CBottomSheetScaffold(
             snackbarHost = snackbarHost,
             floatingActionButton = floatingActionButton,
             floatingActionButtonPosition = floatingActionButtonPosition,
-            isFloatingActionButtonDocked = isFloatingActionButtonDocked
+            isFloatingActionButtonDocked = isFloatingActionButtonDocked,
+            scaffoldState = scaffoldState
         ) {
             content.invoke()
         }

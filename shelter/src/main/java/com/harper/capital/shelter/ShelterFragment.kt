@@ -65,7 +65,7 @@ private fun ShelterScreen(state: ShelterState, onEvent: (ShelterEvent) -> Unit) 
             LazyColumn {
                 items(state.assetStates) { assetState ->
                     Card(modifier = Modifier.padding(vertical = CapitalTheme.dimensions.side)) {
-                        Column(modifier = Modifier.padding(CapitalTheme.dimensions.small)) {
+                        Column(modifier = Modifier.padding(CapitalTheme.dimensions.medium)) {
                             Text(text = assetState.asset.name)
                             CHorizontalSpacer(height = CapitalTheme.dimensions.side)
                             CAmountTextField(

@@ -40,7 +40,11 @@ class TransactionManageViewModel(
             val assetFrom = fetchAssetUseCase(params.assetFromId)
             val assetTo = fetchAssetUseCase(params.assetToId)
             mutateState {
-                it.copy(assetPair = AssetPair(assetFrom, assetTo), isLoading = false)
+                it.copy(
+                    assetPair = AssetPair(assetFrom, assetTo),
+                    currency = assetFrom.currency,
+                    isLoading = false
+                )
             }
         }
     }

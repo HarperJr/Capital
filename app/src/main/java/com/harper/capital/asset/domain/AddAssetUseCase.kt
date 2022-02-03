@@ -17,7 +17,8 @@ class AddAssetUseCase(private val assetRepository: AssetRepository) {
         currency: Currency,
         color: AssetColor,
         icon: AssetIcon,
-        type: AssetType
+        type: AssetType,
+        isIncluded: Boolean
     ) = coroutineScope {
         assetRepository.insert(
             Asset(
@@ -27,14 +28,17 @@ class AddAssetUseCase(private val assetRepository: AssetRepository) {
                 currency = currency,
                 color = color,
                 icon = icon,
-                metadata = when (type) {
-                    AssetType.DEBET -> AssetMetadata.Debet
-                    AssetType.CREDIT -> AssetMetadata.Credit(limit = 0.0)
-                    AssetType.GOAL -> AssetMetadata.Goal(goal = 0.0)
-                    AssetType.INCOME -> AssetMetadata.Income
-                    AssetType.EXPENSE -> AssetMetadata.Expense
-                }
+                isIncluded = isIncluded,
+                metadata = createMetadataByType(type)
             )
         )
+    }
+
+    private fun createMetadataByType(type: AssetType): AssetMetadata = when (type) {
+        AssetType.DEBET -> AssetMetadata.Debet
+        AssetType.CREDIT -> AssetMetadata.Credit(limit = 0.0)
+        AssetType.GOAL -> AssetMetadata.Goal(goal = 0.0)
+        AssetType.INCOME -> AssetMetadata.Income
+        AssetType.EXPENSE -> AssetMetadata.Expense
     }
 }

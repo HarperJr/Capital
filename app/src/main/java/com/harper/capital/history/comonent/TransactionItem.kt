@@ -20,7 +20,6 @@ import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.domain.model.AssetMetadata
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.domain.model.Transaction
-import com.harper.capital.domain.model.TransactionType
 import com.harper.core.component.CPreview
 import com.harper.core.component.CVerticalSpacer
 import com.harper.core.ext.formatWithCurrencySymbol
@@ -34,7 +33,7 @@ fun TransactionItem(modifier: Modifier = Modifier, transaction: Transaction) {
             .fillMaxWidth()
             .padding(
                 horizontal = CapitalTheme.dimensions.side,
-                vertical = CapitalTheme.dimensions.small
+                vertical = CapitalTheme.dimensions.medium
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -52,7 +51,7 @@ fun TransactionItem(modifier: Modifier = Modifier, transaction: Transaction) {
                 icon = transaction.source.icon
             )
         }
-        CVerticalSpacer(width = CapitalTheme.dimensions.medium)
+        CVerticalSpacer(width = CapitalTheme.dimensions.side)
         Column(modifier = Modifier.weight(1f)) {
             Text(text = transaction.source.name)
             Text(

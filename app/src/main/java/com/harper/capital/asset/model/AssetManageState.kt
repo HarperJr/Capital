@@ -1,5 +1,6 @@
 package com.harper.capital.asset.model
 
+import androidx.annotation.StringRes
 import com.harper.capital.domain.model.AssetColor
 import com.harper.capital.domain.model.AssetIcon
 import com.harper.capital.domain.model.AssetType
@@ -14,7 +15,10 @@ data class AssetManageState(
     val color: AssetColor = AssetColor.TINKOFF,
     val icon: AssetIcon = AssetIcon.TINKOFF,
     val assetType: AssetType = AssetType.DEBET,
-    val bottomSheetState: AssetManageBottomSheetState = AssetManageBottomSheetState(isExpended = false)
+    val isIncluded: Boolean = true,
+    val isArchived: Boolean = true,
+    val bottomSheetState: AssetManageBottomSheetState = AssetManageBottomSheetState(isExpended = false),
+    @StringRes val errorMessage: Int? = null
 )
 
 data class AssetManageBottomSheetState(

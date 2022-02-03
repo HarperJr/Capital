@@ -7,5 +7,7 @@ data class Asset(
     val currency: Currency,
     val color: AssetColor,
     val icon: AssetIcon,
-    val metadata: AssetMetadata?
+    val isIncluded: Boolean = true,
+    val isArchived: Boolean = false,
+    val metadata: AssetMetadata? = null
 )

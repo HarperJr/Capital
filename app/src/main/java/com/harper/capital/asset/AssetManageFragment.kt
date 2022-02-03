@@ -12,14 +12,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,33 +39,30 @@ import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CBottomSheetScaffold
 import com.harper.core.component.CButton
 import com.harper.core.component.CHorizontalSpacer
-import com.harper.core.component.CIcon
 import com.harper.core.component.CPreferenceArrow
 import com.harper.core.component.CPreferenceSwitch
 import com.harper.core.component.CPreview
 import com.harper.core.component.CSeparator
-import com.harper.core.component.CToolbar
+import com.harper.core.component.CSnackBarHost
+import com.harper.core.component.CToolbarCommon
 import com.harper.core.ext.compose.assetCardSize
 import com.harper.core.ext.formatCurrencyName
 import com.harper.core.ext.formatCurrencySymbol
-import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
-import com.harper.core.ui.ComponentFragment
-import com.harper.core.ui.ComponentViewModel
-import com.harper.core.ui.EventSender
-import com.harper.core.ui.MockEventSender
+import com.harper.core.ui.ComponentFragmentV1
+import com.harper.core.ui.ComponentViewModelV1
 import com.harper.core.ui.withArgs
 import kotlinx.parcelize.Parcelize
 import org.koin.core.parameter.parametersOf
 
-class AssetManageFragment : ComponentFragment<AssetManageViewModel>(),
-    EventSender<AssetManageEvent> {
+class AssetManageFragment : ComponentFragmentV1<AssetManageViewModel>() {
     override val viewModel: AssetManageViewModel by injectViewModel { parametersOf(params) }
     private val params: Params by requireArg(PARAMS)
 
-    override fun content(): @Composable () -> Unit = {
+    @Composable
+    override fun ScreenContent() {
         ScreenLayout {
-            AssetManageScreen(viewModel, this)
+            AssetManageScreen(viewModel)
         }
     }
 
@@ -81,29 +79,33 @@ class AssetManageFragment : ComponentFragment<AssetManageViewModel>(),
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-private fun AssetManageScreen(
-    viewModel: ComponentViewModel<AssetManageState>,
-    es: EventSender<AssetManageEvent>
-) {
+private fun AssetManageScreen(viewModel: ComponentViewModelV1<AssetManageState, AssetManageEvent>) {
     val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-
+    val scaffoldState = rememberScaffoldState()
+    val focusManager = LocalFocusManager.current
     CBottomSheetScaffold(
         sheetContent = {
             val bottomSheet = remember(state.bottomSheetState) {
                 state.bottomSheetState.bottomSheet
             }
-            BottomSheetContent(bottomSheet, es)
+            BottomSheetContent(bottomSheet, viewModel)
             LaunchedEffect(state.bottomSheetState) {
                 if (state.bottomSheetState.isExpended) {
+                    focusManager.clearFocus(force = true)
                     sheetState.show()
                 } else {
                     sheetState.hide()
                 }
             }
         },
-        topBar = { AssetManageTopBar(state, es) },
-        sheetState = sheetState
+        topBar = {
+            AssetManageTopBar(
+                state,
+                onBackClick = { viewModel.onEvent(AssetManageEvent.BackClick) })
+        },
+        sheetState = sheetState,
+        scaffoldState = scaffoldState
     ) {
         Column(
             modifier = Modifier
@@ -122,28 +124,29 @@ private fun AssetManageScreen(
                     amount = state.amount,
                     icon = state.icon,
                     color = state.color,
-                    onNameChange = { es.send(AssetManageEvent.NameChange(it)) },
-                    onAmountChange = { es.send(AssetManageEvent.AmountChange(it)) },
-                    onIconClick = { es.send(AssetManageEvent.IconSelectClick) }
+                    currency = state.currency,
+                    onNameChange = { viewModel.onEvent(AssetManageEvent.NameChange(it)) },
+                    onAmountChange = { viewModel.onEvent(AssetManageEvent.AmountChange(it)) },
+                    onIconClick = { viewModel.onEvent(AssetManageEvent.IconSelectClick) }
                 )
-                CHorizontalSpacer(height = 8.dp)
+                CHorizontalSpacer(height = CapitalTheme.dimensions.medium)
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                        .padding(vertical = CapitalTheme.dimensions.small),
+                    horizontalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.small),
                     contentPadding = PaddingValues(horizontal = 32.dp)
                 ) {
                     items(state.colors) { item ->
                         AssetColorSelector(
                             color = item,
                             isSelected = state.color == item,
-                            onSelect = { es.send(AssetManageEvent.ColorSelect(color = item)) }
+                            onSelect = { viewModel.onEvent(AssetManageEvent.ColorSelect(color = item)) }
                         )
                     }
                 }
-                CHorizontalSpacer(height = 16.dp)
-                SettingsBlock(state, es)
+                CHorizontalSpacer(height = CapitalTheme.dimensions.side)
+                SettingsBlock(state, viewModel)
             }
             val applyButtonText = if (state.mode == AssetManageMode.ADD) {
                 stringResource(id = R.string.add_asset)
@@ -153,36 +156,43 @@ private fun AssetManageScreen(
             CButton(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(CapitalTheme.dimensions.side),
                 text = applyButtonText,
-                onClick = { es.send(AssetManageEvent.Apply) }
+                onClick = { viewModel.onEvent(AssetManageEvent.Apply) }
+            )
+            CSnackBarHost(
+                scaffoldState = scaffoldState,
+                message = state.errorMessage?.let { stringResource(id = it) }
             )
         }
     }
 }
 
 @Composable
-private fun SettingsBlock(state: AssetManageState, es: EventSender<AssetManageEvent>) {
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+private fun SettingsBlock(
+    state: AssetManageState,
+    viewModel: ComponentViewModelV1<AssetManageState, AssetManageEvent>
+) {
+    Column(modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side)) {
         CPreferenceArrow(
             title = "${state.currency.name} ${state.currency.name.formatCurrencySymbol()}",
             subtitle = state.currency.name.formatCurrencyName(),
-            onClick = { es.send(AssetManageEvent.CurrencySelectClick) })
+            onClick = { viewModel.onEvent(AssetManageEvent.CurrencySelectClick) })
         CSeparator()
         CPreferenceArrow(
             title = stringResource(id = R.string.asset_type),
             subtitle = state.assetType.resolveText(),
-            onClick = { es.send(AssetManageEvent.AssetTypeSelectClick) })
+            onClick = { viewModel.onEvent(AssetManageEvent.AssetTypeSelectClick) })
         CPreferenceSwitch(
             title = stringResource(id = R.string.include_asset),
             subtitle = stringResource(id = R.string.include_asset_subtitle),
-            onCheckedChange = { es.send(AssetManageEvent.IncludeAssetCheckedChange(it)) }
+            onCheckedChange = { viewModel.onEvent(AssetManageEvent.IncludeAssetCheckedChange(it)) }
         )
         if (state.mode == AssetManageMode.EDIT) {
             CPreferenceSwitch(
-                title = stringResource(id = R.string.is_active_asset),
-                subtitle = stringResource(id = R.string.is_active_asset_subtitle),
-                onCheckedChange = { es.send(AssetManageEvent.ActivateAssetCheckedChange(it)) }
+                title = stringResource(id = R.string.is_archived_asset),
+                subtitle = stringResource(id = R.string.is_archived_asset_subtitle),
+                onCheckedChange = { viewModel.onEvent(AssetManageEvent.ActivateAssetCheckedChange(it)) }
             )
         }
     }
@@ -191,26 +201,26 @@ private fun SettingsBlock(state: AssetManageState, es: EventSender<AssetManageEv
 @Composable
 private fun BottomSheetContent(
     bottomSheet: AssetManageBottomSheet?,
-    es: EventSender<AssetManageEvent>
+    viewModel: ComponentViewModelV1<AssetManageState, AssetManageEvent>
 ) {
     when (bottomSheet) {
         is AssetManageBottomSheet.Currencies -> {
             CurrencyBottomSheet(
                 currencies = bottomSheet.currencies,
                 selectedCurrency = bottomSheet.selectedCurrency,
-                onCurrencySelect = { es.send(AssetManageEvent.CurrencySelect(it)) }
+                onCurrencySelect = { viewModel.onEvent(AssetManageEvent.CurrencySelect(it)) }
             )
         }
         is AssetManageBottomSheet.Icons -> {
             IconsBottomSheet(
                 data = bottomSheet.data,
-                onIconSelect = { es.send(AssetManageEvent.IconSelect(it)) }
+                onIconSelect = { viewModel.onEvent(AssetManageEvent.IconSelect(it)) }
             )
         }
         is AssetManageBottomSheet.AssetTypes -> {
             SelectorBottomSheet(
                 data = bottomSheet.data,
-                onValueSelect = { es.send(AssetManageEvent.AssetTypeSelect(it)) }
+                onValueSelect = { viewModel.onEvent(AssetManageEvent.AssetTypeSelect(it)) }
             )
         }
         else -> {
@@ -219,23 +229,16 @@ private fun BottomSheetContent(
 }
 
 @Composable
-private fun AssetManageTopBar(state: AssetManageState, es: EventSender<AssetManageEvent>) {
+private fun AssetManageTopBar(state: AssetManageState, onBackClick: () -> Unit) {
     val title = if (state.mode == AssetManageMode.ADD) {
         stringResource(id = R.string.new_asset_title)
     } else {
         stringResource(id = R.string.edit_asset_title)
     }
-    CToolbar(
-        content = {
-            Text(
-                text = title,
-                style = CapitalTheme.typography.title
-            )
-        },
-        navigation = {
-            CIcon(imageVector = CapitalIcons.ArrowLeft) {
-                es.send(AssetManageEvent.BackClick)
-            }
+    CToolbarCommon(
+        title = title,
+        onNavigationClick = {
+            onBackClick.invoke()
         }
     )
 }
@@ -244,7 +247,7 @@ private fun AssetManageTopBar(state: AssetManageState, es: EventSender<AssetMana
 @Composable
 private fun AssetManageScreenLight() {
     CPreview {
-        AssetManageScreen(AssetManageMockViewModel(), MockEventSender())
+        AssetManageScreen(AssetManageMockViewModel())
     }
 }
 
@@ -252,6 +255,6 @@ private fun AssetManageScreenLight() {
 @Composable
 private fun AssetManageScreenDark() {
     CPreview(isDark = true) {
-        AssetManageScreen(AssetManageMockViewModel(), MockEventSender())
+        AssetManageScreen(AssetManageMockViewModel())
     }
 }

@@ -24,5 +24,6 @@ internal object TransactionMapper : (List<TransactionEntityEmbedded>) -> List<Tr
             )
         }
 
-    private fun mapLedger(entity: LedgerEntityEmbedded): Asset = AssetMapper(entity.asset, null)
+    private fun mapLedger(entity: LedgerEntityEmbedded): Asset =
+        AssetMapper(entity.asset, null, null)
 }

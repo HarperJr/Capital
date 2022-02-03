@@ -42,7 +42,7 @@ fun TransactionHeader(modifier: Modifier = Modifier, assetFrom: Asset, assetTo: 
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = CapitalTheme.dimensions.small)
+                .padding(horizontal = CapitalTheme.dimensions.medium)
         ) {
             Text(
                 text = assetFrom.name,

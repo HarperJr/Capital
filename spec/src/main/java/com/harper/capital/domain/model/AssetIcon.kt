@@ -8,12 +8,18 @@ enum class AssetIcon {
     RAIFFEISEN,
     BITCOIN,
     ETHERIUM,
+    DOGECOIN,
     USD,
     EUR,
     PIGGY_BANK,
     MOBILE,
     PRODUCTS,
-    WALLET;
+    WALLET,
+    TRAVEL,
+    BUSINESS,
+    CAR,
+    TRANSPORT,
+    BANK;
 
     companion object {
         private val bankIncons = listOf(

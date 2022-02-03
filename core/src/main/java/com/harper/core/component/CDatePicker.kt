@@ -90,7 +90,7 @@ fun CDatePicker(
                 Box(
                     modifier = Modifier
                         .layoutId(selectorRectId)
-                        .padding(CapitalTheme.dimensions.tiny)
+                        .padding(CapitalTheme.dimensions.small)
                         .background(
                             color = CapitalTheme.colors.primaryVariant,
                             shape = CapitalTheme.shapes.medium
@@ -100,7 +100,7 @@ fun CDatePicker(
                     modifier = Modifier
                         .layoutId(dateListId)
                         .fillMaxWidth(),
-                    contentPadding = PaddingValues(vertical = CapitalTheme.dimensions.small),
+                    contentPadding = PaddingValues(vertical = CapitalTheme.dimensions.medium),
                     state = dateListState,
                     flingBehavior = flingBehavior
                 ) {
@@ -176,7 +176,7 @@ private fun DateItem(
     val date = remember { dateStart.plusDays(dayIndex.toLong()) }
     Column(
         modifier = modifier
-            .padding(horizontal = CapitalTheme.dimensions.tiny)
+            .padding(horizontal = CapitalTheme.dimensions.small)
             .clickable { onClick.invoke(dayIndex) },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

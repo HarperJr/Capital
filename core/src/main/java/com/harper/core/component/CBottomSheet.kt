@@ -12,8 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsHeight
-import com.harper.core.theme.CapitalColors
+import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.harper.core.theme.CapitalTheme
 
 @Composable
@@ -32,9 +33,11 @@ fun CBottomSheet(modifier: Modifier = Modifier, content: @Composable () -> Unit)
             )
         }
         content.invoke()
+        val imeInsets =
+            rememberInsetsPaddingValues(insets = LocalWindowInsets.current.ime, applyBottom = true)
         Spacer(
             modifier = Modifier
-                .navigationBarsHeight()
+                .navigationBarsHeight(additional = imeInsets.calculateBottomPadding())
                 .fillMaxWidth()
         )
     }

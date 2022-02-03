@@ -13,24 +13,28 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
 import androidx.compose.material.LocalContentColor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.harper.capital.R
 import com.harper.capital.domain.model.AssetColor
 import com.harper.capital.domain.model.AssetIcon
+import com.harper.capital.domain.model.Currency
 import com.harper.capital.ext.assetBackgroundColor
-import com.harper.capital.ext.getImageVector
 import com.harper.capital.ext.assetContentColorFor
 import com.harper.capital.ext.assetOnBackgroundColorFor
+import com.harper.capital.ext.getImageVector
 import com.harper.core.component.CAmountTextField
 import com.harper.core.component.CPreview
 import com.harper.core.component.CTextField
@@ -44,6 +48,7 @@ fun AssetEditableCard(
     amount: Double,
     icon: AssetIcon,
     color: AssetColor,
+    currency: Currency,
     onIconClick: () -> Unit,
     onAmountChange: (Double) -> Unit,
     onNameChange: (String) -> Unit
@@ -56,30 +61,38 @@ fun AssetEditableCard(
         elevation = 4.dp,
         shape = CapitalTheme.shapes.extraLarge
     ) {
+        Image(
+            modifier = Modifier
+                .fillMaxSize(0.5f),
+            imageVector = ImageVector.vectorResource(id = R.drawable.bg_card_whiteness),
+            contentDescription = null,
+            alignment = Alignment.CenterEnd
+        )
         val focusManager = LocalFocusManager.current
-
-        val amountValue = rememberSaveable(amount) { mutableStateOf(amount) }
-        val nameValue = rememberSaveable(name) { mutableStateOf(name) }
 
         val onCardBackgroundColor = assetOnBackgroundColorFor(cardBackgroundColor)
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (tfName, atfAmount, bIcon) = createRefs()
             CTextField(
                 modifier = Modifier.constrainAs(tfName) {
-                    linkTo(start = bIcon.end, end = parent.end, startMargin = 16.dp, endMargin = 16.dp)
+                    linkTo(
+                        start = bIcon.end,
+                        end = parent.end,
+                        startMargin = 16.dp,
+                        endMargin = 16.dp
+                    )
                     centerVerticallyTo(bIcon)
                     width = Dimension.fillToConstraints
                 },
-                value = nameValue.value,
+                value = name,
+                placeholder = stringResource(id = R.string.asset_name_hint),
                 backgroundColor = onCardBackgroundColor,
                 singleLine = true,
-                onValueChange = {
-                    nameValue.value = it
-                    onNameChange.invoke(it)
-                },
+                onValueChange = { onNameChange.invoke(it) },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     capitalization = KeyboardCapitalization.Words,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
+                    autoCorrect = true
                 ),
                 keyboardActions = KeyboardActions(onNext = {
                     focusManager.moveFocus(FocusDirection.Down)
@@ -96,7 +109,9 @@ fun AssetEditableCard(
                     }
             ) {
                 Image(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(CapitalTheme.dimensions.medium),
                     imageVector = icon.getImageVector(),
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(color = LocalContentColor.current)
@@ -104,17 +119,20 @@ fun AssetEditableCard(
             }
             CAmountTextField(
                 modifier = Modifier.constrainAs(atfAmount) {
-                    linkTo(start = parent.start, end = parent.end, startMargin = 16.dp, endMargin = 16.dp)
+                    linkTo(
+                        start = parent.start,
+                        end = parent.end,
+                        startMargin = 16.dp,
+                        endMargin = 16.dp
+                    )
                     top.linkTo(bIcon.bottom, margin = 16.dp)
                     end.linkTo(parent.end, margin = 16.dp)
                     width = Dimension.fillToConstraints
                 },
-                amount = amountValue.value,
+                amount = amount,
+                currencyIso = currency.name,
                 backgroundColor = onCardBackgroundColor,
-                onValueChange = {
-                    amountValue.value = it
-                    onAmountChange.invoke(it)
-                },
+                onValueChange = { onAmountChange.invoke(it) },
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
                     focusManager.clearFocus()
@@ -139,6 +157,7 @@ private fun AssetEditableCardLight() {
                 amount = 12444.32,
                 icon = AssetIcon.TINKOFF,
                 color = AssetColor.TINKOFF,
+                currency = Currency.RUB,
                 onIconClick = {},
                 onNameChange = {},
                 onAmountChange = {}
@@ -161,6 +180,7 @@ private fun AssetEditableCardDark() {
                 amount = 100000.0,
                 icon = AssetIcon.SBER,
                 color = AssetColor.SBER,
+                currency = Currency.RUB,
                 onIconClick = {},
                 onNameChange = {},
                 onAmountChange = {}

@@ -63,6 +63,21 @@ object CapitalIcons {
     val Filter
         @Composable
         get() = ImageVector.vectorResource(id = R.drawable.ic_filter)
+    val Travel
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_travel)
+    val Business
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_business)
+    val Car
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_car)
+    val Transport
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_bus)
+    val BankWallet
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_bank)
 
     val Edit: ImageVector
         get() = Icons.Rounded.Edit
@@ -102,6 +117,9 @@ object CapitalIcons {
         val Bitcoin: ImageVector
             @Composable
             get() = ImageVector.vectorResource(id = R.drawable.ic_btc)
+        val Dogecoin: ImageVector
+            @Composable
+            get() = ImageVector.vectorResource(id = R.drawable.ic_doge)
         val PiggyBank: ImageVector
             @Composable
             get() = ImageVector.vectorResource(id = R.drawable.ic_piggy_bank)
@@ -129,7 +147,12 @@ private fun Icons() {
         CapitalIcons.ArrowRight,
         CapitalIcons.RoundCheck,
         CapitalIcons.Calendar,
-        CapitalIcons.Filter
+        CapitalIcons.Filter,
+        CapitalIcons.Travel,
+        CapitalIcons.Business,
+        CapitalIcons.Car,
+        CapitalIcons.Transport,
+        CapitalIcons.BankWallet
     )
     CWrappedGrid(
         modifier = Modifier.background(CapitalTheme.colors.background),
@@ -152,6 +175,7 @@ private fun BankIcons() {
         CapitalIcons.Bank.Dollar,
         CapitalIcons.Bank.Etherium,
         CapitalIcons.Bank.Bitcoin,
+        CapitalIcons.Bank.Dogecoin,
         CapitalIcons.Bank.PiggyBank
     )
     CWrappedGrid(

@@ -18,7 +18,9 @@ class UpdateAssetUseCase(private val assetRepository: AssetRepository) {
         currency: Currency,
         color: AssetColor,
         icon: AssetIcon,
-        type: AssetType
+        type: AssetType,
+        isIncluded: Boolean,
+        isActive: Boolean
     ) = coroutineScope {
         assetRepository.update(
             Asset(
@@ -28,6 +30,8 @@ class UpdateAssetUseCase(private val assetRepository: AssetRepository) {
                 currency = currency,
                 color = color,
                 icon = icon,
+                isIncluded = isIncluded,
+                isArchived = isActive,
                 metadata = when (type) {
                     AssetType.DEBET -> AssetMetadata.Debet
                     AssetType.CREDIT -> AssetMetadata.Credit(0.0)

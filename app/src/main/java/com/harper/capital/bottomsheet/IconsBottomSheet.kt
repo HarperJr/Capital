@@ -50,9 +50,7 @@ fun IconsBottomSheet(
         }
     }
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .imePadding()
+        modifier = modifier.fillMaxWidth()
     ) {
         CHorizontalSpacer(height = 8.dp)
         CTextField(
@@ -85,7 +83,7 @@ fun IconsBottomSheet(
             columns = 4,
             items = filteredIcons
         ) {
-            Box(modifier = Modifier.padding(4.dp)) {
+            Box {
                 IconItem(
                     modifier = Modifier
                         .size(44.dp)
@@ -111,9 +109,8 @@ private fun IconItem(
         if (isSelected) CapitalTheme.colors.primaryVariant else CapitalColors.Transparent
     Box(
         modifier = modifier
-            .background(
-                color = selectorColor, shape = CircleShape
-            )
+            .background(color = selectorColor, shape = CircleShape)
+            .padding(CapitalTheme.dimensions.small)
             .clickable { onClick.invoke() }
     ) {
         Icon(

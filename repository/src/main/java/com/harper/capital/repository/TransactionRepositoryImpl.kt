@@ -19,7 +19,7 @@ internal class TransactionRepositoryImpl(
     override suspend fun insert(transaction: Transaction) {
         databaseTx.runSuspended {
             val transactionId = transactionDao.insert(TransactionEntityMapper(transaction))
-            val debetLedger = LedgerEntity(
+            val debitLedger = LedgerEntity(
                 transactionId = transactionId,
                 assetId = transaction.source.id,
                 type = LedgerEntityType.DEBET,
@@ -31,7 +31,7 @@ internal class TransactionRepositoryImpl(
                 type = LedgerEntityType.CREDIT,
                 amount = transaction.amount
             )
-            transactionDao.insert(listOf(debetLedger, creditLedger))
+            transactionDao.insert(listOf(debitLedger, creditLedger))
         }
     }
 
@@ -48,7 +48,7 @@ internal class TransactionRepositoryImpl(
                     transactions
                 } else {
                     transactions.filter {
-                        it.ledgers.any { ledger -> ledger.asset.id == assetId }
+                        it.ledgers.any { ledger -> ledger.asset.id == assetId } && it.ledgers.size > 1
                     }
                 }
                 TransactionMapper(filteredTransactions)

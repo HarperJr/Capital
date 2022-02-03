@@ -88,16 +88,17 @@ private fun TransactionManageScreen(
                         .weight(1f)
                         .padding(horizontal = CapitalTheme.dimensions.side)
                 ) {
-                    CHorizontalSpacer(height = CapitalTheme.dimensions.medium)
+                    CHorizontalSpacer(height = CapitalTheme.dimensions.side)
                     val assetPair = state.assetPair
                     if (assetPair != null) {
                         TransactionHeader(assetFrom = assetPair.first, assetTo = assetPair.second)
                     }
-                    CHorizontalSpacer(height = CapitalTheme.dimensions.medium)
+                    CHorizontalSpacer(height = CapitalTheme.dimensions.side)
                     CAmountTextField(
                         modifier = Modifier.fillMaxWidth(),
                         amount = state.amount,
                         placeholder = stringResource(id = R.string.enter_amount_hint),
+                        currencyIso = state.currency.name,
                         title = {
                             Text(text = stringResource(id = R.string.amount))
                         },
@@ -147,7 +148,7 @@ private fun OptionalCommentTitle() {
             color = CapitalTheme.colors.textPrimary
         )
         Text(
-            modifier = Modifier.padding(start = CapitalTheme.dimensions.tiny),
+            modifier = Modifier.padding(start = CapitalTheme.dimensions.small),
             text = stringResource(id = R.string.optional).lowercase(),
             style = CapitalTheme.typography.regularSmall,
             color = CapitalTheme.colors.textSecondary

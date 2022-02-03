@@ -1,6 +1,7 @@
 package com.harper.capital
 
 import android.app.Application
+import android.os.StrictMode
 import com.harper.capital.auth.authModule
 import com.harper.capital.category.categoryModule
 import com.harper.capital.database.databaseModule
@@ -21,8 +22,27 @@ class CapitalApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        if (BuildConfig.DEBUG) {
+            val threadPolicy = StrictMode.ThreadPolicy.Builder()
+                .detectCustomSlowCalls()
+                .permitDiskReads()
+                .permitDiskWrites()
+                .permitNetwork()
+                .penaltyLog()
+                .build()
+            StrictMode.setThreadPolicy(threadPolicy)
+            val vmPolicy = StrictMode.VmPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build()
+            StrictMode.setVmPolicy(vmPolicy)
+        }
 
         Timber.plant(Timber.DebugTree())
+        startKoin()
+    }
+
+    private fun startKoin() {
         koinApp = startKoin {
             modules(
                 appModule,
@@ -44,5 +64,10 @@ class CapitalApplication : Application() {
     override fun onLowMemory() {
         koinApp?.close()
         super.onLowMemory()
+    }
+
+    override fun onTerminate() {
+        koinApp?.close()
+        super.onTerminate()
     }
 }

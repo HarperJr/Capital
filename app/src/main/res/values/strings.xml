@@ -70,6 +70,8 @@
     <string name="edit_asset_title">Edit asset</string>
     <string name="save">Save</string>
     <string name="to_shelter">To shelter</string>
-    <string name="is_active_asset">Is active asset</string>
-    <string name="is_active_asset_subtitle">Check this to clean this up</string>
+    <string name="is_archived_asset">Is archived</string>
+    <string name="is_archived_asset_subtitle">Check to hide asset</string>
+    <string name="asset_name_hint">Asset name</string>
+    <string name="asset_name_is_empty_error">Asset name is required, please provide it</string>
 </resources>

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -61,6 +62,7 @@ fun AssetCard(
             val (icon, name, description, amount) = createRefs()
             Image(
                 modifier = Modifier
+                    .size(CapitalTheme.dimensions.imageLarge)
                     .constrainAs(icon) {
                         end.linkTo(parent.end, margin = 8.dp)
                         top.linkTo(parent.top, margin = 8.dp)

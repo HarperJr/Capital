@@ -14,10 +14,16 @@ fun AssetIcon.getImageVector(): ImageVector = when (this) {
     AssetIcon.RAIFFEISEN -> CapitalIcons.Bank.Raiffeisen
     AssetIcon.BITCOIN -> CapitalIcons.Bank.Bitcoin
     AssetIcon.ETHERIUM -> CapitalIcons.Bank.Etherium
+    AssetIcon.DOGECOIN -> CapitalIcons.Bank.Dogecoin
     AssetIcon.USD -> CapitalIcons.Bank.Dollar
     AssetIcon.EUR -> CapitalIcons.Bank.Euro
     AssetIcon.PIGGY_BANK -> CapitalIcons.Bank.PiggyBank
     AssetIcon.MOBILE -> CapitalIcons.Mobile
     AssetIcon.PRODUCTS -> CapitalIcons.ProductCart
     AssetIcon.WALLET -> CapitalIcons.Wallet
+    AssetIcon.TRAVEL -> CapitalIcons.Travel
+    AssetIcon.BUSINESS -> CapitalIcons.Business
+    AssetIcon.CAR -> CapitalIcons.Car
+    AssetIcon.TRANSPORT -> CapitalIcons.Transport
+    AssetIcon.BANK -> CapitalIcons.BankWallet
 }

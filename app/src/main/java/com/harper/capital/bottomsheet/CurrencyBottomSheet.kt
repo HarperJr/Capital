@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.imePadding
+import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.harper.capital.R
 import com.harper.capital.domain.model.Currency
 import com.harper.core.component.CTextField
@@ -51,9 +52,7 @@ fun CurrencyBottomSheet(
         }
     }
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .imePadding()
+        modifier = modifier.fillMaxWidth()
     ) {
         CHorizontalSpacer(height = 8.dp)
         CTextField(

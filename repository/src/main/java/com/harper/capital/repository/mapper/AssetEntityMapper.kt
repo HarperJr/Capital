@@ -15,8 +15,8 @@ internal object AssetEntityMapper : (Asset) -> AssetEntity {
             type = metadata?.assetType?.let(AssetEntityTypeMapper).orElse(AssetEntityType.DEBET),
             icon = model.icon.name,
             color = model.color.name,
-            isIncluded = true,
-            isArchived = false
+            isIncluded = model.isIncluded,
+            isArchived = model.isArchived
         )
     }
 }
