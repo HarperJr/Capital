@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -19,18 +21,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.imePadding
-import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.harper.capital.R
 import com.harper.capital.domain.model.Currency
-import com.harper.core.component.CTextField
-import com.harper.core.component.CPreview
 import com.harper.core.component.CHorizontalSpacer
+import com.harper.core.component.CPreview
 import com.harper.core.component.CSeparator
+import com.harper.core.component.CTextField
 import com.harper.core.ext.formatCurrencyName
 import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalColors
@@ -44,11 +46,12 @@ fun CurrencyBottomSheet(
     selectedCurrency: Currency,
     onCurrencySelect: (Currency) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     val searchQuery = rememberSaveable { mutableStateOf("") }
     val filteredCurrencies = remember(currencies, searchQuery.value) {
         currencies.filter {
             searchQuery.value.isEmpty() ||
-                    it.name.formatCurrencyName().contains(searchQuery.value, ignoreCase = true)
+                it.name.formatCurrencyName().contains(searchQuery.value, ignoreCase = true)
         }
     }
     Column(
@@ -69,6 +72,12 @@ fun CurrencyBottomSheet(
                     contentDescription = null
                 )
             },
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(onDone = {
+                focusManager.clearFocus()
+            }),
             onValueChange = { searchQuery.value = it }
         )
         Spacer(

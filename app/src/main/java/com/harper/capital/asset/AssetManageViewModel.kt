@@ -24,7 +24,7 @@ class AssetManageViewModel(
     private val updateAssetUseCase: UpdateAssetUseCase,
     private val fetchAssetUseCase: FetchAssetUseCase
 ) : ComponentViewModelV1<AssetManageState, AssetManageEvent>(
-    defaultState = AssetManageState(mode = params.mode)
+    defaultState = AssetManageState(mode = params.mode, isLoading = params.assetId != null)
 ) {
 
     override fun onEvent(event: AssetManageEvent) {
@@ -56,6 +56,7 @@ class AssetManageViewModel(
                 val asset = fetchAssetUseCase(assetId)
                 update {
                     it.copy(
+                        isLoading = false,
                         name = asset.name,
                         balance = asset.balance,
                         currency = asset.currency,

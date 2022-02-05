@@ -10,6 +10,7 @@ import com.harper.core.ui.EventObserver
 class AssetManageMockViewModel : ComponentViewModelV1<AssetManageState, AssetManageEvent>(
     defaultState = AssetManageState(
         mode = AssetManageMode.ADD,
+        isLoading = false,
         name = "Tinkoff Platinum",
         balance = 12434.0,
         colors = AccountColor.values().toList(),

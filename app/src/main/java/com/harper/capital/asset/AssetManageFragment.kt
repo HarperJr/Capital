@@ -39,6 +39,7 @@ import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CBottomSheetScaffold
 import com.harper.core.component.CButton
 import com.harper.core.component.CHorizontalSpacer
+import com.harper.core.component.CLoaderLayout
 import com.harper.core.component.CPreferenceArrow
 import com.harper.core.component.CPreferenceSwitch
 import com.harper.core.component.CPreview
@@ -110,63 +111,65 @@ private fun AssetManageScreen(viewModel: ComponentViewModelV1<AssetManageState, 
         sheetState = sheetState,
         scaffoldState = scaffoldState
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
+        CLoaderLayout(isLoading = state.isLoading, loaderContent = {}) {
             Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth()
             ) {
-                AssetEditableCard(
+                Column(
                     modifier = Modifier
-                        .assetCardSize()
-                        .padding(
-                            horizontal = cardHorizontalPadding,
-                            vertical = CapitalTheme.dimensions.side
-                        ),
-                    name = state.name,
-                    balance = state.balance,
-                    icon = state.icon,
-                    color = state.color,
-                    currency = state.currency,
-                    onNameChange = { viewModel.onEvent(AssetManageEvent.NameChange(it)) },
-                    onAmountChange = { viewModel.onEvent(AssetManageEvent.AmountChange(it)) },
-                    onIconClick = { viewModel.onEvent(AssetManageEvent.IconSelectClick) }
-                )
-                CHorizontalSpacer(height = CapitalTheme.dimensions.medium)
-                LazyRow(
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    AssetEditableCard(
+                        modifier = Modifier
+                            .assetCardSize()
+                            .padding(
+                                horizontal = cardHorizontalPadding,
+                                vertical = CapitalTheme.dimensions.side
+                            ),
+                        name = state.name,
+                        balance = state.balance,
+                        icon = state.icon,
+                        color = state.color,
+                        currency = state.currency,
+                        onNameChange = { viewModel.onEvent(AssetManageEvent.NameChange(it)) },
+                        onAmountChange = { viewModel.onEvent(AssetManageEvent.AmountChange(it)) },
+                        onIconClick = { viewModel.onEvent(AssetManageEvent.IconSelectClick) }
+                    )
+                    CHorizontalSpacer(height = CapitalTheme.dimensions.medium)
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = CapitalTheme.dimensions.small),
+                        horizontalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.small),
+                        contentPadding = PaddingValues(horizontal = cardHorizontalPadding)
+                    ) {
+                        items(state.colors) { item ->
+                            AssetColorSelector(
+                                color = item,
+                                isSelected = state.color == item,
+                                onSelect = { viewModel.onEvent(AssetManageEvent.ColorSelect(color = item)) }
+                            )
+                        }
+                    }
+                    CHorizontalSpacer(height = CapitalTheme.dimensions.side)
+                    SettingsBlock(state, viewModel)
+                }
+                val applyButtonText = if (state.mode == AssetManageMode.ADD) {
+                    stringResource(id = R.string.add_asset)
+                } else {
+                    stringResource(id = R.string.save)
+                }
+                CButton(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = CapitalTheme.dimensions.small),
-                    horizontalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.small),
-                    contentPadding = PaddingValues(horizontal = cardHorizontalPadding)
-                ) {
-                    items(state.colors) { item ->
-                        AssetColorSelector(
-                            color = item,
-                            isSelected = state.color == item,
-                            onSelect = { viewModel.onEvent(AssetManageEvent.ColorSelect(color = item)) }
-                        )
-                    }
-                }
-                CHorizontalSpacer(height = CapitalTheme.dimensions.side)
-                SettingsBlock(state, viewModel)
+                        .padding(CapitalTheme.dimensions.side),
+                    text = applyButtonText,
+                    enabled = state.name.isNotEmpty(),
+                    onClick = { viewModel.onEvent(AssetManageEvent.Apply) }
+                )
             }
-            val applyButtonText = if (state.mode == AssetManageMode.ADD) {
-                stringResource(id = R.string.add_asset)
-            } else {
-                stringResource(id = R.string.save)
-            }
-            CButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(CapitalTheme.dimensions.side),
-                text = applyButtonText,
-                enabled = state.name.isNotEmpty(),
-                onClick = { viewModel.onEvent(AssetManageEvent.Apply) }
-            )
         }
     }
 }
@@ -237,6 +240,7 @@ private fun BottomSheetContent(
 
 @Composable
 private fun AssetManageTopBar(state: AssetManageState, onBackClick: () -> Unit) {
+    val focusManager = LocalFocusManager.current
     val title = if (state.mode == AssetManageMode.ADD) {
         stringResource(id = R.string.new_asset_title)
     } else {
@@ -245,6 +249,7 @@ private fun AssetManageTopBar(state: AssetManageState, onBackClick: () -> Unit) 
     CToolbarCommon(
         title = title,
         onNavigationClick = {
+            focusManager.clearFocus(force = true)
             onBackClick.invoke()
         }
     )

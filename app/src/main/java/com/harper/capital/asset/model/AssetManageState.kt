@@ -7,6 +7,7 @@ import com.harper.capital.domain.model.Currency
 
 data class AssetManageState(
     val mode: AssetManageMode,
+    val isLoading: Boolean,
     val name: String = "",
     val balance: Double = 0.0,
     val currency: Currency = Currency.RUB,
