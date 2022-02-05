@@ -11,24 +11,24 @@ class TransactionDataSetFactory {
 
     fun create(
         type: TransactionType,
-        selectedAssetId: Long?,
+        selectedAccountId: Long?,
         accounts: List<Account>
     ): List<AccountDataSet> = when (type) {
-        TransactionType.EXPENSE -> createExpenseDataSets(selectedAssetId, accounts)
-        TransactionType.INCOME -> createIncomeDataSets(selectedAssetId, accounts)
-        TransactionType.SEND -> createSendDataSets(selectedAssetId, accounts)
+        TransactionType.EXPENSE -> createExpenseDataSets(selectedAccountId, accounts)
+        TransactionType.INCOME -> createIncomeDataSets(selectedAccountId, accounts)
+        TransactionType.SEND -> createSendDataSets(selectedAccountId, accounts)
         TransactionType.DUTY -> emptyList()
     }
 
     private fun createExpenseDataSets(
-        selectedAssetId: Long?,
+        selectedAccountId: Long?,
         accounts: List<Account>
     ): List<AccountDataSet> = listOf(
         AccountDataSet(
             type = DataSetType.ASSET,
             section = DataSetSection.FROM,
             accounts = accounts.filter { it.type == AccountType.ASSET },
-            selectedAccountId = selectedAssetId
+            selectedAccountId = selectedAccountId
         ),
         AccountDataSet(
             type = DataSetType.CATEGORY,
@@ -38,7 +38,7 @@ class TransactionDataSetFactory {
     )
 
     private fun createIncomeDataSets(
-        selectedAssetId: Long?,
+        selectedAccountId: Long?,
         accounts: List<Account>
     ): List<AccountDataSet> = listOf(
         AccountDataSet(
@@ -50,19 +50,19 @@ class TransactionDataSetFactory {
             type = DataSetType.ASSET,
             section = DataSetSection.TO,
             accounts = accounts.filter { it.type == AccountType.ASSET },
-            selectedAccountId = selectedAssetId
+            selectedAccountId = selectedAccountId
         )
     )
 
     private fun createSendDataSets(
-        selectedAssetId: Long?,
+        selectedAccountId: Long?,
         accounts: List<Account>
     ): List<AccountDataSet> = listOf(
         AccountDataSet(
             type = DataSetType.ASSET,
             section = DataSetSection.FROM,
             accounts = accounts.filter { it.type == AccountType.ASSET },
-            selectedAccountId = selectedAssetId
+            selectedAccountId = selectedAccountId
         ),
         AccountDataSet(
             type = DataSetType.ASSET,

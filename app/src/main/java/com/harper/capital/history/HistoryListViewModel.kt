@@ -1,12 +1,19 @@
 package com.harper.capital.history
 
+import com.harper.capital.domain.model.ChargeTransaction
+import com.harper.capital.domain.model.Currency
+import com.harper.capital.domain.model.Transaction
+import com.harper.capital.domain.model.TransferTransaction
 import com.harper.capital.history.domain.FetchTransactionsUseCase
 import com.harper.capital.history.model.HistoryListEvent
+import com.harper.capital.history.model.HistoryListItem
 import com.harper.capital.history.model.HistoryListState
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventObserver
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 
 class HistoryListViewModel(
     private val params: HistoryListFragment.Params,
@@ -28,11 +35,32 @@ class HistoryListViewModel(
         super.onFirstStart()
         launch {
             fetchTransactionsUseCase(params.assetId)
-                .collect { transactions ->
+                .map { createHistoryListItems(it) }
+                .collect { items ->
                     mutateState {
-                        it.copy(transactions = transactions)
+                        it.copy(items = items)
                     }
                 }
         }
+    }
+
+    private fun createHistoryListItems(transactions: List<Transaction>): List<HistoryListItem> {
+        return mutableListOf<HistoryListItem>()
+            .apply {
+                val transactionsMap = mutableMapOf<LocalDate, MutableList<Transaction>>()
+                transactions
+                    .forEach {
+                        transactionsMap.getOrPut(it.dateTime.toLocalDate()) { mutableListOf() }.add(it)
+                    }
+                transactionsMap.forEach { (date, transactions) ->
+                    add(HistoryListItem.TransactionDateScopeItem(date = date, amount = transactions.sumOf { it.amount }, Currency.RUB))
+                    transactions.forEach {
+                        when (it) {
+                            is ChargeTransaction -> add(HistoryListItem.ChargeTransactionItem(transaction = it))
+                            is TransferTransaction -> add(HistoryListItem.TransferTransactionItem(transaction = it))
+                        }
+                    }
+                }
+            }
     }
 }

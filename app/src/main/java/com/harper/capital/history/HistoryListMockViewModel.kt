@@ -5,9 +5,9 @@ import com.harper.capital.domain.model.AccountColor
 import com.harper.capital.domain.model.AccountIcon
 import com.harper.capital.domain.model.AccountType
 import com.harper.capital.domain.model.Currency
-import com.harper.capital.domain.model.Transaction
 import com.harper.capital.domain.model.TransferTransaction
 import com.harper.capital.history.model.HistoryListEvent
+import com.harper.capital.history.model.HistoryListItem
 import com.harper.capital.history.model.HistoryListState
 import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventObserver
@@ -41,7 +41,7 @@ class HistoryListMockViewModel : ComponentViewModel<HistoryListState>(
 
     init {
         mutateState {
-            it.copy(transactions = createTransactions(PREVIEW_TRANSACTIONS_COUNT))
+            it.copy(items = createTransactions(PREVIEW_TRANSACTIONS_COUNT))
         }
     }
 
@@ -49,16 +49,18 @@ class HistoryListMockViewModel : ComponentViewModel<HistoryListState>(
         /**nope**/
     }
 
-    private fun createTransactions(count: Int): List<Transaction> {
+    private fun createTransactions(count: Int): List<HistoryListItem> {
         return (0..count).map {
-            TransferTransaction(
-                id = it.toLong(),
-                source = assetFrom,
-                receiver = assetTo,
-                amount = Math.random() * 100,
-                dateTime = LocalDateTime.now(),
-                comment = null,
-                isScheduled = false
+            HistoryListItem.TransferTransactionItem(
+                TransferTransaction(
+                    id = it.toLong(),
+                    source = assetFrom,
+                    receiver = assetTo,
+                    amount = Math.random() * 100,
+                    dateTime = LocalDateTime.now(),
+                    comment = null,
+                    isScheduled = false
+                )
             )
         }
     }

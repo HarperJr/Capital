@@ -177,15 +177,17 @@ private fun SettingsBlock(
     viewModel: ComponentViewModelV1<AssetManageState, AssetManageEvent>
 ) {
     Column(modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side)) {
-        CPreferenceArrow(
-            title = "${state.currency.name} ${state.currency.name.formatCurrencySymbol()}",
-            subtitle = state.currency.name.formatCurrencyName(),
-            onClick = { viewModel.onEvent(AssetManageEvent.CurrencySelectClick) })
-        CSeparator()
-        CPreferenceArrow(
-            title = stringResource(id = R.string.asset_type),
-            subtitle = state.metadataType.resolveText(),
-            onClick = { viewModel.onEvent(AssetManageEvent.AssetTypeSelectClick) })
+        if (state.mode == AssetManageMode.ADD) {
+            CPreferenceArrow(
+                title = "${state.currency.name} ${state.currency.name.formatCurrencySymbol()}",
+                subtitle = state.currency.name.formatCurrencyName(),
+                onClick = { viewModel.onEvent(AssetManageEvent.CurrencySelectClick) })
+            CSeparator()
+            CPreferenceArrow(
+                title = stringResource(id = R.string.asset_type),
+                subtitle = state.metadataType.resolveText(),
+                onClick = { viewModel.onEvent(AssetManageEvent.AssetTypeSelectClick) })
+        }
         CPreferenceSwitch(
             title = stringResource(id = R.string.include_asset),
             subtitle = stringResource(id = R.string.include_asset_subtitle),

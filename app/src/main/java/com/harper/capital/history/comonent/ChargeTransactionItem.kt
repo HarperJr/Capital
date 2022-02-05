@@ -78,19 +78,19 @@ fun ChargeTransactionItemLight() {
 @Preview(showBackground = true)
 @Composable
 fun ChargeTransactionItemDark() {
-    val assetTo = Account(
+    val receiver = Account(
         id = 1L,
         name = "Products",
-        type = AccountType.LIABILITY,
+        type = AccountType.ASSET,
         balance = 100.0,
         currency = Currency.RUB,
-        color = AccountColor.CATEGORY,
-        icon = AccountIcon.PRODUCTS,
+        color = AccountColor.TINKOFF,
+        icon = AccountIcon.TINKOFF,
         metadata = null
     )
     val transaction = ChargeTransaction(
         id = 0L,
-        receiver = assetTo,
+        receiver = receiver,
         amount = 2400.0,
         dateTime = LocalDateTime.now(),
         comment = null,

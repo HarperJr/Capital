@@ -16,7 +16,7 @@ import com.harper.core.theme.CapitalTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-private val MMMMDDDateFormatter = DateTimeFormatter.ofPattern("MMMM DD")
+private val MMMMDDDateFormatter = DateTimeFormatter.ofPattern("MMMM d")
 
 @Composable
 fun TransactionDateScopeItem(
