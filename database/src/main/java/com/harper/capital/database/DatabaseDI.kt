@@ -14,7 +14,7 @@ val databaseModule
 
         factory { DatabaseTx(get()) }
 
-        factory { get<Database>().assetDao() }
+        factory { get<Database>().accountDao() }
 
         factory { get<Database>().transactionDao() }
     }

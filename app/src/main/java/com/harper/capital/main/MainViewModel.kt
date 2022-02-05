@@ -29,7 +29,7 @@ class MainViewModel(
                 .collect { assets ->
                     mutateState {
                         it.copy(
-                            assets = assets,
+                            accounts = assets,
                             isLoading = false
                         )
                     }
@@ -65,13 +65,13 @@ class MainViewModel(
     }
 
     private fun onHistoryClick(event: MainEvent.HistoryClick) {
-        router.navigateToHistoryList(HistoryListFragment.Params(assetId = event.asset?.id))
+        router.navigateToHistoryList(HistoryListFragment.Params(assetId = event.account?.id))
     }
 
     private fun onIncomeClick(event: MainEvent.IncomeClick) {
         router.navigateToTransaction(
             TransactionFragment.Params(
-                assetId = event.asset?.id,
+                assetId = event.account?.id,
                 TransactionType.INCOME
             )
         )
@@ -80,7 +80,7 @@ class MainViewModel(
     private fun onExpenseClick(event: MainEvent.ExpenseClick) {
         router.navigateToTransaction(
             TransactionFragment.Params(
-                assetId = event.asset?.id,
+                assetId = event.account?.id,
                 TransactionType.EXPENSE
             )
         )
@@ -90,7 +90,7 @@ class MainViewModel(
         router.navigateToManageAsset(
             AssetManageFragment.Params(
                 AssetManageMode.EDIT,
-                assetId = event.asset.id
+                assetId = event.account.id
             )
         )
     }

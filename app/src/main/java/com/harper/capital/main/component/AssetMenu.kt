@@ -15,36 +15,34 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harper.capital.R
-import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.ext.assetBackgroundColor
-import com.harper.capital.ext.assetContentColorFor
+import com.harper.capital.domain.model.AccountColor
+import com.harper.capital.ext.accountBackgroundColor
+import com.harper.capital.ext.accountContentColorFor
 import com.harper.core.component.CPreview
-import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 
 @Composable
 fun AssetMenu(
     modifier: Modifier = Modifier,
-    color: AssetColor,
+    color: AccountColor,
     onHistoryClick: () -> Unit,
     onIncomeClick: () -> Unit,
     onExpenseClick: () -> Unit,
     onEditClick: (() -> Unit)? = null
 ) {
-    val cardBackgroundColor = assetBackgroundColor(color)
+    val cardBackgroundColor = accountBackgroundColor(color)
     Card(
         modifier = modifier,
         elevation = 6.dp,
         backgroundColor = cardBackgroundColor,
-        contentColor = assetContentColorFor(cardBackgroundColor),
+        contentColor = accountContentColorFor(cardBackgroundColor),
         shape = CapitalTheme.shapes.extraLarge
     ) {
         Row(
@@ -111,7 +109,7 @@ private fun CardToolbarLight() {
         Box(modifier = Modifier.background(CapitalTheme.colors.background)) {
             AssetMenu(modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp), color = AssetColor.RAIFFEIZEN, {}, {}, {}, {})
+                .padding(16.dp), color = AccountColor.RAIFFEIZEN, {}, {}, {}, {})
         }
     }
 }
@@ -123,7 +121,7 @@ private fun CardbarboxDark() {
         Box(modifier = Modifier.background(CapitalTheme.colors.background)) {
             AssetMenu(modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp), color = AssetColor.SBER, {}, {}, {}, {})
+                .padding(16.dp), color = AccountColor.SBER, {}, {}, {}, {})
         }
     }
 }

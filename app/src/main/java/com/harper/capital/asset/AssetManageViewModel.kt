@@ -1,6 +1,5 @@
 package com.harper.capital.asset
 
-import com.harper.capital.R
 import com.harper.capital.asset.domain.AddAssetUseCase
 import com.harper.capital.asset.domain.UpdateAssetUseCase
 import com.harper.capital.asset.model.AssetManageBottomSheet
@@ -8,8 +7,8 @@ import com.harper.capital.asset.model.AssetManageBottomSheetState
 import com.harper.capital.asset.model.AssetManageEvent
 import com.harper.capital.asset.model.AssetManageMode
 import com.harper.capital.asset.model.AssetManageState
-import com.harper.capital.domain.model.AssetIcon
-import com.harper.capital.domain.model.AssetType
+import com.harper.capital.domain.model.AccountIcon
+import com.harper.capital.domain.model.AccountMetadataType
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.manage.domain.FetchAssetUseCase
@@ -58,11 +57,11 @@ class AssetManageViewModel(
                 update {
                     it.copy(
                         name = asset.name,
-                        amount = asset.balance,
+                        balance = asset.balance,
                         currency = asset.currency,
                         color = asset.color,
                         icon = asset.icon,
-                        assetType = asset.metadata?.assetType.orElse(it.assetType),
+                        metadataType = it.metadataType,
                         isIncluded = asset.isIncluded,
                         isArchived = asset.isArchived
                     )
@@ -72,26 +71,20 @@ class AssetManageViewModel(
     }
 
     private fun onApply() {
-        if (state.value.name.isEmpty()) {
-            update {
-                it.copy(errorMessage = R.string.asset_name_is_empty_error)
-            }
-            return
-        }
         launch(context = Dispatchers.IO) {
             with(state.value) {
                 if (mode == AssetManageMode.ADD) {
-                    addAssetUseCase(name, amount, currency, color, icon, assetType, isIncluded)
+                    addAssetUseCase(name, color, icon, currency, balance, isIncluded, metadataType)
                 } else {
                     params.assetId?.let { assetId ->
                         updateAssetUseCase(
                             assetId,
                             name,
-                            amount,
+                            balance,
                             currency,
                             color,
                             icon,
-                            assetType,
+                            metadataType = metadataType,
                             isIncluded,
                             isArchived
                         )
@@ -111,7 +104,7 @@ class AssetManageViewModel(
     }
 
     private fun onIconSelect(event: AssetManageEvent.IconSelect) {
-        val selectedIcon = AssetIcon.valueOf(event.iconName)
+        val selectedIcon = AccountIcon.valueOf(event.iconName)
         update {
             it.copy(
                 icon = selectedIcon,
@@ -134,17 +127,17 @@ class AssetManageViewModel(
         update {
             it.copy(
                 bottomSheetState = AssetManageBottomSheetState(
-                    bottomSheet = AssetManageBottomSheet.AssetTypes(it.assetType)
+                    bottomSheet = AssetManageBottomSheet.MetadataTypes(it.metadataType.orElse(AccountMetadataType.UNDEFINED))
                 )
             )
         }
     }
 
     private fun onAssetTypeSelect(event: AssetManageEvent.AssetTypeSelect) {
-        val selectedAssetType = AssetType.valueOf(event.assetTypeName)
+        val selectedAssetType = AccountMetadataType.valueOf(event.assetTypeName)
         update {
             it.copy(
-                assetType = selectedAssetType,
+                metadataType = selectedAssetType,
                 bottomSheetState = it.bottomSheetState.copy(isExpended = false)
             )
         }
@@ -158,7 +151,7 @@ class AssetManageViewModel(
 
     private fun onAmountChange(event: AssetManageEvent.AmountChange) {
         update {
-            it.copy(amount = event.amount)
+            it.copy(balance = event.amount)
         }
     }
 

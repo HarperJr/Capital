@@ -22,11 +22,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.placeholder
+import com.google.accompanist.placeholder.shimmer
 import com.harper.capital.R
-import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.main.component.AssetSummaryCard
+import com.harper.capital.domain.model.AccountColor
 import com.harper.capital.main.component.AssetCard
 import com.harper.capital.main.component.AssetMenu
+import com.harper.capital.main.component.AssetSummaryCard
 import com.harper.capital.main.domain.model.Summary
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
@@ -40,6 +43,7 @@ import com.harper.core.component.CScaffold
 import com.harper.core.component.CToolbar
 import com.harper.core.component.Menu
 import com.harper.core.component.MenuItem
+import com.harper.core.ext.compose.assetCardSize
 import com.harper.core.ext.compose.fullyVisibleItemIndex
 import com.harper.core.ext.formatWithCurrencySymbol
 import com.harper.core.ext.orElse
@@ -80,7 +84,7 @@ class MainFragment : ComponentFragment<MainViewModel>(), EventSender<MainEvent> 
 private fun MainScreenScreen(viewModel: ComponentViewModel<MainState>, es: EventSender<MainEvent>) {
     val state by viewModel.state.collectAsState()
 
-    CLoaderLayout(isLoading = state.isLoading, loaderContent = {}) {
+    CLoaderLayout(isLoading = state.isLoading, loaderContent = { MainScreenLoaderContent() }) {
         CScaffold(
             topBar = { OverviewTopBar(summary = state.summary, es) },
             floatingActionButton = {
@@ -112,12 +116,12 @@ private fun MainScreenScreen(viewModel: ComponentViewModel<MainState>, es: Event
                         state = assetListState,
                         flingBehavior = rememberSnapperFlingBehavior(lazyListState = assetListState)
                     ) {
-                        items(state.assets) {
+                        items(state.accounts) {
                             AssetCard(
                                 modifier = Modifier
                                     .fillParentMaxWidth()
                                     .padding(horizontal = 24.dp),
-                                asset = it
+                                account = it
                             )
                         }
                         item {
@@ -130,12 +134,12 @@ private fun MainScreenScreen(viewModel: ComponentViewModel<MainState>, es: Event
                         }
                     }
                     CHorizontalSpacer(height = 24.dp)
-                    val selectedAsset = state.assets.getOrNull(selectedAssetIndex.value)
+                    val selectedAsset = state.accounts.getOrNull(selectedAssetIndex.value)
                     AssetMenu(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp),
-                        color = selectedAsset?.color.orElse(AssetColor.TINKOFF_PLATINUM),
+                        color = selectedAsset?.color.orElse(AccountColor.TINKOFF_PLATINUM),
                         onHistoryClick = { es.send(MainEvent.HistoryClick(selectedAsset)) },
                         onIncomeClick = { es.send(MainEvent.IncomeClick(selectedAsset)) },
                         onExpenseClick = { es.send(MainEvent.ExpenseClick(selectedAsset)) },
@@ -150,10 +154,59 @@ private fun MainScreenScreen(viewModel: ComponentViewModel<MainState>, es: Event
 }
 
 @Composable
+private fun MainScreenLoaderContent() {
+    CScaffold(topBar = {
+        CToolbar(
+            content = {
+                Column(modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side)) {
+                    Text(
+                        modifier = Modifier
+                            .placeholder(
+                                visible = true,
+                                color = CapitalTheme.colors.primaryVariant,
+                                shape = CapitalTheme.shapes.large,
+                                highlight = PlaceholderHighlight.shimmer(highlightColor = CapitalColors.White)
+                            ),
+                        text = "100 000 000,00 P",
+                        style = CapitalTheme.typography.title
+                    )
+                    CHorizontalSpacer(height = CapitalTheme.dimensions.small)
+                    Text(
+                        modifier = Modifier.placeholder(
+                            visible = true,
+                            color = CapitalTheme.colors.primaryVariant,
+                            shape = CapitalTheme.shapes.large,
+                            highlight = PlaceholderHighlight.shimmer(highlightColor = CapitalColors.White)
+                        ),
+                        text = "-1 000,00 P in January",
+                        style = CapitalTheme.typography.titleSmall
+                    )
+                }
+            }
+        )
+    }) {
+        Column {
+            CHorizontalSpacer(height = 24.dp)
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .assetCardSize()
+                    .placeholder(
+                        visible = true,
+                        color = CapitalTheme.colors.primaryVariant,
+                        shape = CapitalTheme.shapes.extraLarge,
+                        highlight = PlaceholderHighlight.shimmer(highlightColor = CapitalColors.White)
+                    )
+            )
+        }
+    }
+}
+
+@Composable
 fun OverviewTopBar(summary: Summary, es: EventSender<MainEvent>) {
     CToolbar(
         content = {
-            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Column(modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side)) {
                 CAmountText(
                     amount = summary.balance,
                     currencyIso = summary.currency.name,

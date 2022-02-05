@@ -66,7 +66,7 @@ private fun ShelterScreen(state: ShelterState, onEvent: (ShelterEvent) -> Unit) 
                 items(state.assetStates) { assetState ->
                     Card(modifier = Modifier.padding(vertical = CapitalTheme.dimensions.side)) {
                         Column(modifier = Modifier.padding(CapitalTheme.dimensions.medium)) {
-                            Text(text = assetState.asset.name)
+                            Text(text = assetState.account.name)
                             CHorizontalSpacer(height = CapitalTheme.dimensions.side)
                             CAmountTextField(
                                 modifier = Modifier.fillMaxWidth(),

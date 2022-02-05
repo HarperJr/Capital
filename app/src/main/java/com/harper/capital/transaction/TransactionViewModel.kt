@@ -4,7 +4,7 @@ import com.harper.capital.asset.AssetManageFragment
 import com.harper.capital.asset.model.AssetManageMode
 import com.harper.capital.category.CategoryManageFragment
 import com.harper.capital.category.model.CategoryManageType
-import com.harper.capital.domain.model.Asset
+import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.TransactionType
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.domain.FetchAssetsUseCase
@@ -39,11 +39,11 @@ class TransactionViewModel(
 
     private fun fillPages(
         pages: List<TransactionPage>,
-        assets: List<Asset>
+        accounts: List<Account>
     ): List<TransactionPage> =
         pages.map {
             it.copy(
-                assetDataSets = transactionDataSetFactory.create(it.type, params.assetId, assets)
+                accountDataSets = transactionDataSetFactory.create(it.type, params.assetId, accounts)
             )
         }
 
@@ -60,9 +60,9 @@ class TransactionViewModel(
     private fun onApply() {
         val page = state.value.pages[state.value.selectedPage]
         val assetFromId =
-            page.assetDataSets.first { it.section == DataSetSection.FROM }.selectedAssetId
+            page.accountDataSets.first { it.section == DataSetSection.FROM }.selectedAccountId
         val assetToId =
-            page.assetDataSets.first { it.section == DataSetSection.TO }.selectedAssetId
+            page.accountDataSets.first { it.section == DataSetSection.TO }.selectedAccountId
         if (assetFromId != null && assetToId != null) {
             router.navigateToManageTransaction(
                 TransactionManageFragment.Params(
@@ -81,9 +81,8 @@ class TransactionViewModel(
             }
             DataSetType.CATEGORY -> {
                 val categoryType = when (event.transactionType) {
-                    TransactionType.EXPENSE -> CategoryManageType.EXPENSE
+                    TransactionType.EXPENSE -> CategoryManageType.LIABILITY
                     TransactionType.INCOME -> CategoryManageType.INCOME
-                    TransactionType.GOAL -> CategoryManageType.GOAL
                     else -> return
                 }
                 router.navigateToManageCategory(params = CategoryManageFragment.Params(categoryType))
@@ -96,9 +95,9 @@ class TransactionViewModel(
         mutateState {
             val pages = it.pages.map { page ->
                 if (page.type == event.transactionType) {
-                    page.copy(assetDataSets = page.assetDataSets.map { dataSet ->
+                    page.copy(accountDataSets = page.accountDataSets.map { dataSet ->
                         if (dataSet.section == event.section) {
-                            dataSet.copy(selectedAssetId = event.asset.id)
+                            dataSet.copy(selectedAccountId = event.account.id)
                         } else {
                             dataSet
                         }
@@ -107,13 +106,25 @@ class TransactionViewModel(
                     page
                 }
             }
-            it.copy(pages = pages)
+            it.copy(
+                pages = pages,
+                isApplyButtonEnabled = checkApplyButtonCanBeEnabled(pages, it.selectedPage)
+            )
         }
     }
 
     private fun onTabSelect(event: TransactionEvent.TabSelect) {
-        mutateState {
-            it.copy(selectedPage = event.tabIndex, isApplyButtonEnabled = true)
+        mutateState { prevState ->
+            prevState.copy(
+                selectedPage = event.tabIndex,
+                isApplyButtonEnabled = checkApplyButtonCanBeEnabled(prevState.pages, event.tabIndex)
+            )
         }
+    }
+
+    private fun checkApplyButtonCanBeEnabled(pages: List<TransactionPage>, selectedPage: Int): Boolean {
+        val page = pages[selectedPage]
+        return page.accountDataSets.find { it.section == DataSetSection.FROM }?.selectedAccountId != null &&
+            page.accountDataSets.find { it.section == DataSetSection.TO }?.selectedAccountId != null
     }
 }

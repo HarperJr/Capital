@@ -7,10 +7,10 @@ import com.harper.capital.category.model.CategoryManageEvent
 import com.harper.capital.category.model.CategoryManagePage
 import com.harper.capital.category.model.CategoryManageState
 import com.harper.capital.category.model.CategoryManageType
-import com.harper.capital.domain.model.Asset
-import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.domain.model.AssetIcon
-import com.harper.capital.domain.model.AssetMetadata
+import com.harper.capital.domain.model.Account
+import com.harper.capital.domain.model.AccountColor
+import com.harper.capital.domain.model.AccountIcon
+import com.harper.capital.domain.model.AccountType
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.core.ui.ComponentViewModel
@@ -42,19 +42,19 @@ class CategoryManageViewModel(
         launch {
             val category = with(state.value) {
                 val currentPage = pages[selectedPage]
-                val metadata = when (currentPage.type) {
-                    CategoryManageType.EXPENSE -> AssetMetadata.Expense
-                    CategoryManageType.INCOME -> AssetMetadata.Income
-                    CategoryManageType.GOAL -> AssetMetadata.Goal(goal = currentPage.amount)
+                val type = when (currentPage.type) {
+                    CategoryManageType.LIABILITY -> AccountType.LIABILITY
+                    CategoryManageType.INCOME -> AccountType.INCOME
                 }
-                Asset(
+                Account(
                     id = 0L,
                     name = currentPage.name,
+                    type = type,
                     balance = currentPage.amount,
                     currency = currentPage.currency,
                     icon = currentPage.icon,
-                    color = AssetColor.CATEGORY,
-                    metadata = metadata
+                    color = AccountColor.CATEGORY,
+                    metadata = null
                 )
             }
             addCategoryUseCase(category)
@@ -83,7 +83,7 @@ class CategoryManageViewModel(
     private fun onIconSelect(event: CategoryManageEvent.IconSelect) {
         mutateState {
             val pages = updateSelectedPage(it) { page ->
-                page.copy(icon = AssetIcon.valueOf(event.iconName))
+                page.copy(icon = AccountIcon.valueOf(event.iconName))
             }
             it.copy(pages = pages, bottomSheetState = it.bottomSheetState.copy(isExpended = false))
         }

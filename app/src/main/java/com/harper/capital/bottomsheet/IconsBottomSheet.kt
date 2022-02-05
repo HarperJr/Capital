@@ -22,9 +22,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.imePadding
 import com.harper.capital.R
-import com.harper.capital.domain.model.AssetIcon
+import com.harper.capital.domain.model.AccountIcon
 import com.harper.capital.ext.getImageVector
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CPreview
@@ -128,9 +127,9 @@ fun IconsBottomSheetLight() {
         Box(modifier = Modifier.background(color = CapitalTheme.colors.background)) {
             IconsBottomSheet(
                 data = IconsBottomSheetData(
-                    icons = AssetIcon.values()
+                    icons = AccountIcon.values()
                         .map { IconsBottomSheetData.Icon(it.name, it.getImageVector()) },
-                    selectedIcon = AssetIcon.ALPHA.name
+                    selectedIcon = AccountIcon.ALPHA.name
                 ),
                 onIconSelect = {}
             )
@@ -145,9 +144,9 @@ private fun IconsBottomSheetDark() {
         Box(modifier = Modifier.background(color = CapitalTheme.colors.background)) {
             IconsBottomSheet(
                 data = IconsBottomSheetData(
-                    icons = AssetIcon.values()
+                    icons = AccountIcon.values()
                         .map { IconsBottomSheetData.Icon(it.name, it.getImageVector()) },
-                    selectedIcon = AssetIcon.ALPHA.name
+                    selectedIcon = AccountIcon.ALPHA.name
                 ),
                 onIconSelect = {}
             )

@@ -7,9 +7,8 @@ import androidx.room.PrimaryKey
 
 internal object GoalTable {
     const val tableName = "goals"
-
     const val id = "id"
-    const val assetId = "asset_id"
+    const val accountId = "account_id"
     const val goal = "goal"
 }
 
@@ -17,9 +16,9 @@ internal object GoalTable {
     tableName = GoalTable.tableName,
     foreignKeys = [
         ForeignKey(
-            entity = AssetEntity::class,
-            childColumns = [GoalTable.assetId],
-            parentColumns = [AssetTable.id],
+            entity = AccountEntity::class,
+            childColumns = [GoalTable.accountId],
+            parentColumns = [AccountTable.id],
             onDelete = ForeignKey.CASCADE
         )
     ]
@@ -27,6 +26,6 @@ internal object GoalTable {
 data class GoalEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = GoalTable.id) val id: Long = 0L,
-    @ColumnInfo(name = GoalTable.assetId) val assetId: Long,
+    @ColumnInfo(name = GoalTable.accountId) val accountId: Long,
     @ColumnInfo(name = GoalTable.goal) val goal: Double
 )

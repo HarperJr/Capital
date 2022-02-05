@@ -1,11 +1,11 @@
 package com.harper.capital.transaction.domain
 
-import com.harper.capital.repository.AssetRepository
+import com.harper.capital.repository.AccountRepository
 import kotlinx.coroutines.coroutineScope
 
-class FetchAssetsUseCase(private val assetRepository: AssetRepository) {
+class FetchAssetsUseCase(private val accountRepository: AccountRepository) {
 
     suspend operator fun invoke() = coroutineScope {
-        assetRepository.fetchAll()
+        accountRepository.fetchAll()
     }
 }

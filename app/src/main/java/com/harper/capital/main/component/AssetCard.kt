@@ -21,14 +21,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.harper.capital.R
-import com.harper.capital.domain.model.Asset
-import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.domain.model.AssetIcon
-import com.harper.capital.domain.model.AssetMetadata
+import com.harper.capital.domain.model.Account
+import com.harper.capital.domain.model.AccountColor
+import com.harper.capital.domain.model.AccountIcon
+import com.harper.capital.domain.model.AccountMetadata
+import com.harper.capital.domain.model.AccountType
 import com.harper.capital.domain.model.Currency
-import com.harper.capital.ext.assetBackgroundColor
+import com.harper.capital.ext.accountBackgroundColor
+import com.harper.capital.ext.accountContentColorFor
 import com.harper.capital.ext.getImageVector
-import com.harper.capital.ext.assetContentColorFor
 import com.harper.core.component.CAmountText
 import com.harper.core.component.CPreview
 import com.harper.core.ext.compose.assetCardSize
@@ -36,15 +37,12 @@ import com.harper.core.ext.formatWithCurrencySymbol
 import com.harper.core.theme.CapitalTheme
 
 @Composable
-fun AssetCard(
-    modifier: Modifier = Modifier,
-    asset: Asset
-) {
-    val cardBackgroundColor = assetBackgroundColor(asset.color)
+fun AssetCard(modifier: Modifier = Modifier, account: Account) {
+    val cardBackgroundColor = accountBackgroundColor(account.color)
     Card(
         modifier = modifier.assetCardSize(),
         backgroundColor = cardBackgroundColor,
-        contentColor = assetContentColorFor(cardBackgroundColor),
+        contentColor = accountContentColorFor(cardBackgroundColor),
         elevation = 6.dp,
         shape = CapitalTheme.shapes.extraLarge
     ) {
@@ -67,9 +65,9 @@ fun AssetCard(
                         end.linkTo(parent.end, margin = 8.dp)
                         top.linkTo(parent.top, margin = 8.dp)
                     },
-                imageVector = asset.icon.getImageVector(),
+                imageVector = account.icon.getImageVector(),
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(color = assetContentColorFor(cardBackgroundColor))
+                colorFilter = ColorFilter.tint(color = accountContentColorFor(cardBackgroundColor))
             )
             CAmountText(
                 modifier = Modifier
@@ -77,20 +75,20 @@ fun AssetCard(
                         start.linkTo(parent.start, margin = 16.dp)
                         top.linkTo(parent.top, margin = 16.dp)
                     },
-                amount = asset.balance,
-                currencyIso = asset.currency.name,
+                amount = account.balance,
+                currencyIso = account.currency.name,
                 style = CapitalTheme.typography.header
             )
 
-            val metadata = remember { asset.metadata }
+            val metadata = remember { account.metadata }
             val (type, info) = when (metadata) {
-                is AssetMetadata.Credit -> {
+                is AccountMetadata.LoanAsset -> {
                     stringResource(id = R.string.credit_card) to
-                        (asset.balance - metadata.limit).formatWithCurrencySymbol(asset.currency.name)
+                        (account.balance - metadata.limit).formatWithCurrencySymbol(account.currency.name)
                 }
-                is AssetMetadata.Goal -> {
+                is AccountMetadata.GoalAsset -> {
                     stringResource(id = R.string.goal) to
-                            metadata.goal.formatWithCurrencySymbol(asset.currency.name)
+                        metadata.goal.formatWithCurrencySymbol(account.currency.name)
                 }
                 else -> null to null
             }
@@ -113,7 +111,7 @@ fun AssetCard(
                         bottom.linkTo(parent.bottom, margin = 12.dp)
                         start.linkTo(parent.start, margin = 16.dp)
                     },
-                text = asset.name
+                text = account.name
             )
         }
     }
@@ -146,14 +144,15 @@ private fun AssetCardLight() {
                 .padding(16.dp)
         ) {
             AssetCard(
-                asset = Asset(
+                account = Account(
                     0L,
-                    "Tinkoff Bank",
-                    45000.00,
-                    Currency.RUB,
-                    metadata = AssetMetadata.Credit(limit = 75000.00),
-                    icon = AssetIcon.TINKOFF,
-                    color = AssetColor.TINKOFF
+                    "Big house",
+                    type = AccountType.ASSET,
+                    color = AccountColor.TINKOFF,
+                    icon = AccountIcon.TINKOFF,
+                    Currency.EUR,
+                    75000.00,
+                    metadata = AccountMetadata.GoalAsset(goal = 100000.00)
                 )
             )
         }
@@ -170,14 +169,15 @@ private fun AssetCardDark() {
                 .padding(16.dp)
         ) {
             AssetCard(
-                asset = Asset(
+                account = Account(
                     0L,
                     "Big house",
-                    75000.00,
+                    type = AccountType.ASSET,
+                    color = AccountColor.TINKOFF,
+                    icon = AccountIcon.TINKOFF,
                     Currency.EUR,
-                    icon = AssetIcon.TINKOFF,
-                    metadata = AssetMetadata.Goal(goal = 100000.00),
-                    color = AssetColor.TINKOFF
+                    75000.00,
+                    metadata = AccountMetadata.GoalAsset(goal = 100000.00)
                 )
             )
         }

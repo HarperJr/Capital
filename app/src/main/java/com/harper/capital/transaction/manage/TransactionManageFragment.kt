@@ -91,7 +91,7 @@ private fun TransactionManageScreen(
                     CHorizontalSpacer(height = CapitalTheme.dimensions.side)
                     val assetPair = state.assetPair
                     if (assetPair != null) {
-                        TransactionHeader(assetFrom = assetPair.first, assetTo = assetPair.second)
+                        TransactionHeader(source = assetPair.first, receiver = assetPair.second)
                     }
                     CHorizontalSpacer(height = CapitalTheme.dimensions.side)
                     CAmountTextField(
@@ -182,7 +182,6 @@ private fun TransactionType.resolveTitle() = when (this) {
     TransactionType.EXPENSE -> stringResource(id = R.string.expense)
     TransactionType.INCOME -> stringResource(id = R.string.income)
     TransactionType.SEND -> stringResource(id = R.string.send)
-    TransactionType.GOAL -> stringResource(id = R.string.goal)
     TransactionType.DUTY -> stringResource(id = R.string.duty)
 }
 

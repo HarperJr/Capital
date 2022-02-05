@@ -3,16 +3,16 @@ package com.harper.capital.shelter.model
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.harper.capital.domain.model.Asset
+import com.harper.capital.domain.model.Account
 
 data class ShelterState(
     val title: String = "Title",
-    val assets: List<Asset> = emptyList()
+    val accounts: List<Account> = emptyList()
 ) {
     var text: String by mutableStateOf("")
-    var assetStates: List<AssetState> = assets.map { AssetState(it) }
+    var assetStates: List<AssetState> = accounts.map { AssetState(it) }
 }
 
-class AssetState(val asset: Asset) {
-    var amount: Double by mutableStateOf(asset.balance)
+class AssetState(val account: Account) {
+    var amount: Double by mutableStateOf(account.balance)
 }

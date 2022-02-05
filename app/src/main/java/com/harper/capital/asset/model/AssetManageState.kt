@@ -1,24 +1,22 @@
 package com.harper.capital.asset.model
 
-import androidx.annotation.StringRes
-import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.domain.model.AssetIcon
-import com.harper.capital.domain.model.AssetType
+import com.harper.capital.domain.model.AccountColor
+import com.harper.capital.domain.model.AccountIcon
+import com.harper.capital.domain.model.AccountMetadataType
 import com.harper.capital.domain.model.Currency
 
 data class AssetManageState(
     val mode: AssetManageMode,
     val name: String = "",
-    val amount: Double = 0.0,
+    val balance: Double = 0.0,
     val currency: Currency = Currency.RUB,
-    val colors: List<AssetColor> = AssetColor.values().toList(),
-    val color: AssetColor = AssetColor.TINKOFF,
-    val icon: AssetIcon = AssetIcon.TINKOFF,
-    val assetType: AssetType = AssetType.DEBET,
+    val colors: List<AccountColor> = AccountColor.values().toList(),
+    val color: AccountColor = AccountColor.TINKOFF,
+    val icon: AccountIcon = AccountIcon.TINKOFF,
+    val metadataType: AccountMetadataType = AccountMetadataType.UNDEFINED,
     val isIncluded: Boolean = true,
-    val isArchived: Boolean = true,
-    val bottomSheetState: AssetManageBottomSheetState = AssetManageBottomSheetState(isExpended = false),
-    @StringRes val errorMessage: Int? = null
+    val isArchived: Boolean = false,
+    val bottomSheetState: AssetManageBottomSheetState = AssetManageBottomSheetState(isExpended = false)
 )
 
 data class AssetManageBottomSheetState(

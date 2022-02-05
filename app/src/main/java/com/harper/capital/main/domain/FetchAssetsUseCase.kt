@@ -1,14 +1,14 @@
 package com.harper.capital.main.domain
 
-import com.harper.capital.domain.model.Asset
-import com.harper.capital.domain.model.AssetType
-import com.harper.capital.repository.AssetRepository
+import com.harper.capital.domain.model.Account
+import com.harper.capital.domain.model.AccountType
+import com.harper.capital.repository.AccountRepository
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 
-class FetchAssetsUseCase(private val assetRepository: AssetRepository) {
+class FetchAssetsUseCase(private val accountRepository: AccountRepository) {
 
-    suspend operator fun invoke(): Flow<List<Asset>> = coroutineScope {
-        assetRepository.fetchByTypes(AssetType.assetValues())
+    suspend operator fun invoke(): Flow<List<Account>> = coroutineScope {
+        accountRepository.fetchByType(AccountType.ASSET)
     }
 }

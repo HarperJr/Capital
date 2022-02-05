@@ -12,18 +12,18 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.domain.model.AssetIcon
-import com.harper.capital.ext.assetBackgroundColor
-import com.harper.capital.ext.assetContentColorFor
+import com.harper.capital.domain.model.AccountColor
+import com.harper.capital.domain.model.AccountIcon
+import com.harper.capital.ext.accountBackgroundColor
+import com.harper.capital.ext.accountContentColorFor
 import com.harper.capital.ext.getImageVector
 import com.harper.core.component.CPreview
 import com.harper.core.theme.CapitalTheme
 
 @Composable
-fun AssetIconRound(modifier: Modifier = Modifier, color: AssetColor, icon: AssetIcon) {
-    val backgroundColor = assetBackgroundColor(color)
-    CompositionLocalProvider(LocalContentColor provides assetContentColorFor(backgroundColor)) {
+fun AccountIconRound(modifier: Modifier = Modifier, color: AccountColor, icon: AccountIcon) {
+    val backgroundColor = accountBackgroundColor(color)
+    CompositionLocalProvider(LocalContentColor provides accountContentColorFor(backgroundColor)) {
         Box(
             modifier = modifier
                 .size(CapitalTheme.dimensions.imageMedium)
@@ -40,24 +40,24 @@ fun AssetIconRound(modifier: Modifier = Modifier, color: AssetColor, icon: Asset
 
 @Preview(showBackground = true)
 @Composable
-private fun AssetIconRoundLight() {
+private fun AccountIconRoundLight() {
     CPreview {
-        AssetIconRound(
+        AccountIconRound(
             modifier = Modifier.padding(CapitalTheme.dimensions.side),
-            color = AssetColor.TINKOFF,
-            icon = AssetIcon.TINKOFF
+            color = AccountColor.TINKOFF,
+            icon = AccountIcon.TINKOFF
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun AssetIconRoundDark() {
+private fun AccountIconRoundDark() {
     CPreview(isDark = true) {
-        AssetIconRound(
+        AccountIconRound(
             modifier = Modifier.padding(CapitalTheme.dimensions.side),
-            color = AssetColor.TINKOFF,
-            icon = AssetIcon.TINKOFF
+            color = AccountColor.TINKOFF,
+            icon = AccountIcon.TINKOFF
         )
     }
 }

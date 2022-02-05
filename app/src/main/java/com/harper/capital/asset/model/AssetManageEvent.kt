@@ -1,11 +1,11 @@
 package com.harper.capital.asset.model
 
-import com.harper.capital.domain.model.AssetColor
+import com.harper.capital.domain.model.AccountColor
 import com.harper.capital.domain.model.Currency
 
 sealed class AssetManageEvent {
 
-    class ColorSelect(val color: AssetColor) : AssetManageEvent()
+    class ColorSelect(val color: AccountColor) : AssetManageEvent()
 
     class CurrencySelect(val currency: Currency) : AssetManageEvent()
 

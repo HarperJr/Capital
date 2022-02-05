@@ -29,7 +29,6 @@ private fun emptyPages(): List<CategoryManagePage> =
     }
 
 private fun CategoryManageType.resolveTitleRes(): Int = when (this) {
-    CategoryManageType.EXPENSE -> R.string.expense
+    CategoryManageType.LIABILITY -> R.string.expense
     CategoryManageType.INCOME -> R.string.income
-    CategoryManageType.GOAL -> R.string.goal
 }

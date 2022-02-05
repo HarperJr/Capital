@@ -7,55 +7,59 @@ import com.harper.capital.auth.signin.SignInFragment
 import com.harper.capital.category.CategoryManageFragment
 import com.harper.capital.history.HistoryListFragment
 import com.harper.capital.main.MainFragment
+import com.harper.capital.navigation.animation.FadeInFadeOutAppearanceAnimation
+import com.harper.capital.navigation.animation.ScreenAppearanceAnimation
+import com.harper.capital.navigation.animation.SlideInLeftSlideOutRightAppearanceAnimation
 import com.harper.capital.settings.SettingsFragment
 import com.harper.capital.shelter.ShelterFragment
 import com.harper.capital.transaction.TransactionFragment
 import com.harper.capital.transaction.manage.TransactionManageFragment
 
-private const val SIGN_IN_KEY = "sign_in_key"
-private const val MAIN_KEY = "main_key"
-private const val ASSET_MANAGE_KEY = "asset_manage_key"
-private const val CATEGORY_MANAGE_KEY = "category_manage_key"
-private const val TRANSACTION_KEY = "transaction_key"
-private const val TRANSACTION_MANAGE_KEY = "transaction_manage_key"
-private const val HISTORY_LIST_KEY = "history_list_key"
-private const val SETTINGS_KEY = "settings_key"
-private const val SHELTER_KEY = "shelter_key"
+object ScreenAppearanceAnimations {
+
+    // Doesn't work, has glitches (
+    operator fun get(key: String): ScreenAppearanceAnimation? = when (ScreenKey.valueOf(key)) {
+//        ScreenKey.SETTINGS -> SlideInLeftSlideOutRightAppearanceAnimation()
+        else -> null
+    }
+}
 
 object Screens {
 
-    fun signIn(): Screen = FragmentScreen(SIGN_IN_KEY) { SignInFragment.newInstance() }
+    fun signIn(): Screen = FragmentScreen(ScreenKey.SIGN_IN.name) { SignInFragment.newInstance() }
 
-    fun main(): Screen = FragmentScreen(MAIN_KEY) { MainFragment.newInstance() }
+    fun main(): Screen = FragmentScreen(ScreenKey.MAIN.name) { MainFragment.newInstance() }
 
-    fun assetManage(params: AssetManageFragment.Params): Screen = FragmentScreen(ASSET_MANAGE_KEY) {
-        AssetManageFragment.newInstance(params)
-    }
+    fun assetManage(params: AssetManageFragment.Params): Screen =
+        FragmentScreen(ScreenKey.ASSET_MANAGE.name) {
+            AssetManageFragment.newInstance(params)
+        }
 
     fun categoryManage(params: CategoryManageFragment.Params): Screen =
-        FragmentScreen(CATEGORY_MANAGE_KEY) {
+        FragmentScreen(ScreenKey.CATEGORY_MANAGE.name) {
             CategoryManageFragment.newInstance(params)
         }
 
-    fun transaction(params: TransactionFragment.Params): Screen = FragmentScreen(TRANSACTION_KEY) {
-        TransactionFragment.newInstance(params)
-    }
+    fun transaction(params: TransactionFragment.Params): Screen =
+        FragmentScreen(ScreenKey.TRANSACTION.name) {
+            TransactionFragment.newInstance(params)
+        }
 
     fun transactionManage(params: TransactionManageFragment.Params): Screen =
-        FragmentScreen(TRANSACTION_MANAGE_KEY) {
+        FragmentScreen(ScreenKey.TRANSACTION_MANAGE.name) {
             TransactionManageFragment.newInstance(params)
         }
 
     fun historyList(params: HistoryListFragment.Params): Screen =
-        FragmentScreen(HISTORY_LIST_KEY) {
+        FragmentScreen(ScreenKey.HISTORY_LIST.name) {
             HistoryListFragment.newInstance(params)
         }
 
-    fun settings(): Screen = FragmentScreen(SETTINGS_KEY) {
+    fun settings(): Screen = FragmentScreen(ScreenKey.SETTINGS.name) {
         SettingsFragment.newInstance()
     }
 
-    fun shelter(): Screen = FragmentScreen(SHELTER_KEY) {
+    fun shelter(): Screen = FragmentScreen(ScreenKey.SHELTER.name) {
         ShelterFragment.newInstance()
     }
 }

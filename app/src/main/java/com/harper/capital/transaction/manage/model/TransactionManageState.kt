@@ -1,11 +1,11 @@
 package com.harper.capital.transaction.manage.model
 
-import com.harper.capital.domain.model.Asset
+import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.domain.model.TransactionType
 import java.time.LocalDate
 
-typealias AssetPair = Pair<Asset, Asset>
+typealias AssetPair = Pair<Account, Account>
 
 data class TransactionManageState(
     val transactionType: TransactionType,

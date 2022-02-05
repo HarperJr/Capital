@@ -1,7 +1,7 @@
 package com.harper.capital.ext
 
 import androidx.compose.ui.graphics.Color
-import com.harper.capital.domain.model.AssetColor
+import com.harper.capital.domain.model.AccountColor
 import com.harper.core.theme.CapitalColors
 
 val tinkoff: Color = Color(0xFF242424)
@@ -22,18 +22,18 @@ val onVtb: Color = Color(0xFF117EA1)
 val onRaiffeizen: Color = Color(0xFFAFA800)
 val onCategory: Color = Color(0xFFA5A5A5)
 
-fun assetBackgroundColor(color: AssetColor) = when (color) {
-    AssetColor.TINKOFF -> tinkoff
-    AssetColor.TINKOFF_PLATINUM -> tinkoffPlatinum
-    AssetColor.SBER -> sber
-    AssetColor.ALPHA -> alpha
-    AssetColor.VTB_OLD -> vtbOld
-    AssetColor.VTB -> vtb
-    AssetColor.RAIFFEIZEN -> raiffeizen
-    AssetColor.CATEGORY -> category
+fun accountBackgroundColor(color: AccountColor) = when (color) {
+    AccountColor.TINKOFF -> tinkoff
+    AccountColor.TINKOFF_PLATINUM -> tinkoffPlatinum
+    AccountColor.SBER -> sber
+    AccountColor.ALPHA -> alpha
+    AccountColor.VTB_OLD -> vtbOld
+    AccountColor.VTB -> vtb
+    AccountColor.RAIFFEIZEN -> raiffeizen
+    AccountColor.CATEGORY -> category
 }
 
-fun assetOnBackgroundColorFor(color: Color) = when (color) {
+fun accountOnBackgroundColorFor(color: Color) = when (color) {
     tinkoff -> onTinkoff
     tinkoffPlatinum -> onTinkoffPlatinum
     sber -> onSber
@@ -45,7 +45,7 @@ fun assetOnBackgroundColorFor(color: Color) = when (color) {
     else -> Color.Unspecified
 }
 
-fun assetContentColorFor(color: Color): Color = when (color) {
+fun accountContentColorFor(color: Color): Color = when (color) {
     tinkoff -> CapitalColors.White
     tinkoffPlatinum -> CapitalColors.White
     sber -> CapitalColors.White

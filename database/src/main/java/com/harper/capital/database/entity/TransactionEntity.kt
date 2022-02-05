@@ -7,7 +7,6 @@ import java.time.LocalDateTime
 
 internal object TransactionTable {
     const val tableName = "transactions"
-
     const val id = "id"
     const val dateTime = "date_time"
     const val comment = "comment"
@@ -17,8 +16,8 @@ internal object TransactionTable {
 @Entity(tableName = TransactionTable.tableName)
 data class TransactionEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = TransactionTable.id) val id: Long,
+    @ColumnInfo(name = TransactionTable.id) val id: Long = 0L,
     @ColumnInfo(name = TransactionTable.dateTime) val dateTime: LocalDateTime,
-    @ColumnInfo(name = TransactionTable.comment) val comment: String?,
-    @ColumnInfo(name = TransactionTable.isScheduled) val isScheduled: Boolean
+    @ColumnInfo(name = TransactionTable.comment) val comment: String? = null,
+    @ColumnInfo(name = TransactionTable.isScheduled) val isScheduled: Boolean = false
 )

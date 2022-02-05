@@ -1,9 +1,10 @@
 package com.harper.capital.main
 
-import com.harper.capital.domain.model.Asset
-import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.domain.model.AssetIcon
-import com.harper.capital.domain.model.AssetMetadata
+import com.harper.capital.domain.model.Account
+import com.harper.capital.domain.model.AccountColor
+import com.harper.capital.domain.model.AccountIcon
+import com.harper.capital.domain.model.AccountMetadata
+import com.harper.capital.domain.model.AccountType
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.main.domain.model.Summary
 import com.harper.capital.main.model.MainEvent
@@ -14,24 +15,26 @@ import com.harper.core.ui.EventObserver
 class MainMockViewModel : ComponentViewModel<MainState>(
     defaultState = MainState(
         summary = Summary(expenses = 14241.24, balance = 10000.0, Currency.RUB),
-        assets = listOf(
-            Asset(
+        accounts = listOf(
+            Account(
                 0L,
                 "Tinkoff Credit",
-                2044.44,
+                type = AccountType.ASSET,
+                color = AccountColor.TINKOFF,
+                icon = AccountIcon.TINKOFF,
                 Currency.RUB,
-                metadata = AssetMetadata.Credit(limit = 40000.00),
-                color = AssetColor.TINKOFF,
-                icon = AssetIcon.TINKOFF
+                2044.44,
+                metadata = AccountMetadata.LoanAsset(limit = 40000.00)
             ),
-            Asset(
+            Account(
                 1L,
                 "Tinkoff USD",
-                24.44,
+                type = AccountType.ASSET,
+                color = AccountColor.TINKOFF,
+                icon = AccountIcon.TINKOFF,
                 Currency.USD,
-                metadata = AssetMetadata.Goal(goal = 100000.00),
-                color = AssetColor.TINKOFF,
-                icon = AssetIcon.TINKOFF
+                24.44,
+                metadata = AccountMetadata.GoalAsset(goal = 100000.00)
             )
         )
     )

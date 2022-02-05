@@ -1,9 +1,9 @@
 package com.harper.capital.transaction
 
-import com.harper.capital.domain.model.Asset
-import com.harper.capital.domain.model.AssetType
+import com.harper.capital.domain.model.Account
+import com.harper.capital.domain.model.AccountType
 import com.harper.capital.domain.model.TransactionType
-import com.harper.capital.transaction.model.AssetDataSet
+import com.harper.capital.transaction.model.AccountDataSet
 import com.harper.capital.transaction.model.DataSetSection
 import com.harper.capital.transaction.model.DataSetType
 
@@ -12,63 +12,62 @@ class TransactionDataSetFactory {
     fun create(
         type: TransactionType,
         selectedAssetId: Long?,
-        assets: List<Asset>
-    ): List<AssetDataSet> = when (type) {
-        TransactionType.EXPENSE -> createExpenseDataSets(selectedAssetId, assets)
-        TransactionType.INCOME -> createIncomeDataSets(selectedAssetId, assets)
-        TransactionType.SEND -> createSendDataSets(selectedAssetId, assets)
-        TransactionType.GOAL -> emptyList()
+        accounts: List<Account>
+    ): List<AccountDataSet> = when (type) {
+        TransactionType.EXPENSE -> createExpenseDataSets(selectedAssetId, accounts)
+        TransactionType.INCOME -> createIncomeDataSets(selectedAssetId, accounts)
+        TransactionType.SEND -> createSendDataSets(selectedAssetId, accounts)
         TransactionType.DUTY -> emptyList()
     }
 
     private fun createExpenseDataSets(
         selectedAssetId: Long?,
-        assets: List<Asset>
-    ): List<AssetDataSet> = listOf(
-        AssetDataSet(
+        accounts: List<Account>
+    ): List<AccountDataSet> = listOf(
+        AccountDataSet(
             type = DataSetType.ASSET,
             section = DataSetSection.FROM,
-            assets = assets.filter { it.metadata?.assetType in AssetType.assetValues() },
-            selectedAssetId = selectedAssetId
+            accounts = accounts.filter { it.type == AccountType.ASSET },
+            selectedAccountId = selectedAssetId
         ),
-        AssetDataSet(
+        AccountDataSet(
             type = DataSetType.CATEGORY,
             section = DataSetSection.TO,
-            assets = assets.filter { it.metadata?.assetType == AssetType.EXPENSE }
+            accounts = accounts.filter { it.type == AccountType.LIABILITY }
         )
     )
 
     private fun createIncomeDataSets(
         selectedAssetId: Long?,
-        assets: List<Asset>
-    ): List<AssetDataSet> = listOf(
-        AssetDataSet(
+        accounts: List<Account>
+    ): List<AccountDataSet> = listOf(
+        AccountDataSet(
             type = DataSetType.CATEGORY,
             section = DataSetSection.FROM,
-            assets = assets.filter { it.metadata?.assetType == AssetType.INCOME }
+            accounts = accounts.filter { it.type == AccountType.INCOME }
         ),
-        AssetDataSet(
+        AccountDataSet(
             type = DataSetType.ASSET,
             section = DataSetSection.TO,
-            assets = assets.filter { it.metadata?.assetType in AssetType.assetValues() },
-            selectedAssetId = selectedAssetId
+            accounts = accounts.filter { it.type == AccountType.ASSET },
+            selectedAccountId = selectedAssetId
         )
     )
 
     private fun createSendDataSets(
         selectedAssetId: Long?,
-        assets: List<Asset>
-    ): List<AssetDataSet> = listOf(
-        AssetDataSet(
+        accounts: List<Account>
+    ): List<AccountDataSet> = listOf(
+        AccountDataSet(
             type = DataSetType.ASSET,
             section = DataSetSection.FROM,
-            assets = assets.filter { it.metadata?.assetType in AssetType.assetValues() },
-            selectedAssetId = selectedAssetId
+            accounts = accounts.filter { it.type == AccountType.ASSET },
+            selectedAccountId = selectedAssetId
         ),
-        AssetDataSet(
+        AccountDataSet(
             type = DataSetType.ASSET,
             section = DataSetSection.TO,
-            assets = assets.filter { it.metadata?.assetType in AssetType.assetValues() }
+            accounts = accounts.filter { it.type == AccountType.ASSET }
         ),
     )
 }

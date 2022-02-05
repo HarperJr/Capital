@@ -1,44 +1,45 @@
 package com.harper.capital.asset.domain
 
-import com.harper.capital.domain.model.Asset
-import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.domain.model.AssetIcon
-import com.harper.capital.domain.model.AssetMetadata
-import com.harper.capital.domain.model.AssetType
+import com.harper.capital.domain.model.Account
+import com.harper.capital.domain.model.AccountColor
+import com.harper.capital.domain.model.AccountIcon
+import com.harper.capital.domain.model.AccountMetadata
+import com.harper.capital.domain.model.AccountMetadataType
+import com.harper.capital.domain.model.AccountType
 import com.harper.capital.domain.model.Currency
-import com.harper.capital.repository.AssetRepository
+import com.harper.capital.repository.AccountRepository
 import kotlinx.coroutines.coroutineScope
 
-class AddAssetUseCase(private val assetRepository: AssetRepository) {
+class AddAssetUseCase(private val accountRepository: AccountRepository) {
 
     suspend operator fun invoke(
         name: String,
-        balance: Double,
+        color: AccountColor,
+        icon: AccountIcon,
         currency: Currency,
-        color: AssetColor,
-        icon: AssetIcon,
-        type: AssetType,
-        isIncluded: Boolean
+        balance: Double,
+        isIncluded: Boolean,
+        metadataType: AccountMetadataType
     ) = coroutineScope {
-        assetRepository.insert(
-            Asset(
+        accountRepository.insert(
+            Account(
                 id = 0L,
                 name = name,
-                balance = balance,
-                currency = currency,
+                type = AccountType.ASSET,
                 color = color,
                 icon = icon,
+                currency = currency,
+                balance = balance,
                 isIncluded = isIncluded,
-                metadata = createMetadataByType(type)
+                metadata = createMetadataByType(metadataType)
             )
         )
     }
 
-    private fun createMetadataByType(type: AssetType): AssetMetadata = when (type) {
-        AssetType.DEBET -> AssetMetadata.Debet
-        AssetType.CREDIT -> AssetMetadata.Credit(limit = 0.0)
-        AssetType.GOAL -> AssetMetadata.Goal(goal = 0.0)
-        AssetType.INCOME -> AssetMetadata.Income
-        AssetType.EXPENSE -> AssetMetadata.Expense
+    private fun createMetadataByType(metadataType: AccountMetadataType): AccountMetadata? = when (metadataType) {
+        AccountMetadataType.LOAN -> AccountMetadata.LoanAsset(limit = 0.0)
+        AccountMetadataType.GOAL -> AccountMetadata.GoalAsset(goal = 0.0)
+        AccountMetadataType.INVESTMENT -> AccountMetadata.Investment(percent = 0.1)
+        else -> null
     }
 }

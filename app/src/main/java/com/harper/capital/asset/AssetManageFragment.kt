@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
 import com.harper.capital.R
 import com.harper.capital.asset.component.AssetColorSelector
 import com.harper.capital.asset.component.AssetEditableCard
@@ -43,7 +43,6 @@ import com.harper.core.component.CPreferenceArrow
 import com.harper.core.component.CPreferenceSwitch
 import com.harper.core.component.CPreview
 import com.harper.core.component.CSeparator
-import com.harper.core.component.CSnackBarHost
 import com.harper.core.component.CToolbarCommon
 import com.harper.core.ext.compose.assetCardSize
 import com.harper.core.ext.formatCurrencyName
@@ -54,6 +53,10 @@ import com.harper.core.ui.ComponentViewModelV1
 import com.harper.core.ui.withArgs
 import kotlinx.parcelize.Parcelize
 import org.koin.core.parameter.parametersOf
+
+private val cardHorizontalPadding: Dp
+    @Composable
+    get() = CapitalTheme.dimensions.side * 2
 
 class AssetManageFragment : ComponentFragmentV1<AssetManageViewModel>() {
     override val viewModel: AssetManageViewModel by injectViewModel { parametersOf(params) }
@@ -119,9 +122,12 @@ private fun AssetManageScreen(viewModel: ComponentViewModelV1<AssetManageState, 
                 AssetEditableCard(
                     modifier = Modifier
                         .assetCardSize()
-                        .padding(horizontal = 32.dp, vertical = 16.dp),
+                        .padding(
+                            horizontal = cardHorizontalPadding,
+                            vertical = CapitalTheme.dimensions.side
+                        ),
                     name = state.name,
-                    amount = state.amount,
+                    balance = state.balance,
                     icon = state.icon,
                     color = state.color,
                     currency = state.currency,
@@ -135,7 +141,7 @@ private fun AssetManageScreen(viewModel: ComponentViewModelV1<AssetManageState, 
                         .fillMaxWidth()
                         .padding(vertical = CapitalTheme.dimensions.small),
                     horizontalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.small),
-                    contentPadding = PaddingValues(horizontal = 32.dp)
+                    contentPadding = PaddingValues(horizontal = cardHorizontalPadding)
                 ) {
                     items(state.colors) { item ->
                         AssetColorSelector(
@@ -158,11 +164,8 @@ private fun AssetManageScreen(viewModel: ComponentViewModelV1<AssetManageState, 
                     .fillMaxWidth()
                     .padding(CapitalTheme.dimensions.side),
                 text = applyButtonText,
+                enabled = state.name.isNotEmpty(),
                 onClick = { viewModel.onEvent(AssetManageEvent.Apply) }
-            )
-            CSnackBarHost(
-                scaffoldState = scaffoldState,
-                message = state.errorMessage?.let { stringResource(id = it) }
             )
         }
     }
@@ -181,17 +184,19 @@ private fun SettingsBlock(
         CSeparator()
         CPreferenceArrow(
             title = stringResource(id = R.string.asset_type),
-            subtitle = state.assetType.resolveText(),
+            subtitle = state.metadataType.resolveText(),
             onClick = { viewModel.onEvent(AssetManageEvent.AssetTypeSelectClick) })
         CPreferenceSwitch(
             title = stringResource(id = R.string.include_asset),
             subtitle = stringResource(id = R.string.include_asset_subtitle),
+            isChecked = state.isIncluded,
             onCheckedChange = { viewModel.onEvent(AssetManageEvent.IncludeAssetCheckedChange(it)) }
         )
         if (state.mode == AssetManageMode.EDIT) {
             CPreferenceSwitch(
                 title = stringResource(id = R.string.is_archived_asset),
                 subtitle = stringResource(id = R.string.is_archived_asset_subtitle),
+                isChecked = state.isArchived,
                 onCheckedChange = { viewModel.onEvent(AssetManageEvent.ActivateAssetCheckedChange(it)) }
             )
         }
@@ -217,7 +222,7 @@ private fun BottomSheetContent(
                 onIconSelect = { viewModel.onEvent(AssetManageEvent.IconSelect(it)) }
             )
         }
-        is AssetManageBottomSheet.AssetTypes -> {
+        is AssetManageBottomSheet.MetadataTypes -> {
             SelectorBottomSheet(
                 data = bottomSheet.data,
                 onValueSelect = { viewModel.onEvent(AssetManageEvent.AssetTypeSelect(it)) }

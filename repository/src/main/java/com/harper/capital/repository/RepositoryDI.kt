@@ -5,7 +5,7 @@ import org.koin.dsl.module
 val repositoryModule
     get() = module {
 
-        factory<AssetRepository> { AssetRepositoryImpl(get(), get(), get()) }
+        factory<AccountRepository> { AccountRepositoryImpl(get(), get(), get()) }
 
         factory<TransactionRepository> { TransactionRepositoryImpl(get(), get()) }
     }

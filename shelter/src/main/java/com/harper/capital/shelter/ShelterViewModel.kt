@@ -22,7 +22,7 @@ class ShelterViewModel(
             fetchAssetsUseCase()
                 .collect {
                     mutateState { prevState ->
-                        prevState.copy(assets = it)
+                        prevState.copy(accounts = it)
                     }
                 }
         }

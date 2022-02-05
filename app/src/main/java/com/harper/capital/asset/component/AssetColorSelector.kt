@@ -19,8 +19,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harper.capital.R
-import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.ext.assetBackgroundColor
+import com.harper.capital.domain.model.AccountColor
+import com.harper.capital.ext.accountBackgroundColor
 import com.harper.core.component.CPreview
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
@@ -28,7 +28,7 @@ import com.harper.core.theme.CapitalTheme
 @Composable
 fun AssetColorSelector(
     modifier: Modifier = Modifier,
-    color: AssetColor,
+    color: AccountColor,
     isSelected: Boolean,
     onSelect: () -> Unit
 ) {
@@ -49,7 +49,7 @@ fun AssetColorSelector(
                 modifier = Modifier
                     .size(width = 46.dp, height = 28.dp)
                     .clickable { onSelect.invoke() },
-                backgroundColor = assetBackgroundColor(color)
+                backgroundColor = accountBackgroundColor(color)
             ) {
                 Image(
                     modifier = Modifier.fillMaxSize(0.5f),
@@ -68,7 +68,7 @@ fun AssetColorSelectorLight() {
     CPreview {
         AssetColorSelector(
             modifier = Modifier.padding(CapitalTheme.dimensions.side),
-            color = AssetColor.TINKOFF,
+            color = AccountColor.TINKOFF,
             isSelected = false,
             onSelect = {}
         )
@@ -81,7 +81,7 @@ fun AssetColorSelectorDark() {
     CPreview(isDark = true) {
         AssetColorSelector(
             modifier = Modifier.padding(CapitalTheme.dimensions.side),
-            color = AssetColor.TINKOFF,
+            color = AccountColor.TINKOFF,
             isSelected = false,
             onSelect = {}
         )

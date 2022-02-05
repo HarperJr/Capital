@@ -1,6 +1,6 @@
 package com.harper.capital.domain.model
 
-enum class AssetColor {
+enum class AccountColor {
     TINKOFF,
     TINKOFF_PLATINUM,
     SBER,

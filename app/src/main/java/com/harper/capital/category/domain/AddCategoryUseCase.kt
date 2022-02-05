@@ -1,12 +1,12 @@
 package com.harper.capital.category.domain
 
-import com.harper.capital.domain.model.Asset
-import com.harper.capital.repository.AssetRepository
+import com.harper.capital.domain.model.Account
+import com.harper.capital.repository.AccountRepository
 import kotlinx.coroutines.coroutineScope
 
-class AddCategoryUseCase(private val assetRepository: AssetRepository) {
+class AddCategoryUseCase(private val accountRepository: AccountRepository) {
 
-    suspend operator fun invoke(asset: Asset) = coroutineScope {
-        assetRepository.insert(asset)
+    suspend operator fun invoke(account: Account) = coroutineScope {
+        accountRepository.insert(account)
     }
 }

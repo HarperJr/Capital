@@ -1,13 +1,14 @@
 package com.harper.capital.domain.model
 
-data class Asset(
+data class Account(
     val id: Long,
     val name: String,
-    val balance: Double,
+    val type: AccountType,
+    val color: AccountColor,
+    val icon: AccountIcon,
     val currency: Currency,
-    val color: AssetColor,
-    val icon: AssetIcon,
+    val balance: Double,
     val isIncluded: Boolean = true,
     val isArchived: Boolean = false,
-    val metadata: AssetMetadata? = null
+    val metadata: AccountMetadata? = null
 )

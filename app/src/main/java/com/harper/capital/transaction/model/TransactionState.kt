@@ -22,13 +22,12 @@ data class TransactionState(
 }
 
 private fun emptyPages(): List<TransactionPage> = TransactionType.values().map {
-    TransactionPage(type = it, assetDataSets = emptyList())
+    TransactionPage(type = it, accountDataSets = emptyList())
 }
 
 private fun TransactionType.resolveTitleRes(): Int = when (this) {
     TransactionType.EXPENSE -> R.string.expense
     TransactionType.INCOME -> R.string.income
     TransactionType.SEND -> R.string.send
-    TransactionType.GOAL -> R.string.goal
     TransactionType.DUTY -> R.string.duty
 }

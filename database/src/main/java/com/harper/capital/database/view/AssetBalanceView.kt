@@ -3,10 +3,9 @@ package com.harper.capital.database.view
 import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
 import androidx.room.Embedded
-import com.harper.capital.database.entity.AssetEntity
-import com.harper.capital.database.entity.AssetTable
+import com.harper.capital.database.entity.AccountEntity
+import com.harper.capital.database.entity.AccountTable
 import com.harper.capital.database.entity.LedgerTable
-import com.harper.capital.database.entity.TransactionTable
 
 internal object AssetBalanceTable {
     const val tableName = "asset_balances"
@@ -17,17 +16,18 @@ internal object AssetBalanceTable {
 @DatabaseView(
     viewName = AssetBalanceTable.tableName,
     value = """
-        SELECT *, SUM(CASE WHEN L.${LedgerTable.type} = 'CREDIT' THEN
+        SELECT *, SUM(CASE WHEN L.${LedgerTable.type} = 'DEBIT' THEN
         L.${LedgerTable.amount} ELSE -L.${LedgerTable.amount} END) AS ${AssetBalanceTable.balance}
-        FROM ${AssetTable.tableName} A
+        FROM ${AccountTable.tableName} A
         LEFT JOIN ${LedgerTable.tableName} L ON
-        A.${AssetTable.id} = L.${LedgerTable.assetId}
-        GROUP BY A.${AssetTable.id}
+        A.${AccountTable.id} = L.${LedgerTable.accountId}
+        WHERE A.${AccountTable.isArchived} = 0
+        GROUP BY A.${AccountTable.id}
     """
 )
 data class AssetBalanceView(
     @Embedded
-    val asset: AssetEntity,
+    val account: AccountEntity,
     @ColumnInfo(name = AssetBalanceTable.balance)
     val balance: Double?
 )

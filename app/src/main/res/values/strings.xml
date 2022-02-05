@@ -29,8 +29,8 @@
     <string name="include_asset">Include in balance</string>
     <string name="include_asset_subtitle">Check to include in balance</string>
 
-    <string name="debet">Debet</string>
-    <string name="credit">Credit</string>
+    <string name="debet">Debit</string>
+    <string name="loan">Loan</string>
     <string name="new_category">New category</string>
     <string name="settings">Settings</string>
     <string name="forgot_password">I forgot password</string>
@@ -74,4 +74,5 @@
     <string name="is_archived_asset_subtitle">Check to hide asset</string>
     <string name="asset_name_hint">Asset name</string>
     <string name="asset_name_is_empty_error">Asset name is required, please provide it</string>
+    <string name="investment">Investment</string>
 </resources>

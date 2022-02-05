@@ -28,12 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.harper.capital.R
-import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.domain.model.AssetIcon
+import com.harper.capital.domain.model.AccountColor
+import com.harper.capital.domain.model.AccountIcon
 import com.harper.capital.domain.model.Currency
-import com.harper.capital.ext.assetBackgroundColor
-import com.harper.capital.ext.assetContentColorFor
-import com.harper.capital.ext.assetOnBackgroundColorFor
+import com.harper.capital.ext.accountBackgroundColor
+import com.harper.capital.ext.accountContentColorFor
+import com.harper.capital.ext.accountOnBackgroundColorFor
 import com.harper.capital.ext.getImageVector
 import com.harper.core.component.CAmountTextField
 import com.harper.core.component.CPreview
@@ -45,19 +45,19 @@ import com.harper.core.theme.CapitalTheme
 fun AssetEditableCard(
     modifier: Modifier = Modifier,
     name: String,
-    amount: Double,
-    icon: AssetIcon,
-    color: AssetColor,
+    balance: Double,
+    icon: AccountIcon,
+    color: AccountColor,
     currency: Currency,
     onIconClick: () -> Unit,
     onAmountChange: (Double) -> Unit,
     onNameChange: (String) -> Unit
 ) {
-    val cardBackgroundColor = assetBackgroundColor(color)
+    val cardBackgroundColor = accountBackgroundColor(color)
     Card(
         modifier = modifier.assetCardSize(),
         backgroundColor = cardBackgroundColor,
-        contentColor = assetContentColorFor(cardBackgroundColor),
+        contentColor = accountContentColorFor(cardBackgroundColor),
         elevation = 4.dp,
         shape = CapitalTheme.shapes.extraLarge
     ) {
@@ -70,7 +70,7 @@ fun AssetEditableCard(
         )
         val focusManager = LocalFocusManager.current
 
-        val onCardBackgroundColor = assetOnBackgroundColorFor(cardBackgroundColor)
+        val onCardBackgroundColor = accountOnBackgroundColorFor(cardBackgroundColor)
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (tfName, atfAmount, bIcon) = createRefs()
             CTextField(
@@ -129,7 +129,7 @@ fun AssetEditableCard(
                     end.linkTo(parent.end, margin = 16.dp)
                     width = Dimension.fillToConstraints
                 },
-                amount = amount,
+                amount = balance,
                 currencyIso = currency.name,
                 backgroundColor = onCardBackgroundColor,
                 onValueChange = { onAmountChange.invoke(it) },
@@ -154,9 +154,9 @@ private fun AssetEditableCardLight() {
         ) {
             AssetEditableCard(
                 name = "Tinkoff black",
-                amount = 12444.32,
-                icon = AssetIcon.TINKOFF,
-                color = AssetColor.TINKOFF,
+                balance = 12444.32,
+                icon = AccountIcon.TINKOFF,
+                color = AccountColor.TINKOFF,
                 currency = Currency.RUB,
                 onIconClick = {},
                 onNameChange = {},
@@ -177,9 +177,9 @@ private fun AssetEditableCardDark() {
         ) {
             AssetEditableCard(
                 name = "Sberbank",
-                amount = 100000.0,
-                icon = AssetIcon.SBER,
-                color = AssetColor.SBER,
+                balance = 100000.0,
+                icon = AccountIcon.SBER,
+                color = AccountColor.SBER,
                 currency = Currency.RUB,
                 onIconClick = {},
                 onNameChange = {},

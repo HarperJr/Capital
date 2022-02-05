@@ -4,5 +4,5 @@ import com.harper.capital.domain.model.TransactionType
 
 data class TransactionPage(
     val type: TransactionType,
-    val assetDataSets: List<AssetDataSet>
+    val accountDataSets: List<AccountDataSet>
 )

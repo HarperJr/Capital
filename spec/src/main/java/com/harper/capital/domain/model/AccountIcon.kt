@@ -1,6 +1,6 @@
 package com.harper.capital.domain.model
 
-enum class AssetIcon {
+enum class AccountIcon {
     TINKOFF,
     ALPHA,
     VTB,
@@ -22,10 +22,8 @@ enum class AssetIcon {
     BANK;
 
     companion object {
-        private val bankIncons = listOf(
-            TINKOFF, ALPHA, VTB, SBER, RAIFFEISEN
-        )
+        private val assetIcons = listOf(TINKOFF, ALPHA, VTB, SBER, RAIFFEISEN)
 
-        fun categoryValues(): List<AssetIcon> = values().filter { it !in bankIncons }
+        fun liabilityValues(): List<AccountIcon> = values().filter { it !in assetIcons }
     }
 }

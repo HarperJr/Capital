@@ -13,10 +13,10 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harper.capital.R
-import com.harper.capital.domain.model.AssetColor
+import com.harper.capital.domain.model.AccountColor
 import com.harper.capital.domain.model.Currency
-import com.harper.capital.ext.assetBackgroundColor
-import com.harper.capital.ext.assetContentColorFor
+import com.harper.capital.ext.accountBackgroundColor
+import com.harper.capital.ext.accountContentColorFor
 import com.harper.capital.main.domain.model.Summary
 import com.harper.core.component.CAmountText
 import com.harper.core.component.CPreview
@@ -28,11 +28,11 @@ fun AssetSummaryCard(
     modifier: Modifier = Modifier,
     summary: Summary
 ) {
-    val cardBackgroundColor = assetBackgroundColor(AssetColor.TINKOFF_PLATINUM)
+    val cardBackgroundColor = accountBackgroundColor(AccountColor.TINKOFF_PLATINUM)
     Card(
         modifier = modifier.assetCardSize(),
         backgroundColor = cardBackgroundColor,
-        contentColor = assetContentColorFor(cardBackgroundColor),
+        contentColor = accountContentColorFor(cardBackgroundColor),
         elevation = 6.dp,
         shape = CapitalTheme.shapes.extraLarge
     ) {

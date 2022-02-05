@@ -8,10 +8,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
 import com.github.terrakok.cicerone.Navigator
 import com.github.terrakok.cicerone.NavigatorHolder
-import com.github.terrakok.cicerone.androidx.AppNavigator
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.harper.capital.R
 import com.harper.capital.databinding.ActivityCapitalBinding
+import com.harper.capital.navigation.GlobalNavigator
 import org.koin.android.ext.android.inject
 import org.koin.androidx.scope.activityScope
 import org.koin.androidx.viewmodel.ViewModelOwner
@@ -50,5 +50,5 @@ class CapitalActivity : AppCompatActivity() {
     }
 
     private fun createNavigator(): Navigator =
-        AppNavigator(this, R.id.screen_container, supportFragmentManager)
+        GlobalNavigator(this, R.id.screen_container, supportFragmentManager)
 }

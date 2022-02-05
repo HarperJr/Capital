@@ -1,6 +1,6 @@
 package com.harper.capital.transaction.model
 
-import com.harper.capital.domain.model.Asset
+import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.TransactionType
 
 sealed class TransactionEvent {
@@ -10,7 +10,7 @@ sealed class TransactionEvent {
     class AssetSourceSelect(
         val transactionType: TransactionType,
         val section: DataSetSection,
-        val asset: Asset
+        val account: Account
     ) : TransactionEvent()
 
     class NewSourceClick(val transactionType: TransactionType, val dataSetType: DataSetType) :

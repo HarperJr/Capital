@@ -18,13 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.harper.capital.domain.model.Asset
-import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.domain.model.AssetIcon
-import com.harper.capital.domain.model.AssetMetadata
+import com.harper.capital.domain.model.Account
+import com.harper.capital.domain.model.AccountColor
+import com.harper.capital.domain.model.AccountIcon
+import com.harper.capital.domain.model.AccountType
 import com.harper.capital.domain.model.Currency
-import com.harper.capital.ext.assetBackgroundColor
-import com.harper.capital.ext.assetContentColorFor
+import com.harper.capital.ext.accountBackgroundColor
+import com.harper.capital.ext.accountContentColorFor
 import com.harper.capital.ext.getImageVector
 import com.harper.core.component.CPreview
 import com.harper.core.ext.formatWithCurrencySymbol
@@ -35,7 +35,7 @@ import com.harper.core.theme.CapitalTheme
 @OptIn(ExperimentalMaterialApi::class)
 fun AssetSource(
     modifier: Modifier = Modifier,
-    asset: Asset,
+    account: Account,
     isSelected: Boolean,
     onSelect: () -> Unit
 ) {
@@ -49,7 +49,7 @@ fun AssetSource(
             onClick = { onSelect.invoke() }
         ) {
             Row {
-                val circleColor = assetBackgroundColor(asset.color)
+                val circleColor = accountBackgroundColor(account.color)
                 Box(
                     modifier = Modifier
                         .padding(4.dp)
@@ -61,9 +61,9 @@ fun AssetSource(
                 ) {
                     Icon(
                         modifier = Modifier.align(Alignment.Center),
-                        imageVector = asset.icon.getImageVector(),
+                        imageVector = account.icon.getImageVector(),
                         contentDescription = null,
-                        tint = assetContentColorFor(circleColor)
+                        tint = accountContentColorFor(circleColor)
                     )
                 }
                 Column(
@@ -72,12 +72,12 @@ fun AssetSource(
                         .padding(end = 24.dp)
                 ) {
                     Text(
-                        text = asset.name,
+                        text = account.name,
                         style = CapitalTheme.typography.regular,
                         color = CapitalTheme.colors.textPrimary
                     )
                     Text(
-                        text = asset.balance.formatWithCurrencySymbol(asset.currency.name),
+                        text = account.balance.formatWithCurrencySymbol(account.currency.name),
                         style = CapitalTheme.typography.regularSmall,
                         color = CapitalTheme.colors.textSecondary
                     )
@@ -100,14 +100,15 @@ private fun AssetSourceLight() {
     CPreview {
         AssetSource(
             modifier = Modifier.padding(16.dp),
-            asset = Asset(
+            account = Account(
                 id = 0L,
                 name = "Tinkoff Black",
+                type = AccountType.ASSET,
                 balance = 1500.0,
                 currency = Currency.RUB,
-                color = AssetColor.TINKOFF,
-                icon = AssetIcon.TINKOFF,
-                metadata = AssetMetadata.Debet
+                color = AccountColor.TINKOFF,
+                icon = AccountIcon.TINKOFF,
+                metadata = null
             ),
             isSelected = false
         ) {}
@@ -120,14 +121,15 @@ private fun AssetSourceDark() {
     CPreview(isDark = true) {
         AssetSource(
             modifier = Modifier.padding(16.dp),
-            asset = Asset(
+            account = Account(
                 id = 0L,
                 name = "Tinkoff Black",
+                type = AccountType.ASSET,
                 balance = 1500.0,
                 currency = Currency.RUB,
-                color = AssetColor.TINKOFF,
-                icon = AssetIcon.TINKOFF,
-                metadata = AssetMetadata.Debet
+                color = AccountColor.TINKOFF,
+                icon = AccountIcon.TINKOFF,
+                metadata = null
             ),
             isSelected = true
         ) {}

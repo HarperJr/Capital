@@ -13,13 +13,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.harper.capital.component.AssetIconRound
-import com.harper.capital.domain.model.Asset
-import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.domain.model.AssetIcon
-import com.harper.capital.domain.model.AssetMetadata
+import com.harper.capital.component.AccountIconRound
+import com.harper.capital.domain.model.Account
+import com.harper.capital.domain.model.AccountColor
+import com.harper.capital.domain.model.AccountIcon
+import com.harper.capital.domain.model.AccountType
 import com.harper.capital.domain.model.Currency
-import com.harper.capital.domain.model.Transaction
+import com.harper.capital.domain.model.TransferTransaction
 import com.harper.core.component.CPreview
 import com.harper.core.component.CVerticalSpacer
 import com.harper.core.ext.formatWithCurrencySymbol
@@ -27,7 +27,7 @@ import com.harper.core.theme.CapitalTheme
 import java.time.LocalDateTime
 
 @Composable
-fun TransactionItem(modifier: Modifier = Modifier, transaction: Transaction) {
+fun TransactionItem(modifier: Modifier = Modifier, transaction: TransferTransaction) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -38,12 +38,12 @@ fun TransactionItem(modifier: Modifier = Modifier, transaction: Transaction) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(contentAlignment = Alignment.CenterStart) {
-            AssetIconRound(
+            AccountIconRound(
                 modifier = Modifier.padding(start = CapitalTheme.dimensions.imageMedium * 0.75f),
                 color = transaction.receiver.color,
                 icon = transaction.receiver.icon
             )
-            AssetIconRound(
+            AccountIconRound(
                 modifier = Modifier
                     .background(color = CapitalTheme.colors.background, shape = CircleShape)
                     .padding(1.dp),
@@ -70,28 +70,30 @@ fun TransactionItem(modifier: Modifier = Modifier, transaction: Transaction) {
 @Preview(showBackground = true)
 @Composable
 fun TransactionItemLight() {
-    val assetFrom = Asset(
+    val source = Account(
         id = 0L,
         name = "Tinkoff Black",
+        type = AccountType.ASSET,
         balance = 1000.0,
         currency = Currency.RUB,
-        color = AssetColor.TINKOFF,
-        icon = AssetIcon.TINKOFF,
-        metadata = AssetMetadata.Debet
+        color = AccountColor.TINKOFF,
+        icon = AccountIcon.TINKOFF,
+        metadata = null
     )
-    val assetTo = Asset(
+    val receiver = Account(
         id = 1L,
         name = "Products",
+        type = AccountType.LIABILITY,
         balance = 100.0,
         currency = Currency.RUB,
-        color = AssetColor.CATEGORY,
-        icon = AssetIcon.PRODUCTS,
-        metadata = AssetMetadata.Expense
+        color = AccountColor.CATEGORY,
+        icon = AccountIcon.PRODUCTS,
+        metadata = null
     )
-    val transaction = Transaction(
+    val transaction = TransferTransaction(
         id = 0L,
-        source = assetFrom,
-        receiver = assetTo,
+        source = source,
+        receiver = receiver,
         amount = 2400.0,
         dateTime = LocalDateTime.now(),
         comment = null,
@@ -105,28 +107,30 @@ fun TransactionItemLight() {
 @Preview(showBackground = true)
 @Composable
 fun TransactionItemDark() {
-    val assetFrom = Asset(
+    val source = Account(
         id = 0L,
         name = "Tinkoff Black",
+        type = AccountType.ASSET,
         balance = 1000.0,
         currency = Currency.RUB,
-        color = AssetColor.TINKOFF,
-        icon = AssetIcon.TINKOFF,
-        metadata = AssetMetadata.Debet
+        color = AccountColor.TINKOFF,
+        icon = AccountIcon.TINKOFF,
+        metadata = null
     )
-    val assetTo = Asset(
+    val receiver = Account(
         id = 1L,
         name = "Products",
+        type = AccountType.LIABILITY,
         balance = 100.0,
         currency = Currency.RUB,
-        color = AssetColor.CATEGORY,
-        icon = AssetIcon.PRODUCTS,
-        metadata = AssetMetadata.Expense
+        color = AccountColor.CATEGORY,
+        icon = AccountIcon.PRODUCTS,
+        metadata = null
     )
-    val transaction = Transaction(
+    val transaction = TransferTransaction(
         id = 0L,
-        source = assetFrom,
-        receiver = assetTo,
+        source = source,
+        receiver = receiver,
         amount = 2400.0,
         dateTime = LocalDateTime.now(),
         comment = null,

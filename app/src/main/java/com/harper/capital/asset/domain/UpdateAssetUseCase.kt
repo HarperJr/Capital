@@ -1,43 +1,43 @@
 package com.harper.capital.asset.domain
 
-import com.harper.capital.domain.model.Asset
-import com.harper.capital.domain.model.AssetColor
-import com.harper.capital.domain.model.AssetIcon
-import com.harper.capital.domain.model.AssetMetadata
-import com.harper.capital.domain.model.AssetType
+import com.harper.capital.domain.model.Account
+import com.harper.capital.domain.model.AccountColor
+import com.harper.capital.domain.model.AccountIcon
+import com.harper.capital.domain.model.AccountMetadata
+import com.harper.capital.domain.model.AccountMetadataType
+import com.harper.capital.domain.model.AccountType
 import com.harper.capital.domain.model.Currency
-import com.harper.capital.repository.AssetRepository
+import com.harper.capital.repository.AccountRepository
 import kotlinx.coroutines.coroutineScope
 
-class UpdateAssetUseCase(private val assetRepository: AssetRepository) {
+class UpdateAssetUseCase(private val accountRepository: AccountRepository) {
 
     suspend operator fun invoke(
         id: Long,
         name: String,
         amount: Double,
         currency: Currency,
-        color: AssetColor,
-        icon: AssetIcon,
-        type: AssetType,
+        color: AccountColor,
+        icon: AccountIcon,
+        metadataType: AccountMetadataType?,
         isIncluded: Boolean,
         isActive: Boolean
     ) = coroutineScope {
-        assetRepository.update(
-            Asset(
+        accountRepository.update(
+            Account(
                 id = id,
                 name = name,
                 balance = amount,
+                type = AccountType.ASSET,
                 currency = currency,
                 color = color,
                 icon = icon,
                 isIncluded = isIncluded,
                 isArchived = isActive,
-                metadata = when (type) {
-                    AssetType.DEBET -> AssetMetadata.Debet
-                    AssetType.CREDIT -> AssetMetadata.Credit(0.0)
-                    AssetType.GOAL -> AssetMetadata.Goal(0.0)
-                    AssetType.INCOME -> AssetMetadata.Income
-                    AssetType.EXPENSE -> AssetMetadata.Expense
+                metadata = when (metadataType) {
+                    AccountMetadataType.LOAN -> AccountMetadata.LoanAsset(0.0)
+                    AccountMetadataType.GOAL -> AccountMetadata.GoalAsset(0.0)
+                    else -> null
                 }
             )
         )

@@ -1,6 +1,6 @@
 package com.harper.capital.transaction.manage
 
-import com.harper.capital.domain.model.Transaction
+import com.harper.capital.domain.model.TransferTransaction
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.manage.domain.AddTransactionUseCase
 import com.harper.capital.transaction.manage.domain.FetchAssetUseCase
@@ -87,7 +87,7 @@ class TransactionManageViewModel(
         with(state.value) {
             if (assetPair != null) {
                 val (assetFrom, assetTo) = assetPair
-                val transaction = Transaction(
+                val transaction = TransferTransaction(
                     id = 0L,
                     source = assetFrom,
                     receiver = assetTo,

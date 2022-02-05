@@ -8,13 +8,9 @@ import java.util.concurrent.Callable
 
 class DatabaseTx(private val database: Database) {
 
-    fun <T> run(transaction: () -> T): T = database.runInTransaction(Callable(transaction))
-
     suspend fun <T> runSuspended(transaction: suspend () -> T): T = coroutineScope {
         withContext((Dispatchers.IO)) {
-            database.runInTransaction(Callable {
-                runBlocking { transaction.invoke() }
-            })
+            database.runInTransaction(Callable { runBlocking { transaction.invoke() } })
         }
     }
 }

@@ -112,7 +112,7 @@ private fun PageBlock(page: TransactionPage, es: EventSender<TransactionEvent>) 
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
-        page.assetDataSets.forEach { dataSet ->
+        page.accountDataSets.forEach { dataSet ->
             CHorizontalSpacer(height = 24.dp)
             Text(text = dataSet.section.resolveTitle(), style = CapitalTheme.typography.button)
             CHorizontalSpacer(height = 8.dp)
@@ -120,8 +120,8 @@ private fun PageBlock(page: TransactionPage, es: EventSender<TransactionEvent>) 
                 mainAxisSpacing = 8.dp,
                 crossAxisSpacing = 8.dp
             ) {
-                dataSet.assets.forEach {
-                    AssetSource(asset = it, isSelected = it.id == dataSet.selectedAssetId) {
+                dataSet.accounts.forEach {
+                    AssetSource(account = it, isSelected = it.id == dataSet.selectedAccountId) {
                         es.send(TransactionEvent.AssetSourceSelect(page.type, dataSet.section, it))
                     }
                 }
