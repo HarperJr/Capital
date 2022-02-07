@@ -1,7 +1,7 @@
 package com.harper.capital.history.domain
 
 import com.harper.capital.domain.model.Transaction
-import com.harper.capital.repository.TransactionRepository
+import com.harper.capital.repository.transaction.TransactionRepository
 import kotlinx.coroutines.flow.Flow
 
 class FetchTransactionsUseCase(private val transactionRepository: TransactionRepository) {

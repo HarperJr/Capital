@@ -1,4 +1,4 @@
-package com.harper.capital.repository.mapper
+package com.harper.capital.repository.transaction.mapper
 
 import com.harper.capital.database.entity.TransactionEntity
 import com.harper.capital.domain.model.Transaction

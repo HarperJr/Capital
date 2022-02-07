@@ -9,6 +9,8 @@ import com.harper.capital.history.model.HistoryListEvent
 import com.harper.capital.history.model.HistoryListItem
 import com.harper.capital.history.model.HistoryListState
 import com.harper.capital.navigation.GlobalRouter
+import com.harper.capital.transaction.manage.TransactionManageFragment
+import com.harper.capital.transaction.manage.model.TransactionManageMode
 import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventObserver
 import kotlinx.coroutines.flow.collect
@@ -28,6 +30,7 @@ class HistoryListViewModel(
             HistoryListEvent.BackClick -> router.back()
             HistoryListEvent.FilterItemClick -> {
             }
+            is HistoryListEvent.OnTransactionClick -> onTransactionClick(event)
         }
     }
 
@@ -42,6 +45,17 @@ class HistoryListViewModel(
                     }
                 }
         }
+    }
+
+    private fun onTransactionClick(event: HistoryListEvent.OnTransactionClick) {
+        router.navigateToManageTransaction(
+            TransactionManageFragment.Params(
+                mode = TransactionManageMode.EDIT,
+                transactionId = event.transactionId,
+                sourceAccountId = 0L,
+                receiverAccountId = 0L
+            )
+        )
     }
 
     private fun createHistoryListItems(transactions: List<Transaction>): List<HistoryListItem> {

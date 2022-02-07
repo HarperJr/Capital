@@ -1,7 +1,7 @@
 package com.harper.capital.main.domain
 
 import com.harper.capital.main.domain.model.Summary
-import com.harper.capital.repository.TransactionRepository
+import com.harper.capital.repository.transaction.TransactionRepository
 import com.harper.core.ext.zipWith
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

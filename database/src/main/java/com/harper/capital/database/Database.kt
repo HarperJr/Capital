@@ -8,9 +8,9 @@ import com.harper.capital.database.converter.LocalDateTimeConverter
 import com.harper.capital.database.dao.AccountDao
 import com.harper.capital.database.dao.TransactionDao
 import com.harper.capital.database.entity.AccountEntity
-import com.harper.capital.database.entity.LoanEntity
 import com.harper.capital.database.entity.GoalEntity
 import com.harper.capital.database.entity.LedgerEntity
+import com.harper.capital.database.entity.LoanEntity
 import com.harper.capital.database.entity.TransactionEntity
 import com.harper.capital.database.view.AssetBalanceView
 
@@ -26,7 +26,7 @@ import com.harper.capital.database.view.AssetBalanceView
     views = [AssetBalanceView::class]
 )
 @TypeConverters(LocalDateTimeConverter::class, LocalDateConverter::class)
-abstract class Database : RoomDatabase() {
+internal abstract class Database : RoomDatabase() {
 
     abstract fun accountDao(): AccountDao
 

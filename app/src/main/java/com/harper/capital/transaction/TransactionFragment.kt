@@ -18,7 +18,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.harper.capital.R
-import com.harper.capital.domain.model.TransactionType
+import com.harper.capital.transaction.model.TransactionType
 import com.harper.capital.transaction.component.AssetSource
 import com.harper.capital.transaction.component.NewSource
 import com.harper.capital.transaction.model.DataSetSection

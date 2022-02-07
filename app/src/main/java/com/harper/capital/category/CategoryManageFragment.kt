@@ -20,14 +20,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.imePadding
+import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.harper.capital.R
@@ -127,29 +126,20 @@ private fun CategoryManageScreen(
                     PageBlock(page = state.pages[pageIndex], es = es)
                 }
             }
-            Box(
+            CButton(
                 modifier = Modifier
-                    .imePadding()
                     .fillMaxWidth()
-            ) {
-                CButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp),
-                    text = stringResource(id = R.string.create_new_category),
-                    onClick = { es.send(CategoryManageEvent.Apply) }
-                )
-            }
+                    .padding(CapitalTheme.dimensions.side)
+                    .navigationBarsWithImePadding(),
+                text = stringResource(id = R.string.create_new_category),
+                onClick = { es.send(CategoryManageEvent.Apply) }
+            )
         }
     }
 }
 
 @Composable
 fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
-    val name = remember { mutableStateOf(page.name) }
-    val amount = remember { mutableStateOf(page.amount) }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -174,10 +164,9 @@ fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
                     .weight(1f)
                     .padding(start = 8.dp)
                     .align(Alignment.CenterVertically),
-                value = name.value,
+                value = page.name,
                 placeholder = stringResource(id = R.string.enter_name_hint),
                 onValueChange = {
-                    name.value = it
                     es.send(CategoryManageEvent.NameChange(it))
                 },
                 textColor = CapitalTheme.colors.onBackground
@@ -186,10 +175,10 @@ fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
         CHorizontalSpacer(height = 24.dp)
         CAmountTextField(
             modifier = Modifier.fillMaxWidth(),
-            amount = amount.value,
+            amount = page.amount,
+            currencyIso = page.currency.name,
             placeholder = stringResource(id = R.string.enter_amount_hint),
             onValueChange = {
-                amount.value = it
                 es.send(CategoryManageEvent.AmountChange(it))
             },
             textColor = CapitalTheme.colors.onBackground

@@ -13,11 +13,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.harper.capital.R
-import com.harper.capital.domain.model.TransactionType
 import com.harper.capital.transaction.manage.component.TransactionHeader
 import com.harper.capital.transaction.manage.model.TransactionManageEvent
+import com.harper.capital.transaction.manage.model.TransactionManageMode
 import com.harper.capital.transaction.manage.model.TransactionManageState
+import com.harper.capital.transaction.model.TransactionType
 import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CAmountTextField
 import com.harper.core.component.CButton
@@ -54,8 +56,12 @@ class TransactionManageFragment : ComponentFragment<TransactionManageViewModel>(
     }
 
     @Parcelize
-    class Params(val transactionType: TransactionType, val assetFromId: Long, val assetToId: Long) :
-        Parcelable
+    class Params(
+        val mode: TransactionManageMode,
+        val transactionId: Long? = null,
+        val sourceAccountId: Long,
+        val receiverAccountId: Long
+    ) : Parcelable
 
     companion object {
         private const val PARAMS = "transaction_manage_params"
@@ -71,7 +77,7 @@ private fun TransactionManageScreen(
     es: EventSender<TransactionManageEvent>
 ) {
     val state by viewModel.state.collectAsState()
-    CScaffold(topBar = { TransactionManageTopBar(state, es) }) {
+    CScaffold(topBar = { TransactionManageTopBar(es) }) {
         CLoaderLayout(isLoading = state.isLoading, loaderContent = {}) {
             if (state.datePickerDialogState.isVisible) {
                 CDatePickerDialog(
@@ -89,7 +95,7 @@ private fun TransactionManageScreen(
                         .padding(horizontal = CapitalTheme.dimensions.side)
                 ) {
                     CHorizontalSpacer(height = CapitalTheme.dimensions.side)
-                    val assetPair = state.assetPair
+                    val assetPair = state.accountPair
                     if (assetPair != null) {
                         TransactionHeader(source = assetPair.first, receiver = assetPair.second)
                     }
@@ -128,11 +134,16 @@ private fun TransactionManageScreen(
                         onCheckedChange = { es.send(TransactionManageEvent.ScheduledCheckChange(it)) }
                     )
                 }
+                val applyButtonText = when (state.mode) {
+                    TransactionManageMode.ADD -> stringResource(id = R.string.create_new_transaction)
+                    TransactionManageMode.EDIT -> stringResource(id = R.string.save)
+                }
                 CButton(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(CapitalTheme.dimensions.side),
-                    text = stringResource(id = R.string.create_new_transaction),
+                        .padding(CapitalTheme.dimensions.side)
+                        .navigationBarsWithImePadding(),
+                    text = applyButtonText,
                     onClick = { es.send(TransactionManageEvent.Apply) }
                 )
             }
@@ -157,18 +168,8 @@ private fun OptionalCommentTitle() {
 }
 
 @Composable
-private fun TransactionManageTopBar(
-    state: TransactionManageState,
-    es: EventSender<TransactionManageEvent>
-) {
+private fun TransactionManageTopBar(es: EventSender<TransactionManageEvent>) {
     CToolbar(
-        content = {
-            Text(
-                text = state.transactionType.resolveTitle(),
-                style = CapitalTheme.typography.title,
-                color = CapitalTheme.colors.onBackground
-            )
-        },
         navigation = {
             CIcon(imageVector = CapitalIcons.ArrowLeft, onClick = {
                 es.send(TransactionManageEvent.BackClick)

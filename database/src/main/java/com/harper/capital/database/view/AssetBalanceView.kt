@@ -9,7 +9,6 @@ import com.harper.capital.database.entity.LedgerTable
 
 internal object AssetBalanceTable {
     const val tableName = "asset_balances"
-
     const val balance = "balance"
 }
 

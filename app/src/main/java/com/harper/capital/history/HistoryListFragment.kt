@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.harper.capital.R
 import com.harper.capital.history.comonent.ChargeTransactionItem
 import com.harper.capital.history.comonent.TransactionDateScopeItem
-import com.harper.capital.history.comonent.TransactionItem
+import com.harper.capital.history.comonent.TransferTransactionItem
 import com.harper.capital.history.model.HistoryListEvent
 import com.harper.capital.history.model.HistoryListItem
 import com.harper.capital.history.model.HistoryListState
@@ -68,8 +68,10 @@ private fun HistoryListScreen(
             LazyColumn(modifier = Modifier.weight(1f)) {
                 items(state.items) {
                     when (it) {
-                        is HistoryListItem.TransferTransactionItem -> TransactionItem(transaction = it.transaction)
                         is HistoryListItem.ChargeTransactionItem -> ChargeTransactionItem(transaction = it.transaction)
+                        is HistoryListItem.TransferTransactionItem -> TransferTransactionItem(transaction = it.transaction) {
+                            es.send(HistoryListEvent.OnTransactionClick(it.transaction.id))
+                        }
                         is HistoryListItem.TransactionDateScopeItem -> TransactionDateScopeItem(
                             date = it.date,
                             amount = it.amount,

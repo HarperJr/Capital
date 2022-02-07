@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.harper.capital.database.entity.AccountTable
 import com.harper.capital.database.entity.LedgerEntity
 import com.harper.capital.database.entity.LedgerTable
@@ -23,13 +24,23 @@ interface TransactionDao {
     @Insert
     suspend fun insertLedgers(entities: List<LedgerEntity>)
 
+    @Update
+    suspend fun update(entity: TransactionEntity)
+
+    @Update
+    suspend fun updateLedgers(entities: List<LedgerEntity>)
+
     @Query("DELETE FROM ${TransactionTable.tableName} WHERE ${TransactionTable.id} = :id")
     suspend fun deleteById(id: Long)
+
+    @Transaction
+    @Query("SELECT * FROM ${TransactionTable.tableName} WHERE ${TransactionTable.id} = :id")
+    suspend fun selectById(id: Long): TransactionEntityEmbedded
 
     @Query(
         """
         SELECT SUM(${AssetBalanceTable.balance}) FROM ${AssetBalanceTable.tableName} 
-        WHERE ${AccountTable.type} IN ('ASSET') AND ${AccountTable.isIncluded} = 1
+        WHERE ${AccountTable.type} = 'ASSET' AND ${AccountTable.isIncluded} = 1
         """
     )
     fun selectBalance(): Flow<Double>
@@ -40,12 +51,11 @@ interface TransactionDao {
         LEFT JOIN ${LedgerTable.tableName} L ON T.${TransactionTable.id} = L.${LedgerTable.transactionId} 
         LEFT JOIN ${AccountTable.tableName} A ON A.${AccountTable.id} = L.${LedgerTable.accountId}
         WHERE A.${AccountTable.type} = 'LIABILITY' AND T.${TransactionTable.dateTime} BETWEEN :dateTimeAfter AND :dateTimeBefore
-        GROUP BY A.${AccountTable.id}
         """
     )
     fun selectLiabilitiesBetween(dateTimeAfter: LocalDateTime, dateTimeBefore: LocalDateTime): Flow<Double>
 
     @Transaction
-    @Query("SELECT * FROM ${TransactionTable.tableName}")
+    @Query("SELECT * FROM ${TransactionTable.tableName} ORDER BY ${TransactionTable.dateTime} DESC")
     fun selectAll(): Flow<List<TransactionEntityEmbedded>>
 }

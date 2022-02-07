@@ -7,7 +7,7 @@ import com.harper.capital.domain.model.AccountMetadata
 import com.harper.capital.domain.model.AccountMetadataType
 import com.harper.capital.domain.model.AccountType
 import com.harper.capital.domain.model.Currency
-import com.harper.capital.repository.AccountRepository
+import com.harper.capital.repository.account.AccountRepository
 import kotlinx.coroutines.coroutineScope
 
 class UpdateAssetUseCase(private val accountRepository: AccountRepository) {

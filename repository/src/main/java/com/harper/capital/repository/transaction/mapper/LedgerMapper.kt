@@ -1,9 +1,10 @@
-package com.harper.capital.repository.mapper
+package com.harper.capital.repository.transaction.mapper
 
 import com.harper.capital.database.entity.LedgerEntityType
 import com.harper.capital.database.entity.embedded.LedgerEntityEmbedded
 import com.harper.capital.domain.model.Ledger
 import com.harper.capital.domain.model.LedgerType
+import com.harper.capital.repository.account.mapper.AccountMapper
 
 internal object LedgerMapper : (LedgerEntityEmbedded) -> Ledger {
 

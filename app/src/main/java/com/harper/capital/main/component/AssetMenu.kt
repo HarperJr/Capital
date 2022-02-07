@@ -1,6 +1,7 @@
 package com.harper.capital.main.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -12,12 +13,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Card
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
+import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harper.capital.R
@@ -45,39 +50,41 @@ fun AssetMenu(
         contentColor = accountContentColorFor(cardBackgroundColor),
         shape = CapitalTheme.shapes.extraLarge
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            ToolbarItem(
-                modifier = Modifier.weight(1f),
-                icon = CapitalIcons.History,
-                text = stringResource(id = R.string.history),
-                onClick = onHistoryClick
-            )
-
-            ToolbarItem(
-                modifier = Modifier.weight(1f),
-                icon = CapitalIcons.Income,
-                text = stringResource(id = R.string.income),
-                onClick = onIncomeClick
-            )
-
-            ToolbarItem(
-                modifier = Modifier.weight(1f),
-                icon = CapitalIcons.Expense,
-                text = stringResource(id = R.string.expense),
-                onClick = onExpenseClick
-            )
-
-            onEditClick?.let {
+        CompositionLocalProvider(LocalIndication provides rememberRipple(bounded = false)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
                 ToolbarItem(
                     modifier = Modifier.weight(1f),
-                    icon = CapitalIcons.EditAsset,
-                    text = stringResource(id = R.string.edit),
-                    onClick = it
+                    icon = CapitalIcons.History,
+                    text = stringResource(id = R.string.history),
+                    onClick = onHistoryClick
                 )
+
+                ToolbarItem(
+                    modifier = Modifier.weight(1f),
+                    icon = CapitalIcons.Income,
+                    text = stringResource(id = R.string.income),
+                    onClick = onIncomeClick
+                )
+
+                ToolbarItem(
+                    modifier = Modifier.weight(1f),
+                    icon = CapitalIcons.Expense,
+                    text = stringResource(id = R.string.expense),
+                    onClick = onExpenseClick
+                )
+
+                onEditClick?.let {
+                    ToolbarItem(
+                        modifier = Modifier.weight(1f),
+                        icon = CapitalIcons.EditAsset,
+                        text = stringResource(id = R.string.edit),
+                        onClick = it
+                    )
+                }
             }
         }
     }

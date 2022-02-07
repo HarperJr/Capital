@@ -1,4 +1,4 @@
-package com.harper.capital.repository
+package com.harper.capital.repository.account
 
 import com.harper.capital.database.DatabaseTx
 import com.harper.capital.database.dao.AccountDao
@@ -13,12 +13,15 @@ import com.harper.capital.database.entity.embedded.AssetEntityEmbedded
 import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.AccountMetadata
 import com.harper.capital.domain.model.AccountType
-import com.harper.capital.repository.mapper.AccountEntityTypeMapper
-import com.harper.capital.repository.mapper.AccountEntityMapper
-import com.harper.capital.repository.mapper.AccountMapper
+import com.harper.capital.repository.account.mapper.AccountEntityMapper
+import com.harper.capital.repository.account.mapper.AccountEntityTypeMapper
+import com.harper.capital.repository.account.mapper.AccountMapper
 import com.harper.core.ext.cast
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 
 internal class AccountRepositoryImpl(
@@ -27,7 +30,7 @@ internal class AccountRepositoryImpl(
     private val databaseTx: DatabaseTx
 ) : AccountRepository {
 
-    override suspend fun insert(account: Account) = databaseTx.runSuspended {
+    override suspend fun insert(account: Account) = databaseTx.runSuspended(context = Dispatchers.IO) {
         val accountEntity = AccountEntityMapper(account)
         val accountId = accountDao.insert(accountEntity)
         when (accountEntity.metadataType) {
@@ -48,18 +51,23 @@ internal class AccountRepositoryImpl(
     override fun fetchByType(type: AccountType): Flow<List<Account>> =
         accountDao.selectByType(AccountEntityTypeMapper(type))
             .map { entities -> entities.map { mapToAccount(it) } }
+            .flowOn(Dispatchers.IO)
 
     override fun fetchAll(): Flow<List<Account>> =
         accountDao.selectAll()
             .map { entities -> entities.map { mapToAccount(it) } }
+            .flowOn(Dispatchers.IO)
 
-    override suspend fun fetchById(id: Long): Account =
+    override suspend fun fetchById(id: Long): Account = withContext(Dispatchers.IO) {
         mapToAccount(accountDao.selectById(id))
+    }
 
     override suspend fun update(account: Account) {
-        val existedAccount = fetchById(account.id)
-        accountDao.update(AccountEntityMapper(account))
-        insertBalanceTransaction(account.id, account.balance - existedAccount.balance)
+        withContext(Dispatchers.IO) {
+            val existedAccount = fetchById(account.id)
+            accountDao.update(AccountEntityMapper(account))
+            insertBalanceTransaction(account.id, account.balance - existedAccount.balance)
+        }
     }
 
     private suspend fun mapToAccount(entity: AssetEntityEmbedded): Account = entity.let {

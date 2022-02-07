@@ -5,10 +5,11 @@ import com.harper.capital.asset.model.AssetManageMode
 import com.harper.capital.category.CategoryManageFragment
 import com.harper.capital.category.model.CategoryManageType
 import com.harper.capital.domain.model.Account
-import com.harper.capital.domain.model.TransactionType
+import com.harper.capital.transaction.model.TransactionType
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.domain.FetchAssetsUseCase
 import com.harper.capital.transaction.manage.TransactionManageFragment
+import com.harper.capital.transaction.manage.model.TransactionManageMode
 import com.harper.capital.transaction.model.DataSetSection
 import com.harper.capital.transaction.model.DataSetType
 import com.harper.capital.transaction.model.TransactionEvent
@@ -59,16 +60,16 @@ class TransactionViewModel(
 
     private fun onApply() {
         val page = state.value.pages[state.value.selectedPage]
-        val assetFromId =
+        val sourceAccountId =
             page.accountDataSets.first { it.section == DataSetSection.FROM }.selectedAccountId
-        val assetToId =
+        val receiverAccountId =
             page.accountDataSets.first { it.section == DataSetSection.TO }.selectedAccountId
-        if (assetFromId != null && assetToId != null) {
+        if (sourceAccountId != null && receiverAccountId != null) {
             router.navigateToManageTransaction(
                 TransactionManageFragment.Params(
-                    transactionType = page.type,
-                    assetFromId = assetFromId,
-                    assetToId = assetToId
+                    mode = TransactionManageMode.ADD,
+                    sourceAccountId = sourceAccountId,
+                    receiverAccountId = receiverAccountId
                 )
             )
         }

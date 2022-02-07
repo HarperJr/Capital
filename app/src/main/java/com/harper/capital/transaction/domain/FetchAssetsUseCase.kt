@@ -1,6 +1,6 @@
 package com.harper.capital.transaction.domain
 
-import com.harper.capital.repository.AccountRepository
+import com.harper.capital.repository.account.AccountRepository
 import kotlinx.coroutines.coroutineScope
 
 class FetchAssetsUseCase(private val accountRepository: AccountRepository) {

@@ -12,7 +12,7 @@ val databaseModule
                 .build()
         }
 
-        factory { DatabaseTx(get()) }
+        factory<DatabaseTx> { DatabaseTxImpl(get()) }
 
         factory { get<Database>().accountDao() }
 

@@ -5,7 +5,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-class LocalDateTimeConverter {
+internal class LocalDateTimeConverter {
 
     @TypeConverter
     fun toEntity(model: LocalDateTime): Long = model.toInstant(ZoneOffset.UTC).toEpochMilli()

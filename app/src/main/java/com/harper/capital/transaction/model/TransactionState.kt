@@ -3,7 +3,6 @@ package com.harper.capital.transaction.model
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.harper.capital.R
-import com.harper.capital.domain.model.TransactionType
 import com.harper.core.component.Tab
 import com.harper.core.component.TabBarData
 

@@ -1,4 +1,4 @@
-package com.harper.capital.repository
+package com.harper.capital.repository.account
 
 import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.AccountType

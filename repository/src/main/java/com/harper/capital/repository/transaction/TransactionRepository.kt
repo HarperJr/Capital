@@ -1,15 +1,18 @@
-package com.harper.capital.repository
+package com.harper.capital.repository.transaction
 
 import com.harper.capital.domain.model.Transaction
-import com.harper.capital.domain.model.TransferTransaction
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
 interface TransactionRepository {
 
-    suspend fun insert(transaction: TransferTransaction)
+    suspend fun insert(transaction: Transaction)
+
+    suspend fun update(transaction: Transaction)
 
     suspend fun deleteById(transactionId: Long)
+
+    suspend fun fetchTransaction(transactionId: Long): Transaction
 
     fun fetchBalance(): Flow<Double>
 

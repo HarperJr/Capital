@@ -156,10 +156,9 @@ private fun AssetManageScreen(viewModel: ComponentViewModelV1<AssetManageState, 
                     CHorizontalSpacer(height = CapitalTheme.dimensions.side)
                     SettingsBlock(state, viewModel)
                 }
-                val applyButtonText = if (state.mode == AssetManageMode.ADD) {
-                    stringResource(id = R.string.add_asset)
-                } else {
-                    stringResource(id = R.string.save)
+                val applyButtonText = when (state.mode) {
+                    AssetManageMode.ADD -> stringResource(id = R.string.add_asset)
+                    AssetManageMode.EDIT -> stringResource(id = R.string.save)
                 }
                 CButton(
                     modifier = Modifier

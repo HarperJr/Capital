@@ -1,16 +1,9 @@
 package com.harper.capital.database
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import java.util.concurrent.Callable
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
-class DatabaseTx(private val database: Database) {
+interface DatabaseTx {
 
-    suspend fun <T> runSuspended(transaction: suspend () -> T): T = coroutineScope {
-        withContext((Dispatchers.IO)) {
-            database.runInTransaction(Callable { runBlocking { transaction.invoke() } })
-        }
-    }
+    suspend fun <T> runSuspended(context: CoroutineContext = EmptyCoroutineContext, transaction: suspend () -> T): T
 }

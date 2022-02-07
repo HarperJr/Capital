@@ -2,7 +2,7 @@ package com.harper.capital.main
 
 import com.harper.capital.asset.AssetManageFragment
 import com.harper.capital.asset.model.AssetManageMode
-import com.harper.capital.domain.model.TransactionType
+import com.harper.capital.transaction.model.TransactionType
 import com.harper.capital.history.HistoryListFragment
 import com.harper.capital.main.domain.FetchAssetsUseCase
 import com.harper.capital.main.domain.FetchSummaryUseCase
@@ -12,7 +12,10 @@ import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.TransactionFragment
 import com.harper.core.ui.ComponentViewModel
 import com.harper.core.ui.EventObserver
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 
 class MainViewModel(
     private val router: GlobalRouter,
@@ -23,23 +26,23 @@ class MainViewModel(
 
     override fun onFirstStart() {
         super.onFirstStart()
+        fetchAssets()
+    }
 
+    private fun fetchAssets() {
         launch {
-            fetchAssetsUseCase()
-                .collect { assets ->
+            combine(
+                fetchAssetsUseCase(),
+                fetchSummaryUseCase()
+            ) { assets, summary -> assets to summary }
+                .flowOn(Dispatchers.Main)
+                .collect { (assets, summary) ->
                     mutateState {
                         it.copy(
                             accounts = assets,
+                            summary = summary,
                             isLoading = false
                         )
-                    }
-                }
-        }
-        launch {
-            fetchSummaryUseCase()
-                .collect { summary ->
-                    mutateState {
-                        it.copy(summary = summary)
                     }
                 }
         }
