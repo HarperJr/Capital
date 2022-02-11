@@ -15,13 +15,13 @@ import com.harper.capital.navigation.GlobalNavigator
 import org.koin.android.ext.android.inject
 import org.koin.androidx.scope.activityScope
 import org.koin.androidx.viewmodel.ViewModelOwner
-import org.koin.androidx.viewmodel.scope.viewModel
+import org.koin.androidx.viewmodel.scope.getViewModel
 
 class CapitalActivity : AppCompatActivity() {
-    private val scope by activityScope()
-    private val viewModel by scope.viewModel<CapitalViewModel>(owner = {
-        ViewModelOwner.from(this)
-    })
+    val scope by activityScope()
+    private val viewModel by lazy(mode = LazyThreadSafetyMode.NONE) {
+        scope.getViewModel<CapitalViewModel>(owner = { ViewModelOwner.from(this) })
+    }
     private val navigationHolder: NavigatorHolder by inject()
 
     private lateinit var navigator: Navigator

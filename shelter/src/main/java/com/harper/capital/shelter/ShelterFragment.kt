@@ -1,36 +1,64 @@
 package com.harper.capital.shelter
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.harper.capital.shelter.core.ComposableFragment
 import com.harper.capital.shelter.core.ScreenLayout
-import com.harper.capital.shelter.model.ShelterEvent
-import com.harper.capital.shelter.model.ShelterState
-import com.harper.core.component.CAmountTextField
-import com.harper.core.component.CHorizontalSpacer
-import com.harper.core.component.CScaffold
-import com.harper.core.component.CTextField
-import com.harper.core.component.CToolbarCommon
-import com.harper.core.theme.CapitalTheme
+import com.harper.capital.shelter.details.DetailsScreen
+import com.harper.capital.shelter.details.ShelterDetailsViewModel
+import com.harper.capital.shelter.main.MainScreen
+import com.harper.capital.shelter.main.ShelterMainViewModel
+import com.harper.capital.shelter.model.ShelterDetailParams
+import com.harper.core.ext.orElse
+import org.koin.androidx.compose.getViewModel
+import org.koin.core.parameter.parametersOf
 
-class ShelterFragment : ComposableFragment<ShelterViewModel>() {
-    override val viewModel: ShelterViewModel by injectViewModel()
+class ShelterFragment : ComposableFragment() {
 
     @Composable
+    @OptIn(ExperimentalAnimationApi::class)
     override fun ScreenContent() {
+        val controller = rememberAnimatedNavController()
+        val config = LocalConfiguration.current
         ScreenLayout {
-            val state by viewModel.state.collectAsState()
-            ShelterScreen(state) {
-                viewModel.onEvent(it)
+            AnimatedNavHost(navController = controller, startDestination = ShelterScreens.MAIN.name) {
+                composable(route = ShelterScreens.MAIN.name) {
+                    MainScreen(viewModel = getViewModel<ShelterMainViewModel>(), onDetailsClick = { name ->
+                        controller.navigate("${ShelterScreens.DETAILS.name}/$name")
+                    })
+                }
+                composable(
+                    route = "${ShelterScreens.DETAILS.name}/{name}",
+                    arguments = listOf(navArgument("name") { type = NavType.StringType }),
+                    enterTransition = { _, _ ->
+                        slideInHorizontally(initialOffsetX = { config.screenWidthDp }, animationSpec = tween(600)) +
+                            fadeIn(animationSpec = tween(1000))
+                    },
+                    exitTransition = { _, _ ->
+                        slideOutHorizontally(targetOffsetX = { config.screenWidthDp }, animationSpec = tween(600)) +
+                            fadeOut(animationSpec = tween(1000))
+                    }
+                ) { backStackEntry ->
+                    val name = backStackEntry.arguments?.getString("name").orElse("No title")
+                    DetailsScreen(
+                        viewModel = getViewModel<ShelterDetailsViewModel>() {
+                            parametersOf(ShelterDetailParams(name))
+                        },
+                        onBackClick = {
+                            controller.popBackStack()
+                        })
+                }
             }
         }
     }
@@ -41,45 +69,3 @@ class ShelterFragment : ComposableFragment<ShelterViewModel>() {
     }
 }
 
-@Composable
-private fun ShelterScreen(state: ShelterState, onEvent: (ShelterEvent) -> Unit) {
-    CScaffold(
-        topBar = {
-            CToolbarCommon(
-                title = "Shelter",
-                onNavigationClick = { onEvent(ShelterEvent.BackClick) }
-            )
-        }
-    ) {
-        Column(modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side)) {
-            CHorizontalSpacer(height = CapitalTheme.dimensions.side)
-            CTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = state.text,
-                title = {
-                    Text(text = "Text field")
-                },
-                onValueChange = { state.text = it }
-            )
-            CHorizontalSpacer(height = CapitalTheme.dimensions.side)
-            LazyColumn {
-                items(state.assetStates) { assetState ->
-                    Card(modifier = Modifier.padding(vertical = CapitalTheme.dimensions.side)) {
-                        Column(modifier = Modifier.padding(CapitalTheme.dimensions.medium)) {
-                            Text(text = assetState.account.name)
-                            CHorizontalSpacer(height = CapitalTheme.dimensions.side)
-                            CAmountTextField(
-                                modifier = Modifier.fillMaxWidth(),
-                                amount = assetState.amount,
-                                title = {
-                                    Text(text = "Text field")
-                                },
-                                onValueChange = { assetState.amount = it }
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}

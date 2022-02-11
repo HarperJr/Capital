@@ -4,22 +4,15 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-abstract class ComposableViewModel<State, Event>(defaultState: State) : ViewModel() {
+abstract class ComposableViewModel<State, Event>(initialState: State) : ViewModel() {
     val state: StateFlow<State>
         get() = mutableState
-    private val mutableState: MutableStateFlow<State> = MutableStateFlow(defaultState)
+    private val mutableState: MutableStateFlow<State> = MutableStateFlow(initialState)
     private var isStarted = false
 
     abstract fun onEvent(event: Event)
 
-    fun start() {
-        if (!isStarted) {
-            isStarted = true
-            onFirstStart()
-        }
-    }
-
-    open fun onFirstStart() {}
+    open fun onFirstCompose() {}
 
     protected fun mutateState(mutation: (State) -> State) {
         mutableState.value = mutation(mutableState.value)

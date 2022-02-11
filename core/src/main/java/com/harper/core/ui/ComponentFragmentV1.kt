@@ -12,13 +12,13 @@ import com.harper.core.ext.cast
 import com.harper.core.ext.tryCast
 import org.koin.androidx.scope.fragmentScope
 import org.koin.androidx.viewmodel.ViewModelOwner
-import org.koin.androidx.viewmodel.scope.viewModel
+import org.koin.androidx.viewmodel.scope.getViewModel
 import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.scope.Scope
 
 abstract class ComponentFragmentV1<CVM : ComponentViewModelV1<*, *>> : Fragment() {
-    protected val scope: Scope by fragmentScope()
+    val scope: Scope by fragmentScope()
     abstract val viewModel: CVM
 
     override fun onCreateView(
@@ -42,10 +42,13 @@ abstract class ComponentFragmentV1<CVM : ComponentViewModelV1<*, *>> : Fragment(
     protected inline fun <reified VM : ViewModel> injectViewModel(
         qualifier: Qualifier? = null,
         noinline parameters: ParametersDefinition? = null
-    ) = scope.viewModel<VM>(
-        qualifier = qualifier,
-        parameters = parameters,
-        owner = { ViewModelOwner(viewModelStore) })
+    ): Lazy<VM> = lazy(mode = LazyThreadSafetyMode.NONE) {
+        scope.getViewModel(
+            qualifier = qualifier,
+            parameters = parameters,
+            owner = { ViewModelOwner(viewModelStore) }
+        )
+    }
 
     protected inline fun <reified T : Any> requireArg(key: String): Lazy<T> =
         lazy { requireArguments().get(key).cast() }

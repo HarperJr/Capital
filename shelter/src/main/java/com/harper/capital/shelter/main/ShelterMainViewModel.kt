@@ -1,4 +1,4 @@
-package com.harper.capital.shelter
+package com.harper.capital.shelter.main
 
 import androidx.lifecycle.viewModelScope
 import com.harper.capital.shelter.core.ComposableViewModel
@@ -8,16 +8,19 @@ import com.harper.capital.shelter.model.ShelterState
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class ShelterViewModel(
+class ShelterMainViewModel(
     private val fetchAssetsUseCase: FetchAssetsUseCase
 ) : ComposableViewModel<ShelterState, ShelterEvent>(ShelterState()) {
 
     override fun onEvent(event: ShelterEvent) {
-
+        when (event) {
+            ShelterEvent.BackClick -> {
+            }
+        }
     }
 
-    override fun onFirstStart() {
-        super.onFirstStart()
+    override fun onFirstCompose() {
+        super.onFirstCompose()
         viewModelScope.launch {
             fetchAssetsUseCase()
                 .collect {

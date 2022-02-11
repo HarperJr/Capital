@@ -6,24 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.ViewWindowInsetObserver
 import com.harper.core.ext.cast
 import com.harper.core.ext.tryCast
 import org.koin.androidx.scope.fragmentScope
 import org.koin.androidx.viewmodel.ViewModelOwner
-import org.koin.androidx.viewmodel.scope.viewModel
+import org.koin.androidx.viewmodel.scope.getViewModel
 import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
 import org.koin.core.scope.Scope
 
 abstract class ComponentFragment<VM : ComponentViewModel<*>> : Fragment() {
-    protected val scope: Scope by fragmentScope()
+    val scope: Scope by fragmentScope()
     protected abstract val viewModel: VM
 
     protected abstract fun content(): @Composable () -> Unit
@@ -48,10 +45,13 @@ abstract class ComponentFragment<VM : ComponentViewModel<*>> : Fragment() {
     protected inline fun <reified VM : ViewModel> injectViewModel(
         qualifier: Qualifier? = null,
         noinline parameters: ParametersDefinition? = null
-    ) = scope.viewModel<VM>(
-        qualifier = qualifier,
-        parameters = parameters,
-        owner = { ViewModelOwner(viewModelStore) })
+    ): Lazy<VM> = lazy(mode = LazyThreadSafetyMode.NONE) {
+        scope.getViewModel(
+            qualifier = qualifier,
+            parameters = parameters,
+            owner = { ViewModelOwner(viewModelStore) }
+        )
+    }
 
     protected inline fun <reified T : Any> requireArg(key: String): Lazy<T> =
         lazy { requireArguments().get(key).cast() }
