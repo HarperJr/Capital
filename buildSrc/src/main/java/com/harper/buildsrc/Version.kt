@@ -2,7 +2,7 @@ package com.harper.buildsrc
 
 object Version {
     const val jvmTarget = "1.8"
-    const val kotlin = "1.5.31"
+    const val kotlin = "1.6.10"
     const val detekt = "1.19.0"
 
     object App {
@@ -20,9 +20,9 @@ object Version {
         const val coroutines = "1.6.0-RC"
         const val appCompat = "1.3.1"
         const val material = "1.4.0"
-        const val compose = "1.0.5"
-        const val accompanist = "0.20.3"
+        const val compose = "1.1.0"
+        const val accompanist = "0.23.0"
         const val koin = "3.1.5"
-        const val room = "2.3.0"
+        const val room = "2.4.1"
     }
 }

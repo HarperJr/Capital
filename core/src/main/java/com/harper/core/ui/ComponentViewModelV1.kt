@@ -4,29 +4,32 @@ import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-abstract class ComponentViewModelV1<State, Event>(defaultState: State) : ViewModel() {
+abstract class ComponentViewModelV1<State, Event>(initialState: State) : ViewModel() {
     val state: StateFlow<State>
-        get() = mutableState
-    private val mutableState: MutableStateFlow<State> = MutableStateFlow(defaultState)
-    private var isStarted = false
+        get() = mutableState.asStateFlow()
+    private val mutableState: MutableStateFlow<State> = MutableStateFlow(initialState)
+    private var isComposed = false
 
     abstract fun onEvent(event: Event)
 
-    fun start() {
-        if (!isStarted) {
-            onFirstStart()
+    fun onComposition() {
+        if (!isComposed) {
+            onFirstComposition()
         }
-        isStarted = true
+        isComposed = true
     }
 
-    open fun onFirstStart() {}
+    protected open fun onFirstComposition() {}
 
     protected fun update(mutation: (State) -> State) {
         check(Looper.getMainLooper().isCurrentThread) { "Unsafe change of state is forbidden! Use main thread" }

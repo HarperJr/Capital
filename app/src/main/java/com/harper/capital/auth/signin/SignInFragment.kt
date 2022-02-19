@@ -38,16 +38,19 @@ import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.theme.capitalButtonColors
 import com.harper.core.ui.ComponentFragment
+import com.harper.core.ui.ComponentFragmentV1
 import com.harper.core.ui.ComponentViewModel
+import com.harper.core.ui.ComponentViewModelV1
 import com.harper.core.ui.EventSender
 import com.harper.core.ui.MockEventSender
 
-class SignInFragment : ComponentFragment<SignInViewModel>(), EventSender<SignInEvent> {
+class SignInFragment : ComponentFragmentV1<SignInViewModel>() {
     override val viewModel: SignInViewModel by injectViewModel()
 
-    override fun content(): @Composable () -> Unit = {
+    @Composable
+    override fun ScreenContent() {
         ScreenLayout {
-            SignInScreen(viewModel, this)
+            SignInScreen(viewModel)
         }
     }
 
@@ -65,7 +68,7 @@ val Google
     get() = ImageVector.vectorResource(id = R.drawable.ic_google)
 
 @Composable
-private fun SignInScreen(viewModel: ComponentViewModel<SignInState>, es: EventSender<SignInEvent>) {
+fun SignInScreen(viewModel: ComponentViewModelV1<SignInState, SignInEvent>) {
     val state by viewModel.state.collectAsState()
     CScaffold {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -80,7 +83,7 @@ private fun SignInScreen(viewModel: ComponentViewModel<SignInState>, es: EventSe
                     modifier = Modifier.fillMaxWidth(),
                     value = username.value,
                     placeholder = stringResource(id = R.string.username_or_email_hint),
-                    onValueChange = { es.send(SignInEvent.UsernameChange(it)) })
+                    onValueChange = { viewModel.onEvent(SignInEvent.UsernameChange(it)) })
                 CHorizontalSpacer(height = 24.dp)
                 val password = rememberSaveable { mutableStateOf(state.password) }
                 CTextField(
@@ -88,7 +91,7 @@ private fun SignInScreen(viewModel: ComponentViewModel<SignInState>, es: EventSe
                     value = password.value,
                     placeholder = stringResource(id = R.string.password_hint),
                     visualTransformation = PasswordVisualTransformation(),
-                    onValueChange = { es.send(SignInEvent.PasswordChange(it)) }
+                    onValueChange = { viewModel.onEvent(SignInEvent.PasswordChange(it)) }
                 )
                 CHorizontalSpacer(height = 8.dp)
                 Text(
@@ -117,7 +120,7 @@ private fun SignInScreen(viewModel: ComponentViewModel<SignInState>, es: EventSe
                     )
                 }
                 CHorizontalSpacer(height = 16.dp)
-                ServiceSignBlock(es)
+                ServiceSignBlock(viewModel)
                 CHorizontalSpacer(height = 16.dp)
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -130,7 +133,7 @@ private fun SignInScreen(viewModel: ComponentViewModel<SignInState>, es: EventSe
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(16.dp),
-                onClick = { es.send(SignInEvent.ToShelterClick) }
+                onClick = { viewModel.onEvent(SignInEvent.ToShelterClick) }
             ) {
                 Text(text = stringResource(id = R.string.to_shelter), color = CapitalColors.White)
             }
@@ -138,7 +141,7 @@ private fun SignInScreen(viewModel: ComponentViewModel<SignInState>, es: EventSe
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(16.dp),
-                onClick = { es.send(SignInEvent.GoOfflineClick) }
+                onClick = { viewModel.onEvent(SignInEvent.GoOfflineClick) }
             ) {
                 Text(text = stringResource(id = R.string.go_offline), color = CapitalColors.White)
             }
@@ -147,7 +150,7 @@ private fun SignInScreen(viewModel: ComponentViewModel<SignInState>, es: EventSe
 }
 
 @Composable
-private fun ServiceSignBlock(es: EventSender<SignInEvent>) {
+private fun ServiceSignBlock(viewModel: ComponentViewModelV1<SignInState, SignInEvent>) {
     CButton(
         modifier = Modifier.fillMaxWidth(),
         text = stringResource(id = R.string.continue_with_apple),
@@ -180,7 +183,7 @@ private fun ServiceSignBlock(es: EventSender<SignInEvent>) {
 @Composable
 fun SignInScreenLight() {
     CPreview {
-        SignInScreen(SignInMockViewModel(), MockEventSender())
+        SignInScreen(SignInMockViewModel())
     }
 }
 
@@ -188,6 +191,6 @@ fun SignInScreenLight() {
 @Composable
 fun SignInScreenDark() {
     CPreview(isDark = true) {
-        SignInScreen(SignInMockViewModel(), MockEventSender())
+        SignInScreen(SignInMockViewModel())
     }
 }

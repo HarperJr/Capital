@@ -5,6 +5,7 @@ import com.android.build.api.dsl.LibraryDefaultConfig
 import com.android.build.api.dsl.LibraryExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import org.gradle.api.JavaVersion
+import org.gradle.kotlin.dsl.get
 import java.io.File
 
 fun BaseAppModuleExtension.capitalAppDefaultConfig(configClosure: ApplicationDefaultConfig.() -> Unit) {
@@ -24,10 +25,15 @@ fun BaseAppModuleExtension.capitalAppDefaultConfig(configClosure: ApplicationDef
     buildTypes {
         getByName("debug") {
             isMinifyEnabled = false
+            versionNameSuffix = "-debug"
+            applicationIdSuffix = ".debug"
+            manifestPlaceholders += "app_name" to "Capital-debug"
         }
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             isShrinkResources = false
+            signingConfig = signingConfigs["release"]
+            manifestPlaceholders += "app_name" to "Capital"
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 File("proguard-rules.pro")

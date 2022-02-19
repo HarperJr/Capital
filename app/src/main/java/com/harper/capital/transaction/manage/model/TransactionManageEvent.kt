@@ -1,5 +1,6 @@
 package com.harper.capital.transaction.manage.model
 
+import com.harper.capital.history.model.HistoryListEvent
 import java.time.LocalDate
 
 sealed class TransactionManageEvent {

@@ -7,6 +7,7 @@ import com.harper.capital.repository.transaction.mapper.LedgerEntityMapper
 import com.harper.capital.repository.transaction.mapper.TransactionEntityMapper
 import com.harper.capital.repository.transaction.mapper.TransactionMapper
 import com.harper.core.ext.defaultIfNull
+import com.harper.core.ext.orElse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -58,8 +59,12 @@ internal class TransactionRepositoryImpl(
             .defaultIfNull(0.0)
             .flowOn(Dispatchers.IO)
 
-    override fun fetchTransactions(accountId: Long?): Flow<List<Transaction>> =
-        transactionDao.selectAll()
+    override fun fetchTransactions(accountId: Long?, dateTimeAfter: LocalDateTime, dateTimeBefore: LocalDateTime): Flow<List<Transaction>> =
+        transactionDao
+            .selectAllBetween(
+                dateTimeAfter = dateTimeAfter,
+                dateTimeBefore = dateTimeBefore
+            )
             .map { transactions ->
                 val filteredTransactions = if (accountId == null) {
                     transactions

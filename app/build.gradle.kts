@@ -23,6 +23,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:\\Users\\HarperJr\\Desktop\\InDev\\Capital\\capitalkeystore")
+            storePassword = "j2HsoxA952Fk"
+            keyAlias = "capital"
+            keyPassword = "j2HsoxA952Fk"
+        }
+    }
     capitalAppDefaultConfig {
         javaCompileOptions {
             annotationProcessorOptions {

@@ -69,11 +69,14 @@ fun DependencyHandlerScope.compose() {
     implementation("androidx.compose.runtime:runtime:${Version.Library.compose}")
     implementation("androidx.compose.runtime:runtime-livedata:${Version.Library.compose}")
     implementation("androidx.compose.material:material:${Version.Library.compose}")
+    implementation("androidx.compose.material:material-icons-extended:${Version.Library.compose}")
+    implementation("androidx.compose.material:material-icons-core:${Version.Library.compose}")
     implementation("androidx.compose.foundation:foundation:${Version.Library.compose}")
     implementation("androidx.compose.foundation:foundation-layout:${Version.Library.compose}")
     implementation("androidx.compose.animation:animation:${Version.Library.compose}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
     implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
+    implementation("androidx.compose.ui:ui-tooling-preview:${Version.Library.compose}")
     debugImplementation("androidx.compose.ui:ui-tooling:${Version.Library.compose}")
 }
 

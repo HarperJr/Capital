@@ -2,7 +2,6 @@ package com.harper.capital.main
 
 import com.harper.capital.asset.AssetManageFragment
 import com.harper.capital.asset.model.AssetManageMode
-import com.harper.capital.transaction.model.TransactionType
 import com.harper.capital.history.HistoryListFragment
 import com.harper.capital.main.domain.FetchAssetsUseCase
 import com.harper.capital.main.domain.FetchSummaryUseCase
@@ -10,8 +9,8 @@ import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.TransactionFragment
-import com.harper.core.ui.ComponentViewModel
-import com.harper.core.ui.EventObserver
+import com.harper.capital.transaction.model.TransactionType
+import com.harper.core.ui.ComponentViewModelV1
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
@@ -21,11 +20,10 @@ class MainViewModel(
     private val router: GlobalRouter,
     private val fetchAssetsUseCase: FetchAssetsUseCase,
     private val fetchSummaryUseCase: FetchSummaryUseCase
-) : ComponentViewModel<MainState>(defaultState = MainState()),
-    EventObserver<MainEvent> {
+) : ComponentViewModelV1<MainState, MainEvent>(initialState = MainState()) {
 
-    override fun onFirstStart() {
-        super.onFirstStart()
+    override fun onFirstComposition() {
+        super.onFirstComposition()
         fetchAssets()
     }
 
@@ -37,7 +35,7 @@ class MainViewModel(
             ) { assets, summary -> assets to summary }
                 .flowOn(Dispatchers.Main)
                 .collect { (assets, summary) ->
-                    mutateState {
+                    update {
                         it.copy(
                             accounts = assets,
                             summary = summary,
@@ -93,7 +91,7 @@ class MainViewModel(
         router.navigateToManageAsset(
             AssetManageFragment.Params(
                 AssetManageMode.EDIT,
-                assetId = event.account.id
+                accountId = event.account.id
             )
         )
     }

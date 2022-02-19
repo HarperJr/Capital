@@ -13,7 +13,7 @@ class FetchSummaryUseCase(private val transactionRepository: TransactionReposito
     operator fun invoke(): Flow<Summary> {
         val currentDate = LocalDate.now()
         val startOfMonth = currentDate.withDayOfMonth(1).atStartOfDay()
-        val endOfMonth = currentDate.plusMonths(1).atTime(LocalTime.MIDNIGHT)
+        val endOfMonth = startOfMonth.plusMonths(1)
         return transactionRepository.fetchBalance()
             .zipWith(transactionRepository.fetchLiabilitiesBetween(dateTimeAfter = startOfMonth, dateTimeBefore = endOfMonth))
             .map { (balance, expenses) -> Summary(expenses = expenses, balance = balance) }

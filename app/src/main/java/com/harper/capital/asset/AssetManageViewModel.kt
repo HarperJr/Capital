@@ -24,7 +24,7 @@ class AssetManageViewModel(
     private val updateAssetUseCase: UpdateAssetUseCase,
     private val fetchAssetUseCase: FetchAssetUseCase
 ) : ComponentViewModelV1<AssetManageState, AssetManageEvent>(
-    defaultState = AssetManageState(mode = params.mode, isLoading = params.assetId != null)
+    initialState = AssetManageState(mode = params.mode, isLoading = params.accountId != null)
 ) {
 
     override fun onEvent(event: AssetManageEvent) {
@@ -49,9 +49,9 @@ class AssetManageViewModel(
         update { it.copy(isArchived = event.isChecked) }
     }
 
-    override fun onFirstStart() {
-        super.onFirstStart()
-        params.assetId?.let { assetId ->
+    override fun onFirstComposition() {
+        super.onFirstComposition()
+        params.accountId?.let { assetId ->
             launch {
                 val asset = fetchAssetUseCase(assetId)
                 update {
@@ -77,7 +77,7 @@ class AssetManageViewModel(
                 if (mode == AssetManageMode.ADD) {
                     addAssetUseCase(name, color, icon, currency, balance, isIncluded, metadataType)
                 } else {
-                    params.assetId?.let { assetId ->
+                    params.accountId?.let { assetId ->
                         updateAssetUseCase(
                             assetId,
                             name,

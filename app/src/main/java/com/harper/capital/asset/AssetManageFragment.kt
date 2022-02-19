@@ -28,6 +28,7 @@ import com.harper.capital.R
 import com.harper.capital.asset.component.AssetColorSelector
 import com.harper.capital.asset.component.AssetEditableCard
 import com.harper.capital.asset.model.AssetManageBottomSheet
+import com.harper.capital.asset.model.AssetManageBottomSheetState
 import com.harper.capital.asset.model.AssetManageEvent
 import com.harper.capital.asset.model.AssetManageMode
 import com.harper.capital.asset.model.AssetManageState
@@ -71,7 +72,7 @@ class AssetManageFragment : ComponentFragmentV1<AssetManageViewModel>() {
     }
 
     @Parcelize
-    class Params(val mode: AssetManageMode, val assetId: Long? = null) : Parcelable
+    class Params(val mode: AssetManageMode, val accountId: Long? = null) : Parcelable
 
     companion object {
         private const val PARAMS = "asset_manage_params"
@@ -83,17 +84,14 @@ class AssetManageFragment : ComponentFragmentV1<AssetManageViewModel>() {
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-private fun AssetManageScreen(viewModel: ComponentViewModelV1<AssetManageState, AssetManageEvent>) {
+fun AssetManageScreen(viewModel: ComponentViewModelV1<AssetManageState, AssetManageEvent>) {
     val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scaffoldState = rememberScaffoldState()
     val focusManager = LocalFocusManager.current
     CBottomSheetScaffold(
         sheetContent = {
-            val bottomSheet = remember(state.bottomSheetState) {
-                state.bottomSheetState.bottomSheet
-            }
-            BottomSheetContent(bottomSheet, viewModel)
+            BottomSheetContent(state.bottomSheetState, viewModel)
             LaunchedEffect(state.bottomSheetState) {
                 if (state.bottomSheetState.isExpended) {
                     focusManager.clearFocus(force = true)
@@ -209,10 +207,10 @@ private fun SettingsBlock(
 
 @Composable
 private fun BottomSheetContent(
-    bottomSheet: AssetManageBottomSheet?,
+    bottomSheetState: AssetManageBottomSheetState?,
     viewModel: ComponentViewModelV1<AssetManageState, AssetManageEvent>
 ) {
-    when (bottomSheet) {
+    when (val bottomSheet = bottomSheetState?.bottomSheet) {
         is AssetManageBottomSheet.Currencies -> {
             CurrencyBottomSheet(
                 currencies = bottomSheet.currencies,

@@ -33,7 +33,7 @@ abstract class ComponentFragmentV1<CVM : ComponentViewModelV1<*, *>> : Fragment(
 
     override fun onStart() {
         super.onStart()
-        viewModel.start()
+        viewModel.onComposition()
     }
 
     @Composable

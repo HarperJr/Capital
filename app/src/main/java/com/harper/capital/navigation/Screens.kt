@@ -3,13 +3,12 @@ package com.harper.capital.navigation
 import com.github.terrakok.cicerone.Screen
 import com.github.terrakok.cicerone.androidx.FragmentScreen
 import com.harper.capital.asset.AssetManageFragment
-import com.harper.capital.auth.signin.SignInFragment
+import com.harper.capital.asset.AssetManageNavArgsHolder
 import com.harper.capital.category.CategoryManageFragment
 import com.harper.capital.history.HistoryListFragment
-import com.harper.capital.main.MainFragment
-import com.harper.capital.navigation.animation.FadeInFadeOutAppearanceAnimation
 import com.harper.capital.navigation.animation.ScreenAppearanceAnimation
 import com.harper.capital.navigation.animation.SlideInLeftSlideOutRightAppearanceAnimation
+import com.harper.capital.navigation.v1.ComposableScreen
 import com.harper.capital.settings.SettingsFragment
 import com.harper.capital.shelter.ShelterFragment
 import com.harper.capital.transaction.TransactionFragment
@@ -19,21 +18,19 @@ object ScreenAppearanceAnimations {
 
     // Doesn't work, has glitches (
     operator fun get(key: String): ScreenAppearanceAnimation? = when (ScreenKey.valueOf(key)) {
-//        ScreenKey.SETTINGS -> SlideInLeftSlideOutRightAppearanceAnimation()
+        ScreenKey.SETTINGS -> SlideInLeftSlideOutRightAppearanceAnimation()
         else -> null
     }
 }
 
 object Screens {
 
-    fun signIn(): Screen = FragmentScreen(ScreenKey.SIGN_IN.name) { SignInFragment.newInstance() }
+    fun signIn(): Screen = ComposableScreen(ScreenKey.SIGN_IN.name)
 
-    fun main(): Screen = FragmentScreen(ScreenKey.MAIN.name) { MainFragment.newInstance() }
+    fun main(): Screen = ComposableScreen(ScreenKey.MAIN.name)
 
     fun assetManage(params: AssetManageFragment.Params): Screen =
-        FragmentScreen(ScreenKey.ASSET_MANAGE.name) {
-            AssetManageFragment.newInstance(params)
-        }
+        ComposableScreen(ScreenKey.ASSET_MANAGE.name, arguments = AssetManageNavArgsHolder.getArguments(params))
 
     fun categoryManage(params: CategoryManageFragment.Params): Screen =
         FragmentScreen(ScreenKey.CATEGORY_MANAGE.name) {

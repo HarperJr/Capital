@@ -8,7 +8,7 @@ import com.harper.core.ui.ComponentViewModelV1
 import com.harper.core.ui.EventObserver
 
 class AssetManageMockViewModel : ComponentViewModelV1<AssetManageState, AssetManageEvent>(
-    defaultState = AssetManageState(
+    initialState = AssetManageState(
         mode = AssetManageMode.ADD,
         isLoading = false,
         name = "Tinkoff Platinum",

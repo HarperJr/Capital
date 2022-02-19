@@ -10,6 +10,8 @@ import com.harper.capital.database.entity.LedgerEntity
 import com.harper.capital.database.entity.LedgerTable
 import com.harper.capital.database.entity.TransactionEntity
 import com.harper.capital.database.entity.TransactionTable
+import com.harper.capital.database.entity.embedded.LiabilitiesEntityEmbedded
+import com.harper.capital.database.entity.embedded.LiabilitiesTable
 import com.harper.capital.database.entity.embedded.TransactionEntityEmbedded
 import com.harper.capital.database.view.AssetBalanceTable
 import kotlinx.coroutines.flow.Flow
@@ -56,6 +58,11 @@ interface TransactionDao {
     fun selectLiabilitiesBetween(dateTimeAfter: LocalDateTime, dateTimeBefore: LocalDateTime): Flow<Double>
 
     @Transaction
-    @Query("SELECT * FROM ${TransactionTable.tableName} ORDER BY ${TransactionTable.dateTime} DESC")
-    fun selectAll(): Flow<List<TransactionEntityEmbedded>>
+    @Query(
+        """
+        SELECT * FROM ${TransactionTable.tableName} WHERE ${TransactionTable.dateTime} 
+        BETWEEN :dateTimeAfter AND :dateTimeBefore ORDER BY ${TransactionTable.dateTime} DESC
+        """
+    )
+    fun selectAllBetween(dateTimeAfter: LocalDateTime, dateTimeBefore: LocalDateTime): Flow<List<TransactionEntityEmbedded>>
 }

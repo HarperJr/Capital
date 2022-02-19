@@ -18,13 +18,4 @@ val mainModule
             scoped { FetchAssetsUseCase(get()) }
             viewModel { MainViewModel(get(), get(), get()) }
         }
-
-        scope<AssetManageFragment> {
-            scoped { UpdateAssetUseCase(get()) }
-            scoped { FetchAssetUseCase(get()) }
-            scoped { AddAssetUseCase(get()) }
-            viewModel { (params: AssetManageFragment.Params) ->
-                AssetManageViewModel(params, get(), get(), get(), get())
-            }
-        }
     }

@@ -41,11 +41,11 @@ class ShelterFragment : ComposableFragment() {
                 composable(
                     route = "${ShelterScreens.DETAILS.name}/{name}",
                     arguments = listOf(navArgument("name") { type = NavType.StringType }),
-                    enterTransition = { _, _ ->
+                    enterTransition = {
                         slideInHorizontally(initialOffsetX = { config.screenWidthDp }, animationSpec = tween(600)) +
                             fadeIn(animationSpec = tween(1000))
                     },
-                    exitTransition = { _, _ ->
+                    exitTransition = {
                         slideOutHorizontally(targetOffsetX = { config.screenWidthDp }, animationSpec = tween(600)) +
                             fadeOut(animationSpec = tween(1000))
                     }

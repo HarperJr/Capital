@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">Capital</string>
-
     <string name="overview_title">Overview</string>
 
     <string name="add_asset">Add asset</string>
@@ -75,4 +73,5 @@
     <string name="asset_name_hint">Asset name</string>
     <string name="asset_name_is_empty_error">Asset name is required, please provide it</string>
     <string name="investment">Investment</string>
+    <string name="summary_loss">Your summary loss is %s</string>
 </resources>

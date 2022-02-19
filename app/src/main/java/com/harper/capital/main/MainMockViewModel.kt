@@ -9,11 +9,10 @@ import com.harper.capital.domain.model.Currency
 import com.harper.capital.main.domain.model.Summary
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
-import com.harper.core.ui.ComponentViewModel
-import com.harper.core.ui.EventObserver
+import com.harper.core.ui.ComponentViewModelV1
 
-class MainMockViewModel : ComponentViewModel<MainState>(
-    defaultState = MainState(
+class MainMockViewModel : ComponentViewModelV1<MainState, MainEvent>(
+    initialState = MainState(
         summary = Summary(expenses = 14241.24, balance = 10000.0, Currency.RUB),
         accounts = listOf(
             Account(
@@ -38,7 +37,7 @@ class MainMockViewModel : ComponentViewModel<MainState>(
             )
         )
     )
-), EventObserver<MainEvent> {
+) {
 
     override fun onEvent(event: MainEvent) {
         /**nope**/

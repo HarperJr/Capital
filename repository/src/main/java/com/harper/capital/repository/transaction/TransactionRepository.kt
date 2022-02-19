@@ -21,5 +21,9 @@ interface TransactionRepository {
         dateTimeBefore: LocalDateTime
     ): Flow<Double>
 
-    fun fetchTransactions(accountId: Long? = null): Flow<List<Transaction>>
+    fun fetchTransactions(
+        accountId: Long? = null,
+        dateTimeAfter: LocalDateTime,
+        dateTimeBefore: LocalDateTime
+    ): Flow<List<Transaction>>
 }
