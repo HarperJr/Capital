@@ -13,17 +13,17 @@ import com.harper.capital.domain.model.Currency
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.manage.domain.FetchAssetUseCase
 import com.harper.core.ext.orElse
-import com.harper.core.ui.ComponentViewModelV1
+import com.harper.core.ui.ComponentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class AssetManageViewModel(
-    private val params: AssetManageFragment.Params,
+    private val params: AssetManageParams,
     private val router: GlobalRouter,
     private val addAssetUseCase: AddAssetUseCase,
     private val updateAssetUseCase: UpdateAssetUseCase,
     private val fetchAssetUseCase: FetchAssetUseCase
-) : ComponentViewModelV1<AssetManageState, AssetManageEvent>(
+) : ComponentViewModel<AssetManageState, AssetManageEvent>(
     initialState = AssetManageState(mode = params.mode, isLoading = params.accountId != null)
 ) {
 

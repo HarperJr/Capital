@@ -10,15 +10,14 @@ import com.harper.capital.settings.model.SettingsEvent
 import com.harper.capital.settings.model.SettingsState
 import com.harper.capital.ui.model.ColorTheme
 import com.harper.core.ui.ComponentViewModel
-import com.harper.core.ui.EventObserver
 
 class SettingsViewModel(
     private val router: GlobalRouter,
     private val changeColorThemeUseCase: ChangeColorThemeUseCase,
     private val getColorThemeUseCase: GetColorThemeUseCase
-) : ComponentViewModel<SettingsState>(
-    defaultState = SettingsState(colorTheme = getColorThemeUseCase())
-), EventObserver<SettingsEvent> {
+) : ComponentViewModel<SettingsState, SettingsEvent>(
+    initialState = SettingsState(colorTheme = getColorThemeUseCase())
+) {
 
     override fun onEvent(event: SettingsEvent) {
         when (event) {
@@ -31,13 +30,13 @@ class SettingsViewModel(
     }
 
     private fun onCurrencySelect(event: SettingsEvent.CurrencySelect) {
-        mutateState {
+        update {
             it.copy(currency = event.currency, bottomSheetState = it.bottomSheetState.copy(isExpended = false))
         }
     }
 
     private fun onColorThemeSelect(event: SettingsEvent.ColorThemeSelect) {
-        mutateState {
+        update {
             val selectedColorTheme = ColorTheme.valueOf(event.colorThemeName)
             it.copy(colorTheme = selectedColorTheme, bottomSheetState = it.bottomSheetState.copy(isExpended = false))
         }
@@ -45,7 +44,7 @@ class SettingsViewModel(
     }
 
     private fun onColorThemeSelectClick() {
-        mutateState {
+        update {
             it.copy(
                 bottomSheetState = SettingsBottomSheetState(
                     bottomSheet = SettingsBottomSheet.ColorThemes(
@@ -57,7 +56,7 @@ class SettingsViewModel(
     }
 
     private fun onCurrencySelectClick() {
-        mutateState {
+        update {
             it.copy(
                 bottomSheetState = SettingsBottomSheetState(
                     bottomSheet = SettingsBottomSheet.Currencies(

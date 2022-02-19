@@ -2,12 +2,13 @@ package com.harper.capital.prefs
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
+@Deprecated("Use DataStore for prefs instead")
 class SharedPrefs(private val sharedPrefs: SharedPreferences) {
 
     fun <T : Any> prefFlow(key: String, defaultValue: T): Flow<T> = callbackFlow {

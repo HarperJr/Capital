@@ -4,55 +4,41 @@ import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-abstract class ComponentViewModel<S : Any>(defaultState: S) : ViewModel() {
-    val state: StateFlow<S>
-        get() = _state
-    private val _state: MutableStateFlow<S> = MutableStateFlow(defaultState)
-    private var isStarted: Boolean = false
+abstract class ComponentViewModel<State, Event>(initialState: State) : ViewModel() {
+    val state: StateFlow<State>
+        get() = mutableState.asStateFlow()
+    private val mutableState: MutableStateFlow<State> = MutableStateFlow(initialState)
+    private var isComposed = false
 
-    fun start() {
-        if (!isStarted) {
-            onFirstStart()
+    abstract fun onEvent(event: Event)
+
+    fun onComposition() {
+        if (!isComposed) {
+            onFirstComposition()
         }
-        isStarted = true
+        isComposed = true
     }
 
-    protected open fun onFirstStart() {}
+    protected open fun onFirstComposition() {}
 
-    protected fun mutateState(mutation: (S) -> S) {
+    protected fun update(mutation: (State) -> State) {
         check(Looper.getMainLooper().isCurrentThread) { "Unsafe change of state is forbidden! Use main thread" }
-        _state.value = mutation.invoke(_state.value)
-    }
-
-    protected fun mutateReducedState(mutation: StateMutation<S>.() -> Unit) {
-        check(Looper.getMainLooper().isCurrentThread) { "Unsafe change of state is forbidden! Use main thread" }
-        val stateMutation = StateMutation(_state)
-            .also { mutation.invoke(it) }
-        stateMutation.newState?.let { _state.value = it }
+        mutableState.update(mutation)
     }
 
     protected fun launch(
         context: CoroutineContext = EmptyCoroutineContext,
         closure: suspend CoroutineScope.() -> Unit
     ) =
-        viewModelScope.launch(context) { closure.invoke(this) }
-
-    class StateMutation<S : Any>(private val stateFlow: StateFlow<S>) {
-        val state: S
-            get() = stateFlow.value
-        var newState: S? = null
-
-        inline fun <reified FS : S> forState(mutation: (FS) -> FS) {
-            val currentState = state
-            if (currentState is FS) {
-                newState = mutation.invoke(currentState)
-            }
-        }
-    }
+        viewModelScope.launch(context = context) { closure.invoke(this) }
 }

@@ -6,15 +6,9 @@ import org.koin.dsl.module
 
 val categoryModule
     get() = module {
+        factory { AddCategoryUseCase(get()) }
 
-        scope<CategoryManageFragment> {
-            scoped { AddCategoryUseCase(get()) }
-            viewModel { (params: CategoryManageFragment.Params) ->
-                CategoryManageViewModel(
-                    params,
-                    get(),
-                    get()
-                )
-            }
+        viewModel { (params: CategoryManageParams) ->
+            CategoryManageViewModel(params, get(), get())
         }
     }

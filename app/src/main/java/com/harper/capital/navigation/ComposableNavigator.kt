@@ -1,4 +1,4 @@
-package com.harper.capital.navigation.v1
+package com.harper.capital.navigation
 
 import androidx.navigation.NavController
 import com.github.terrakok.cicerone.Back
@@ -8,9 +8,10 @@ import com.github.terrakok.cicerone.Forward
 import com.github.terrakok.cicerone.Navigator
 import com.github.terrakok.cicerone.Replace
 import com.github.terrakok.cicerone.Screen
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
-class ComponentNavigator : Navigator {
+class ComposableNavigator : Navigator {
     private val navController: NavController
         get() = _navController.get() ?: throw IllegalStateException("Nav controller is not attached to navigator")
     private var _navController: WeakReference<NavController?> = WeakReference(null)
@@ -54,6 +55,7 @@ class ComponentNavigator : Navigator {
     }
 
     private fun applyReplace(screen: Screen) {
+        Timber.d("Replace by route: ${screen.screenKey}")
         if (screen is ComposableScreen) {
             if (localStackCopy.isNotEmpty()) {
                 navController.popBackStack()
@@ -68,6 +70,7 @@ class ComponentNavigator : Navigator {
     }
 
     private fun applyForward(screen: Screen) {
+        Timber.d("Forward by route: ${screen.screenKey}")
         if (screen is ComposableScreen) {
             navigateForward(screen)
         } else {

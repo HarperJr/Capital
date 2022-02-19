@@ -1,13 +1,13 @@
 package com.harper.capital.navigation
 
-enum class ScreenKey {
-    SIGN_IN,
-    MAIN,
-    ASSET_MANAGE,
-    CATEGORY_MANAGE,
-    TRANSACTION,
-    TRANSACTION_MANAGE,
-    HISTORY_LIST,
-    SETTINGS,
-    SHELTER // Experimental
+enum class ScreenKey(val route: String) {
+    SIGN_IN("sign_in"),
+    MAIN("main"),
+    ASSET_MANAGE("asset_manage"),
+    CATEGORY_MANAGE("category_manage"),
+    TRANSACTION("transaction"),
+    TRANSACTION_MANAGE("transaction_manage"),
+    HISTORY_LIST("history_list"),
+    SETTINGS("settings"),
+    SHELTER("shelter") // Experimental
 }

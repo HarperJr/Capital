@@ -1,10 +1,10 @@
 package com.harper.capital.navigation
 
-import com.harper.capital.asset.AssetManageFragment
-import com.harper.capital.category.CategoryManageFragment
-import com.harper.capital.history.HistoryListFragment
-import com.harper.capital.transaction.TransactionFragment
-import com.harper.capital.transaction.manage.TransactionManageFragment
+import com.harper.capital.asset.AssetManageParams
+import com.harper.capital.category.CategoryManageParams
+import com.harper.capital.history.HistoryListParams
+import com.harper.capital.transaction.TransactionParams
+import com.harper.capital.transaction.manage.TransactionManageParams
 
 interface GlobalRouter {
 
@@ -12,15 +12,15 @@ interface GlobalRouter {
 
     fun setMainAsRoot()
 
-    fun navigateToManageAsset(params: AssetManageFragment.Params)
+    fun navigateToManageAsset(params: AssetManageParams)
 
-    fun navigateToTransaction(params: TransactionFragment.Params)
+    fun navigateToTransaction(params: TransactionParams)
 
-    fun navigateToManageCategory(params: CategoryManageFragment.Params)
+    fun navigateToManageCategory(params: CategoryManageParams)
 
-    fun navigateToManageTransaction(params: TransactionManageFragment.Params)
+    fun navigateToManageTransaction(params: TransactionManageParams)
 
-    fun navigateToHistoryList(params: HistoryListFragment.Params)
+    fun navigateToHistoryList(params: HistoryListParams)
 
     fun navigateToSettings()
 

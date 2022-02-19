@@ -1,6 +1,5 @@
 package com.harper.capital.category
 
-import android.os.Parcelable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -36,9 +35,7 @@ import com.harper.capital.category.model.CategoryManageBottomSheet
 import com.harper.capital.category.model.CategoryManageEvent
 import com.harper.capital.category.model.CategoryManagePage
 import com.harper.capital.category.model.CategoryManageState
-import com.harper.capital.category.model.CategoryManageType
 import com.harper.capital.ext.getImageVector
-import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CAmountTextField
 import com.harper.core.component.CBottomSheetScaffold
 import com.harper.core.component.CButton
@@ -53,42 +50,13 @@ import com.harper.core.ext.formatCurrencyName
 import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
-import com.harper.core.ui.ComponentFragment
 import com.harper.core.ui.ComponentViewModel
-import com.harper.core.ui.EventSender
-import com.harper.core.ui.MockEventSender
-import com.harper.core.ui.withArgs
-import kotlinx.parcelize.Parcelize
-import org.koin.core.parameter.parametersOf
 import timber.log.Timber
-
-class CategoryManageFragment : ComponentFragment<CategoryManageViewModel>(),
-    EventSender<CategoryManageEvent> {
-    override val viewModel: CategoryManageViewModel by injectViewModel { parametersOf(params) }
-    private val params by requireArg<Params>(PARAMS)
-
-    override fun content(): @Composable () -> Unit = {
-        ScreenLayout {
-            CategoryManageScreen(viewModel, this)
-        }
-    }
-
-    @Parcelize
-    data class Params(val type: CategoryManageType) : Parcelable
-
-    companion object {
-        private const val PARAMS = "category_manage_params"
-
-        fun newInstance(params: Params): CategoryManageFragment =
-            CategoryManageFragment().withArgs(PARAMS to params)
-    }
-}
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
-private fun CategoryManageScreen(
-    viewModel: ComponentViewModel<CategoryManageState>,
-    es: EventSender<CategoryManageEvent>
+fun CategoryManageScreen(
+    viewModel: ComponentViewModel<CategoryManageState, CategoryManageEvent>
 ) {
     val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -98,7 +66,7 @@ private fun CategoryManageScreen(
             val bottomSheet = remember(state.bottomSheetState) {
                 state.bottomSheetState.bottomSheet
             }
-            BottomSheetContent(bottomSheet, es)
+            BottomSheetContent(bottomSheet, viewModel)
             LaunchedEffect(state.bottomSheetState) {
                 if (state.bottomSheetState.isExpended) {
                     sheetState.show()
@@ -107,7 +75,7 @@ private fun CategoryManageScreen(
                 }
             }
         },
-        topBar = { CategoryManageTopBar(es) },
+        topBar = { CategoryManageTopBar(viewModel) },
         sheetState = sheetState,
     ) {
         Timber.d("Recomposition")
@@ -120,10 +88,10 @@ private fun CategoryManageScreen(
                 TabBar(
                     data = state.tabBarData,
                     pagerState = pagerState,
-                    onTabSelect = { es.send(CategoryManageEvent.TabSelect(it)) }
+                    onTabSelect = { viewModel.onEvent(CategoryManageEvent.TabSelect(it)) }
                 )
                 HorizontalPager(state = pagerState, count = state.pages.size) { pageIndex ->
-                    PageBlock(page = state.pages[pageIndex], es = es)
+                    PageBlock(page = state.pages[pageIndex], viewModel)
                 }
             }
             CButton(
@@ -132,14 +100,14 @@ private fun CategoryManageScreen(
                     .padding(CapitalTheme.dimensions.side)
                     .navigationBarsWithImePadding(),
                 text = stringResource(id = R.string.create_new_category),
-                onClick = { es.send(CategoryManageEvent.Apply) }
+                onClick = { viewModel.onEvent(CategoryManageEvent.Apply) }
             )
         }
     }
 }
 
 @Composable
-fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
+fun PageBlock(page: CategoryManagePage, viewModel: ComponentViewModel<CategoryManageState, CategoryManageEvent>) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -151,7 +119,7 @@ fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
                 modifier = Modifier
                     .size(44.dp)
                     .background(color = CapitalTheme.colors.primaryVariant, shape = CircleShape)
-                    .clickable { es.send(CategoryManageEvent.IconSelectClick) }
+                    .clickable { viewModel.onEvent(CategoryManageEvent.IconSelectClick) }
             ) {
                 Icon(
                     modifier = Modifier.align(Alignment.Center),
@@ -167,7 +135,7 @@ fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
                 value = page.name,
                 placeholder = stringResource(id = R.string.enter_name_hint),
                 onValueChange = {
-                    es.send(CategoryManageEvent.NameChange(it))
+                    viewModel.onEvent(CategoryManageEvent.NameChange(it))
                 },
                 textColor = CapitalTheme.colors.onBackground
             )
@@ -179,7 +147,7 @@ fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
             currencyIso = page.currency.name,
             placeholder = stringResource(id = R.string.enter_amount_hint),
             onValueChange = {
-                es.send(CategoryManageEvent.AmountChange(it))
+                viewModel.onEvent(CategoryManageEvent.AmountChange(it))
             },
             textColor = CapitalTheme.colors.onBackground
         )
@@ -189,7 +157,7 @@ fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
             title = "${page.currency.name} ${page.currency.name.formatCurrencySymbol()}",
             subtitle = page.currency.name.formatCurrencyName()
         ) {
-            es.send(CategoryManageEvent.CurrencySelectClick)
+            viewModel.onEvent(CategoryManageEvent.CurrencySelectClick)
         }
     }
 }
@@ -197,20 +165,20 @@ fun PageBlock(page: CategoryManagePage, es: EventSender<CategoryManageEvent>) {
 @Composable
 private fun BottomSheetContent(
     bottomSheet: CategoryManageBottomSheet?,
-    es: EventSender<CategoryManageEvent>
+    viewModel: ComponentViewModel<CategoryManageState, CategoryManageEvent>
 ) {
     when (bottomSheet) {
         is CategoryManageBottomSheet.Currencies -> {
             CurrencyBottomSheet(
                 currencies = bottomSheet.currencies,
                 selectedCurrency = bottomSheet.selectedCurrency,
-                onCurrencySelect = { es.send(CategoryManageEvent.CurrencySelect(it)) }
+                onCurrencySelect = { viewModel.onEvent(CategoryManageEvent.CurrencySelect(it)) }
             )
         }
         is CategoryManageBottomSheet.Icons -> {
             IconsBottomSheet(
                 data = bottomSheet.data,
-                onIconSelect = { es.send(CategoryManageEvent.IconSelect(it)) }
+                onIconSelect = { viewModel.onEvent(CategoryManageEvent.IconSelect(it)) }
             )
         }
         else -> {
@@ -219,7 +187,7 @@ private fun BottomSheetContent(
 }
 
 @Composable
-private fun CategoryManageTopBar(es: EventSender<CategoryManageEvent>) {
+private fun CategoryManageTopBar(viewModel: ComponentViewModel<CategoryManageState, CategoryManageEvent>) {
     CToolbar(
         content = {
             Text(
@@ -231,7 +199,7 @@ private fun CategoryManageTopBar(es: EventSender<CategoryManageEvent>) {
         navigation = {
             CIcon(
                 imageVector = CapitalIcons.ArrowLeft,
-                onClick = { es.send(CategoryManageEvent.BackClick) }
+                onClick = { viewModel.onEvent(CategoryManageEvent.BackClick) }
             )
         }
     )
@@ -241,7 +209,7 @@ private fun CategoryManageTopBar(es: EventSender<CategoryManageEvent>) {
 @Composable
 private fun CategoryManageScreenLight() {
     CPreview {
-        CategoryManageScreen(CategoryManageMockViewModel(), MockEventSender())
+        CategoryManageScreen(CategoryManageMockViewModel())
     }
 }
 
@@ -249,6 +217,6 @@ private fun CategoryManageScreenLight() {
 @Composable
 private fun CategoryManageScreenDark() {
     CPreview(isDark = true) {
-        CategoryManageScreen(CategoryManageMockViewModel(), MockEventSender())
+        CategoryManageScreen(CategoryManageMockViewModel())
     }
 }

@@ -1,6 +1,5 @@
 package com.harper.capital.transaction.manage
 
-import android.os.Parcelable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,14 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.google.accompanist.insets.navigationBarsWithImePadding
+import com.google.accompanist.insets.imePadding
 import com.harper.capital.R
 import com.harper.capital.transaction.manage.component.TransactionHeader
 import com.harper.capital.transaction.manage.model.TransactionManageEvent
 import com.harper.capital.transaction.manage.model.TransactionManageMode
 import com.harper.capital.transaction.manage.model.TransactionManageState
 import com.harper.capital.transaction.model.TransactionType
-import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CAmountTextField
 import com.harper.core.component.CButton
 import com.harper.core.component.CDatePicker
@@ -35,57 +33,23 @@ import com.harper.core.component.CTextField
 import com.harper.core.component.CToolbar
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
-import com.harper.core.ui.ComponentFragment
 import com.harper.core.ui.ComponentViewModel
-import com.harper.core.ui.EventSender
-import com.harper.core.ui.MockEventSender
-import com.harper.core.ui.withArgs
-import kotlinx.parcelize.Parcelize
-import org.koin.core.parameter.parametersOf
 import java.time.LocalDate
 
-class TransactionManageFragment : ComponentFragment<TransactionManageViewModel>(),
-    EventSender<TransactionManageEvent> {
-    override val viewModel: TransactionManageViewModel by injectViewModel { parametersOf(params) }
-    private val params by requireArg<Params>(PARAMS)
-
-    override fun content(): @Composable () -> Unit = {
-        ScreenLayout {
-            TransactionManageScreen(viewModel, this)
-        }
-    }
-
-    @Parcelize
-    class Params(
-        val mode: TransactionManageMode,
-        val transactionId: Long? = null,
-        val sourceAccountId: Long,
-        val receiverAccountId: Long
-    ) : Parcelable
-
-    companion object {
-        private const val PARAMS = "transaction_manage_params"
-
-        fun newInstance(params: Params): TransactionManageFragment =
-            TransactionManageFragment().withArgs(PARAMS to params)
-    }
-}
-
 @Composable
-private fun TransactionManageScreen(
-    viewModel: ComponentViewModel<TransactionManageState>,
-    es: EventSender<TransactionManageEvent>
+fun TransactionManageScreen(
+    viewModel: ComponentViewModel<TransactionManageState, TransactionManageEvent>
 ) {
     val state by viewModel.state.collectAsState()
-    CScaffold(topBar = { TransactionManageTopBar(es) }) {
+    CScaffold(topBar = { TransactionManageTopBar(viewModel) }) {
         CLoaderLayout(isLoading = state.isLoading, loaderContent = {}) {
             if (state.datePickerDialogState.isVisible) {
                 CDatePickerDialog(
                     date = state.datePickerDialogState.date,
                     onDismiss = {
-                        es.send(TransactionManageEvent.HideDialog)
+                        viewModel.onEvent(TransactionManageEvent.HideDialog)
                     },
-                    onDateSelect = { es.send(TransactionManageEvent.DateSelect(it)) }
+                    onDateSelect = { viewModel.onEvent(TransactionManageEvent.DateSelect(it)) }
                 )
             }
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -108,7 +72,7 @@ private fun TransactionManageScreen(
                         title = {
                             Text(text = stringResource(id = R.string.amount))
                         },
-                        onValueChange = { es.send(TransactionManageEvent.AmountChange(it)) }
+                        onValueChange = { viewModel.onEvent(TransactionManageEvent.AmountChange(it)) }
                     )
                     CHorizontalSpacer(height = CapitalTheme.dimensions.large)
                     Text(text = stringResource(id = R.string.date))
@@ -116,8 +80,8 @@ private fun TransactionManageScreen(
                         dateStart = LocalDate.now().minusDays(30),
                         dateEnd = LocalDate.now(),
                         date = state.date,
-                        onDateSelectClick = { es.send(TransactionManageEvent.DateSelectClick(it)) },
-                        onDateSelect = { es.send(TransactionManageEvent.DateSelect(it)) }
+                        onDateSelectClick = { viewModel.onEvent(TransactionManageEvent.DateSelectClick(it)) },
+                        onDateSelect = { viewModel.onEvent(TransactionManageEvent.DateSelect(it)) }
                     )
                     CHorizontalSpacer(height = CapitalTheme.dimensions.large)
                     CTextField(
@@ -125,13 +89,13 @@ private fun TransactionManageScreen(
                         value = state.comment.orEmpty(),
                         placeholder = stringResource(id = R.string.enter_comment_hint),
                         title = { OptionalCommentTitle() },
-                        onValueChange = { es.send(TransactionManageEvent.CommentChange(it)) }
+                        onValueChange = { viewModel.onEvent(TransactionManageEvent.CommentChange(it)) }
                     )
                     CHorizontalSpacer(height = CapitalTheme.dimensions.large)
                     CPreferenceSwitch(
                         title = stringResource(id = R.string.schedule_transaction),
                         isChecked = state.isScheduled,
-                        onCheckedChange = { es.send(TransactionManageEvent.ScheduledCheckChange(it)) }
+                        onCheckedChange = { viewModel.onEvent(TransactionManageEvent.ScheduledCheckChange(it)) }
                     )
                 }
                 val applyButtonText = when (state.mode) {
@@ -142,9 +106,9 @@ private fun TransactionManageScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(CapitalTheme.dimensions.side)
-                        .navigationBarsWithImePadding(),
+                        .imePadding(),
                     text = applyButtonText,
-                    onClick = { es.send(TransactionManageEvent.Apply) }
+                    onClick = { viewModel.onEvent(TransactionManageEvent.Apply) }
                 )
             }
         }
@@ -168,11 +132,11 @@ private fun OptionalCommentTitle() {
 }
 
 @Composable
-private fun TransactionManageTopBar(es: EventSender<TransactionManageEvent>) {
+private fun TransactionManageTopBar(viewModel: ComponentViewModel<TransactionManageState, TransactionManageEvent>) {
     CToolbar(
         navigation = {
             CIcon(imageVector = CapitalIcons.ArrowLeft, onClick = {
-                es.send(TransactionManageEvent.BackClick)
+                viewModel.onEvent(TransactionManageEvent.BackClick)
             })
         }
     )
@@ -190,10 +154,7 @@ private fun TransactionType.resolveTitle() = when (this) {
 @Composable
 private fun TransactionManageScreenLight() {
     CPreview {
-        TransactionManageScreen(
-            viewModel = TransactionManageMockViewModel(),
-            es = MockEventSender()
-        )
+        TransactionManageScreen(viewModel = TransactionManageMockViewModel())
     }
 }
 
@@ -201,10 +162,7 @@ private fun TransactionManageScreenLight() {
 @Composable
 private fun TransactionManageScreenDark() {
     CPreview(isDark = true) {
-        TransactionManageScreen(
-            viewModel = TransactionManageMockViewModel(),
-            es = MockEventSender()
-        )
+        TransactionManageScreen(viewModel = TransactionManageMockViewModel())
     }
 }
 

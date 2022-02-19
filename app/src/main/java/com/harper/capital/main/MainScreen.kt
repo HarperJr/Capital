@@ -31,7 +31,6 @@ import com.harper.capital.main.component.AssetSummaryCard
 import com.harper.capital.main.domain.model.Summary
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
-import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CAmountText
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CLoaderLayout
@@ -47,8 +46,7 @@ import com.harper.core.ext.orElse
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
-import com.harper.core.ui.ComponentFragmentV1
-import com.harper.core.ui.ComponentViewModelV1
+import com.harper.core.ui.ComponentViewModel
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 import kotlinx.coroutines.flow.collect
 import java.time.LocalDate
@@ -59,25 +57,9 @@ private const val SETTINGS_MENU_ITEM_ID = 1
 
 private val MMMMDateTimeFormatter = DateTimeFormatter.ofPattern("MMMM")
 
-class MainFragment : ComponentFragmentV1<MainViewModel>() {
-    override val viewModel: MainViewModel by injectViewModel()
-
-    @Composable
-    override fun ScreenContent() {
-        ScreenLayout {
-            MainScreen(viewModel)
-        }
-    }
-
-    companion object {
-
-        fun newInstance(): MainFragment = MainFragment()
-    }
-}
-
 @Composable
 @OptIn(ExperimentalPagerApi::class, dev.chrisbanes.snapper.ExperimentalSnapperApi::class)
-fun MainScreen(viewModel: ComponentViewModelV1<MainState, MainEvent>) {
+fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
     val state by viewModel.state.collectAsState()
 
     CLoaderLayout(isLoading = state.isLoading, loaderContent = { MainScreenLoaderContent() }) {
@@ -185,7 +167,7 @@ private fun MainScreenLoaderContent() {
 }
 
 @Composable
-fun OverviewTopBar(viewModel: ComponentViewModelV1<MainState, MainEvent>, summary: Summary) {
+fun OverviewTopBar(viewModel: ComponentViewModel<MainState, MainEvent>, summary: Summary) {
     CToolbar(
         content = {
             Column(modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side)) {

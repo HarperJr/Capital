@@ -12,7 +12,7 @@
         android:theme="@style/Theme.Capital">
 
         <activity
-            android:name=".ui.CapitalActivityV1"
+            android:name=".ui.CapitalActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
 

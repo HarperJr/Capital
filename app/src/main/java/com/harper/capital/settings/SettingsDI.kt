@@ -7,9 +7,9 @@ import org.koin.dsl.module
 
 val settingsModule
     get() = module {
-        scope<SettingsFragment> {
-            scoped { GetColorThemeUseCase(get()) }
-            scoped { ChangeColorThemeUseCase(get()) }
-            viewModel { SettingsViewModel(get(), get(), get()) }
-        }
+        factory { GetColorThemeUseCase(get()) }
+
+        factory { ChangeColorThemeUseCase(get()) }
+
+        viewModel { SettingsViewModel(get(), get(), get()) }
     }

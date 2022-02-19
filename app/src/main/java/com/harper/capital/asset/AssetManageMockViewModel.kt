@@ -4,10 +4,9 @@ import com.harper.capital.asset.model.AssetManageEvent
 import com.harper.capital.asset.model.AssetManageMode
 import com.harper.capital.asset.model.AssetManageState
 import com.harper.capital.domain.model.AccountColor
-import com.harper.core.ui.ComponentViewModelV1
-import com.harper.core.ui.EventObserver
+import com.harper.core.ui.ComponentViewModel
 
-class AssetManageMockViewModel : ComponentViewModelV1<AssetManageState, AssetManageEvent>(
+class AssetManageMockViewModel : ComponentViewModel<AssetManageState, AssetManageEvent>(
     initialState = AssetManageState(
         mode = AssetManageMode.ADD,
         isLoading = false,
@@ -16,7 +15,7 @@ class AssetManageMockViewModel : ComponentViewModelV1<AssetManageState, AssetMan
         colors = AccountColor.values().toList(),
         color = AccountColor.TINKOFF
     )
-), EventObserver<AssetManageEvent> {
+) {
 
     override fun onEvent(event: AssetManageEvent) {
         /**nope**/

@@ -1,23 +1,19 @@
 package com.harper.capital.asset
 
-import android.os.Bundle
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.google.accompanist.navigation.animation.composable
 import com.harper.capital.asset.model.AssetManageMode
 import com.harper.capital.navigation.ScreenKey
-import com.harper.capital.navigation.v1.NavArgsHolder
-import com.harper.core.ext.orElse
+import com.harper.core.navigation.NavArgsSpec
+import com.harper.core.navigation.composable
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 
-object AssetManageNavArgsHolder : NavArgsHolder<AssetManageFragment.Params> {
+object AssetManageNavArgsSpec : NavArgsSpec<AssetManageParams> {
     private const val MODE = "mode"
     private const val ACCOUNT_ID = "account_id"
 
@@ -32,37 +28,34 @@ object AssetManageNavArgsHolder : NavArgsHolder<AssetManageFragment.Params> {
         }
     )
 
-    override fun getArguments(param: AssetManageFragment.Params): Map<String, Any?> =
+    override fun getArguments(param: AssetManageParams): Map<String, Any?> =
         mapOf(
-            MODE to param.mode,
+            MODE to param.mode.name,
             ACCOUNT_ID to param.accountId
         )
-
-    override fun getData(args: Bundle): AssetManageFragment.Params =
-        AssetManageFragment.Params(
-            mode = args.getString(MODE)?.let(AssetManageMode::valueOf).orElse(AssetManageMode.ADD),
-            accountId = args.getLong(ACCOUNT_ID, -1L).takeIf { it != -1L }
-        )
 }
+
+class AssetManageParams(val mode: AssetManageMode, val accountId: Long? = null)
 
 @ExperimentalAnimationApi
 fun NavGraphBuilder.assetManage() {
     composable(
-        route = "${ScreenKey.ASSET_MANAGE.name}?mode={mode}&account_id={account_id}",
-        arguments = AssetManageNavArgsHolder.navArguments
-    ) { backStackEntry ->
-        CompositionLocalProvider(LocalViewModelStoreOwner provides backStackEntry) {
-            val parameters = backStackEntry.arguments?.let {
-                AssetManageNavArgsHolder.getData(it)
-            }.orElse(AssetManageFragment.Params(mode = AssetManageMode.ADD))
-
-            val viewModel = getViewModel<AssetManageViewModel> { parametersOf(parameters) }
-            LaunchedEffect(Unit) {
-                viewModel.apply {
-                    onComposition()
-                }
-            }
-            AssetManageScreen(viewModel = viewModel)
+        route = ScreenKey.ASSET_MANAGE.route,
+        argsSpec = AssetManageNavArgsSpec
+    ) { (mode: String, accountId: Long) ->
+        val viewModel = getViewModel<AssetManageViewModel> {
+            parametersOf(
+                AssetManageParams(
+                    AssetManageMode.valueOf(mode),
+                    accountId.takeIf { it != -1L }
+                )
+            )
         }
+        LaunchedEffect(Unit) {
+            viewModel.apply {
+                onComposition()
+            }
+        }
+        AssetManageScreen(viewModel = viewModel)
     }
 }

@@ -1,11 +1,11 @@
 package com.harper.capital.navigation
 
 import com.github.terrakok.cicerone.Router
-import com.harper.capital.asset.AssetManageFragment
-import com.harper.capital.category.CategoryManageFragment
-import com.harper.capital.history.HistoryListFragment
-import com.harper.capital.transaction.TransactionFragment
-import com.harper.capital.transaction.manage.TransactionManageFragment
+import com.harper.capital.asset.AssetManageParams
+import com.harper.capital.category.CategoryManageParams
+import com.harper.capital.history.HistoryListParams
+import com.harper.capital.transaction.TransactionParams
+import com.harper.capital.transaction.manage.TransactionManageParams
 
 class GlobalRouterImpl : Router(), GlobalRouter {
 
@@ -13,19 +13,19 @@ class GlobalRouterImpl : Router(), GlobalRouter {
 
     override fun setMainAsRoot() = newRootScreen(Screens.main())
 
-    override fun navigateToManageAsset(params: AssetManageFragment.Params) =
+    override fun navigateToManageAsset(params: AssetManageParams) =
         navigateTo(Screens.assetManage(params))
 
-    override fun navigateToTransaction(params: TransactionFragment.Params) =
+    override fun navigateToTransaction(params: TransactionParams) =
         navigateTo(Screens.transaction(params))
 
-    override fun navigateToManageCategory(params: CategoryManageFragment.Params) =
+    override fun navigateToManageCategory(params: CategoryManageParams) =
         navigateTo(Screens.categoryManage(params))
 
-    override fun navigateToManageTransaction(params: TransactionManageFragment.Params) =
+    override fun navigateToManageTransaction(params: TransactionManageParams) =
         navigateTo(Screens.transactionManage(params))
 
-    override fun navigateToHistoryList(params: HistoryListFragment.Params) =
+    override fun navigateToHistoryList(params: HistoryListParams) =
         navigateTo(Screens.historyList(params))
 
     override fun navigateToSettings() = navigateTo(Screens.settings())

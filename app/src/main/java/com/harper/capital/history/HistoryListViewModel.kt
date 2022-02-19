@@ -12,9 +12,9 @@ import com.harper.capital.history.model.HistoryListEvent
 import com.harper.capital.history.model.HistoryListItem
 import com.harper.capital.history.model.HistoryListState
 import com.harper.capital.navigation.GlobalRouter
-import com.harper.capital.transaction.manage.TransactionManageFragment
+import com.harper.capital.transaction.manage.TransactionManageParams
 import com.harper.capital.transaction.manage.model.TransactionManageMode
-import com.harper.core.ui.ComponentViewModelV1
+import com.harper.core.ui.ComponentViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
@@ -22,10 +22,10 @@ import java.time.LocalDate
 
 @OptIn(FlowPreview::class)
 class HistoryListViewModel(
-    private val params: HistoryListFragment.Params,
+    private val params: HistoryListParams,
     private val router: GlobalRouter,
     private val fetchTransactionsUseCase: FetchTransactionsUseCase
-) : ComponentViewModelV1<HistoryListState, HistoryListEvent>(
+) : ComponentViewModel<HistoryListState, HistoryListEvent>(
     initialState = HistoryListState()
 ) {
 
@@ -48,7 +48,7 @@ class HistoryListViewModel(
 
     private fun fetchTransactions() {
         launch {
-            fetchTransactionsUseCase(params.assetId, state.value.selectedMonth)
+            fetchTransactionsUseCase(params.accountId, state.value.selectedMonth)
                 .map { createHistoryListItems(it) to dedicateLiabilities(it) }
                 .collect { (transactionsItems, liabilities) ->
                     update {
@@ -82,7 +82,7 @@ class HistoryListViewModel(
 
     private fun onTransactionClick(event: HistoryListEvent.OnTransactionClick) {
         router.navigateToManageTransaction(
-            TransactionManageFragment.Params(
+            TransactionManageParams(
                 mode = TransactionManageMode.EDIT,
                 transactionId = event.transaction.id,
                 sourceAccountId = event.transaction.source.id,

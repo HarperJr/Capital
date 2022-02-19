@@ -1,6 +1,5 @@
 package com.harper.capital.history
 
-import android.os.Parcelable
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,7 +30,6 @@ import com.harper.capital.history.comonent.TransferTransactionItem
 import com.harper.capital.history.model.HistoryListEvent
 import com.harper.capital.history.model.HistoryListItem
 import com.harper.capital.history.model.HistoryListState
-import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CDatePickerDialog
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CPreview
@@ -43,40 +41,14 @@ import com.harper.core.component.MenuItem
 import com.harper.core.ext.formatAmount
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
-import com.harper.core.ui.ComponentFragmentV1
-import com.harper.core.ui.ComponentViewModelV1
-import com.harper.core.ui.withArgs
-import kotlinx.parcelize.Parcelize
-import org.koin.core.parameter.parametersOf
+import com.harper.core.ui.ComponentViewModel
 import java.time.format.DateTimeFormatter
 
 private const val FILTER_MENU_ITEM_ID = 0
 private val MMMMDateFormatter = DateTimeFormatter.ofPattern("MMMM")
 
-class HistoryListFragment : ComponentFragmentV1<HistoryListViewModel>() {
-    override val viewModel: HistoryListViewModel by injectViewModel { parametersOf(params) }
-    private val params by requireArg<Params>(PARAMS)
-
-    @Composable
-    override fun ScreenContent() {
-        ScreenLayout {
-            HistoryListScreen(viewModel)
-        }
-    }
-
-    @Parcelize
-    class Params(val assetId: Long?) : Parcelable
-
-    companion object {
-        private const val PARAMS = "history_asset_params"
-
-        fun newInstance(params: Params): HistoryListFragment =
-            HistoryListFragment().withArgs(PARAMS to params)
-    }
-}
-
 @Composable
-private fun HistoryListScreen(viewModel: ComponentViewModelV1<HistoryListState, HistoryListEvent>) {
+fun HistoryListScreen(viewModel: ComponentViewModel<HistoryListState, HistoryListEvent>) {
     val state by viewModel.state.collectAsState()
 
     CScaffold(topBar = { HistoryListTopBar(viewModel) }) {
@@ -145,7 +117,7 @@ private fun HistoryListScreen(viewModel: ComponentViewModelV1<HistoryListState, 
 }
 
 @Composable
-private fun HistoryListTopBar(viewModel: ComponentViewModelV1<HistoryListState, HistoryListEvent>) {
+private fun HistoryListTopBar(viewModel: ComponentViewModel<HistoryListState, HistoryListEvent>) {
     CToolbarCommon(
         title = stringResource(id = R.string.history_title),
         onNavigationClick = { viewModel.onEvent(HistoryListEvent.BackClick) },

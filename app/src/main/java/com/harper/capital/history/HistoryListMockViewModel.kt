@@ -9,13 +9,13 @@ import com.harper.capital.domain.model.TransferTransaction
 import com.harper.capital.history.model.HistoryListEvent
 import com.harper.capital.history.model.HistoryListItem
 import com.harper.capital.history.model.HistoryListState
-import com.harper.core.ui.ComponentViewModelV1
+import com.harper.core.ui.ComponentViewModel
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 private const val PREVIEW_TRANSACTIONS_COUNT = 10
 
-class HistoryListMockViewModel : ComponentViewModelV1<HistoryListState, HistoryListEvent>(
+class HistoryListMockViewModel : ComponentViewModel<HistoryListState, HistoryListEvent>(
     initialState = HistoryListState()
 ) {
     private val assetFrom = Account(

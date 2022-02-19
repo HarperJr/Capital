@@ -26,39 +26,17 @@ import androidx.compose.ui.unit.dp
 import com.harper.capital.R
 import com.harper.capital.auth.signin.model.SignInEvent
 import com.harper.capital.auth.signin.model.SignInState
-import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CButton
 import com.harper.core.component.CChip
 import com.harper.core.component.CHorizontalSpacer
+import com.harper.core.component.CPreview
 import com.harper.core.component.CScaffold
 import com.harper.core.component.CSeparator
 import com.harper.core.component.CTextField
-import com.harper.core.component.CPreview
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.theme.capitalButtonColors
-import com.harper.core.ui.ComponentFragment
-import com.harper.core.ui.ComponentFragmentV1
 import com.harper.core.ui.ComponentViewModel
-import com.harper.core.ui.ComponentViewModelV1
-import com.harper.core.ui.EventSender
-import com.harper.core.ui.MockEventSender
-
-class SignInFragment : ComponentFragmentV1<SignInViewModel>() {
-    override val viewModel: SignInViewModel by injectViewModel()
-
-    @Composable
-    override fun ScreenContent() {
-        ScreenLayout {
-            SignInScreen(viewModel)
-        }
-    }
-
-    companion object {
-
-        fun newInstance(): SignInFragment = SignInFragment()
-    }
-}
 
 val Apple
     @Composable
@@ -68,7 +46,7 @@ val Google
     get() = ImageVector.vectorResource(id = R.drawable.ic_google)
 
 @Composable
-fun SignInScreen(viewModel: ComponentViewModelV1<SignInState, SignInEvent>) {
+fun SignInScreen(viewModel: ComponentViewModel<SignInState, SignInEvent>) {
     val state by viewModel.state.collectAsState()
     CScaffold {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -150,7 +128,7 @@ fun SignInScreen(viewModel: ComponentViewModelV1<SignInState, SignInEvent>) {
 }
 
 @Composable
-private fun ServiceSignBlock(viewModel: ComponentViewModelV1<SignInState, SignInEvent>) {
+private fun ServiceSignBlock(viewModel: ComponentViewModel<SignInState, SignInEvent>) {
     CButton(
         modifier = Modifier.fillMaxWidth(),
         text = stringResource(id = R.string.continue_with_apple),

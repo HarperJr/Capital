@@ -14,15 +14,14 @@ import com.harper.capital.domain.model.AccountType
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.core.ui.ComponentViewModel
-import com.harper.core.ui.EventObserver
 
 class CategoryManageViewModel(
-    params: CategoryManageFragment.Params,
+    params: CategoryManageParams,
     private val addCategoryUseCase: AddCategoryUseCase,
     private val router: GlobalRouter
-) : ComponentViewModel<CategoryManageState>(
-    defaultState = CategoryManageState(selectedPage = params.type.ordinal)
-), EventObserver<CategoryManageEvent> {
+) : ComponentViewModel<CategoryManageState, CategoryManageEvent>(
+    initialState = CategoryManageState(selectedPage = params.type.ordinal)
+) {
 
     override fun onEvent(event: CategoryManageEvent) {
         when (event) {
@@ -63,7 +62,7 @@ class CategoryManageViewModel(
     }
 
     private fun onNameChange(event: CategoryManageEvent.NameChange) {
-        mutateState {
+        update {
             val pages = updateSelectedPage(it) { page ->
                 page.copy(name = event.name)
             }
@@ -72,7 +71,7 @@ class CategoryManageViewModel(
     }
 
     private fun onAmountChange(event: CategoryManageEvent.AmountChange) {
-        mutateState {
+        update {
             val pages = updateSelectedPage(it) { page ->
                 page.copy(amount = event.amount)
             }
@@ -81,7 +80,7 @@ class CategoryManageViewModel(
     }
 
     private fun onIconSelect(event: CategoryManageEvent.IconSelect) {
-        mutateState {
+        update {
             val pages = updateSelectedPage(it) { page ->
                 page.copy(icon = AccountIcon.valueOf(event.iconName))
             }
@@ -90,7 +89,7 @@ class CategoryManageViewModel(
     }
 
     private fun onCurrencySelect(event: CategoryManageEvent.CurrencySelect) {
-        mutateState {
+        update {
             val pages = updateSelectedPage(it) { page ->
                 page.copy(currency = event.currency)
             }
@@ -113,13 +112,13 @@ class CategoryManageViewModel(
     }
 
     private fun onTabSelect(event: CategoryManageEvent.TabSelect) {
-        mutateState {
+        update {
             it.copy(selectedPage = event.tabIndex)
         }
     }
 
     private fun onCurrencyClick() {
-        mutateState {
+        update {
             val currency = it.pages[it.selectedPage].currency
             it.copy(
                 bottomSheetState = CategoryManageBottomSheetState(
@@ -133,7 +132,7 @@ class CategoryManageViewModel(
     }
 
     private fun onIconSelectClick() {
-        mutateState {
+        update {
             val icon = it.pages[it.selectedPage].icon
             it.copy(
                 bottomSheetState = CategoryManageBottomSheetState(

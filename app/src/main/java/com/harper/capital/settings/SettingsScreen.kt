@@ -24,7 +24,6 @@ import com.harper.capital.settings.ext.resolveText
 import com.harper.capital.settings.model.SettingsBottomSheet
 import com.harper.capital.settings.model.SettingsEvent
 import com.harper.capital.settings.model.SettingsState
-import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CBottomSheetScaffold
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CIcon
@@ -36,32 +35,11 @@ import com.harper.core.ext.formatCurrencyName
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
-import com.harper.core.ui.ComponentFragment
 import com.harper.core.ui.ComponentViewModel
-import com.harper.core.ui.EventSender
-import com.harper.core.ui.MockEventSender
-
-class SettingsFragment : ComponentFragment<SettingsViewModel>(), EventSender<SettingsEvent> {
-    override val viewModel: SettingsViewModel by injectViewModel()
-
-    override fun content(): @Composable () -> Unit = {
-        ScreenLayout {
-            SettingsScreen(viewModel, this)
-        }
-    }
-
-    companion object {
-
-        fun newInstance(): SettingsFragment = SettingsFragment()
-    }
-}
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-private fun SettingsScreen(
-    viewModel: ComponentViewModel<SettingsState>,
-    es: EventSender<SettingsEvent>
-) {
+fun SettingsScreen(viewModel: ComponentViewModel<SettingsState, SettingsEvent>) {
     val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
@@ -70,7 +48,7 @@ private fun SettingsScreen(
             val bottomSheet = remember(state.bottomSheetState) {
                 state.bottomSheetState.bottomSheet
             }
-            BottomSheetContent(bottomSheet = bottomSheet, es = es)
+            BottomSheetContent(bottomSheet = bottomSheet, viewModel)
             LaunchedEffect(state.bottomSheetState) {
                 if (state.bottomSheetState.isExpended) {
                     sheetState.show()
@@ -79,7 +57,7 @@ private fun SettingsScreen(
                 }
             }
         },
-        topBar = { SettingsTopBar(es) },
+        topBar = { SettingsTopBar(viewModel) },
         sheetState = sheetState
     ) {
         Column(
@@ -106,13 +84,13 @@ private fun SettingsScreen(
                 title = stringResource(id = R.string.color_theme),
                 subtitle = state.colorTheme.resolveText()
             ) {
-                es.send(SettingsEvent.ColorThemeSelectClick)
+                viewModel.onEvent(SettingsEvent.ColorThemeSelectClick)
             }
             CPreferenceArrow(
                 title = stringResource(id = R.string.default_currency),
                 subtitle = state.currency.name.formatCurrencyName()
             ) {
-                es.send(SettingsEvent.CurrencySelectClick)
+                viewModel.onEvent(SettingsEvent.CurrencySelectClick)
             }
             CPreferenceArrow(title = stringResource(id = R.string.help)) {}
             CPreferenceSwitch(title = stringResource(id = R.string.notifications)) {}
@@ -121,13 +99,13 @@ private fun SettingsScreen(
 }
 
 @Composable
-private fun BottomSheetContent(bottomSheet: SettingsBottomSheet?, es: EventSender<SettingsEvent>) {
+private fun BottomSheetContent(bottomSheet: SettingsBottomSheet?, viewModel: ComponentViewModel<SettingsState, SettingsEvent>) {
     when (bottomSheet) {
         is SettingsBottomSheet.ColorThemes -> {
             SelectorBottomSheet(
                 data = bottomSheet.data,
                 onValueSelect = {
-                    es.send(SettingsEvent.ColorThemeSelect(it))
+                    viewModel.onEvent(SettingsEvent.ColorThemeSelect(it))
                 }
             )
         }
@@ -135,7 +113,7 @@ private fun BottomSheetContent(bottomSheet: SettingsBottomSheet?, es: EventSende
             CurrencyBottomSheet(
                 currencies = bottomSheet.currencies,
                 selectedCurrency = bottomSheet.selectedCurrency,
-                onCurrencySelect = { es.send(SettingsEvent.CurrencySelectClick) }
+                onCurrencySelect = { viewModel.onEvent(SettingsEvent.CurrencySelectClick) }
             )
         }
         else -> {
@@ -144,7 +122,7 @@ private fun BottomSheetContent(bottomSheet: SettingsBottomSheet?, es: EventSende
 }
 
 @Composable
-private fun SettingsTopBar(es: EventSender<SettingsEvent>) {
+private fun SettingsTopBar(viewModel: ComponentViewModel<SettingsState, SettingsEvent>) {
     CToolbar(
         content = {
             Text(
@@ -157,7 +135,7 @@ private fun SettingsTopBar(es: EventSender<SettingsEvent>) {
             CIcon(
                 imageVector = CapitalIcons.ArrowLeft,
                 onClick = {
-                    es.send(SettingsEvent.BackClick)
+                    viewModel.onEvent(SettingsEvent.BackClick)
                 }
             )
         }
@@ -168,7 +146,7 @@ private fun SettingsTopBar(es: EventSender<SettingsEvent>) {
 @Composable
 private fun SettingsScreenLight() {
     CPreview(isDark = true) {
-        SettingsScreen(SettingsMockViewModel(), MockEventSender())
+        SettingsScreen(SettingsMockViewModel())
     }
 }
 
@@ -176,6 +154,6 @@ private fun SettingsScreenLight() {
 @Composable
 private fun SettingsScreenDark() {
     CPreview(isDark = true) {
-        SettingsScreen(SettingsMockViewModel(), MockEventSender())
+        SettingsScreen(SettingsMockViewModel())
     }
 }

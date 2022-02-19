@@ -14,20 +14,19 @@ import com.harper.capital.transaction.manage.model.TransactionManageState
 import com.harper.core.ext.cast
 import com.harper.core.ext.orElse
 import com.harper.core.ui.ComponentViewModel
-import com.harper.core.ui.EventObserver
 import java.time.LocalTime
 import kotlin.math.abs
 
 class TransactionManageViewModel(
-    private val params: TransactionManageFragment.Params,
+    private val params: TransactionManageParams,
     private val router: GlobalRouter,
     private val fetchAssetUseCase: FetchAssetUseCase,
     private val addTransactionUseCase: AddTransactionUseCase,
     private val updateTransactionUseCase: UpdateTransactionUseCase,
     private val fetchTransactionUseCase: FetchTransactionUseCase
-) : ComponentViewModel<TransactionManageState>(
-    defaultState = TransactionManageState(mode = params.mode)
-), EventObserver<TransactionManageEvent> {
+) : ComponentViewModel<TransactionManageState, TransactionManageEvent>(
+    initialState = TransactionManageState(mode = params.mode)
+) {
 
     override fun onEvent(event: TransactionManageEvent) {
         when (event) {
@@ -42,8 +41,8 @@ class TransactionManageViewModel(
         }
     }
 
-    override fun onFirstStart() {
-        super.onFirstStart()
+    override fun onFirstComposition() {
+        super.onFirstComposition()
         if (params.transactionId == null) {
             fetchAccounts()
         } else {
@@ -54,7 +53,7 @@ class TransactionManageViewModel(
     private fun fetchTransaction(transactionId: Long) {
         launch {
             val transaction = fetchTransactionUseCase(transactionId).cast<TransferTransaction>()
-            mutateState {
+            update {
                 it.copy(
                     accountPair = AssetPair(transaction.source, transaction.receiver),
                     amount = abs(transaction.amount),
@@ -72,7 +71,7 @@ class TransactionManageViewModel(
         launch {
             val sourceAccount = fetchAssetUseCase(params.sourceAccountId)
             val receiverAccount = fetchAssetUseCase(params.receiverAccountId)
-            mutateState {
+            update {
                 it.copy(
                     accountPair = AssetPair(sourceAccount, receiverAccount),
                     currency = sourceAccount.currency,
@@ -83,37 +82,37 @@ class TransactionManageViewModel(
     }
 
     private fun onHideDialog() {
-        mutateState {
+        update {
             it.copy(datePickerDialogState = DatePickerDialogState(isVisible = false))
         }
     }
 
     private fun onAmountChange(event: TransactionManageEvent.AmountChange) {
-        mutateState {
+        update {
             it.copy(amount = event.amount)
         }
     }
 
     private fun onCommentChange(event: TransactionManageEvent.CommentChange) {
-        mutateState {
+        update {
             it.copy(comment = event.comment.takeIf { comment -> comment.isNotEmpty() })
         }
     }
 
     private fun onDateSelect(event: TransactionManageEvent.DateSelect) {
-        mutateState {
+        update {
             it.copy(date = event.date)
         }
     }
 
     private fun onDateSelectClick(event: TransactionManageEvent.DateSelectClick) {
-        mutateState {
+        update {
             it.copy(datePickerDialogState = DatePickerDialogState(event.date, isVisible = true))
         }
     }
 
     private fun onScheduledCheckChange(event: TransactionManageEvent.ScheduledCheckChange) {
-        mutateState { it.copy(isScheduled = event.isChecked) }
+        update { it.copy(isScheduled = event.isChecked) }
     }
 
     private fun onApply() {
@@ -121,7 +120,6 @@ class TransactionManageViewModel(
             TransactionManageMode.ADD -> addTransaction()
             TransactionManageMode.EDIT -> updateTransaction()
         }
-
     }
 
     private fun updateTransaction() {

@@ -2,6 +2,7 @@ package com.harper.capital
 
 import android.app.Application
 import android.os.StrictMode
+import com.harper.capital.asset.assetModule
 import com.harper.capital.auth.authModule
 import com.harper.capital.category.categoryModule
 import com.harper.capital.database.databaseModule
@@ -48,6 +49,7 @@ class CapitalApplication : Application() {
                 appModule,
                 mainModule,
                 authModule,
+                assetModule,
                 transactionModule,
                 categoryModule,
                 historyModule,

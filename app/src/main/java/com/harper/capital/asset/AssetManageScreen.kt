@@ -1,6 +1,5 @@
 package com.harper.capital.asset
 
-import android.os.Parcelable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -36,7 +34,6 @@ import com.harper.capital.bottomsheet.CurrencyBottomSheet
 import com.harper.capital.bottomsheet.IconsBottomSheet
 import com.harper.capital.bottomsheet.SelectorBottomSheet
 import com.harper.capital.ext.resolveText
-import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CBottomSheetScaffold
 import com.harper.core.component.CButton
 import com.harper.core.component.CHorizontalSpacer
@@ -50,41 +47,15 @@ import com.harper.core.ext.compose.assetCardSize
 import com.harper.core.ext.formatCurrencyName
 import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalTheme
-import com.harper.core.ui.ComponentFragmentV1
-import com.harper.core.ui.ComponentViewModelV1
-import com.harper.core.ui.withArgs
-import kotlinx.parcelize.Parcelize
-import org.koin.core.parameter.parametersOf
+import com.harper.core.ui.ComponentViewModel
 
 private val cardHorizontalPadding: Dp
     @Composable
     get() = CapitalTheme.dimensions.side * 2
 
-class AssetManageFragment : ComponentFragmentV1<AssetManageViewModel>() {
-    override val viewModel: AssetManageViewModel by injectViewModel { parametersOf(params) }
-    private val params: Params by requireArg(PARAMS)
-
-    @Composable
-    override fun ScreenContent() {
-        ScreenLayout {
-            AssetManageScreen(viewModel)
-        }
-    }
-
-    @Parcelize
-    class Params(val mode: AssetManageMode, val accountId: Long? = null) : Parcelable
-
-    companion object {
-        private const val PARAMS = "asset_manage_params"
-
-        fun newInstance(params: Params): AssetManageFragment =
-            AssetManageFragment().withArgs(PARAMS to params)
-    }
-}
-
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-fun AssetManageScreen(viewModel: ComponentViewModelV1<AssetManageState, AssetManageEvent>) {
+fun AssetManageScreen(viewModel: ComponentViewModel<AssetManageState, AssetManageEvent>) {
     val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val scaffoldState = rememberScaffoldState()
@@ -104,7 +75,8 @@ fun AssetManageScreen(viewModel: ComponentViewModelV1<AssetManageState, AssetMan
         topBar = {
             AssetManageTopBar(
                 state,
-                onBackClick = { viewModel.onEvent(AssetManageEvent.BackClick) })
+                onBackClick = { viewModel.onEvent(AssetManageEvent.BackClick) }
+            )
         },
         sheetState = sheetState,
         scaffoldState = scaffoldState
@@ -174,7 +146,7 @@ fun AssetManageScreen(viewModel: ComponentViewModelV1<AssetManageState, AssetMan
 @Composable
 private fun SettingsBlock(
     state: AssetManageState,
-    viewModel: ComponentViewModelV1<AssetManageState, AssetManageEvent>
+    viewModel: ComponentViewModel<AssetManageState, AssetManageEvent>
 ) {
     Column(modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side)) {
         if (state.mode == AssetManageMode.ADD) {
@@ -208,7 +180,7 @@ private fun SettingsBlock(
 @Composable
 private fun BottomSheetContent(
     bottomSheetState: AssetManageBottomSheetState?,
-    viewModel: ComponentViewModelV1<AssetManageState, AssetManageEvent>
+    viewModel: ComponentViewModel<AssetManageState, AssetManageEvent>
 ) {
     when (val bottomSheet = bottomSheetState?.bottomSheet) {
         is AssetManageBottomSheet.Currencies -> {

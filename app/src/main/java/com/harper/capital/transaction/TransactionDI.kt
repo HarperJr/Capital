@@ -1,7 +1,7 @@
 package com.harper.capital.transaction
 
 import com.harper.capital.transaction.domain.FetchAssetsUseCase
-import com.harper.capital.transaction.manage.TransactionManageFragment
+import com.harper.capital.transaction.manage.TransactionManageParams
 import com.harper.capital.transaction.manage.TransactionManageViewModel
 import com.harper.capital.transaction.manage.domain.AddTransactionUseCase
 import com.harper.capital.transaction.manage.domain.FetchAssetUseCase
@@ -12,21 +12,21 @@ import org.koin.dsl.module
 
 val transactionModule
     get() = module {
+        factory { FetchAssetsUseCase(get()) }
 
-        scope<TransactionFragment> {
-            scoped { FetchAssetsUseCase(get()) }
-            viewModel { (params: TransactionFragment.Params) ->
-                TransactionViewModel(params, get(), get())
-            }
+        viewModel { (params: TransactionParams) ->
+            TransactionViewModel(params, get(), get())
         }
 
-        scope<TransactionManageFragment> {
-            scoped { AddTransactionUseCase(get()) }
-            scoped { FetchAssetUseCase(get()) }
-            scoped { FetchTransactionUseCase(get()) }
-            scoped { UpdateTransactionUseCase(get()) }
-            viewModel { (params: TransactionManageFragment.Params) ->
-                TransactionManageViewModel(params, get(), get(), get(), get(), get())
-            }
+        factory { AddTransactionUseCase(get()) }
+
+        factory { FetchAssetUseCase(get()) }
+
+        factory { FetchTransactionUseCase(get()) }
+
+        factory { UpdateTransactionUseCase(get()) }
+
+        viewModel { (params: TransactionManageParams) ->
+            TransactionManageViewModel(params, get(), get(), get(), get(), get())
         }
     }

@@ -1,4 +1,4 @@
-package com.harper.capital.navigation.v1
+package com.harper.capital.navigation
 
 import com.github.terrakok.cicerone.Screen
 

@@ -1,16 +1,16 @@
 package com.harper.capital.main
 
-import com.harper.capital.asset.AssetManageFragment
+import com.harper.capital.asset.AssetManageParams
 import com.harper.capital.asset.model.AssetManageMode
-import com.harper.capital.history.HistoryListFragment
+import com.harper.capital.history.HistoryListParams
 import com.harper.capital.main.domain.FetchAssetsUseCase
 import com.harper.capital.main.domain.FetchSummaryUseCase
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
 import com.harper.capital.navigation.GlobalRouter
-import com.harper.capital.transaction.TransactionFragment
+import com.harper.capital.transaction.TransactionParams
 import com.harper.capital.transaction.model.TransactionType
-import com.harper.core.ui.ComponentViewModelV1
+import com.harper.core.ui.ComponentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
@@ -20,7 +20,7 @@ class MainViewModel(
     private val router: GlobalRouter,
     private val fetchAssetsUseCase: FetchAssetsUseCase,
     private val fetchSummaryUseCase: FetchSummaryUseCase
-) : ComponentViewModelV1<MainState, MainEvent>(initialState = MainState()) {
+) : ComponentViewModel<MainState, MainEvent>(initialState = MainState()) {
 
     override fun onFirstComposition() {
         super.onFirstComposition()
@@ -62,17 +62,17 @@ class MainViewModel(
     }
 
     private fun onNewAssetClick() {
-        router.navigateToManageAsset(AssetManageFragment.Params(AssetManageMode.ADD))
+        router.navigateToManageAsset(AssetManageParams(AssetManageMode.ADD))
     }
 
     private fun onHistoryClick(event: MainEvent.HistoryClick) {
-        router.navigateToHistoryList(HistoryListFragment.Params(assetId = event.account?.id))
+        router.navigateToHistoryList(HistoryListParams(accountId = event.account?.id))
     }
 
     private fun onIncomeClick(event: MainEvent.IncomeClick) {
         router.navigateToTransaction(
-            TransactionFragment.Params(
-                assetId = event.account?.id,
+            TransactionParams(
+                accountId = event.account?.id,
                 TransactionType.INCOME
             )
         )
@@ -80,8 +80,8 @@ class MainViewModel(
 
     private fun onExpenseClick(event: MainEvent.ExpenseClick) {
         router.navigateToTransaction(
-            TransactionFragment.Params(
-                assetId = event.account?.id,
+            TransactionParams(
+                accountId = event.account?.id,
                 TransactionType.EXPENSE
             )
         )
@@ -89,7 +89,7 @@ class MainViewModel(
 
     private fun onEditClick(event: MainEvent.EditClick) {
         router.navigateToManageAsset(
-            AssetManageFragment.Params(
+            AssetManageParams(
                 AssetManageMode.EDIT,
                 accountId = event.account.id
             )

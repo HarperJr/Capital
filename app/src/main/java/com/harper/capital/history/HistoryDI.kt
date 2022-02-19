@@ -6,11 +6,9 @@ import org.koin.dsl.module
 
 val historyModule
     get() = module {
+        factory { FetchTransactionsUseCase(get()) }
 
-        scope<HistoryListFragment> {
-            scoped { FetchTransactionsUseCase(get()) }
-            viewModel { (params: HistoryListFragment.Params) ->
-                HistoryListViewModel(params, get(), get())
-            }
+        viewModel { (params: HistoryListParams) ->
+            HistoryListViewModel(params, get(), get())
         }
     }

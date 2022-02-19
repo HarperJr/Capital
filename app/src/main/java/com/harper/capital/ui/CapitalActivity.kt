@@ -1,46 +1,88 @@
 package com.harper.capital.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.view.WindowCompat
-import com.github.terrakok.cicerone.Navigator
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.google.accompanist.insets.ProvideWindowInsets
-import com.harper.capital.R
-import com.harper.capital.databinding.ActivityCapitalBinding
-import com.harper.capital.navigation.GlobalNavigator
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.harper.capital.asset.assetManage
+import com.harper.capital.auth.signin.signIn
+import com.harper.capital.category.categoryManage
+import com.harper.capital.history.historyList
+import com.harper.capital.main.main
+import com.harper.capital.navigation.ScreenKey
+import com.harper.capital.navigation.ComposableNavigator
+import com.harper.capital.settings.settings
+import com.harper.capital.transaction.manage.transactionManage
+import com.harper.capital.transaction.transaction
+import com.harper.capital.ui.model.ColorTheme
+import com.harper.core.theme.CapitalColors
+import com.harper.core.theme.CapitalTheme
+import kotlinx.coroutines.flow.map
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
-import org.koin.androidx.scope.activityScope
-import org.koin.androidx.viewmodel.ViewModelOwner
-import org.koin.androidx.viewmodel.scope.getViewModel
 
-class CapitalActivity : AppCompatActivity() {
-    val scope by activityScope()
-    private val viewModel by lazy(mode = LazyThreadSafetyMode.NONE) {
-        scope.getViewModel<CapitalViewModel>(owner = { ViewModelOwner.from(this) })
-    }
+@OptIn(ExperimentalAnimationApi::class)
+class CapitalActivity : ComponentActivity() {
+    private val navigator: ComposableNavigator = ComposableNavigator()
     private val navigationHolder: NavigatorHolder by inject()
 
-    private lateinit var navigator: Navigator
-
+    @SuppressLint("FlowOperatorInvokedInComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            ProvideWindowInsets(consumeWindowInsets = false) {
-                AndroidView(factory = { ActivityCapitalBinding.inflate(LayoutInflater.from(it)).root })
+            ProvideWindowInsets {
+                val isDarkThemeState by get<ColorThemeProvider>().colorThemeFlow
+                    .map { ColorTheme.valueOf(it) == ColorTheme.DARK }
+                    .collectAsState(initial = false)
+                val systemUiController = rememberSystemUiController()
+                val useDarkIcons = CapitalTheme.colors.isLight
+                SideEffect {
+                    systemUiController.setSystemBarsColor(
+                        color = CapitalColors.Transparent,
+                        darkIcons = useDarkIcons
+                    )
+                }
+                CapitalTheme(isDark = isDarkThemeState) {
+                    val navController = rememberAnimatedNavController()
+                    DisposableEffect(Unit) {
+                        navigator.attachNavController(navController)
+                        onDispose {
+                            navigator.detachNavController()
+                        }
+                    }
+                    AnimatedNavHost(
+                        navController = navController,
+                        startDestination = ScreenKey.SIGN_IN.route
+                    ) {
+                        main()
+                        signIn()
+                        assetManage()
+                        categoryManage()
+                        transaction()
+                        transactionManage()
+                        historyList()
+                        settings()
+                    }
+                }
             }
         }
-        navigator = createNavigator()
     }
 
     override fun onStart() {
         super.onStart()
-        viewModel.start()
         navigationHolder.setNavigator(navigator)
     }
 
@@ -48,7 +90,4 @@ class CapitalActivity : AppCompatActivity() {
         navigationHolder.removeNavigator()
         super.onStop()
     }
-
-    private fun createNavigator(): Navigator =
-        GlobalNavigator(this, R.id.screen_container, supportFragmentManager)
 }

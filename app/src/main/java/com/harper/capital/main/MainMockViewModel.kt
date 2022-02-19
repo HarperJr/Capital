@@ -9,9 +9,9 @@ import com.harper.capital.domain.model.Currency
 import com.harper.capital.main.domain.model.Summary
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
-import com.harper.core.ui.ComponentViewModelV1
+import com.harper.core.ui.ComponentViewModel
 
-class MainMockViewModel : ComponentViewModelV1<MainState, MainEvent>(
+class MainMockViewModel : ComponentViewModel<MainState, MainEvent>(
     initialState = MainState(
         summary = Summary(expenses = 14241.24, balance = 10000.0, Currency.RUB),
         accounts = listOf(

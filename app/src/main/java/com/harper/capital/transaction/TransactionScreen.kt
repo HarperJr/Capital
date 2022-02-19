@@ -1,6 +1,5 @@
 package com.harper.capital.transaction
 
-import android.os.Parcelable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,14 +17,12 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.harper.capital.R
-import com.harper.capital.transaction.model.TransactionType
 import com.harper.capital.transaction.component.AssetSource
 import com.harper.capital.transaction.component.NewSource
 import com.harper.capital.transaction.model.DataSetSection
 import com.harper.capital.transaction.model.TransactionEvent
 import com.harper.capital.transaction.model.TransactionPage
 import com.harper.capital.transaction.model.TransactionState
-import com.harper.capital.ui.base.ScreenLayout
 import com.harper.core.component.CButton
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CIcon
@@ -35,46 +32,15 @@ import com.harper.core.component.CToolbar
 import com.harper.core.component.TabBar
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
-import com.harper.core.ui.ComponentFragment
 import com.harper.core.ui.ComponentViewModel
-import com.harper.core.ui.EventSender
-import com.harper.core.ui.MockEventSender
-import com.harper.core.ui.withArgs
-import kotlinx.parcelize.Parcelize
-import org.koin.core.parameter.parametersOf
-
-class TransactionFragment : ComponentFragment<TransactionViewModel>(),
-    EventSender<TransactionEvent> {
-    override val viewModel: TransactionViewModel by injectViewModel { parametersOf(params) }
-    private val params by requireArg<Params>(PARAMS)
-
-    override fun content(): @Composable () -> Unit = {
-        ScreenLayout {
-            TransactionScreen(viewModel, this)
-        }
-    }
-
-    @Parcelize
-    class Params(val assetId: Long?, val transactionType: TransactionType) : Parcelable
-
-    companion object {
-        private const val PARAMS = "transaction_params"
-
-        fun newInstance(params: Params): TransactionFragment =
-            TransactionFragment().withArgs(PARAMS to params)
-    }
-}
 
 @Composable
 @OptIn(ExperimentalPagerApi::class)
-private fun TransactionScreen(
-    viewModel: ComponentViewModel<TransactionState>,
-    es: EventSender<TransactionEvent>
-) {
+fun TransactionScreen(viewModel: ComponentViewModel<TransactionState, TransactionEvent>) {
     val state by viewModel.state.collectAsState()
 
     CScaffold(
-        topBar = { TransactionTopBar(es) },
+        topBar = { TransactionTopBar(viewModel) },
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Column(
@@ -84,13 +50,13 @@ private fun TransactionScreen(
                 TabBar(
                     data = state.tabBarData,
                     pagerState = pagerState,
-                    onTabSelect = { es.send(TransactionEvent.TabSelect(it)) }
+                    onTabSelect = { viewModel.onEvent(TransactionEvent.TabSelect(it)) }
                 )
                 HorizontalPager(
                     state = pagerState,
                     count = state.pages.size
                 ) { pageIndex ->
-                    PageBlock(page = state.pages[pageIndex], es = es)
+                    PageBlock(page = state.pages[pageIndex], viewModel)
                 }
             }
             CButton(
@@ -99,14 +65,14 @@ private fun TransactionScreen(
                     .padding(16.dp),
                 text = stringResource(id = R.string.next),
                 enabled = state.isApplyButtonEnabled,
-                onClick = { es.send(TransactionEvent.Apply) }
+                onClick = { viewModel.onEvent(TransactionEvent.Apply) }
             )
         }
     }
 }
 
 @Composable
-private fun PageBlock(page: TransactionPage, es: EventSender<TransactionEvent>) {
+private fun PageBlock(page: TransactionPage, viewModel: ComponentViewModel<TransactionState, TransactionEvent>) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -122,10 +88,10 @@ private fun PageBlock(page: TransactionPage, es: EventSender<TransactionEvent>) 
             ) {
                 dataSet.accounts.forEach {
                     AssetSource(account = it, isSelected = it.id == dataSet.selectedAccountId) {
-                        es.send(TransactionEvent.AssetSourceSelect(page.type, dataSet.section, it))
+                        viewModel.onEvent(TransactionEvent.AssetSourceSelect(page.type, dataSet.section, it))
                     }
                 }
-                NewSource { es.send(TransactionEvent.NewSourceClick(page.type, dataSet.type)) }
+                NewSource { viewModel.onEvent(TransactionEvent.NewSourceClick(page.type, dataSet.type)) }
             }
         }
     }
@@ -138,7 +104,7 @@ private fun DataSetSection.resolveTitle(): String = when (this) {
 }
 
 @Composable
-private fun TransactionTopBar(es: EventSender<TransactionEvent>) {
+private fun TransactionTopBar(viewModel: ComponentViewModel<TransactionState, TransactionEvent>) {
     CToolbar(
         content = {
             Text(
@@ -149,7 +115,7 @@ private fun TransactionTopBar(es: EventSender<TransactionEvent>) {
         },
         navigation = {
             CIcon(imageVector = CapitalIcons.ArrowLeft, onClick = {
-                es.send(TransactionEvent.BackClick)
+                viewModel.onEvent(TransactionEvent.BackClick)
             })
         }
     )
@@ -158,13 +124,13 @@ private fun TransactionTopBar(es: EventSender<TransactionEvent>) {
 @Preview(showBackground = true)
 @Composable
 private fun ContentLight() {
-    TransactionScreen(TransactionMockViewModel(), es = MockEventSender())
+    TransactionScreen(TransactionMockViewModel())
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun ContentDark() {
     CPreview(isDark = true) {
-        TransactionScreen(TransactionMockViewModel(), es = MockEventSender())
+        TransactionScreen(TransactionMockViewModel())
     }
 }

@@ -12,7 +12,7 @@ import org.koin.androidx.compose.getViewModel
 
 @ExperimentalAnimationApi
 fun NavGraphBuilder.main() {
-    composable(ScreenKey.MAIN.name) { backStackEntry ->
+    composable(ScreenKey.MAIN.route) { backStackEntry ->
         CompositionLocalProvider(LocalViewModelStoreOwner provides backStackEntry) {
             val viewModel = getViewModel<MainViewModel>()
             LaunchedEffect(Unit) {
