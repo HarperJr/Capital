@@ -25,7 +25,7 @@ fun CLoaderLayout(
         targetState = isLoading,
         transitionSpec = {
             fadeIn(
-                animationSpec = tween(900, delayMillis = 90)
+                animationSpec = tween(450, delayMillis = 90)
             ) with fadeOut(
                 animationSpec = tween(90)
             )

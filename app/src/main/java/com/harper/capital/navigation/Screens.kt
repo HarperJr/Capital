@@ -19,19 +19,19 @@ object Screens {
     fun main(): Screen = ComposableScreen(ScreenKey.MAIN.route)
 
     fun assetManage(params: AssetManageParams): Screen =
-        ComposableScreen(ScreenKey.ASSET_MANAGE.route, arguments = AssetManageNavArgsSpec.getArguments(params))
+        ComposableScreen(ScreenKey.ASSET_MANAGE.route, arguments = AssetManageNavArgsSpec.args(params))
 
     fun categoryManage(params: CategoryManageParams): Screen =
-        ComposableScreen(ScreenKey.CATEGORY_MANAGE.route, arguments = CategoryManageNavArgsSpec.getArguments(params))
+        ComposableScreen(ScreenKey.CATEGORY_MANAGE.route, arguments = CategoryManageNavArgsSpec.args(params))
 
     fun transaction(params: TransactionParams): Screen =
-        ComposableScreen(ScreenKey.TRANSACTION.route, arguments = TransactionNavArgsSpec.getArguments(params))
+        ComposableScreen(ScreenKey.TRANSACTION.route, arguments = TransactionNavArgsSpec.args(params))
 
     fun transactionManage(params: TransactionManageParams): Screen =
-        ComposableScreen(ScreenKey.TRANSACTION_MANAGE.route, arguments = TransactionManageNavArgsSpec.getArguments(params))
+        ComposableScreen(ScreenKey.TRANSACTION_MANAGE.route, arguments = TransactionManageNavArgsSpec.args(params))
 
     fun historyList(params: HistoryListParams): Screen =
-        ComposableScreen(ScreenKey.HISTORY_LIST.route, arguments = HistoryListManageNavArgsSpec.getArguments(params))
+        ComposableScreen(ScreenKey.HISTORY_LIST.route, arguments = HistoryListManageNavArgsSpec.args(params))
 
     fun settings(): Screen = ComposableScreen(ScreenKey.SETTINGS.route)
 

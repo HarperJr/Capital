@@ -28,7 +28,7 @@ object AssetManageNavArgsSpec : NavArgsSpec<AssetManageParams> {
         }
     )
 
-    override fun getArguments(param: AssetManageParams): Map<String, Any?> =
+    override fun args(param: AssetManageParams): Map<String, Any?> =
         mapOf(
             MODE to param.mode.name,
             ACCOUNT_ID to param.accountId
@@ -52,9 +52,7 @@ fun NavGraphBuilder.assetManage() {
             )
         }
         LaunchedEffect(Unit) {
-            viewModel.apply {
-                onComposition()
-            }
+            viewModel.onComposition()
         }
         AssetManageScreen(viewModel = viewModel)
     }

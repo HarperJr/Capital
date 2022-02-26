@@ -12,7 +12,7 @@ data class ChargeTransaction(
 ) : Transaction(
     id = id,
     ledgers = listOf(
-        Ledger(receiver, if (receiver.type == AccountType.ASSET) LedgerType.DEBIT else LedgerType.CREDIT)
+        Ledger(id = 0L, receiver, if (receiver.type == AccountType.ASSET) LedgerType.DEBIT else LedgerType.CREDIT)
     ),
     amount = amount,
     dateTime = dateTime,

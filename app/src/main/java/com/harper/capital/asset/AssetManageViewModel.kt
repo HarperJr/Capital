@@ -37,11 +37,11 @@ class AssetManageViewModel(
             is AssetManageEvent.AssetTypeSelect -> onAssetTypeSelect(event)
             is AssetManageEvent.IncludeAssetCheckedChange -> onIncludeAssetCheckedChange(event)
             is AssetManageEvent.ActivateAssetCheckedChange -> onActivateAssetCheckedChange(event)
-            AssetManageEvent.CurrencySelectClick -> onCurrencySelectClick()
-            AssetManageEvent.AssetTypeSelectClick -> onAssetTypeSelectClick()
-            AssetManageEvent.IconSelectClick -> onIconSelectClick()
-            AssetManageEvent.BackClick -> router.back()
-            AssetManageEvent.Apply -> onApply()
+            is AssetManageEvent.CurrencySelectClick -> onCurrencySelectClick()
+            is AssetManageEvent.AssetTypeSelectClick -> onAssetTypeSelectClick()
+            is AssetManageEvent.IconSelectClick -> onIconSelectClick()
+            is AssetManageEvent.BackClick -> router.back()
+            is AssetManageEvent.Apply -> onApply()
         }
     }
 

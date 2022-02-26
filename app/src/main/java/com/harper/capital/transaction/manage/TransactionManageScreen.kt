@@ -4,13 +4,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.insets.imePadding
 import com.harper.capital.R
@@ -41,17 +45,9 @@ fun TransactionManageScreen(
     viewModel: ComponentViewModel<TransactionManageState, TransactionManageEvent>
 ) {
     val state by viewModel.state.collectAsState()
+    val focusManager = LocalFocusManager.current
     CScaffold(topBar = { TransactionManageTopBar(viewModel) }) {
         CLoaderLayout(isLoading = state.isLoading, loaderContent = {}) {
-            if (state.datePickerDialogState.isVisible) {
-                CDatePickerDialog(
-                    date = state.datePickerDialogState.date,
-                    onDismiss = {
-                        viewModel.onEvent(TransactionManageEvent.HideDialog)
-                    },
-                    onDateSelect = { viewModel.onEvent(TransactionManageEvent.DateSelect(it)) }
-                )
-            }
             Column(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier
@@ -72,15 +68,18 @@ fun TransactionManageScreen(
                         title = {
                             Text(text = stringResource(id = R.string.amount))
                         },
-                        onValueChange = { viewModel.onEvent(TransactionManageEvent.AmountChange(it)) }
+                        onValueChange = { viewModel.onEvent(TransactionManageEvent.AmountChange(it)) },
+                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = {
+                            focusManager.clearFocus()
+                        })
                     )
                     CHorizontalSpacer(height = CapitalTheme.dimensions.large)
                     Text(text = stringResource(id = R.string.date))
                     CDatePicker(
                         dateStart = LocalDate.now().minusDays(30),
                         dateEnd = LocalDate.now(),
-                        date = state.date,
-                        onDateSelectClick = { viewModel.onEvent(TransactionManageEvent.DateSelectClick(it)) },
+                        date = state.date.toLocalDate(),
                         onDateSelect = { viewModel.onEvent(TransactionManageEvent.DateSelect(it)) }
                     )
                     CHorizontalSpacer(height = CapitalTheme.dimensions.large)
@@ -140,14 +139,6 @@ private fun TransactionManageTopBar(viewModel: ComponentViewModel<TransactionMan
             })
         }
     )
-}
-
-@Composable
-private fun TransactionType.resolveTitle() = when (this) {
-    TransactionType.EXPENSE -> stringResource(id = R.string.expense)
-    TransactionType.INCOME -> stringResource(id = R.string.income)
-    TransactionType.SEND -> stringResource(id = R.string.send)
-    TransactionType.DUTY -> stringResource(id = R.string.duty)
 }
 
 @Preview(showBackground = true)

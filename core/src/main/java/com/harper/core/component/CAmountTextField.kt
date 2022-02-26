@@ -1,6 +1,7 @@
 package com.harper.core.component
 
-import android.icu.text.DecimalFormat
+import android.icu.text.NumberFormat
+import android.icu.util.ULocale
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -20,8 +22,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.harper.core.ext.formatAmount
+import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalTheme
 import kotlin.math.min
 
@@ -45,7 +47,12 @@ fun CAmountTextField(
 ) {
     val amountTextValue = rememberSaveable(amount) { mutableStateOf(amount.format()) }
     CTextField(
-        modifier = modifier,
+        modifier = modifier.onFocusChanged { focusState ->
+            val value = amountTextValue.value
+            if (!focusState.isFocused && value.endsWithDecimalSeparator()) {
+                amountTextValue.value = amountTextValue.value.removeDecimalSeparator()
+            }
+        },
         value = amountTextValue.value,
         placeholder = placeholder,
         title = title,
@@ -53,13 +60,17 @@ fun CAmountTextField(
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         onValueChange = { value ->
-            val newValue = value.toDoubleOrNull()
-            if (newValue != null && newValue != amount) {
+            if (value.endsWithDecimalSeparator() && !amountTextValue.value.endsWithDecimalSeparator()) {
                 amountTextValue.value = value
-                onValueChange.invoke(newValue)
             } else {
-                amountTextValue.value = "0"
-                onValueChange.invoke(0.0)
+                if (value.isBlank()) {
+                    onValueChange.invoke(0.0)
+                } else {
+                    val newValue = value.parse()
+                    if (newValue != amount) {
+                        onValueChange.invoke(newValue)
+                    }
+                }
             }
         },
         textStyle = textStyle,
@@ -69,13 +80,22 @@ fun CAmountTextField(
         cursorColor = textColor,
         singleLine = true,
         visualTransformation = { annotatedString ->
-            val newValue = annotatedString.text.toDoubleOrNull() ?: 0.0
-            val transformedText = newValue.formatAmount(minFractionDigits = 0)
+            val newValue = annotatedString.text
+            val transformedText = if (newValue.endsWithDecimalSeparator()) {
+                newValue.removeDecimalSeparator()
+                    .parse()
+                    .formatAmount(minFractionDigits = 0)
+                    .plus(",")
+            } else {
+                newValue.parse()
+                    .formatAmount(minFractionDigits = 0)
+            }
             val offsetDiff = transformedText.length - annotatedString.length
-            val transformedTextWithCurrencyIfExists =
-                AnnotatedString(text = newValue.formatAmount(currencyIso, minFractionDigits = 0))
+            val transformedTextWithCurrency = AnnotatedString(
+                text = transformedText.plus(currencyIso?.formatCurrencySymbol()?.let { " $it" }.orEmpty())
+            )
             TransformedText(
-                text = transformedTextWithCurrencyIfExists,
+                text = transformedTextWithCurrency,
                 offsetMapping = object : OffsetMapping {
 
                     override fun originalToTransformed(offset: Int): Int =
@@ -83,19 +103,33 @@ fun CAmountTextField(
 
                     override fun transformedToOriginal(offset: Int): Int =
                         min(offset - offsetDiff, annotatedString.length)
-                })
+                }
+            )
         },
         interactionSource = interactionSource,
         keyboardActions = keyboardActions
     )
 }
 
-private fun Double.format(
-    maxFractionDigits: Int = 2
-): String = DecimalFormat("#.##").apply {
+private fun String.endsWithDecimalSeparator(): Boolean =
+    this.endsWith(suffix = ".", ignoreCase = true) ||
+        this.endsWith(suffix = ",", ignoreCase = true)
+
+private fun String.removeDecimalSeparator(): String =
+    this.removeSuffix(suffix = ".")
+
+private fun Double.format(): String = NumberFormat.getInstance(ULocale.ENGLISH).apply {
+    isGroupingUsed = false
     minimumFractionDigits = 0
-    maximumFractionDigits = maxFractionDigits
+    maximumFractionDigits = 2
 }.format(this)
+
+private fun String.parse(): Double = NumberFormat.getInstance(ULocale.ENGLISH).apply {
+    isGroupingUsed = false
+    minimumFractionDigits = 0
+    maximumFractionDigits = 2
+}.parse(this).toDouble()
+
 
 @Preview(showBackground = true)
 @Composable
@@ -104,8 +138,9 @@ private fun AmountTextFieldLight() {
         CAmountTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            amount = 1000000.0,
+                .padding(CapitalTheme.dimensions.side),
+            amount = 1000000.5,
+            currencyIso = "RUB",
             textStyle = CapitalTheme.typography.regular,
             textColor = CapitalTheme.colors.secondary
         ) {}
@@ -117,8 +152,10 @@ private fun AmountTextFieldLight() {
 private fun AmountTextFieldDark() {
     CPreview(isDark = true) {
         CAmountTextField(
-            modifier = Modifier.padding(16.dp),
-            amount = 1221.0,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(CapitalTheme.dimensions.side),
+            amount = 1221.54,
             currencyIso = "RUB",
             textStyle = CapitalTheme.typography.regular,
             textColor = CapitalTheme.colors.secondary

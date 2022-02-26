@@ -2,12 +2,14 @@ package com.harper.capital.repository.transaction
 
 import com.harper.capital.database.DatabaseTx
 import com.harper.capital.database.dao.TransactionDao
+import com.harper.capital.domain.model.AccountType
+import com.harper.capital.domain.model.LedgerType
 import com.harper.capital.domain.model.Transaction
+import com.harper.capital.domain.model.TransferTransaction
 import com.harper.capital.repository.transaction.mapper.LedgerEntityMapper
 import com.harper.capital.repository.transaction.mapper.TransactionEntityMapper
 import com.harper.capital.repository.transaction.mapper.TransactionMapper
 import com.harper.core.ext.defaultIfNull
-import com.harper.core.ext.orElse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -35,9 +37,13 @@ internal class TransactionRepositoryImpl(
 
     override suspend fun update(transaction: Transaction) {
         databaseTx.runSuspended(context = Dispatchers.IO) {
+            val existedTransaction = transactionDao.selectById(transaction.id)
             transactionDao.update(TransactionEntityMapper(transaction))
             transactionDao.updateLedgers(
                 LedgerEntityMapper(transaction.id, transaction.amount, transaction.ledgers)
+                    .map { ledger ->
+                        ledger.copy(id = existedTransaction.ledgers.first { it.ledger.type == ledger.type }.ledger.id)
+                    }
             )
         }
     }

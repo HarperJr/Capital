@@ -1,6 +1,11 @@
 package com.harper.capital.transaction.manage
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavGraphBuilder
@@ -38,11 +43,11 @@ object TransactionManageNavArgsSpec : NavArgsSpec<TransactionManageParams> {
         }
     )
 
-    override fun getArguments(param: TransactionManageParams): Map<String, Any?> =
+    override fun args(param: TransactionManageParams): Map<String, Any?> =
         mapOf(
             TRANSACTION_ID to param.transactionId,
-            TRANSACTION_ID to param.sourceAccountId,
-            TRANSACTION_ID to param.receiverAccountId,
+            SOURCE_ACCOUNT_ID to param.sourceAccountId,
+            RECEIVER_ACCOUNT_ID to param.receiverAccountId,
             MODE to param.mode
         )
 }
@@ -58,7 +63,9 @@ class TransactionManageParams(
 fun NavGraphBuilder.transactionManage() {
     composable(
         route = ScreenKey.TRANSACTION_MANAGE.route,
-        argsSpec = TransactionManageNavArgsSpec
+        argsSpec = TransactionManageNavArgsSpec,
+        enterTransition = { slideInVertically { it } + fadeIn() },
+        exitTransition = { slideOutVertically { it } + fadeOut() }
     ) { (transactionId: Long, sourceId: Long, receiverId: Long, mode: String) ->
         val viewModel = getViewModel<TransactionManageViewModel> {
             parametersOf(

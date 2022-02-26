@@ -23,7 +23,7 @@ object CategoryManageNavArgsSpec : NavArgsSpec<CategoryManageParams> {
         }
     )
 
-    override fun getArguments(param: CategoryManageParams): Map<String, Any?> = mapOf(TYPE to param.type)
+    override fun args(param: CategoryManageParams): Map<String, Any?> = mapOf(TYPE to param.type)
 }
 
 class CategoryManageParams(val type: CategoryManageType)

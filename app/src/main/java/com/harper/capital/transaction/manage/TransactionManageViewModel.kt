@@ -30,14 +30,12 @@ class TransactionManageViewModel(
 
     override fun onEvent(event: TransactionManageEvent) {
         when (event) {
-            TransactionManageEvent.BackClick -> router.back()
+            is TransactionManageEvent.BackClick -> router.back()
             is TransactionManageEvent.AmountChange -> onAmountChange(event)
             is TransactionManageEvent.CommentChange -> onCommentChange(event)
             is TransactionManageEvent.DateSelect -> onDateSelect(event)
-            is TransactionManageEvent.DateSelectClick -> onDateSelectClick(event)
             is TransactionManageEvent.ScheduledCheckChange -> onScheduledCheckChange(event)
-            TransactionManageEvent.HideDialog -> onHideDialog()
-            TransactionManageEvent.Apply -> onApply()
+            is TransactionManageEvent.Apply -> onApply()
         }
     }
 
@@ -58,7 +56,7 @@ class TransactionManageViewModel(
                     accountPair = AssetPair(transaction.source, transaction.receiver),
                     amount = abs(transaction.amount),
                     currency = transaction.source.currency,
-                    date = transaction.dateTime.toLocalDate(),
+                    date = transaction.dateTime,
                     comment = transaction.comment,
                     isScheduled = transaction.isScheduled,
                     isLoading = false
@@ -81,12 +79,6 @@ class TransactionManageViewModel(
         }
     }
 
-    private fun onHideDialog() {
-        update {
-            it.copy(datePickerDialogState = DatePickerDialogState(isVisible = false))
-        }
-    }
-
     private fun onAmountChange(event: TransactionManageEvent.AmountChange) {
         update {
             it.copy(amount = event.amount)
@@ -95,19 +87,13 @@ class TransactionManageViewModel(
 
     private fun onCommentChange(event: TransactionManageEvent.CommentChange) {
         update {
-            it.copy(comment = event.comment.takeIf { comment -> comment.isNotEmpty() })
+            it.copy(comment = event.comment.takeIf { comment -> comment.isNotBlank() })
         }
     }
 
     private fun onDateSelect(event: TransactionManageEvent.DateSelect) {
         update {
-            it.copy(date = event.date)
-        }
-    }
-
-    private fun onDateSelectClick(event: TransactionManageEvent.DateSelectClick) {
-        update {
-            it.copy(datePickerDialogState = DatePickerDialogState(event.date, isVisible = true))
+            it.copy(date = event.date.atTime(LocalTime.now()))
         }
     }
 
@@ -124,14 +110,14 @@ class TransactionManageViewModel(
 
     private fun updateTransaction() {
         with(state.value) {
-            if (accountPair != null) {
+            if (accountPair != null && params.transactionId != null) {
                 val (sourceAccount, receiverAccount) = accountPair
                 val transaction = TransferTransaction(
-                    id = params.transactionId.orElse(0L),
+                    id = params.transactionId,
                     source = sourceAccount,
                     receiver = receiverAccount,
                     amount = amount,
-                    dateTime = date.atTime(LocalTime.now()),
+                    dateTime = date,
                     comment = comment,
                     isScheduled = isScheduled
                 )
@@ -152,7 +138,7 @@ class TransactionManageViewModel(
                     source = sourceAccount,
                     receiver = receiverAccount,
                     amount = amount,
-                    dateTime = date.atTime(LocalTime.now()),
+                    dateTime = date,
                     comment = comment,
                     isScheduled = isScheduled
                 )

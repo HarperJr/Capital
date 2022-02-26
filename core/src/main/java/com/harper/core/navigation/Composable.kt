@@ -17,21 +17,17 @@ import com.harper.core.ext.orElse
 @ExperimentalAnimationApi
 fun NavGraphBuilder.composable(
     route: String,
-    argsSpec: NavArgsSpec<*>,
+    argsSpec: NavArgsSpec<*>? = null,
     deepLinks: List<NavDeepLink> = emptyList(),
     enterTransition: (AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition?)? = null,
     exitTransition: (AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition?)? = null,
-    popEnterTransition: (
-    AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition?
-    )? = enterTransition,
-    popExitTransition: (
-    AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition?
-    )? = exitTransition,
+    popEnterTransition: (AnimatedContentScope<NavBackStackEntry>.() -> EnterTransition?)? = enterTransition,
+    popExitTransition: (AnimatedContentScope<NavBackStackEntry>.() -> ExitTransition?)? = exitTransition,
     content: @Composable AnimatedVisibilityScope.(NavArgsHolder) -> Unit
 ) {
     val routeWithArgs = buildString {
         append(route)
-        if (argsSpec.navArguments.isNotEmpty()) {
+        if (argsSpec != null && argsSpec.navArguments.isNotEmpty()) {
             append(
                 argsSpec.navArguments.joinToString(prefix = "?", separator = "&") {
                     "${it.name}={${it.name}}"
@@ -41,7 +37,7 @@ fun NavGraphBuilder.composable(
     }
     composable(
         route = routeWithArgs,
-        arguments = argsSpec.navArguments,
+        arguments = argsSpec?.navArguments.orEmpty(),
         deepLinks,
         enterTransition = enterTransition,
         exitTransition = exitTransition,
@@ -49,10 +45,9 @@ fun NavGraphBuilder.composable(
         popExitTransition = popExitTransition,
     ) { backStackEntry ->
         CompositionLocalProvider(LocalViewModelStoreOwner provides backStackEntry) {
-            val parameters = backStackEntry.arguments?.let {
-                argsSpec.getNavArgsHolder(it)
-            }.orElse(NavArgsHolder())
-
+            val parameters = backStackEntry.arguments
+                ?.let { argsSpec?.getNavArgsHolder(it) }
+                .orElse(NavArgsHolder())
             content.invoke(this, parameters)
         }
     }

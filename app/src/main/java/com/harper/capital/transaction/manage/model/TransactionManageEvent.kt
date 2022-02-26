@@ -6,8 +6,6 @@ sealed class TransactionManageEvent {
 
     class AmountChange(val amount: Double) : TransactionManageEvent()
 
-    class DateSelectClick(val date: LocalDate) : TransactionManageEvent()
-
     class DateSelect(val date: LocalDate) : TransactionManageEvent()
 
     class CommentChange(val comment: String) : TransactionManageEvent()

@@ -9,4 +9,8 @@ sealed class SignInEvent {
     object GoOfflineClick : SignInEvent()
 
     object ToShelterClick : SignInEvent()
+
+    object SignInAppleClick : SignInEvent()
+
+    object SignInGoogleClick : SignInEvent()
 }

@@ -3,6 +3,7 @@ package com.harper.capital.main
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -17,6 +18,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -55,7 +57,7 @@ import java.time.format.DateTimeFormatter
 private const val ADD_ASSET_MENU_ITEM_ID = 0
 private const val SETTINGS_MENU_ITEM_ID = 1
 
-private val MMMMDateTimeFormatter = DateTimeFormatter.ofPattern("MMMM")
+private val MMMMDateTimeFormatter = DateTimeFormatter.ofPattern("LLLL")
 
 @Composable
 @OptIn(ExperimentalPagerApi::class, dev.chrisbanes.snapper.ExperimentalSnapperApi::class)
@@ -63,7 +65,7 @@ fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
     val state by viewModel.state.collectAsState()
 
     CLoaderLayout(isLoading = state.isLoading, loaderContent = { MainScreenLoaderContent() }) {
-        CScaffold(topBar = { OverviewTopBar(viewModel, summary = state.summary) }) {
+        CScaffold(topBar = { MainScreenTopBar(viewModel, summary = state.summary) }) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 CHorizontalSpacer(height = CapitalTheme.dimensions.large)
                 val assetListState = rememberLazyListState()
@@ -132,7 +134,7 @@ private fun MainScreenLoaderContent() {
                                 highlight = PlaceholderHighlight.shimmer(highlightColor = CapitalColors.White)
                             ),
                         text = "100 000 000,00 P",
-                        style = CapitalTheme.typography.title
+                        style = CapitalTheme.typography.subtitle
                     )
                     CHorizontalSpacer(height = CapitalTheme.dimensions.small)
                     Text(
@@ -150,11 +152,23 @@ private fun MainScreenLoaderContent() {
         )
     }) {
         Column {
-            CHorizontalSpacer(height = 24.dp)
+            CHorizontalSpacer(height = CapitalTheme.dimensions.large)
             Box(
                 modifier = Modifier
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = CapitalTheme.dimensions.large)
                     .assetCardSize()
+                    .placeholder(
+                        visible = true,
+                        color = CapitalTheme.colors.primaryVariant,
+                        shape = CapitalTheme.shapes.extraLarge,
+                        highlight = PlaceholderHighlight.shimmer(highlightColor = CapitalColors.White)
+                    )
+            )
+            CHorizontalSpacer(height = CapitalTheme.dimensions.large)
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = CapitalTheme.dimensions.large)
+                    .height(40.dp)
                     .placeholder(
                         visible = true,
                         color = CapitalTheme.colors.primaryVariant,
@@ -167,7 +181,7 @@ private fun MainScreenLoaderContent() {
 }
 
 @Composable
-fun OverviewTopBar(viewModel: ComponentViewModel<MainState, MainEvent>, summary: Summary) {
+fun MainScreenTopBar(viewModel: ComponentViewModel<MainState, MainEvent>, summary: Summary) {
     CToolbar(
         content = {
             Column(modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side)) {
@@ -184,7 +198,7 @@ fun OverviewTopBar(viewModel: ComponentViewModel<MainState, MainEvent>, summary:
                         LocalDate.now().format(MMMMDateTimeFormatter)
                     ),
                     style = CapitalTheme.typography.titleSmall,
-                    color = CapitalColors.Blue
+                    color = CapitalTheme.colors.secondary
                 )
             }
         },
@@ -215,6 +229,14 @@ private fun ContentLight() {
 @Composable
 private fun MainScreenDark() {
     CPreview(isDark = true) {
+        MainScreen(MainMockViewModel())
+    }
+}
+
+@Preview(showBackground = true, name = "Content side small", device = Devices.PIXEL)
+@Composable
+private fun ContentSizeSmall() {
+    CPreview {
         MainScreen(MainMockViewModel())
     }
 }

@@ -2,6 +2,7 @@ package com.harper.capital.transaction.model
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.harper.capital.BuildConfig
 import com.harper.capital.R
 import com.harper.core.component.Tab
 import com.harper.core.component.TabBarData
@@ -20,9 +21,11 @@ data class TransactionState(
         }
 }
 
-private fun emptyPages(): List<TransactionPage> = TransactionType.values().map {
-    TransactionPage(type = it, accountDataSets = emptyList())
-}
+private fun emptyPages(): List<TransactionPage> = TransactionType.values()
+    .filter { if (BuildConfig.DEBUG) true else it != TransactionType.DUTY }
+    .map {
+        TransactionPage(type = it, accountDataSets = emptyList())
+    }
 
 private fun TransactionType.resolveTitleRes(): Int = when (this) {
     TransactionType.EXPENSE -> R.string.expense

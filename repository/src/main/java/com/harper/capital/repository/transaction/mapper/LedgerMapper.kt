@@ -10,6 +10,7 @@ internal object LedgerMapper : (LedgerEntityEmbedded) -> Ledger {
 
     override fun invoke(entity: LedgerEntityEmbedded): Ledger = with(entity) {
         Ledger(
+            id = entity.ledger.id,
             account = AccountMapper(entity.account, null, null),
             type = when (ledger.type) {
                 LedgerEntityType.DEBIT -> LedgerType.DEBIT

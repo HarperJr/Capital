@@ -4,7 +4,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -25,8 +28,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import com.harper.capital.R
 import com.harper.capital.domain.model.AccountColor
 import com.harper.capital.domain.model.AccountIcon
@@ -36,8 +37,10 @@ import com.harper.capital.ext.accountContentColorFor
 import com.harper.capital.ext.accountOnBackgroundColorFor
 import com.harper.capital.ext.getImageVector
 import com.harper.core.component.CAmountTextField
+import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CPreview
 import com.harper.core.component.CTextField
+import com.harper.core.component.CVerticalSpacer
 import com.harper.core.ext.compose.assetCardSize
 import com.harper.core.theme.CapitalTheme
 
@@ -58,80 +61,60 @@ fun AssetEditableCard(
         modifier = modifier.assetCardSize(),
         backgroundColor = cardBackgroundColor,
         contentColor = accountContentColorFor(cardBackgroundColor),
-        elevation = 4.dp,
+        elevation = 0.dp,
         shape = CapitalTheme.shapes.extraLarge
     ) {
         Image(
-            modifier = Modifier
-                .fillMaxSize(0.5f),
+            modifier = Modifier.fillMaxSize(0.5f),
             imageVector = ImageVector.vectorResource(id = R.drawable.bg_card_whiteness),
             contentDescription = null,
             alignment = Alignment.CenterEnd
         )
         val focusManager = LocalFocusManager.current
-
-        val onCardBackgroundColor = accountOnBackgroundColorFor(cardBackgroundColor)
-        ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-            val (tfName, atfAmount, bIcon) = createRefs()
-            CTextField(
-                modifier = Modifier.constrainAs(tfName) {
-                    linkTo(
-                        start = bIcon.end,
-                        end = parent.end,
-                        startMargin = 16.dp,
-                        endMargin = 16.dp
-                    )
-                    centerVerticallyTo(bIcon)
-                    width = Dimension.fillToConstraints
-                },
-                value = name,
-                placeholder = stringResource(id = R.string.asset_name_hint),
-                backgroundColor = onCardBackgroundColor,
-                singleLine = true,
-                onValueChange = { onNameChange.invoke(it) },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    capitalization = KeyboardCapitalization.Words,
-                    imeAction = ImeAction.Next,
-                    autoCorrect = true
-                ),
-                keyboardActions = KeyboardActions(onNext = {
-                    focusManager.moveFocus(FocusDirection.Down)
-                })
-            )
-            Box(
-                modifier = Modifier
-                    .size(44.dp)
-                    .background(color = onCardBackgroundColor, shape = CircleShape)
-                    .clickable { onIconClick.invoke() }
-                    .constrainAs(bIcon) {
-                        start.linkTo(parent.start, margin = 16.dp)
-                        top.linkTo(parent.top, margin = 16.dp)
-                    }
-            ) {
-                Image(
+        val overCardBackgroundColor = accountOnBackgroundColorFor(cardBackgroundColor)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(CapitalTheme.dimensions.side)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(CapitalTheme.dimensions.medium),
-                    imageVector = icon.getImageVector(),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(color = LocalContentColor.current)
+                        .size(44.dp)
+                        .background(color = overCardBackgroundColor, shape = CircleShape)
+                        .clickable { onIconClick.invoke() }
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(CapitalTheme.dimensions.medium),
+                        imageVector = icon.getImageVector(),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(color = LocalContentColor.current)
+                    )
+                }
+                CVerticalSpacer(width = CapitalTheme.dimensions.side)
+                CTextField(
+                    value = name,
+                    placeholder = stringResource(id = R.string.asset_name_hint),
+                    backgroundColor = overCardBackgroundColor,
+                    singleLine = true,
+                    onValueChange = { onNameChange.invoke(it) },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        capitalization = KeyboardCapitalization.Words,
+                        imeAction = ImeAction.Next,
+                        autoCorrect = true
+                    ),
+                    keyboardActions = KeyboardActions(onNext = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    })
                 )
             }
+            CHorizontalSpacer(height = CapitalTheme.dimensions.side)
             CAmountTextField(
-                modifier = Modifier.constrainAs(atfAmount) {
-                    linkTo(
-                        start = parent.start,
-                        end = parent.end,
-                        startMargin = 16.dp,
-                        endMargin = 16.dp
-                    )
-                    top.linkTo(bIcon.bottom, margin = 16.dp)
-                    end.linkTo(parent.end, margin = 16.dp)
-                    width = Dimension.fillToConstraints
-                },
                 amount = balance,
                 currencyIso = currency.name,
-                backgroundColor = onCardBackgroundColor,
+                backgroundColor = overCardBackgroundColor,
                 onValueChange = { onAmountChange.invoke(it) },
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
@@ -154,7 +137,7 @@ private fun AssetEditableCardLight() {
         ) {
             AssetEditableCard(
                 name = "Tinkoff black",
-                balance = 12444.32,
+                balance = 12444.0,
                 icon = AccountIcon.TINKOFF,
                 color = AccountColor.TINKOFF,
                 currency = Currency.RUB,

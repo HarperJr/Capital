@@ -13,8 +13,8 @@ data class TransferTransaction(
 ) : Transaction(
     id = id,
     ledgers = listOf(
-        Ledger(source, LedgerType.CREDIT),
-        Ledger(receiver, LedgerType.DEBIT)
+        Ledger(id = 0L, source, LedgerType.CREDIT),
+        Ledger(id = 0L, receiver, LedgerType.DEBIT)
     ),
     amount = amount,
     dateTime = dateTime,

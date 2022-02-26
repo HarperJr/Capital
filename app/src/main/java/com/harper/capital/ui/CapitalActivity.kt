@@ -3,6 +3,7 @@ package com.harper.capital.ui
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.DisposableEffect
@@ -15,6 +16,7 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.harper.capital.BuildConfig
 import com.harper.capital.asset.assetManage
 import com.harper.capital.auth.signin.signIn
 import com.harper.capital.category.categoryManage
@@ -65,7 +67,7 @@ class CapitalActivity : ComponentActivity() {
                     }
                     AnimatedNavHost(
                         navController = navController,
-                        startDestination = ScreenKey.SIGN_IN.route
+                        startDestination = (if (BuildConfig.DEBUG) ScreenKey.SIGN_IN else ScreenKey.MAIN).route
                     ) {
                         main()
                         signIn()

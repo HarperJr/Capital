@@ -4,12 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.ModalBottomSheetValue
@@ -22,10 +25,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.harper.capital.R
@@ -51,7 +57,6 @@ import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentViewModel
-import timber.log.Timber
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class, com.google.accompanist.pager.ExperimentalPagerApi::class)
@@ -60,6 +65,7 @@ fun CategoryManageScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val focusManager = LocalFocusManager.current
 
     CBottomSheetScaffold(
         sheetContent = {
@@ -69,6 +75,7 @@ fun CategoryManageScreen(
             BottomSheetContent(bottomSheet, viewModel)
             LaunchedEffect(state.bottomSheetState) {
                 if (state.bottomSheetState.isExpended) {
+                    focusManager.clearFocus(force = true)
                     sheetState.show()
                 } else {
                     sheetState.hide()
@@ -76,45 +83,46 @@ fun CategoryManageScreen(
             }
         },
         topBar = { CategoryManageTopBar(viewModel) },
+        bottomBar = {
+            CButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(CapitalTheme.dimensions.side),
+                text = stringResource(id = R.string.create_new_category),
+                onClick = { viewModel.onEvent(CategoryManageEvent.Apply) }
+            )
+        },
         sheetState = sheetState,
     ) {
-        Timber.d("Recomposition")
         Column(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                val pagerState = rememberPagerState(initialPage = state.selectedPage)
-                TabBar(
-                    data = state.tabBarData,
-                    pagerState = pagerState,
-                    onTabSelect = { viewModel.onEvent(CategoryManageEvent.TabSelect(it)) }
-                )
-                HorizontalPager(state = pagerState, count = state.pages.size) { pageIndex ->
-                    PageBlock(page = state.pages[pageIndex], viewModel)
-                }
-            }
-            CButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(CapitalTheme.dimensions.side)
-                    .navigationBarsWithImePadding(),
-                text = stringResource(id = R.string.create_new_category),
-                onClick = { viewModel.onEvent(CategoryManageEvent.Apply) }
+            val pagerState = rememberPagerState(initialPage = state.selectedPage)
+            TabBar(
+                data = state.tabBarData,
+                pagerState = pagerState,
+                onTabSelect = { viewModel.onEvent(CategoryManageEvent.TabSelect(it)) }
             )
+            HorizontalPager(state = pagerState, count = state.pages.size) { pageIndex ->
+                PageBlock(page = state.pages[pageIndex], viewModel)
+            }
         }
     }
 }
 
 @Composable
 fun PageBlock(page: CategoryManagePage, viewModel: ComponentViewModel<CategoryManageState, CategoryManageEvent>) {
+    val focusManager = LocalFocusManager.current
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
-        CHorizontalSpacer(height = 32.dp)
-        Row(modifier = Modifier.fillMaxWidth()) {
+        CHorizontalSpacer(height = CapitalTheme.dimensions.largest)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = CapitalTheme.dimensions.side)
+        ) {
             Box(
                 modifier = Modifier
                     .size(44.dp)
@@ -130,30 +138,42 @@ fun PageBlock(page: CategoryManagePage, viewModel: ComponentViewModel<CategoryMa
             CTextField(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 8.dp)
+                    .padding(start = CapitalTheme.dimensions.side)
                     .align(Alignment.CenterVertically),
                 value = page.name,
                 placeholder = stringResource(id = R.string.enter_name_hint),
                 onValueChange = {
                     viewModel.onEvent(CategoryManageEvent.NameChange(it))
                 },
-                textColor = CapitalTheme.colors.onBackground
+                textColor = CapitalTheme.colors.onBackground,
+                keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(onNext = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                })
             )
         }
-        CHorizontalSpacer(height = 24.dp)
+        CHorizontalSpacer(height = CapitalTheme.dimensions.large)
         CAmountTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = CapitalTheme.dimensions.side),
             amount = page.amount,
             currencyIso = page.currency.name,
             placeholder = stringResource(id = R.string.enter_amount_hint),
             onValueChange = {
                 viewModel.onEvent(CategoryManageEvent.AmountChange(it))
             },
-            textColor = CapitalTheme.colors.onBackground
+            textColor = CapitalTheme.colors.onBackground,
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = {
+                focusManager.clearFocus()
+            })
         )
-        CHorizontalSpacer(height = 24.dp)
+        CHorizontalSpacer(height = CapitalTheme.dimensions.large)
         CPreferenceArrow(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = CapitalTheme.dimensions.side),
             title = "${page.currency.name} ${page.currency.name.formatCurrencySymbol()}",
             subtitle = page.currency.name.formatCurrencyName()
         ) {
@@ -191,7 +211,7 @@ private fun CategoryManageTopBar(viewModel: ComponentViewModel<CategoryManageSta
     CToolbar(
         content = {
             Text(
-                modifier = Modifier.padding(start = 16.dp),
+                modifier = Modifier.padding(start = CapitalTheme.dimensions.side),
                 text = stringResource(id = R.string.new_category),
                 style = CapitalTheme.typography.title
             )

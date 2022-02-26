@@ -3,14 +3,19 @@ package com.harper.core.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.LocalWindowInsets
@@ -29,6 +34,7 @@ fun CToolbar(
     TopAppBar(
         modifier = modifier,
         elevation = 0.dp,
+        contentColor = CapitalTheme.colors.onPrimary,
         backgroundColor = CapitalTheme.colors.background,
         contentPadding = rememberInsetsPaddingValues(
             LocalWindowInsets.current.statusBars,
@@ -60,7 +66,9 @@ fun CToolbarCommon(
         content = {
             Text(
                 text = title,
-                style = CapitalTheme.typography.title
+                style = CapitalTheme.typography.title,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
             )
         },
         navigation = {

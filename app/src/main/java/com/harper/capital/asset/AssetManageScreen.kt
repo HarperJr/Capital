@@ -12,7 +12,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -43,7 +42,6 @@ import com.harper.core.component.CPreferenceSwitch
 import com.harper.core.component.CPreview
 import com.harper.core.component.CSeparator
 import com.harper.core.component.CToolbarCommon
-import com.harper.core.ext.compose.assetCardSize
 import com.harper.core.ext.formatCurrencyName
 import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalTheme
@@ -58,7 +56,6 @@ private val cardHorizontalPadding: Dp
 fun AssetManageScreen(viewModel: ComponentViewModel<AssetManageState, AssetManageEvent>) {
     val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    val scaffoldState = rememberScaffoldState()
     val focusManager = LocalFocusManager.current
     CBottomSheetScaffold(
         sheetContent = {
@@ -78,26 +75,20 @@ fun AssetManageScreen(viewModel: ComponentViewModel<AssetManageState, AssetManag
                 onBackClick = { viewModel.onEvent(AssetManageEvent.BackClick) }
             )
         },
-        sheetState = sheetState,
-        scaffoldState = scaffoldState
+        sheetState = sheetState
     ) {
         CLoaderLayout(isLoading = state.isLoading, loaderContent = {}) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier
                         .weight(1f)
                         .verticalScroll(rememberScrollState())
                 ) {
                     AssetEditableCard(
-                        modifier = Modifier
-                            .assetCardSize()
-                            .padding(
-                                horizontal = cardHorizontalPadding,
-                                vertical = CapitalTheme.dimensions.side
-                            ),
+                        modifier = Modifier.padding(
+                            horizontal = cardHorizontalPadding,
+                            vertical = CapitalTheme.dimensions.side
+                        ),
                         name = state.name,
                         balance = state.balance,
                         icon = state.icon,
@@ -148,19 +139,22 @@ private fun SettingsBlock(
     state: AssetManageState,
     viewModel: ComponentViewModel<AssetManageState, AssetManageEvent>
 ) {
-    Column(modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side)) {
+    Column(verticalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.medium)) {
         if (state.mode == AssetManageMode.ADD) {
             CPreferenceArrow(
+                modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
                 title = "${state.currency.name} ${state.currency.name.formatCurrencySymbol()}",
                 subtitle = state.currency.name.formatCurrencyName(),
                 onClick = { viewModel.onEvent(AssetManageEvent.CurrencySelectClick) })
-            CSeparator()
+            CSeparator(modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side))
             CPreferenceArrow(
+                modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
                 title = stringResource(id = R.string.asset_type),
                 subtitle = state.metadataType.resolveText(),
                 onClick = { viewModel.onEvent(AssetManageEvent.AssetTypeSelectClick) })
         }
         CPreferenceSwitch(
+            modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
             title = stringResource(id = R.string.include_asset),
             subtitle = stringResource(id = R.string.include_asset_subtitle),
             isChecked = state.isIncluded,
@@ -168,6 +162,7 @@ private fun SettingsBlock(
         )
         if (state.mode == AssetManageMode.EDIT) {
             CPreferenceSwitch(
+                modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
                 title = stringResource(id = R.string.is_archived_asset),
                 subtitle = stringResource(id = R.string.is_archived_asset_subtitle),
                 isChecked = state.isArchived,

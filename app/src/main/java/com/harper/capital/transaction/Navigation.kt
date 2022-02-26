@@ -28,7 +28,7 @@ object TransactionNavArgsSpec : NavArgsSpec<TransactionParams> {
         }
     )
 
-    override fun getArguments(param: TransactionParams): Map<String, Any?> =
+    override fun args(param: TransactionParams): Map<String, Any?> =
         mapOf(
             ACCOUNT_ID to param.accountId,
             TRANSACTION_TYPE to param.transactionType.name

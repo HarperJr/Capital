@@ -19,6 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -27,6 +29,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.harper.core.R
+import com.harper.core.ext.orElse
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
@@ -38,13 +41,14 @@ private const val DAYS_IN_WEEK = 7
 
 private val YYYYDateFormatter = DateTimeFormatter.ofPattern("yyyy")
 private val EDDMMDateFormatter = DateTimeFormatter.ofPattern("E, dd MMM")
-private val MMMMYYYYDateFormatter = DateTimeFormatter.ofPattern("MMMM yyyy")
+private val MMMMYYYYDateFormatter = DateTimeFormatter.ofPattern("LLLL yyyy")
 
 @Composable
-fun CDatePickerDialog(date: LocalDate, onDismiss: () -> Unit, onDateSelect: (LocalDate) -> Unit) {
+fun CDatePickerDialog(date: LocalDate, dateConstraints: DateConstraints? = null, onDismiss: () -> Unit, onDateSelect: (LocalDate) -> Unit) {
     Dialog(onDismissRequest = { onDismiss.invoke() }) {
         CDatePickerDialogContent(
             date = date,
+            dateConstraints,
             onPositiveClick = {
                 onDateSelect.invoke(it)
                 onDismiss.invoke()
@@ -59,6 +63,7 @@ fun CDatePickerDialog(date: LocalDate, onDismiss: () -> Unit, onDateSelect: (Loc
 @Composable
 private fun CDatePickerDialogContent(
     date: LocalDate,
+    dateConstraints: DateConstraints?,
     onPositiveClick: (LocalDate) -> Unit,
     onNegativeClick: () -> Unit
 ) {
@@ -66,13 +71,13 @@ private fun CDatePickerDialogContent(
         color = CapitalTheme.colors.primaryVariant,
         shape = CapitalTheme.shapes.extraLarge
     ) {
-        val state = rememberDatePickerDiaogState(date)
+        val state = rememberDatePickerDiaogState(date, dateConstraints)
         Column {
             CDatePickerHeader(state)
             CHorizontalSpacer(height = CapitalTheme.dimensions.small)
             Column(modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    CIcon(imageVector = CapitalIcons.ArrowLeft) {
+                    CIcon(imageVector = CapitalIcons.ArrowLeft, isEnabled = state.isPreviousMonthAvailable()) {
                         state.toPreviousMonth()
                     }
                     Text(
@@ -81,7 +86,7 @@ private fun CDatePickerDialogContent(
                         style = CapitalTheme.typography.button,
                         textAlign = TextAlign.Center
                     )
-                    CIcon(imageVector = CapitalIcons.ArrowRight) {
+                    CIcon(imageVector = CapitalIcons.ArrowRight, isEnabled = state.isNextMonthAvailable()) {
                         state.toNextMonth()
                     }
                 }
@@ -94,15 +99,21 @@ private fun CDatePickerDialogContent(
                             val dayDate = state.dateStart.plusDays(it.toLong())
                             val dateBackgroundColor =
                                 if (state.isSelected(dayDate)) CapitalTheme.colors.secondary else CapitalColors.Transparent
+                            val textColor = if (state.isSelectable(dayDate)) {
+                                if (state.isSelected(dayDate)) CapitalColors.White else CapitalTheme.colors.textPrimary
+                            } else {
+                                CapitalTheme.colors.textSecondary
+                            }
                             Box(
                                 modifier = Modifier
-                                    .clickable { state.selectedDate = dayDate }
+                                    .clip(CircleShape)
+                                    .clickable(enabled = state.isSelectable(dayDate)) { state.selectedDate = dayDate }
                                     .background(color = dateBackgroundColor, shape = CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = dayDate.dayOfMonth.toString(),
-                                    color = CapitalTheme.colors.textPrimary
+                                    color = textColor
                                 )
                             }
                         }
@@ -134,11 +145,11 @@ private fun CDatePickerDialogContent(
                     .align(Alignment.End)
                     .padding(CapitalTheme.dimensions.side)
             ) {
-                CButton(text = stringResource(id = R.string.cancel), borderless = true) {
+                CButton(text = stringResource(id = R.string.cancel).uppercase(), borderless = true) {
                     onNegativeClick.invoke()
                 }
                 CVerticalSpacer(width = CapitalTheme.dimensions.side)
-                CButton(text = stringResource(id = R.string.ok), borderless = true) {
+                CButton(text = stringResource(id = R.string.ok).uppercase(), borderless = true) {
                     onPositiveClick.invoke(state.selectedDate)
                 }
             }
@@ -147,10 +158,10 @@ private fun CDatePickerDialogContent(
 }
 
 @Composable
-fun rememberDatePickerDiaogState(date: LocalDate): DatePickerDialogState =
-    remember { DatePickerDialogState(date) }
+fun rememberDatePickerDiaogState(date: LocalDate, dateConstraints: DateConstraints?): DatePickerDialogState =
+    remember { DatePickerDialogState(date, dateConstraints) }
 
-class DatePickerDialogState(initialDate: LocalDate) {
+class DatePickerDialogState(initialDate: LocalDate, private val dateConstraints: DateConstraints?) {
     var date: LocalDate by mutableStateOf(initialDate)
     var selectedDate: LocalDate by mutableStateOf(date)
 
@@ -175,8 +186,22 @@ class DatePickerDialogState(initialDate: LocalDate) {
         date = date.plusMonths(1L)
     }
 
+    fun isPreviousMonthAvailable(): Boolean = isInBounds(date.minusMonths(1L))
+
+    fun isNextMonthAvailable(): Boolean = isInBounds(date.plusMonths(1L))
+
     fun isSelected(date: LocalDate): Boolean =
         selectedDate == date
+
+    fun isSelectable(date: LocalDate): Boolean = isInBounds(date)
+
+    private fun isInBounds(date: LocalDate): Boolean = dateConstraints?.isInBounds(date).orElse(true)
+}
+
+class DateConstraints(private val dateStart: LocalDate, private val dateEnd: LocalDate) {
+
+    fun isInBounds(date: LocalDate): Boolean =
+        date.isAfter(dateStart) && date.isBefore(dateEnd.plusDays(1L))
 }
 
 @Composable
@@ -201,7 +226,7 @@ private fun CDatePickerHeader(state: DatePickerDialogState) {
 @Composable
 fun CDatePickerDialogLight() {
     CPreview {
-        CDatePickerDialogContent(date = LocalDate.now(), {}, {})
+        CDatePickerDialogContent(date = LocalDate.now(), dateConstraints = null, onPositiveClick = {}, onNegativeClick = {})
     }
 }
 
@@ -209,6 +234,6 @@ fun CDatePickerDialogLight() {
 @Composable
 fun CDatePickerDialogDark() {
     CPreview(isDark = true) {
-        CDatePickerDialogContent(date = LocalDate.now(), {}, {})
+        CDatePickerDialogContent(date = LocalDate.now(), dateConstraints = null, onPositiveClick = {}, onNegativeClick = {})
     }
 }

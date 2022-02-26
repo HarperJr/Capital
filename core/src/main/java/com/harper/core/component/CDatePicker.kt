@@ -54,7 +54,6 @@ fun CDatePicker(
     dateStart: LocalDate,
     dateEnd: LocalDate,
     date: LocalDate,
-    onDateSelectClick: (LocalDate) -> Unit,
     onDateSelect: (LocalDate) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -64,6 +63,21 @@ fun CDatePicker(
         lazyListState = dateListState,
         snapOffsetForItem = SnapOffsets.End
     )
+    val isDatePickerVisible = remember { mutableStateOf(false) }
+    if (isDatePickerVisible.value) {
+        CDatePickerDialog(
+            date = state.selectedDate,
+            dateConstraints = DateConstraints(dateStart, dateEnd),
+            onDismiss = {
+                isDatePickerVisible.value = false
+            },
+            onDateSelect = {
+                coroutineScope.launch {
+                    dateListState.animateScrollToItem(state.indexOf(it) - 3)
+                }
+            }
+        )
+    }
     LaunchedEffect(dateListState.isScrollInProgress) {
         snapshotFlow {
             dateListState.layoutInfo.fullyVisibleItemIndex {
@@ -77,7 +91,7 @@ fun CDatePicker(
 
     Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         CIcon(imageVector = CapitalIcons.Calendar, onClick = {
-            onDateSelectClick.invoke(state.selectedDate)
+            isDatePickerVisible.value = true
         })
         Box(
             modifier = Modifier
@@ -90,7 +104,7 @@ fun CDatePicker(
                 Box(
                     modifier = Modifier
                         .layoutId(selectorRectId)
-                        .padding(CapitalTheme.dimensions.small)
+                        .padding(vertical = CapitalTheme.dimensions.small)
                         .background(
                             color = CapitalTheme.colors.primaryVariant,
                             shape = CapitalTheme.shapes.medium
@@ -158,12 +172,15 @@ class DatePickerState(
     var selectedDate: LocalDate by mutableStateOf(date)
 
     val dateIndex: Int
-        get() = (Duration.between(dateStart.atStartOfDay(), selectedDate.atStartOfDay())
-            .toDays()).toInt()
+        get() = indexOf(selectedDate)
 
     val daysRange: Int
-        get() = (Duration.between(dateStart.atStartOfDay(), dateEnd.atStartOfDay())
-            .toDays()).toInt() + 1
+        get() = Duration.between(dateStart.atStartOfDay(), dateEnd.atStartOfDay())
+            .toDays().toInt() + 1
+
+    fun indexOf(date: LocalDate): Int =
+        Duration.between(dateStart.atStartOfDay(), date.atStartOfDay())
+            .toDays().toInt()
 }
 
 @Composable
@@ -197,7 +214,6 @@ private fun CDatePickerLight() {
             dateStart = LocalDate.now().minusDays(30),
             dateEnd = LocalDate.now(),
             date = LocalDate.now(),
-            onDateSelectClick = {},
             onDateSelect = {}
         )
     }
@@ -211,7 +227,6 @@ private fun CDatePickerDark() {
             dateStart = LocalDate.now().minusDays(30),
             dateEnd = LocalDate.now(),
             date = LocalDate.now(),
-            onDateSelectClick = {},
             onDateSelect = {}
         )
     }

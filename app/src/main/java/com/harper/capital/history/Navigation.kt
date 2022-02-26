@@ -22,7 +22,7 @@ object HistoryListManageNavArgsSpec : NavArgsSpec<HistoryListParams> {
         }
     )
 
-    override fun getArguments(param: HistoryListParams): Map<String, Any?> =
+    override fun args(param: HistoryListParams): Map<String, Any?> =
         mapOf(ACCOUNT_ID to param.accountId)
 }
 

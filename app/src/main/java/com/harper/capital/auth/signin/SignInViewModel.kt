@@ -13,6 +13,10 @@ class SignInViewModel(private val router: GlobalRouter) : ComponentViewModel<Sig
             is SignInEvent.PasswordChange -> onPasswordChange(event)
             is SignInEvent.GoOfflineClick -> router.setMainAsRoot()
             is SignInEvent.ToShelterClick -> router.shelter()
+            is SignInEvent.SignInAppleClick -> {
+            }
+            is SignInEvent.SignInGoogleClick -> {
+            }
         }
     }
 

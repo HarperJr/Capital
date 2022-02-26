@@ -5,9 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Icon
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -30,27 +33,40 @@ private fun CPreference(
     action: @Composable () -> Unit
 ) {
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = if (subtitle == null) 16.dp else 8.dp)
+            .height(48.dp)
+            .then(modifier),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(modifier = Modifier.weight(1f).align(Alignment.CenterVertically)) {
+        Column(modifier = Modifier.weight(1f)) {
             Text(text = title, style = CapitalTheme.typography.subtitle)
             subtitle?.let {
                 Text(text = it, style = CapitalTheme.typography.regular, color = CapitalTheme.colors.textSecondary)
             }
         }
-        Box(modifier = Modifier.align(Alignment.CenterVertically)) { action.invoke() }
+        Box { action.invoke() }
     }
 }
 
 @Composable
-fun CPreferenceArrow(modifier: Modifier = Modifier, title: String, subtitle: String? = null, onClick: () -> Unit) {
-    CPreference(modifier.clickable { onClick.invoke() }, title = title, subtitle = subtitle) {
-        Image(
+fun CPreferenceArrow(
+    modifier: Modifier = Modifier,
+    title: String,
+    subtitle: String? = null,
+    onClick: () -> Unit
+) {
+    CPreference(
+        Modifier
+            .clickable { onClick.invoke() }
+            .then(modifier),
+        title = title,
+        subtitle = subtitle
+    ) {
+        Icon(
             imageVector = CapitalIcons.ArrowRight,
             contentDescription = null,
-            colorFilter = ColorFilter.tint(color = CapitalTheme.colors.onBackground)
+            tint = CapitalTheme.colors.onBackground
         )
     }
 }
@@ -66,10 +82,12 @@ fun CPreferenceSwitch(
 ) {
     val isSwitchChecked = remember(isChecked) { mutableStateOf(isChecked) }
     CPreference(
-        modifier.clickable {
-            isSwitchChecked.value = !isSwitchChecked.value
-            onCheckedChange.invoke(isSwitchChecked.value)
-        },
+        Modifier
+            .clickable {
+                isSwitchChecked.value = !isSwitchChecked.value
+                onCheckedChange.invoke(isSwitchChecked.value)
+            }
+            .then(modifier),
         title = title,
         subtitle = subtitle
     ) {
@@ -84,22 +102,22 @@ fun CPreferenceSwitch(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SettingBoxLight() {
     CPreview {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = CapitalTheme.colors.background)
-        ) {
+        Column {
             CPreferenceArrow(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = CapitalTheme.dimensions.side),
                 title = "Arrow setting",
                 subtitle = "Use this setting"
             ) {}
             CPreferenceSwitch(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = CapitalTheme.dimensions.side),
                 title = "Checkbox setting",
                 subtitle = "Use this setting"
             ) {}
@@ -107,22 +125,22 @@ private fun SettingBoxLight() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SettingBoxDark() {
     CPreview(isDark = true) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = CapitalTheme.colors.background)
-        ) {
+        Column {
             CPreferenceArrow(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = CapitalTheme.dimensions.side),
                 title = "Arrow setting",
                 subtitle = "Use this setting"
             ) {}
             CPreferenceSwitch(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = CapitalTheme.dimensions.side),
                 title = "Checkbox setting",
                 subtitle = "Use this setting"
             ) {}

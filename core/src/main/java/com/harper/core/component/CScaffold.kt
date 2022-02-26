@@ -42,8 +42,8 @@ fun CScaffold(
                 bottomBar.invoke()
                 Spacer(
                     modifier = Modifier
-                        .navigationBarsHeight()
                         .fillMaxWidth()
+                        .navigationBarsHeight()
                 )
             }
         },
