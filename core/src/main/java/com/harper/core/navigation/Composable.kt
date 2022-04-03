@@ -12,6 +12,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDeepLink
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
+import com.harper.core.component.transition.Transitions
 import com.harper.core.ext.orElse
 
 @ExperimentalAnimationApi
@@ -52,3 +53,21 @@ fun NavGraphBuilder.composable(
         }
     }
 }
+
+@ExperimentalAnimationApi
+fun NavGraphBuilder.composable(
+    route: String,
+    argsSpec: NavArgsSpec<*>? = null,
+    deepLinks: List<NavDeepLink> = emptyList(),
+    transitions: Transitions = Transitions.NONE,
+    content: @Composable AnimatedVisibilityScope.(NavArgsHolder) -> Unit
+) = composable(
+    route,
+    argsSpec,
+    deepLinks,
+    enterTransition = transitions.enter,
+    exitTransition = transitions.exit,
+    popEnterTransition = transitions.popEnter,
+    popExitTransition = transitions.popExit,
+    content
+)

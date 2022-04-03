@@ -1,6 +1,7 @@
 package com.harper.capital.navigation
 
 import com.github.terrakok.cicerone.Router
+import com.harper.capital.analytics.AnalyticsParams
 import com.harper.capital.asset.AssetManageParams
 import com.harper.capital.category.CategoryManageParams
 import com.harper.capital.history.HistoryListParams
@@ -27,6 +28,9 @@ class GlobalRouterImpl : Router(), GlobalRouter {
 
     override fun navigateToHistoryList(params: HistoryListParams) =
         navigateTo(Screens.historyList(params))
+
+    override fun navigateToAnalytics(params: AnalyticsParams) =
+        navigateTo(Screens.analytics(params))
 
     override fun navigateToSettings() = navigateTo(Screens.settings())
 

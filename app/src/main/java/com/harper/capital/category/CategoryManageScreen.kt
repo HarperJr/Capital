@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -51,7 +50,7 @@ import com.harper.core.component.CPreferenceArrow
 import com.harper.core.component.CPreview
 import com.harper.core.component.CTextField
 import com.harper.core.component.CToolbar
-import com.harper.core.component.TabBar
+import com.harper.core.component.CTabBarCommon
 import com.harper.core.ext.formatCurrencyName
 import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalIcons
@@ -99,7 +98,7 @@ fun CategoryManageScreen(
                 .fillMaxWidth()
         ) {
             val pagerState = rememberPagerState(initialPage = state.selectedPage)
-            TabBar(
+            CTabBarCommon(
                 data = state.tabBarData,
                 pagerState = pagerState,
                 onTabSelect = { viewModel.onEvent(CategoryManageEvent.TabSelect(it)) }

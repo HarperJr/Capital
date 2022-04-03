@@ -74,4 +74,8 @@
     <string name="asset_name_is_empty_error">Asset name is required, please provide it</string>
     <string name="investment">Investment</string>
     <string name="summary_loss">Your summary loss is %s</string>
+    <string name="analytics">Analytics</string>
+    <string name="income_liability">Income &amp; liability</string>
+    <string name="balance">Balance</string>
+    <string name="liability">Liability</string>
 </resources>

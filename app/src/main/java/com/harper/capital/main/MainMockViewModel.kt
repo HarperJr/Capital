@@ -36,7 +36,7 @@ class MainMockViewModel : ComponentViewModel<MainState, MainEvent>(
                 metadata = AccountMetadata.GoalAsset(goal = 100000.00)
             )
         ),
-        isLoading = false
+        isLoading = false,
     )
 ) {
 

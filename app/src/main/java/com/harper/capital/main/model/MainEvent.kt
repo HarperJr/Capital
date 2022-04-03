@@ -12,6 +12,8 @@ sealed class MainEvent {
 
     class HistoryClick(val account: Account?) : MainEvent()
 
+    class ActionCardClick(val id: Int) : MainEvent()
+
     object NewAssetClick : MainEvent()
 
     object SettingsClick : MainEvent()

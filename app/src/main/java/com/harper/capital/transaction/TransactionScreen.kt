@@ -29,7 +29,7 @@ import com.harper.core.component.CIcon
 import com.harper.core.component.CPreview
 import com.harper.core.component.CScaffold
 import com.harper.core.component.CToolbar
-import com.harper.core.component.TabBar
+import com.harper.core.component.CTabBarCommon
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentViewModel
@@ -47,7 +47,7 @@ fun TransactionScreen(viewModel: ComponentViewModel<TransactionState, Transactio
                 modifier = Modifier.weight(1f)
             ) {
                 val pagerState = rememberPagerState(initialPage = state.selectedPage)
-                TabBar(
+                CTabBarCommon(
                     data = state.tabBarData,
                     pagerState = pagerState,
                     onTabSelect = { viewModel.onEvent(TransactionEvent.TabSelect(it)) }

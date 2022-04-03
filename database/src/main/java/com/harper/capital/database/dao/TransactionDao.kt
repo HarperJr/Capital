@@ -10,8 +10,8 @@ import com.harper.capital.database.entity.LedgerEntity
 import com.harper.capital.database.entity.LedgerTable
 import com.harper.capital.database.entity.TransactionEntity
 import com.harper.capital.database.entity.TransactionTable
-import com.harper.capital.database.entity.embedded.LiabilitiesEntityEmbedded
-import com.harper.capital.database.entity.embedded.LiabilitiesTable
+import com.harper.capital.database.entity.BalancePartitionEntity
+import com.harper.capital.database.entity.BalancePartitionTable
 import com.harper.capital.database.entity.embedded.TransactionEntityEmbedded
 import com.harper.capital.database.view.AssetBalanceTable
 import kotlinx.coroutines.flow.Flow
@@ -46,6 +46,21 @@ interface TransactionDao {
         """
     )
     fun selectBalance(): Flow<Double>
+
+    @Query(
+        """
+        SELECT A.id AS ${BalancePartitionTable.accountId}, T.date_time AS ${BalancePartitionTable.period}, 
+        T.date_time / :periodInMillis AS period_internal, (
+            SELECT SUM(CASE WHEN L2.type = 'DEBIT' THEN L2.amount ELSE -L2.amount END) FROM ${TransactionTable.tableName} T2 
+            LEFT JOIN ${LedgerTable.tableName} L2 ON T2.id = L2.transaction_id
+            WHERE L2.account_id = A.id AND T2.date_time <= MAX(T.date_time) GROUP BY L2.account_id
+        ) AS ${BalancePartitionTable.balance} FROM ${TransactionTable.tableName} T
+        LEFT JOIN ${LedgerTable.tableName} L ON T.id = L.transaction_id
+        LEFT JOIN ${AccountTable.tableName} A ON A.id = L.account_id
+        GROUP BY A.id, period_internal ORDER BY period_internal   
+        """
+    )
+    fun selectBalancePartitionsByPeriod(periodInMillis: Long): Flow<List<BalancePartitionEntity>>
 
     @Query(
         """

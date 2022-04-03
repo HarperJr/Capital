@@ -8,12 +8,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Tab
+import androidx.compose.material.TabPosition
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -22,6 +26,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -35,7 +40,52 @@ import kotlinx.parcelize.Parcelize
 
 @Composable
 @OptIn(ExperimentalPagerApi::class)
-fun TabBar(
+fun CTabBar(
+    modifier: Modifier = Modifier,
+    tabCount: Int,
+    tab: @Composable (Int) -> Unit,
+    indicator: @Composable (List<TabPosition>) -> Unit,
+    divider: @Composable () -> Unit,
+    edgePadding: Dp = 0.dp,
+    pagerState: PagerState,
+    isScrollable: Boolean = false,
+    onTabSelect: (Int) -> Unit
+) {
+    val selectedTabIndex = remember { mutableStateOf(pagerState.currentPage) }
+    if (isScrollable) {
+        ScrollableTabRow(
+            modifier = modifier.fillMaxWidth(),
+            backgroundColor = CapitalTheme.colors.background,
+            selectedTabIndex = selectedTabIndex.value,
+            edgePadding = edgePadding,
+            indicator = indicator,
+            divider = divider
+        ) {
+            repeat(tabCount) { tab.invoke(it) }
+        }
+    } else {
+        TabRow(
+            modifier = modifier.fillMaxWidth(),
+            backgroundColor = CapitalTheme.colors.background,
+            selectedTabIndex = selectedTabIndex.value,
+            indicator = indicator,
+            divider = divider
+        ) {
+            repeat(tabCount) { tab.invoke(it) }
+        }
+    }
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            selectedTabIndex.value = page
+            onTabSelect.invoke(page)
+        }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalPagerApi::class)
+fun CTabBarCommon(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
     data: TabBarData,
@@ -43,29 +93,17 @@ fun TabBar(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val rememberedData = rememberTabBarData(data)
-    val selectedTabIndex = remember { mutableStateOf(pagerState.currentPage) }
-    TabRow(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        backgroundColor = CapitalTheme.colors.background,
-        selectedTabIndex = selectedTabIndex.value,
-        indicator = {
-            Box(
-                modifier = Modifier
-                    .tabIndicatorOffset(it[selectedTabIndex.value])
-                    .fillMaxHeight()
-                    .padding(vertical = 2.dp)
-                    .background(color = CapitalTheme.colors.secondary, shape = CircleShape)
-                    .zIndex(-1f)
-            )
-        },
-        divider = {}
-    ) {
-        rememberedData.tabs.forEachIndexed { index, tab ->
+    val selectedTabIndex by remember { derivedStateOf { pagerState.currentPage } }
+    CTabBar(
+        modifier = modifier.padding(
+            horizontal = CapitalTheme.dimensions.side,
+            vertical = CapitalTheme.dimensions.medium
+        ),
+        tabCount = rememberedData.tabs.size,
+        tab = { index ->
             Tab(
                 modifier = Modifier.height(CapitalTheme.dimensions.largest),
-                selected = index == selectedTabIndex.value,
+                selected = index == selectedTabIndex,
                 selectedContentColor = CapitalColors.White,
                 unselectedContentColor = CapitalColors.GreyDark,
                 onClick = {
@@ -76,19 +114,25 @@ fun TabBar(
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    text = tab.title,
+                    text = rememberedData.tabs[index].title,
                     style = CapitalTheme.typography.buttonSmall
                 )
             }
-        }
-    }
-
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }.collect { page ->
-            selectedTabIndex.value = page
-            onTabSelect.invoke(page)
-        }
-    }
+        },
+        indicator = {
+            Box(
+                modifier = Modifier
+                    .tabIndicatorOffset(it[selectedTabIndex])
+                    .fillMaxHeight()
+                    .padding(vertical = 2.dp)
+                    .background(color = CapitalTheme.colors.secondary, shape = CircleShape)
+                    .zIndex(-1f)
+            )
+        },
+        divider = { },
+        pagerState = pagerState,
+        onTabSelect = onTabSelect
+    )
 }
 
 @Parcelize
@@ -111,7 +155,7 @@ private fun TabBarLight() {
         Tab(title = "Section4")
     )
     CPreview {
-        TabBar(data = TabBarData(tabs), pagerState = rememberPagerState(), onTabSelect = {})
+        CTabBarCommon(data = TabBarData(tabs), pagerState = rememberPagerState(), onTabSelect = {})
     }
 }
 
@@ -126,7 +170,7 @@ private fun TabBarDark() {
         Tab(title = "Section4")
     )
     CPreview(isDark = true) {
-        TabBar(data = TabBarData(tabs), pagerState = rememberPagerState(), onTabSelect = {})
+        CTabBarCommon(data = TabBarData(tabs), pagerState = rememberPagerState(), onTabSelect = {})
     }
 }
 

@@ -65,4 +65,8 @@
     <string name="asset_name_is_empty_error">Пожалуйста, заполните наименование счета</string>
     <string name="investment">Инвестиции</string>
     <string name="summary_loss">Ваши общие расходы %s</string>
+    <string name="analytics">Аналитика</string>
+    <string name="income_liability">Доход и расход</string>
+    <string name="balance">Баланс</string>
+    <string name="liability">Расходы</string>
 </resources>

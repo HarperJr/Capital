@@ -27,6 +27,7 @@ import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
 import com.harper.capital.R
 import com.harper.capital.domain.model.AccountColor
+import com.harper.capital.main.component.ActionCard
 import com.harper.capital.main.component.AssetCard
 import com.harper.capital.main.component.AssetMenu
 import com.harper.capital.main.component.AssetSummaryCard
@@ -68,11 +69,11 @@ fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
         CScaffold(topBar = { MainScreenTopBar(viewModel, summary = state.summary) }) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 CHorizontalSpacer(height = CapitalTheme.dimensions.large)
-                val assetListState = rememberLazyListState()
+                val accountListState = rememberLazyListState()
                 val selectedAssetIndex =
-                    rememberSaveable { mutableStateOf(assetListState.firstVisibleItemIndex) }
+                    rememberSaveable { mutableStateOf(accountListState.firstVisibleItemIndex) }
                 LaunchedEffect(Unit) {
-                    snapshotFlow { assetListState.layoutInfo }
+                    snapshotFlow { accountListState.layoutInfo }
                         .collect {
                             selectedAssetIndex.value = it.fullyVisibleItemIndex()
                         }
@@ -80,8 +81,8 @@ fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    state = assetListState,
-                    flingBehavior = rememberSnapperFlingBehavior(lazyListState = assetListState)
+                    state = accountListState,
+                    flingBehavior = rememberSnapperFlingBehavior(lazyListState = accountListState)
                 ) {
                     items(state.accounts) {
                         AssetCard(
@@ -114,6 +115,25 @@ fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
                         { viewModel.onEvent(MainEvent.EditClick(selectedAsset)) }
                     } else null
                 )
+                CHorizontalSpacer(height = CapitalTheme.dimensions.large)
+                val actionsListState = rememberLazyListState()
+                val actionCards = state.actionCards
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = CapitalTheme.dimensions.large),
+                    state = actionsListState,
+                    flingBehavior = rememberSnapperFlingBehavior(actionsListState)
+                ) {
+                    items(actionCards) {
+                        ActionCard(
+                            modifier = Modifier.fillParentMaxWidth(0.33f),
+                            title = it.title
+                        ) {
+                            viewModel.onEvent(MainEvent.ActionCardClick(it.id))
+                        }
+                    }
+                }
             }
         }
     }

@@ -8,6 +8,7 @@ enum class ScreenKey(val route: String) {
     TRANSACTION("transaction"),
     TRANSACTION_MANAGE("transaction_manage"),
     HISTORY_LIST("history_list"),
+    ANALYTICS("analytics"),
     SETTINGS("settings"),
     SHELTER("shelter") // Experimental
 }

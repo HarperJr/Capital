@@ -2,6 +2,7 @@ package com.harper.capital
 
 import android.app.Application
 import android.os.StrictMode
+import com.harper.capital.analytics.analyticsModule
 import com.harper.capital.asset.assetModule
 import com.harper.capital.auth.authModule
 import com.harper.capital.category.categoryModule
@@ -56,7 +57,8 @@ class CapitalApplication : Application() {
                 settingsModule,
                 databaseModule,
                 repositoryModule,
-                shelterModule
+                shelterModule,
+                analyticsModule
             )
             androidContext(applicationContext)
             androidLogger()

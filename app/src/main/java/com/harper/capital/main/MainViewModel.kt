@@ -1,5 +1,6 @@
 package com.harper.capital.main
 
+import com.harper.capital.analytics.AnalyticsParams
 import com.harper.capital.asset.AssetManageParams
 import com.harper.capital.asset.model.AssetManageMode
 import com.harper.capital.history.HistoryListParams
@@ -27,6 +28,18 @@ class MainViewModel(
         fetchAssets()
     }
 
+    override fun onEvent(event: MainEvent) {
+        when (event) {
+            is MainEvent.NewAssetClick -> onNewAssetClick()
+            is MainEvent.HistoryClick -> onHistoryClick(event)
+            is MainEvent.IncomeClick -> onIncomeClick(event)
+            is MainEvent.ExpenseClick -> onExpenseClick(event)
+            is MainEvent.EditClick -> onEditClick(event)
+            is MainEvent.SettingsClick -> onSettingsClick()
+            is MainEvent.ActionCardClick -> onActionCardClick(event)
+        }
+    }
+
     private fun fetchAssets() {
         launch {
             combine(
@@ -46,15 +59,8 @@ class MainViewModel(
         }
     }
 
-    override fun onEvent(event: MainEvent) {
-        when (event) {
-            is MainEvent.NewAssetClick -> onNewAssetClick()
-            is MainEvent.HistoryClick -> onHistoryClick(event)
-            is MainEvent.IncomeClick -> onIncomeClick(event)
-            is MainEvent.ExpenseClick -> onExpenseClick(event)
-            is MainEvent.EditClick -> onEditClick(event)
-            MainEvent.SettingsClick -> onSettingsClick()
-        }
+    private fun onActionCardClick(event: MainEvent.ActionCardClick) {
+        router.navigateToAnalytics(AnalyticsParams(event.id))
     }
 
     private fun onSettingsClick() {

@@ -2,10 +2,11 @@ package com.harper.capital.repository.transaction
 
 import com.harper.capital.database.DatabaseTx
 import com.harper.capital.database.dao.TransactionDao
-import com.harper.capital.domain.model.AccountType
-import com.harper.capital.domain.model.LedgerType
+import com.harper.capital.domain.model.BalancePartition
+import com.harper.capital.domain.model.BalancePartitionPeriod
 import com.harper.capital.domain.model.Transaction
-import com.harper.capital.domain.model.TransferTransaction
+import com.harper.capital.repository.transaction.mapper.BalancePartitionMapper
+import com.harper.capital.repository.transaction.mapper.BalancePartitionPeriodEntityMapper
 import com.harper.capital.repository.transaction.mapper.LedgerEntityMapper
 import com.harper.capital.repository.transaction.mapper.TransactionEntityMapper
 import com.harper.capital.repository.transaction.mapper.TransactionMapper
@@ -82,4 +83,8 @@ internal class TransactionRepositoryImpl(
                 filteredTransactions.map(TransactionMapper)
             }
             .flowOn(Dispatchers.IO)
+
+    override fun fetchBalancePartitionsByPeriod(period: BalancePartitionPeriod): Flow<List<BalancePartition>> =
+        transactionDao.selectBalancePartitionsByPeriod(BalancePartitionPeriodEntityMapper(period).periodInMillis)
+            .map { it.map(BalancePartitionMapper) }
 }

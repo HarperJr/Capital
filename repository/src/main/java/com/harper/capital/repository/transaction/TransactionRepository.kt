@@ -1,5 +1,7 @@
 package com.harper.capital.repository.transaction
 
+import com.harper.capital.domain.model.BalancePartition
+import com.harper.capital.domain.model.BalancePartitionPeriod
 import com.harper.capital.domain.model.Transaction
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
@@ -26,4 +28,6 @@ interface TransactionRepository {
         dateTimeAfter: LocalDateTime,
         dateTimeBefore: LocalDateTime
     ): Flow<List<Transaction>>
+
+    fun fetchBalancePartitionsByPeriod(period: BalancePartitionPeriod): Flow<List<BalancePartition>>
 }

@@ -17,6 +17,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.harper.capital.BuildConfig
+import com.harper.capital.analytics.analytics
 import com.harper.capital.asset.assetManage
 import com.harper.capital.auth.signin.signIn
 import com.harper.capital.category.categoryManage
@@ -76,6 +77,7 @@ class CapitalActivity : ComponentActivity() {
                         transaction()
                         transactionManage()
                         historyList()
+                        analytics()
                         settings()
                     }
                 }

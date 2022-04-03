@@ -1,5 +1,6 @@
 package com.harper.capital.navigation
 
+import com.harper.capital.analytics.AnalyticsParams
 import com.harper.capital.asset.AssetManageParams
 import com.harper.capital.category.CategoryManageParams
 import com.harper.capital.history.HistoryListParams
@@ -21,6 +22,8 @@ interface GlobalRouter {
     fun navigateToManageTransaction(params: TransactionManageParams)
 
     fun navigateToHistoryList(params: HistoryListParams)
+
+    fun navigateToAnalytics(params: AnalyticsParams)
 
     fun navigateToSettings()
 

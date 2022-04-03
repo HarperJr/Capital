@@ -1,6 +1,8 @@
 package com.harper.capital.navigation
 
 import com.github.terrakok.cicerone.Screen
+import com.harper.capital.analytics.AnalyticsNavArgsSpec
+import com.harper.capital.analytics.AnalyticsParams
 import com.harper.capital.asset.AssetManageNavArgsSpec
 import com.harper.capital.asset.AssetManageParams
 import com.harper.capital.category.CategoryManageNavArgsSpec
@@ -32,6 +34,9 @@ object Screens {
 
     fun historyList(params: HistoryListParams): Screen =
         ComposableScreen(ScreenKey.HISTORY_LIST.route, arguments = HistoryListManageNavArgsSpec.args(params))
+
+    fun analytics(params: AnalyticsParams): Screen =
+        ComposableScreen(ScreenKey.ANALYTICS.route, arguments = AnalyticsNavArgsSpec.args(params))
 
     fun settings(): Screen = ComposableScreen(ScreenKey.SETTINGS.route)
 
