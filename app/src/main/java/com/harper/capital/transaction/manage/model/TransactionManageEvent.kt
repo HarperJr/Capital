@@ -15,6 +15,4 @@ sealed class TransactionManageEvent {
     object BackClick : TransactionManageEvent()
 
     object Apply : TransactionManageEvent()
-
-    object HideDialog : TransactionManageEvent()
 }
