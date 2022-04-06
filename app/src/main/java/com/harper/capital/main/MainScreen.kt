@@ -249,7 +249,7 @@ private fun ContentLight() {
 @Composable
 private fun MainScreenDark() {
     CPreview(isDark = true) {
-        MainScreen(MainMockViewModel())
+        MainScreen(MainMockViewModel(isLoading = true))
     }
 }
 

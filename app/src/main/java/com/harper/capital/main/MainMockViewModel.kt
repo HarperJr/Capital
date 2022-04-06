@@ -11,7 +11,7 @@ import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
 import com.harper.core.ui.ComponentViewModel
 
-class MainMockViewModel : ComponentViewModel<MainState, MainEvent>(
+class MainMockViewModel(isLoading: Boolean = false) : ComponentViewModel<MainState, MainEvent>(
     initialState = MainState(
         summary = Summary(expenses = 14241.24, balance = 10000.0, Currency.RUB),
         accounts = listOf(
@@ -36,7 +36,7 @@ class MainMockViewModel : ComponentViewModel<MainState, MainEvent>(
                 metadata = AccountMetadata.GoalAsset(goal = 100000.00)
             )
         ),
-        isLoading = false,
+        isLoading = isLoading,
     )
 ) {
 

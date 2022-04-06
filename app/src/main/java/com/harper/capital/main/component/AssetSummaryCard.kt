@@ -33,7 +33,7 @@ fun AssetSummaryCard(
         modifier = modifier.assetCardSize(),
         backgroundColor = cardBackgroundColor,
         contentColor = accountContentColorFor(cardBackgroundColor),
-        elevation = 6.dp,
+        elevation = 0.dp,
         shape = CapitalTheme.shapes.extraLarge
     ) {
         Image(

@@ -50,15 +50,17 @@ class CapitalActivity : ComponentActivity() {
                 val isDarkThemeState by get<ColorThemeProvider>().colorThemeFlow
                     .map { ColorTheme.valueOf(it) == ColorTheme.DARK }
                     .collectAsState(initial = false)
-                val systemUiController = rememberSystemUiController()
-                val useDarkIcons = CapitalTheme.colors.isLight
-                SideEffect {
-                    systemUiController.setSystemBarsColor(
-                        color = CapitalColors.Transparent,
-                        darkIcons = useDarkIcons
-                    )
-                }
+
                 CapitalTheme(isDark = isDarkThemeState) {
+                    val systemUiController = rememberSystemUiController()
+                    val useDarkIcons = CapitalTheme.colors.isLight
+                    SideEffect {
+                        systemUiController.setSystemBarsColor(
+                            color = CapitalColors.Transparent,
+                            darkIcons = useDarkIcons
+                        )
+                    }
+
                     val navController = rememberAnimatedNavController()
                     DisposableEffect(Unit) {
                         navigator.attachNavController(navController)

@@ -1,4 +1,4 @@
-package com.harper.core.component.chart
+package com.harper.core.component.chart.line
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
@@ -14,22 +14,24 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.harper.core.component.chart.CLineChartUtils.calculateDrawableArea
-import com.harper.core.component.chart.CLineChartUtils.calculateFillPath
-import com.harper.core.component.chart.CLineChartUtils.calculateLinePath
-import com.harper.core.component.chart.CLineChartUtils.calculateXAxisDrawableArea
-import com.harper.core.component.chart.CLineChartUtils.calculateXAxisLabelsDrawableArea
-import com.harper.core.component.chart.CLineChartUtils.calculateYAxisDrawableArea
-import com.harper.core.component.chart.CLineChartUtils.simpleChartAnimation
-import com.harper.core.component.chart.drawer.LineDrawer
-import com.harper.core.component.chart.drawer.SimpleXAxisDrawer
-import com.harper.core.component.chart.drawer.SimpleYAxisDrawer
-import com.harper.core.component.chart.drawer.SolidLineDrawer
-import com.harper.core.component.chart.drawer.XAxisDrawer
-import com.harper.core.component.chart.drawer.YAxisDrawer
-import com.harper.core.component.chart.shader.LineShader
-import com.harper.core.component.chart.shader.NoLineShader
-import com.harper.core.component.chart.shader.SolidLineShader
+import com.harper.core.component.CPreview
+import com.harper.core.component.chart.line.CLineChartUtils.calculateDrawableArea
+import com.harper.core.component.chart.line.CLineChartUtils.calculateFillPath
+import com.harper.core.component.chart.line.CLineChartUtils.calculateLinePath
+import com.harper.core.component.chart.line.CLineChartUtils.calculateXAxisDrawableArea
+import com.harper.core.component.chart.line.CLineChartUtils.calculateXAxisLabelsDrawableArea
+import com.harper.core.component.chart.line.CLineChartUtils.calculateYAxisDrawableArea
+import com.harper.core.component.chart.line.CLineChartUtils.simpleChartAnimation
+import com.harper.core.component.chart.line.drawer.LineDrawer
+import com.harper.core.component.chart.line.drawer.SimpleXAxisDrawer
+import com.harper.core.component.chart.line.drawer.SimpleYAxisDrawer
+import com.harper.core.component.chart.line.drawer.SolidLineDrawer
+import com.harper.core.component.chart.line.drawer.XAxisDrawer
+import com.harper.core.component.chart.line.drawer.YAxisDrawer
+import com.harper.core.component.chart.line.shader.LineShader
+import com.harper.core.component.chart.line.shader.NoLineShader
+import com.harper.core.component.chart.line.shader.SolidLineShader
+import com.harper.core.ext.orElse
 import com.harper.core.theme.CapitalTheme
 
 @Composable
@@ -154,8 +156,8 @@ class LineChartData(
 
     private val yMinMax: Pair<Float, Float>
         get() {
-            val min = lines.minOf { it.yMinMax.first }
-            val max = lines.maxOf { it.yMinMax.second }
+            val min = lines.minOfOrNull { it.yMinMax.first }.orElse(0f)
+            val max = lines.maxOfOrNull { it.yMinMax.second }.orElse(0f)
             return min to max
         }
 
@@ -175,8 +177,8 @@ class LineChartData(
     data class Line(val points: List<Float>, val color: Color) {
         internal val yMinMax: Pair<Float, Float>
             get() {
-                val min = points.minOf { it }
-                val max = points.maxOf { it }
+                val min = points.minOfOrNull { it }.orElse(0f)
+                val max = points.maxOfOrNull { it }.orElse(0f)
                 return min to max
             }
     }
@@ -185,7 +187,7 @@ class LineChartData(
 @Preview(showBackground = true)
 @Composable
 fun CLineChartLight() {
-    CapitalTheme {
+    CPreview {
         CLineChart(
             modifier = Modifier.padding(CapitalTheme.dimensions.side),
             lineChartData = LineChartData(

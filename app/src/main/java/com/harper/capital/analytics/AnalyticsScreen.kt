@@ -47,7 +47,8 @@ import com.harper.core.component.CScaffold
 import com.harper.core.component.CTabBar
 import com.harper.core.component.CToolbarCommon
 import com.harper.core.component.CVerticalSpacer
-import com.harper.core.component.chart.CLineChart
+import com.harper.core.component.chart.line.CLineChart
+import com.harper.core.component.chart.pie.CPieChart
 import com.harper.core.ext.formatWithCurrencySymbol
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
@@ -195,6 +196,10 @@ private fun ChartPageBlock(modifier: Modifier = Modifier, page: AnalyticsPage) {
         is Chart.LineChart -> CLineChart(
             modifier = modifier,
             lineChartData = chart.data
+        )
+        is Chart.PieChart -> CPieChart(
+            modifier = modifier,
+            pieChartData = chart.data
         )
         is Chart.LineLoadingChart,
         is Chart.PieLoadingChart -> Box(

@@ -43,7 +43,7 @@ fun AssetMenu(
     val cardBackgroundColor = accountBackgroundColor(color)
     Card(
         modifier = modifier,
-        elevation = 6.dp,
+        elevation = 0.dp,
         backgroundColor = cardBackgroundColor,
         contentColor = accountContentColorFor(cardBackgroundColor),
         shape = CapitalTheme.shapes.extraLarge

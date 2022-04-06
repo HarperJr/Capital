@@ -1,4 +1,4 @@
-package com.harper.core.component.chart.drawer
+package com.harper.core.component.chart.line.drawer
 
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color

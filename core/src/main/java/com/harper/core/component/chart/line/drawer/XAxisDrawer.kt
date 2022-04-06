@@ -1,4 +1,4 @@
-package com.harper.core.component.chart.drawer
+package com.harper.core.component.chart.line.drawer
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.harper.core.component.chart.CLineChartUtils.toLegacyInt
+import com.harper.core.component.chart.line.CLineChartUtils.toLegacyInt
 
 interface XAxisDrawer {
 

@@ -1,18 +1,14 @@
-package com.harper.core.component.chart.shader
+package com.harper.core.component.chart.line.shader
 
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.drawscope.DrawScope
 
-interface LineShader {
-
-    fun fillLine(drawScope: DrawScope, canvas: Canvas, fillPath: Path, color: Color)
-}
-
-object NoLineShader : LineShader {
+class SolidLineShader : LineShader {
 
     override fun fillLine(drawScope: DrawScope, canvas: Canvas, fillPath: Path, color: Color) {
-        // Do nothing
+        drawScope.drawPath(path = fillPath, color = color.compositeOver(Color.Black))
     }
 }

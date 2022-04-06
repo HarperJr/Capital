@@ -1,4 +1,4 @@
-package com.harper.core.component.chart
+package com.harper.core.component.chart.line
 
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.ui.geometry.Offset

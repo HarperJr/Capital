@@ -17,20 +17,26 @@ class FetchBalancePartitionsByPeriodUseCase(private val transactionRepository: T
         transactionRepository.fetchBalancePartitionsByPeriod(period)
             .map { partitions ->
                 if (partitions.isEmpty()) {
-                    BalancePartitions(balanceEntries = emptyMap(), periods = emptyList())
+                    BalancePartitions(entries = emptyMap(), periods = emptyList())
                 } else {
                     val aligner = partitionAlignFactory.create(period)
-                    val periods = aligner.calculatePeriods(partitions.first(), partitions.last())
+                    val periods = aligner.calculatePeriods(
+                        minDate = partitions.minOf { it.period },
+                        maxDate = partitions.maxOf { it.period }
+                    )
                     val entries = partitions.groupBy { it.accountId }
-                        .mapValues { (_, partitions) ->
-                            var prevPartition = partitions.first()
+                        .mapValues { (accountId, partitions) ->
+                            var prevPartition: BalancePartition? = null
                             periods.map { period ->
                                 partitions.find { aligner.isPartitionInPeriod(it, period) }
                                     ?.also { prevPartition = it }
-                                    .orElse(prevPartition.copy(period = period))
+                                    .orElse(
+                                        prevPartition?.copy(period = period)
+                                            .orElse(BalancePartition(accountId, balance = 0.0, period = period))
+                                    )
                             }
                         }
-                    BalancePartitions(balanceEntries = entries, periods = periods)
+                    BalancePartitions(entries = entries, periods = periods)
                 }
             }
 }
@@ -47,16 +53,16 @@ class PartitionAlignFactory {
 
 interface PartitionAligner {
 
-    fun calculatePeriods(first: BalancePartition, last: BalancePartition): List<LocalDate>
+    fun calculatePeriods(minDate: LocalDate, maxDate: LocalDate): List<LocalDate>
 
     fun isPartitionInPeriod(partition: BalancePartition, period: LocalDate): Boolean
 }
 
 class DayPartitionAligner : PartitionAligner {
 
-    override fun calculatePeriods(first: BalancePartition, last: BalancePartition): List<LocalDate> {
-        val diff = Period.between(first.period, last.period).days
-        return (0..diff).map { first.period.plusDays(it.toLong()) }
+    override fun calculatePeriods(minDate: LocalDate, maxDate: LocalDate): List<LocalDate> {
+        val diff = Period.between(minDate, maxDate).days
+        return (0..diff).map { minDate.plusDays(it.toLong()) }
     }
 
     override fun isPartitionInPeriod(partition: BalancePartition, period: LocalDate): Boolean =
@@ -65,9 +71,9 @@ class DayPartitionAligner : PartitionAligner {
 
 class MonthPartitionAligner : PartitionAligner {
 
-    override fun calculatePeriods(first: BalancePartition, last: BalancePartition): List<LocalDate> {
-        val diff = Period.between(first.period, last.period).months
-        return (0..diff).map { first.period.plusMonths(it.toLong()) }
+    override fun calculatePeriods(minDate: LocalDate, maxDate: LocalDate): List<LocalDate> {
+        val diff = Period.between(minDate, maxDate).months
+        return (0..diff).map { minDate.plusMonths(it.toLong()) }
     }
 
     override fun isPartitionInPeriod(partition: BalancePartition, period: LocalDate): Boolean =
@@ -77,9 +83,9 @@ class MonthPartitionAligner : PartitionAligner {
 
 class QuarterPartitionAligner : PartitionAligner {
 
-    override fun calculatePeriods(first: BalancePartition, last: BalancePartition): List<LocalDate> {
-        val diff = Period.between(first.period, last.period).months * 3
-        return (0..diff).map { first.period.plusMonths(it.toLong() * 3) }
+    override fun calculatePeriods(minDate: LocalDate, maxDate: LocalDate): List<LocalDate> {
+        val diff = Period.between(minDate, maxDate).months * 3
+        return (0..diff).map { minDate.plusMonths(it.toLong() * 3) }
     }
 
     override fun isPartitionInPeriod(partition: BalancePartition, period: LocalDate): Boolean =
@@ -88,9 +94,9 @@ class QuarterPartitionAligner : PartitionAligner {
 
 class YearPartitionAligner : PartitionAligner {
 
-    override fun calculatePeriods(first: BalancePartition, last: BalancePartition): List<LocalDate> {
-        val diff = Period.between(first.period, last.period).years
-        return (0..diff).map { first.period.plusYears(it.toLong()) }
+    override fun calculatePeriods(minDate: LocalDate, maxDate: LocalDate): List<LocalDate> {
+        val diff = Period.between(minDate, maxDate).years
+        return (0..diff).map { minDate.plusYears(it.toLong()) }
     }
 
     override fun isPartitionInPeriod(partition: BalancePartition, period: LocalDate): Boolean =
