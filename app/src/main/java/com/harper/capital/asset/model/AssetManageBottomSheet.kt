@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import com.harper.capital.bottomsheet.IconsBottomSheetData
 import com.harper.capital.bottomsheet.SelectorBottomSheetData
 import com.harper.capital.domain.model.AccountIcon
-import com.harper.capital.domain.model.AccountMetadataType
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.ext.getImageVector
 import com.harper.capital.ext.resolveText
@@ -22,11 +21,11 @@ sealed class AssetManageBottomSheet {
             )
     }
 
-    class MetadataTypes(private val selectedAccountType: AccountMetadataType) : AssetManageBottomSheet() {
+    class MetadataTypes(private val selectedAccountType: AssetMetadataType) : AssetManageBottomSheet() {
         val data: SelectorBottomSheetData
             @Composable
             get() = SelectorBottomSheetData(
-                values = AccountMetadataType.values().map {
+                values = AssetMetadataType.values().map {
                     SelectorBottomSheetData.Value(it.name, it.resolveText())
                 },
                 selectedValue = selectedAccountType.name

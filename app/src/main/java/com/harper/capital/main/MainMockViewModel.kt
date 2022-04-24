@@ -23,7 +23,7 @@ class MainMockViewModel(isLoading: Boolean = false) : ComponentViewModel<MainSta
                 icon = AccountIcon.TINKOFF,
                 Currency.RUB,
                 2044.44,
-                metadata = AccountMetadata.LoanAsset(limit = 40000.00)
+                metadata = AccountMetadata.Loan(limit = 40000.00)
             ),
             Account(
                 1L,
@@ -33,7 +33,7 @@ class MainMockViewModel(isLoading: Boolean = false) : ComponentViewModel<MainSta
                 icon = AccountIcon.TINKOFF,
                 Currency.USD,
                 24.44,
-                metadata = AccountMetadata.GoalAsset(goal = 100000.00)
+                metadata = AccountMetadata.Goal(goal = 100000.00)
             )
         ),
         isLoading = isLoading,

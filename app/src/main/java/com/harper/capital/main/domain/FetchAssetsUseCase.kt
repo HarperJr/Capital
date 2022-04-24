@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 class FetchAssetsUseCase(private val accountRepository: AccountRepository) {
 
-    suspend operator fun invoke(): Flow<List<Account>> = coroutineScope {
-        accountRepository.fetchByType(AccountType.ASSET)
+    operator fun invoke(): Flow<List<Account>> {
+        return accountRepository.fetchByType(AccountType.ASSET)
     }
 }

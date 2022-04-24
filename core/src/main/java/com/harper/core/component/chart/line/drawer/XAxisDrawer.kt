@@ -20,7 +20,14 @@ interface XAxisDrawer {
 
     fun drawAxisLine(drawScope: DrawScope, canvas: Canvas, drawableArea: Rect)
 
-    fun drawAxisLabels(drawScope: DrawScope, canvas: Canvas, drawableArea: Rect, labels: List<String>)
+    fun drawAxisLabels(
+        drawScope: DrawScope,
+        canvas: Canvas,
+        drawableArea: Rect,
+        offset: Float,
+        spacedByPercent: Float,
+        labels: List<String>
+    )
 }
 
 class SimpleXAxisDrawer(
@@ -77,6 +84,8 @@ class SimpleXAxisDrawer(
         drawScope: DrawScope,
         canvas: Canvas,
         drawableArea: Rect,
+        offset: Float,
+        spacedByPercent: Float,
         labels: List<String>
     ) {
         with(drawScope) {
@@ -85,10 +94,10 @@ class SimpleXAxisDrawer(
                 textAlign = android.graphics.Paint.Align.CENTER
             }
 
-            val labelIncrements = drawableArea.width / (labels.size - 1)
+            val labelWidth = drawableArea.width * spacedByPercent
             labels.forEachIndexed { index, label ->
                 if (index.rem(labelRatio) == 0) {
-                    val x = drawableArea.left + (labelIncrements * (index))
+                    val x = drawableArea.left + index * labelWidth + offset
                     val y = drawableArea.bottom
 
                     canvas.nativeCanvas.drawText(label, x, y, labelPaint)

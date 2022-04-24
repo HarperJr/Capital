@@ -3,12 +3,7 @@ package com.harper.capital.history
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -24,20 +19,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harper.capital.R
-import com.harper.capital.history.comonent.ChargeTransactionItem
 import com.harper.capital.history.comonent.TransactionDateScopeItem
-import com.harper.capital.history.comonent.TransferTransactionItem
+import com.harper.capital.history.comonent.TransactionItem
 import com.harper.capital.history.model.HistoryListEvent
-import com.harper.capital.history.model.HistoryListItem
 import com.harper.capital.history.model.HistoryListState
-import com.harper.core.component.CDatePickerDialog
-import com.harper.core.component.CHorizontalSpacer
-import com.harper.core.component.CPreview
-import com.harper.core.component.CScaffold
-import com.harper.core.component.CToolbarCommon
-import com.harper.core.component.CVerticalSpacer
-import com.harper.core.component.Menu
-import com.harper.core.component.MenuItem
+import com.harper.core.component.*
 import com.harper.core.ext.formatAmount
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
@@ -98,17 +84,18 @@ fun HistoryListScreen(viewModel: ComponentViewModel<HistoryListState, HistoryLis
             }
             CHorizontalSpacer(height = CapitalTheme.dimensions.medium)
             LazyColumn(modifier = Modifier.weight(1f)) {
-                items(state.items) {
-                    when (it) {
-                        is HistoryListItem.ChargeTransactionItem -> ChargeTransactionItem(transaction = it.transaction)
-                        is HistoryListItem.TransferTransactionItem -> TransferTransactionItem(transaction = it.transaction) {
-                            viewModel.onEvent(HistoryListEvent.OnTransactionClick(it.transaction))
-                        }
-                        is HistoryListItem.TransactionDateScopeItem -> TransactionDateScopeItem(
+                state.items.forEach {
+                    item {
+                        TransactionDateScopeItem(
                             date = it.date,
-                            amount = it.amount,
+                            amount = it.summaryAmount,
                             currency = it.currency
                         )
+                    }
+                    items(it.transactions) { transaction ->
+                        TransactionItem(transaction = transaction) {
+                            viewModel.onEvent(HistoryListEvent.OnTransactionClick(transaction))
+                        }
                     }
                 }
             }

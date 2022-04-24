@@ -1,13 +1,18 @@
 package com.harper.capital.asset
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
@@ -15,10 +20,13 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.harper.capital.R
@@ -32,7 +40,10 @@ import com.harper.capital.asset.model.AssetManageState
 import com.harper.capital.bottomsheet.CurrencyBottomSheet
 import com.harper.capital.bottomsheet.IconsBottomSheet
 import com.harper.capital.bottomsheet.SelectorBottomSheet
+import com.harper.capital.domain.model.AccountMetadata
 import com.harper.capital.ext.resolveText
+import com.harper.capital.ext.resolveValueHint
+import com.harper.core.component.CAmountTextField
 import com.harper.core.component.CBottomSheetScaffold
 import com.harper.core.component.CButton
 import com.harper.core.component.CHorizontalSpacer
@@ -75,60 +86,64 @@ fun AssetManageScreen(viewModel: ComponentViewModel<AssetManageState, AssetManag
                 onBackClick = { viewModel.onEvent(AssetManageEvent.BackClick) }
             )
         },
-        sheetState = sheetState
-    ) {
-        CLoaderLayout(isLoading = state.isLoading, loaderContent = {}) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    AssetEditableCard(
-                        modifier = Modifier.padding(
-                            horizontal = cardHorizontalPadding,
-                            vertical = CapitalTheme.dimensions.side
-                        ),
-                        name = state.name,
-                        balance = state.balance,
-                        icon = state.icon,
-                        color = state.color,
-                        currency = state.currency,
-                        onNameChange = { viewModel.onEvent(AssetManageEvent.NameChange(it)) },
-                        onAmountChange = { viewModel.onEvent(AssetManageEvent.AmountChange(it)) },
-                        onIconClick = { viewModel.onEvent(AssetManageEvent.IconSelectClick) }
-                    )
-                    CHorizontalSpacer(height = CapitalTheme.dimensions.medium)
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = CapitalTheme.dimensions.small),
-                        horizontalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.small),
-                        contentPadding = PaddingValues(horizontal = cardHorizontalPadding)
-                    ) {
-                        items(state.colors) { item ->
-                            AssetColorSelector(
-                                color = item,
-                                isSelected = state.color == item,
-                                onSelect = { viewModel.onEvent(AssetManageEvent.ColorSelect(color = item)) }
-                            )
-                        }
-                    }
-                    CHorizontalSpacer(height = CapitalTheme.dimensions.side)
-                    SettingsBlock(state, viewModel)
+        bottomBar = {
+            val applyButtonTextRes = remember(state.mode) {
+                when (state.mode) {
+                    AssetManageMode.ADD -> R.string.add_asset
+                    AssetManageMode.EDIT -> R.string.save
                 }
-                val applyButtonText = when (state.mode) {
-                    AssetManageMode.ADD -> stringResource(id = R.string.add_asset)
-                    AssetManageMode.EDIT -> stringResource(id = R.string.save)
-                }
+            }
+            Box(modifier = Modifier.background(color = CapitalTheme.colors.background)) {
                 CButton(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(CapitalTheme.dimensions.side),
-                    text = applyButtonText,
+                    text = stringResource(id = applyButtonTextRes),
                     enabled = state.name.isNotEmpty(),
                     onClick = { viewModel.onEvent(AssetManageEvent.Apply) }
                 )
+            }
+        },
+        sheetState = sheetState
+    ) {
+        CLoaderLayout(isLoading = state.isLoading, loaderContent = {}) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                AssetEditableCard(
+                    modifier = Modifier.padding(
+                        horizontal = cardHorizontalPadding,
+                        vertical = CapitalTheme.dimensions.side
+                    ),
+                    name = state.name,
+                    balance = state.balance,
+                    icon = state.icon,
+                    color = state.color,
+                    currency = state.currency,
+                    onNameChange = { viewModel.onEvent(AssetManageEvent.NameChange(it)) },
+                    onAmountChange = { viewModel.onEvent(AssetManageEvent.AmountChange(it)) },
+                    onIconClick = { viewModel.onEvent(AssetManageEvent.IconSelectClick) }
+                )
+                CHorizontalSpacer(height = CapitalTheme.dimensions.medium)
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = CapitalTheme.dimensions.small),
+                    horizontalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.medium),
+                    contentPadding = PaddingValues(horizontal = cardHorizontalPadding)
+                ) {
+                    items(state.colors) { item ->
+                        AssetColorSelector(
+                            color = item,
+                            isSelected = state.color == item,
+                            onSelect = { viewModel.onEvent(AssetManageEvent.ColorSelect(color = item)) }
+                        )
+                    }
+                }
+                CHorizontalSpacer(height = CapitalTheme.dimensions.side)
+                SettingsBlock(state, viewModel)
             }
         }
     }
@@ -145,13 +160,24 @@ private fun SettingsBlock(
                 modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
                 title = "${state.currency.name} ${state.currency.name.formatCurrencySymbol()}",
                 subtitle = state.currency.name.formatCurrencyName(),
-                onClick = { viewModel.onEvent(AssetManageEvent.CurrencySelectClick) })
+                onClick = { viewModel.onEvent(AssetManageEvent.CurrencySelectClick) }
+            )
             CSeparator(modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side))
             CPreferenceArrow(
                 modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
                 title = stringResource(id = R.string.asset_type),
-                subtitle = state.metadataType.resolveText(),
-                onClick = { viewModel.onEvent(AssetManageEvent.AssetTypeSelectClick) })
+                subtitle = state.metadata.resolveText(),
+                onClick = { viewModel.onEvent(AssetManageEvent.AssetTypeSelectClick) }
+            )
+            if (state.metadata != null) {
+                MetadataValueInput(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = CapitalTheme.dimensions.side, vertical = CapitalTheme.dimensions.medium),
+                    metadata = state.metadata,
+                    onValueChange = { viewModel.onEvent(AssetManageEvent.MetadataValueChange(it)) }
+                )
+            }
         }
         CPreferenceSwitch(
             modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
@@ -170,6 +196,25 @@ private fun SettingsBlock(
             )
         }
     }
+}
+
+@Composable
+private fun MetadataValueInput(modifier: Modifier = Modifier, metadata: AccountMetadata, onValueChange: (Double) -> Unit) {
+    val value by derivedStateOf {
+        when (metadata) {
+            is AccountMetadata.Loan -> metadata.limit
+            is AccountMetadata.Goal -> metadata.goal
+            is AccountMetadata.Investment -> metadata.percent
+        }
+    }
+    val focusManager = LocalFocusManager.current
+    CAmountTextField(
+        modifier, amount = value,
+        onValueChange = onValueChange,
+        placeholder = metadata.resolveValueHint(),
+        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+    )
 }
 
 @Composable

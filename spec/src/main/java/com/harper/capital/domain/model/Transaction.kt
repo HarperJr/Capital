@@ -2,11 +2,16 @@ package com.harper.capital.domain.model
 
 import java.time.LocalDateTime
 
-open class Transaction(
-    open val id: Long,
+data class Transaction(
+    val id: Long,
     val ledgers: List<Ledger>,
-    open val amount: Double,
-    open val dateTime: LocalDateTime,
-    open val comment: String?,
-    open val isScheduled: Boolean
-)
+    val dateTime: LocalDateTime,
+    val comment: String?,
+    val isScheduled: Boolean
+) {
+    val isCharge: Boolean
+        get() = ledgers.size == 1
+
+    val source: Ledger
+        get() = ledgers.first()
+}

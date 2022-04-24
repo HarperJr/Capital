@@ -6,12 +6,9 @@ import androidx.room.TypeConverters
 import com.harper.capital.database.converter.LocalDateConverter
 import com.harper.capital.database.converter.LocalDateTimeConverter
 import com.harper.capital.database.dao.AccountDao
+import com.harper.capital.database.dao.CurrencyDao
 import com.harper.capital.database.dao.TransactionDao
-import com.harper.capital.database.entity.AccountEntity
-import com.harper.capital.database.entity.GoalEntity
-import com.harper.capital.database.entity.LedgerEntity
-import com.harper.capital.database.entity.LoanEntity
-import com.harper.capital.database.entity.TransactionEntity
+import com.harper.capital.database.entity.*
 import com.harper.capital.database.view.AssetBalanceView
 
 @Database(
@@ -21,7 +18,8 @@ import com.harper.capital.database.view.AssetBalanceView
         LoanEntity::class,
         GoalEntity::class,
         TransactionEntity::class,
-        LedgerEntity::class
+        LedgerEntity::class,
+        CurrencyRateEntity::class
     ],
     views = [AssetBalanceView::class]
 )
@@ -31,4 +29,6 @@ internal abstract class Database : RoomDatabase() {
     abstract fun accountDao(): AccountDao
 
     abstract fun transactionDao(): TransactionDao
+
+    abstract fun currencyDao(): CurrencyDao
 }

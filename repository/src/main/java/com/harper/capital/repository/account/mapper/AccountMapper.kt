@@ -16,7 +16,7 @@ internal object AccountMapper : (AccountEntity, AccountMetadata?, Double?) -> Ac
                 id = id,
                 name = name,
                 type = AccountTypeMapper(entity.type),
-                currency = Currency.of(currencyId),
+                currency = Currency.valueOf(entity.currency),
                 balance = balance.orElse(0.0),
                 metadata = metadata,
                 color = AccountColor.valueOf(color),

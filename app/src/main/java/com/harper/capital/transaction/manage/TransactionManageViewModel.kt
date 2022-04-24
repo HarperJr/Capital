@@ -1,19 +1,15 @@
 package com.harper.capital.transaction.manage
 
-import com.harper.capital.domain.model.TransferTransaction
+import com.harper.capital.domain.model.*
 import com.harper.capital.navigation.GlobalRouter
-import com.harper.capital.transaction.manage.domain.AddTransactionUseCase
-import com.harper.capital.transaction.manage.domain.FetchAssetUseCase
-import com.harper.capital.transaction.manage.domain.FetchTransactionUseCase
-import com.harper.capital.transaction.manage.domain.UpdateTransactionUseCase
-import com.harper.capital.transaction.manage.model.AssetPair
+import com.harper.capital.transaction.manage.domain.*
+import com.harper.capital.transaction.manage.model.ExchangeState
 import com.harper.capital.transaction.manage.model.TransactionManageEvent
 import com.harper.capital.transaction.manage.model.TransactionManageMode
 import com.harper.capital.transaction.manage.model.TransactionManageState
-import com.harper.core.ext.cast
 import com.harper.core.ui.ComponentViewModel
+import kotlinx.coroutines.launch
 import java.time.LocalTime
-import kotlin.math.abs
 
 class TransactionManageViewModel(
     private val params: TransactionManageParams,
@@ -21,15 +17,16 @@ class TransactionManageViewModel(
     private val fetchAssetUseCase: FetchAssetUseCase,
     private val addTransactionUseCase: AddTransactionUseCase,
     private val updateTransactionUseCase: UpdateTransactionUseCase,
-    private val fetchTransactionUseCase: FetchTransactionUseCase
+    private val fetchTransactionUseCase: FetchTransactionUseCase,
+    private val fetchCurrencyRatesUseCase: FetchCurrencyRatesUseCase
 ) : ComponentViewModel<TransactionManageState, TransactionManageEvent>(
     initialState = TransactionManageState(mode = params.mode)
 ) {
-
     override fun onEvent(event: TransactionManageEvent) {
         when (event) {
             is TransactionManageEvent.BackClick -> router.back()
-            is TransactionManageEvent.AmountChange -> onAmountChange(event)
+            is TransactionManageEvent.SourceAmountChange -> onSourceAmountChange(event)
+            is TransactionManageEvent.TargetAmountChange -> onTargetAmountChange(event)
             is TransactionManageEvent.CommentChange -> onCommentChange(event)
             is TransactionManageEvent.DateSelect -> onDateSelect(event)
             is TransactionManageEvent.ScheduledCheckChange -> onScheduledCheckChange(event)
@@ -48,12 +45,19 @@ class TransactionManageViewModel(
 
     private fun fetchTransaction(transactionId: Long) {
         launch {
-            val transaction = fetchTransactionUseCase(transactionId).cast<TransferTransaction>()
+            val transaction = fetchTransactionUseCase(transactionId)
+            val rates = fetchCurrencyRatesUseCase()
+            val sourceAccount = transaction.ledgers[0].account
+            val receiverAccount = transaction.ledgers[1].account
+            val rate = getExchangeRate(rates, sourceAccount.currency, receiverAccount.currency)
             update {
                 it.copy(
-                    accountPair = AssetPair(transaction.source, transaction.receiver),
-                    amount = abs(transaction.amount),
-                    currency = transaction.source.currency,
+                    accounts = transaction.ledgers.map { ledger -> ledger.account },
+                    exchangeState = ExchangeState(
+                        sourceCurrency = sourceAccount.currency,
+                        receiverCurrency = receiverAccount.currency,
+                        rate = rate
+                    ),
                     date = transaction.dateTime,
                     comment = transaction.comment,
                     isScheduled = transaction.isScheduled,
@@ -67,19 +71,41 @@ class TransactionManageViewModel(
         launch {
             val sourceAccount = fetchAssetUseCase(params.sourceAccountId)
             val receiverAccount = fetchAssetUseCase(params.receiverAccountId)
+            val rates = fetchCurrencyRatesUseCase()
+            val rate = getExchangeRate(rates, sourceAccount.currency, receiverAccount.currency)
             update {
                 it.copy(
-                    accountPair = AssetPair(sourceAccount, receiverAccount),
-                    currency = sourceAccount.currency,
+                    accounts = listOf(sourceAccount, receiverAccount),
+                    exchangeState = ExchangeState(
+                        sourceCurrency = sourceAccount.currency,
+                        receiverCurrency = receiverAccount.currency,
+                        rate = rate
+                    ),
                     isLoading = false
                 )
             }
         }
     }
 
-    private fun onAmountChange(event: TransactionManageEvent.AmountChange) {
+    private fun onSourceAmountChange(event: TransactionManageEvent.SourceAmountChange) {
         update {
-            it.copy(amount = event.amount)
+            it.copy(
+                exchangeState = it.exchangeState.copy(
+                    sourceAmount = event.amount,
+                    receiverAmount = event.amount / it.exchangeState.rate,
+                )
+            )
+        }
+    }
+
+    private fun onTargetAmountChange(event: TransactionManageEvent.TargetAmountChange) {
+        update {
+            it.copy(
+                exchangeState = it.exchangeState.copy(
+                    sourceAmount = event.amount * it.exchangeState.rate,
+                    receiverAmount = event.amount
+                )
+            )
         }
     }
 
@@ -108,13 +134,14 @@ class TransactionManageViewModel(
 
     private fun updateTransaction() {
         with(state.value) {
-            if (accountPair != null && params.transactionId != null) {
-                val (sourceAccount, receiverAccount) = accountPair
-                val transaction = TransferTransaction(
+            if (accounts.isNotEmpty() && params.transactionId != null) {
+                val (sourceAccount, receiverAccount) = accounts
+                val transaction = Transaction(
                     id = params.transactionId,
-                    source = sourceAccount,
-                    receiver = receiverAccount,
-                    amount = amount,
+                    ledgers = listOf(
+                        Ledger(0L, sourceAccount, LedgerType.CREDIT, exchangeState.sourceAmount),
+                        Ledger(0L, receiverAccount, LedgerType.DEBIT, exchangeState.receiverAmount)
+                    ),
                     dateTime = date,
                     comment = comment,
                     isScheduled = isScheduled
@@ -129,13 +156,14 @@ class TransactionManageViewModel(
 
     private fun addTransaction() {
         with(state.value) {
-            if (accountPair != null) {
-                val (sourceAccount, receiverAccount) = accountPair
-                val transaction = TransferTransaction(
+            if (accounts.isNotEmpty()) {
+                val (sourceAccount, receiverAccount) = accounts
+                val transaction = Transaction(
                     id = 0L,
-                    source = sourceAccount,
-                    receiver = receiverAccount,
-                    amount = amount,
+                    ledgers = listOf(
+                        Ledger(0L, sourceAccount, LedgerType.CREDIT, exchangeState.sourceAmount),
+                        Ledger(0L, receiverAccount, LedgerType.DEBIT, exchangeState.receiverAmount)
+                    ),
                     dateTime = date,
                     comment = comment,
                     isScheduled = isScheduled
@@ -146,5 +174,15 @@ class TransactionManageViewModel(
                 }
             }
         }
+    }
+
+    private fun getExchangeRate(
+        rates: List<CurrencyRate>,
+        sourceCurrency: Currency,
+        targetCurrency: Currency
+    ): Double {
+        val sourceRate = rates.first { it.currency == sourceCurrency }
+        val targetRate = rates.first { it.currency == targetCurrency }
+        return sourceRate.rate / targetRate.rate
     }
 }

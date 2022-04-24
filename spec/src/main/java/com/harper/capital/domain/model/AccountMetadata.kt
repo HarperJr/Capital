@@ -2,9 +2,9 @@ package com.harper.capital.domain.model
 
 sealed class AccountMetadata {
 
-    class LoanAsset(val limit: Double) : AccountMetadata()
+    data class Loan(val limit: Double) : AccountMetadata()
 
-    class GoalAsset(val goal: Double) : AccountMetadata()
+    data class Goal(val goal: Double) : AccountMetadata()
 
-    class Investment(val percent: Double) : AccountMetadata()
+    data class Investment(val percent: Double) : AccountMetadata()
 }

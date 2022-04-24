@@ -9,6 +9,7 @@ import com.harper.capital.category.categoryModule
 import com.harper.capital.database.databaseModule
 import com.harper.capital.history.historyModule
 import com.harper.capital.main.mainModule
+import com.harper.capital.network.networkModule
 import com.harper.capital.repository.repositoryModule
 import com.harper.capital.settings.settingsModule
 import com.harper.capital.shelter.shelterModule
@@ -56,6 +57,7 @@ class CapitalApplication : Application() {
                 historyModule,
                 settingsModule,
                 databaseModule,
+                networkModule,
                 repositoryModule,
                 shelterModule,
                 analyticsModule

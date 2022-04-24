@@ -5,11 +5,7 @@ import com.harper.capital.database.dao.TransactionDao
 import com.harper.capital.domain.model.BalancePartition
 import com.harper.capital.domain.model.BalancePartitionPeriod
 import com.harper.capital.domain.model.Transaction
-import com.harper.capital.repository.transaction.mapper.BalancePartitionMapper
-import com.harper.capital.repository.transaction.mapper.BalancePartitionPeriodEntityMapper
-import com.harper.capital.repository.transaction.mapper.LedgerEntityMapper
-import com.harper.capital.repository.transaction.mapper.TransactionEntityMapper
-import com.harper.capital.repository.transaction.mapper.TransactionMapper
+import com.harper.capital.repository.transaction.mapper.*
 import com.harper.core.ext.defaultIfNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +23,7 @@ internal class TransactionRepositoryImpl(
         databaseTx.runSuspended(context = Dispatchers.IO) {
             val transactionId = transactionDao.insert(TransactionEntityMapper(transaction))
             transactionDao.insertLedgers(
-                LedgerEntityMapper(transactionId, transaction.amount, transaction.ledgers)
+                LedgerEntityMapper(transactionId, transaction.ledgers)
             )
         }
     }
@@ -41,7 +37,7 @@ internal class TransactionRepositoryImpl(
             val existedTransaction = transactionDao.selectById(transaction.id)
             transactionDao.update(TransactionEntityMapper(transaction))
             transactionDao.updateLedgers(
-                LedgerEntityMapper(transaction.id, transaction.amount, transaction.ledgers)
+                LedgerEntityMapper(transaction.id, transaction.ledgers)
                     .map { ledger ->
                         ledger.copy(id = existedTransaction.ledgers.first { it.ledger.type == ledger.type }.ledger.id)
                     }

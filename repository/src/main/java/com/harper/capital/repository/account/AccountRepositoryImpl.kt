@@ -35,11 +35,11 @@ internal class AccountRepositoryImpl(
         val accountId = accountDao.insert(accountEntity)
         when (accountEntity.metadataType) {
             AccountEntityMetadataType.LOAN -> {
-                val metadata = account.metadata.cast<AccountMetadata.LoanAsset>()
+                val metadata = account.metadata.cast<AccountMetadata.Loan>()
                 accountDao.insertLoan(LoanEntity(accountId = accountId, limit = metadata.limit))
             }
             AccountEntityMetadataType.GOAL -> {
-                val metadata = account.metadata.cast<AccountMetadata.GoalAsset>()
+                val metadata = account.metadata.cast<AccountMetadata.Goal>()
                 accountDao.insertGoal(GoalEntity(accountId = accountId, goal = metadata.goal))
             }
             else -> {
@@ -74,11 +74,11 @@ internal class AccountRepositoryImpl(
         val metadata = when (it.account.metadataType) {
             AccountEntityMetadataType.LOAN -> {
                 val loan = accountDao.selectLoanByAccountId(it.account.id)
-                AccountMetadata.LoanAsset(loan.limit)
+                AccountMetadata.Loan(loan.limit)
             }
             AccountEntityMetadataType.GOAL -> {
                 val goal = accountDao.selectGoalByAccountId(it.account.id)
-                AccountMetadata.GoalAsset(goal.goal)
+                AccountMetadata.Goal(goal.goal)
             }
             else -> null
         }

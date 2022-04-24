@@ -24,5 +24,6 @@ object Version {
         const val accompanist = "0.23.0"
         const val koin = "3.1.5"
         const val room = "2.4.1"
+        const val dataStore = "1.0.0"
     }
 }

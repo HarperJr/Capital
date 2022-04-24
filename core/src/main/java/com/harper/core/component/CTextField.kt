@@ -1,5 +1,6 @@
 package com.harper.core.component
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -32,6 +35,7 @@ import com.harper.core.theme.CapitalTheme
 
 private val minTextFieldHeight = 32.dp
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CBasicTextField(
     modifier: Modifier = Modifier,
@@ -51,8 +55,9 @@ private fun CBasicTextField(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onValueChange: (String) -> Unit
 ) {
+    val relocation = remember { BringIntoViewRequester() }
     BasicTextField(
-        modifier = modifier,
+        modifier = modifier.bringIntoViewRequester(bringIntoViewRequester = relocation),
         value = value,
         onValueChange = { onValueChange.invoke(it) },
         textStyle = textStyle.copy(color = textColor),

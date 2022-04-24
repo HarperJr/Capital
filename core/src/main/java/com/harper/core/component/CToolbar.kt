@@ -2,10 +2,10 @@ package com.harper.core.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
@@ -13,6 +13,7 @@ import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
@@ -26,7 +27,7 @@ import com.harper.core.theme.CapitalTheme
 @Composable
 fun CToolbar(
     modifier: Modifier = Modifier,
-    content: @Composable (() -> Unit)? = null,
+    content: @Composable (BoxScope.() -> Unit)? = null,
     navigation: @Composable (() -> Unit)? = null,
     menu: Menu = Menu(),
     onMenuItemClick: ((Int) -> Unit)? = null
@@ -41,13 +42,15 @@ fun CToolbar(
             applyBottom = false,
         )
     ) {
-        navigation?.invoke()
-        Box(modifier = Modifier.weight(1f)) {
-            content?.invoke()
-        }
-        Row(horizontalArrangement = Arrangement.End) {
-            menu.items.forEach { item ->
-                MenuItem(item, onClick = { onMenuItemClick?.invoke(it) })
+        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
+            navigation?.invoke()
+            Box(modifier = Modifier.weight(1f)) {
+                content?.invoke(this)
+            }
+            Row(horizontalArrangement = Arrangement.End) {
+                menu.items.forEach { item ->
+                    MenuItem(item, onClick = { onMenuItemClick?.invoke(it) })
+                }
             }
         }
     }

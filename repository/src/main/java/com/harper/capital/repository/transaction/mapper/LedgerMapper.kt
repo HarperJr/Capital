@@ -15,7 +15,8 @@ internal object LedgerMapper : (LedgerEntityEmbedded) -> Ledger {
             type = when (ledger.type) {
                 LedgerEntityType.DEBIT -> LedgerType.DEBIT
                 LedgerEntityType.CREDIT -> LedgerType.CREDIT
-            }
+            },
+            amount = entity.ledger.amount
         )
     }
 }

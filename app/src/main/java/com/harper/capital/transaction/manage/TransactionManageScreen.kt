@@ -1,9 +1,6 @@
 package com.harper.capital.transaction.manage
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
@@ -22,19 +19,8 @@ import com.harper.capital.transaction.manage.component.TransactionHeader
 import com.harper.capital.transaction.manage.model.TransactionManageEvent
 import com.harper.capital.transaction.manage.model.TransactionManageMode
 import com.harper.capital.transaction.manage.model.TransactionManageState
-import com.harper.capital.transaction.model.TransactionType
-import com.harper.core.component.CAmountTextField
-import com.harper.core.component.CButton
-import com.harper.core.component.CDatePicker
-import com.harper.core.component.CDatePickerDialog
-import com.harper.core.component.CHorizontalSpacer
-import com.harper.core.component.CIcon
-import com.harper.core.component.CLoaderLayout
-import com.harper.core.component.CPreferenceSwitch
-import com.harper.core.component.CPreview
-import com.harper.core.component.CScaffold
-import com.harper.core.component.CTextField
-import com.harper.core.component.CToolbar
+import com.harper.core.component.*
+import com.harper.core.ext.formatWithCurrencySymbol
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentViewModel
@@ -55,25 +41,50 @@ fun TransactionManageScreen(
                         .padding(horizontal = CapitalTheme.dimensions.side)
                 ) {
                     CHorizontalSpacer(height = CapitalTheme.dimensions.side)
-                    val assetPair = state.accountPair
-                    if (assetPair != null) {
-                        TransactionHeader(source = assetPair.first, receiver = assetPair.second)
-                    }
+                    TransactionHeader(accounts = state.accounts)
                     CHorizontalSpacer(height = CapitalTheme.dimensions.side)
-                    CAmountTextField(
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
-                        amount = state.amount,
-                        placeholder = stringResource(id = R.string.enter_amount_hint),
-                        currencyIso = state.currency.name,
-                        title = {
-                            Text(text = stringResource(id = R.string.amount))
-                        },
-                        onValueChange = { viewModel.onEvent(TransactionManageEvent.AmountChange(it)) },
-                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                        keyboardActions = KeyboardActions(onDone = {
-                            focusManager.clearFocus()
-                        })
-                    )
+                        horizontalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.side),
+                        verticalAlignment = Alignment.Bottom
+                    ) {
+                        CAmountTextField(
+                            modifier = Modifier.weight(1f),
+                            amount = state.exchangeState.sourceAmount,
+                            placeholder = stringResource(id = R.string.enter_amount_hint),
+                            currencyIso = state.exchangeState.sourceCurrency.name,
+                            title = {
+                                Text(text = stringResource(id = R.string.amount))
+                            },
+                            onValueChange = { viewModel.onEvent(TransactionManageEvent.SourceAmountChange(it)) },
+                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                            keyboardActions = KeyboardActions(onDone = {
+                                focusManager.clearFocus()
+                            })
+                        )
+                        if (state.exchangeState.hasExchange) {
+                            CAmountTextField(
+                                modifier = Modifier.weight(1f),
+                                amount = state.exchangeState.receiverAmount,
+                                placeholder = stringResource(id = R.string.enter_amount_hint),
+                                currencyIso = state.exchangeState.receiverCurrency.name,
+                                onValueChange = { viewModel.onEvent(TransactionManageEvent.TargetAmountChange(it)) },
+                                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                                keyboardActions = KeyboardActions(onDone = {
+                                    focusManager.clearFocus()
+                                })
+                            )
+                        }
+                    }
+                    CHorizontalSpacer(height = CapitalTheme.dimensions.small)
+                    if (state.exchangeState.hasExchange) {
+                        Text(
+                            text = stringResource(
+                                id = R.string.exchange_hint,
+                                state.exchangeState.rate.formatWithCurrencySymbol(state.exchangeState.sourceCurrency.name)
+                            )
+                        )
+                    }
                     CHorizontalSpacer(height = CapitalTheme.dimensions.large)
                     Text(text = stringResource(id = R.string.date))
                     CDatePicker(

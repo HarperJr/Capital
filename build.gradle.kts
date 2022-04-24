@@ -17,6 +17,7 @@ buildscript {
         classpath("com.android.tools.build:gradle:7.0.3")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0")
         classpath("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.19.0")
+        classpath("com.google.protobuf:protobuf-gradle-plugin:0.8.18")
     }
 }
 

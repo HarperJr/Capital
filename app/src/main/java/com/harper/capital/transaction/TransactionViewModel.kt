@@ -17,6 +17,7 @@ import com.harper.capital.transaction.model.TransactionState
 import com.harper.capital.transaction.model.TransactionType
 import com.harper.core.ui.ComponentViewModel
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class TransactionViewModel(
     private val params: TransactionParams,
@@ -53,16 +54,13 @@ class TransactionViewModel(
             is TransactionEvent.TabSelect -> onTabSelect(event)
             is TransactionEvent.AssetSourceSelect -> onAssetSourceSelect(event)
             is TransactionEvent.NewSourceClick -> onNewSourceClick(event)
-            TransactionEvent.Apply -> onApply()
         }
     }
 
     private fun onApply() {
         val page = state.value.pages[state.value.selectedPage]
-        val sourceAccountId =
-            page.accountDataSets.first { it.section == DataSetSection.FROM }.selectedAccountId
-        val receiverAccountId =
-            page.accountDataSets.first { it.section == DataSetSection.TO }.selectedAccountId
+        val sourceAccountId = page.accountDataSets[DataSetSection.FROM]?.selectedAccountId
+        val receiverAccountId = page.accountDataSets[DataSetSection.TO]?.selectedAccountId
         if (sourceAccountId != null && receiverAccountId != null) {
             router.navigateToManageTransaction(
                 TransactionManageParams(
@@ -90,13 +88,12 @@ class TransactionViewModel(
         }
     }
 
-    // TODO I should think how to avoid such cases and update only what is needed not all content
     private fun onAssetSourceSelect(event: TransactionEvent.AssetSourceSelect) {
         update {
             val pages = it.pages.map { page ->
                 if (page.type == event.transactionType) {
-                    page.copy(accountDataSets = page.accountDataSets.map { dataSet ->
-                        if (dataSet.section == event.section) {
+                    page.copy(accountDataSets = page.accountDataSets.mapValues { (section, dataSet) ->
+                        if (section == event.section) {
                             dataSet.copy(selectedAccountId = event.account.id)
                         } else {
                             dataSet
@@ -106,25 +103,24 @@ class TransactionViewModel(
                     page
                 }
             }
-            it.copy(
-                pages = pages,
-                isApplyButtonEnabled = checkApplyButtonCanBeEnabled(pages, it.selectedPage)
-            )
+            it.copy(pages = pages)
+                .also { state ->
+                    if (checkSourcesAreSelected(state.pages, state.selectedPage)) {
+                        onApply()
+                    }
+                }
         }
     }
 
     private fun onTabSelect(event: TransactionEvent.TabSelect) {
         update { prevState ->
-            prevState.copy(
-                selectedPage = event.tabIndex,
-                isApplyButtonEnabled = checkApplyButtonCanBeEnabled(prevState.pages, event.tabIndex)
-            )
+            prevState.copy(selectedPage = event.tabIndex)
         }
     }
 
-    private fun checkApplyButtonCanBeEnabled(pages: List<TransactionPage>, selectedPage: Int): Boolean {
+    private fun checkSourcesAreSelected(pages: List<TransactionPage>, selectedPage: Int): Boolean {
         val page = pages[selectedPage]
-        return page.accountDataSets.find { it.section == DataSetSection.FROM }?.selectedAccountId != null &&
-            page.accountDataSets.find { it.section == DataSetSection.TO }?.selectedAccountId != null
+        return page.accountDataSets[DataSetSection.FROM]?.selectedAccountId != null &&
+                page.accountDataSets[DataSetSection.TO]?.selectedAccountId != null
     }
 }

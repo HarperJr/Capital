@@ -2,6 +2,8 @@ package com.harper.capital.repository
 
 import com.harper.capital.repository.account.AccountRepository
 import com.harper.capital.repository.account.AccountRepositoryImpl
+import com.harper.capital.repository.currency.CurrencyRepository
+import com.harper.capital.repository.currency.CurrencyRepositoryImpl
 import com.harper.capital.repository.transaction.TransactionRepository
 import com.harper.capital.repository.transaction.TransactionRepositoryImpl
 import org.koin.dsl.module
@@ -12,4 +14,6 @@ val repositoryModule
         factory<AccountRepository> { AccountRepositoryImpl(get(), get(), get()) }
 
         factory<TransactionRepository> { TransactionRepositoryImpl(get(), get()) }
+
+        factory<CurrencyRepository> { CurrencyRepositoryImpl(get(), get()) }
     }

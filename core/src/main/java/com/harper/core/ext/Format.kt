@@ -4,6 +4,7 @@ import android.icu.text.DecimalFormat
 import android.icu.text.NumberFormat
 import android.icu.util.Currency
 import android.icu.util.ULocale
+import java.math.RoundingMode
 import java.util.Locale
 
 fun Double.formatWithCurrencySymbol(
@@ -54,3 +55,5 @@ fun String.parseAmount(currencyIso: String? = null): Double {
         this.parseAmountWithCurrency(currencyIso)
     }
 }
+
+fun Double.formatPercent(): String = NumberFormat.getPercentInstance(ULocale("ru")).format(this)

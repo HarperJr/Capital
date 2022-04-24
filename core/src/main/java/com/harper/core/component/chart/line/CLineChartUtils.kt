@@ -6,84 +6,49 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.dp
 
 object CLineChartUtils {
 
     fun calculateDrawableArea(
-        xAxisDrawableArea: Rect,
-        yAxisDrawableArea: Rect,
         size: Size,
-        offset: Float
+        xAxisDrawableArea: Rect
     ): Rect {
-        val horizontalOffset = xAxisDrawableArea.width * offset / 100f
-
         return Rect(
-            left = yAxisDrawableArea.right + horizontalOffset,
+            left = 0f,
             top = 0f,
             bottom = xAxisDrawableArea.top,
-            right = size.width - horizontalOffset
+            right = size.width
         )
     }
 
     fun calculateXAxisDrawableArea(
-        yAxisWidth: Float,
         labelHeight: Float,
         size: Size
     ): Rect {
         val top = size.height - labelHeight
-
         return Rect(
-            left = yAxisWidth,
+            left = 0f,
             top = top,
             bottom = size.height,
             right = size.width
         )
     }
 
-    fun calculateXAxisLabelsDrawableArea(
-        xAxisDrawableArea: Rect,
-        offset: Float
-    ): Rect {
-        val horizontalOffset = xAxisDrawableArea.width * offset / 100f
-
-        return Rect(
-            left = xAxisDrawableArea.left + horizontalOffset,
-            top = xAxisDrawableArea.top,
-            bottom = xAxisDrawableArea.bottom,
-            right = xAxisDrawableArea.right - horizontalOffset
-        )
-    }
-
-    fun Density.calculateYAxisDrawableArea(
-        xAxisLabelSize: Float,
-        size: Size
-    ): Rect {
-        // Either 50dp or 10% of the chart width.
-        val right = minOf(50.dp.toPx(), size.width * 10f / 100f)
-
-        return Rect(
-            left = 0f,
-            top = 0f,
-            bottom = size.height - xAxisLabelSize,
-            right = right
-        )
-    }
-
     private fun calculatePointLocation(
-        drawableArea: Rect,
         lineChartData: LineChartData.Line,
+        drawableArea: Rect,
+        spacedByPercent: Float,
         point: Float,
         minYValue: Float,
         yRange: Float,
+        offset: Float,
         index: Int
     ): Offset {
-        val x = (index.toFloat() / (lineChartData.points.size - 1))
+        val x = index.toFloat() * drawableArea.width * spacedByPercent
         val y = ((point - minYValue) / yRange)
 
         return Offset(
-            x = (x * drawableArea.width) + drawableArea.left,
+            x = x + drawableArea.left + offset,
             y = drawableArea.height - (y * drawableArea.height)
         )
     }
@@ -111,24 +76,28 @@ object CLineChartUtils {
 
     fun calculateLinePath(
         drawableArea: Rect,
-        lineChartData: LineChartData.Line,
+        line: LineChartData.Line,
+        spacedByPercent: Float,
         minYValue: Float,
         yRange: Float,
+        offset: Float,
         transitionProgress: Float
     ): Path = Path().apply {
         var prevPointLocation: Offset? = null
-        lineChartData.points.forEachIndexed { index, point ->
+        line.points.forEachIndexed { index, point ->
             withProgress(
                 index = index,
                 transitionProgress = transitionProgress,
-                lineChartData = lineChartData
+                lineChartData = line
             ) { progress ->
                 val pointLocation = calculatePointLocation(
+                    lineChartData = line,
                     drawableArea = drawableArea,
-                    lineChartData = lineChartData,
+                    spacedByPercent = spacedByPercent,
                     point = point,
                     minYValue,
                     yRange,
+                    offset,
                     index = index
                 )
 
@@ -157,8 +126,10 @@ object CLineChartUtils {
     fun calculateFillPath(
         drawableArea: Rect,
         lineChartData: LineChartData.Line,
+        spacedByPercent: Float,
         minYValue: Float,
         yRange: Float,
+        offset: Float,
         transitionProgress: Float
     ): Path = Path().apply {
 
@@ -175,9 +146,11 @@ object CLineChartUtils {
                 val pointLocation = calculatePointLocation(
                     drawableArea = drawableArea,
                     lineChartData = lineChartData,
+                    spacedByPercent = spacedByPercent,
                     point = point,
-                    minYValue,
-                    yRange,
+                    minYValue = minYValue,
+                    yRange = yRange,
+                    offset = offset,
                     index = index
                 )
 

@@ -1,11 +1,11 @@
 package com.harper.capital.history.model
 
-import com.harper.capital.domain.model.TransferTransaction
+import com.harper.capital.domain.model.Transaction
 import java.time.LocalDate
 
 sealed class HistoryListEvent {
 
-    class OnTransactionClick(val transaction: TransferTransaction) : HistoryListEvent()
+    class OnTransactionClick(val transaction: Transaction) : HistoryListEvent()
 
     class MonthSelect(val month: LocalDate) : HistoryListEvent()
 

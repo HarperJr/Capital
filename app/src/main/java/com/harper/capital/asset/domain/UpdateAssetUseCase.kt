@@ -4,7 +4,6 @@ import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.AccountColor
 import com.harper.capital.domain.model.AccountIcon
 import com.harper.capital.domain.model.AccountMetadata
-import com.harper.capital.domain.model.AccountMetadataType
 import com.harper.capital.domain.model.AccountType
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.repository.account.AccountRepository
@@ -19,7 +18,7 @@ class UpdateAssetUseCase(private val accountRepository: AccountRepository) {
         currency: Currency,
         color: AccountColor,
         icon: AccountIcon,
-        metadataType: AccountMetadataType?,
+        metadata: AccountMetadata?,
         isIncluded: Boolean,
         isActive: Boolean
     ) = coroutineScope {
@@ -34,11 +33,7 @@ class UpdateAssetUseCase(private val accountRepository: AccountRepository) {
                 icon = icon,
                 isIncluded = isIncluded,
                 isArchived = isActive,
-                metadata = when (metadataType) {
-                    AccountMetadataType.LOAN -> AccountMetadata.LoanAsset(0.0)
-                    AccountMetadataType.GOAL -> AccountMetadata.GoalAsset(0.0)
-                    else -> null
-                }
+                metadata = metadata
             )
         )
     }

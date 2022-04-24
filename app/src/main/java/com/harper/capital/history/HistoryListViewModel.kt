@@ -1,11 +1,9 @@
 package com.harper.capital.history
 
 import com.harper.capital.domain.model.AccountType
-import com.harper.capital.domain.model.ChargeTransaction
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.domain.model.LedgerType
 import com.harper.capital.domain.model.Transaction
-import com.harper.capital.domain.model.TransferTransaction
 import com.harper.capital.history.domain.FetchTransactionsUseCase
 import com.harper.capital.history.model.DatePickerDialogState
 import com.harper.capital.history.model.HistoryListEvent
@@ -14,10 +12,12 @@ import com.harper.capital.history.model.HistoryListState
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.manage.TransactionManageParams
 import com.harper.capital.transaction.manage.model.TransactionManageMode
+import com.harper.core.ext.orElse
 import com.harper.core.ui.ComponentViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @OptIn(FlowPreview::class)
@@ -31,12 +31,12 @@ class HistoryListViewModel(
 
     override fun onEvent(event: HistoryListEvent) {
         when (event) {
-            HistoryListEvent.BackClick -> router.back()
-            HistoryListEvent.FilterItemClick -> {
+            is HistoryListEvent.BackClick -> router.back()
+            is HistoryListEvent.FilterItemClick -> {
             }
             is HistoryListEvent.OnTransactionClick -> onTransactionClick(event)
-            HistoryListEvent.PeriodSelectorClick -> onPeriodSelectorClick()
-            HistoryListEvent.HideDialog -> onHideDialog()
+            is HistoryListEvent.PeriodSelectorClick -> onPeriodSelectorClick()
+            is HistoryListEvent.HideDialog -> onHideDialog()
             is HistoryListEvent.MonthSelect -> onMonthSelect(event)
         }
     }
@@ -80,42 +80,36 @@ class HistoryListViewModel(
         }
     }
 
+    // TODO fix this
     private fun onTransactionClick(event: HistoryListEvent.OnTransactionClick) {
-        router.navigateToManageTransaction(
-            TransactionManageParams(
-                mode = TransactionManageMode.EDIT,
-                transactionId = event.transaction.id,
-                sourceAccountId = event.transaction.source.id,
-                receiverAccountId = event.transaction.receiver.id
+        if (!event.transaction.isCharge) {
+            router.navigateToManageTransaction(
+                TransactionManageParams(
+                    mode = TransactionManageMode.EDIT,
+                    transactionId = event.transaction.id,
+                    sourceAccountId = event.transaction.source.id,
+                    receiverAccountId = event.transaction.ledgers[1].account.id
+                )
             )
-        )
+        }
     }
 
     private fun dedicateLiabilities(transactions: List<Transaction>): Double {
-        return transactions.filter { transaction ->
+        return transactions.map { transaction ->
             transaction.ledgers.firstOrNull {
                 it.type == LedgerType.CREDIT && it.account.type == AccountType.ASSET
-            } != null
-        }.sumOf { it.amount }
+            }?.amount.orElse(0.0)
+        }.sum()
     }
 
     private fun createHistoryListItems(transactions: List<Transaction>): List<HistoryListItem> {
-        return mutableListOf<HistoryListItem>()
-            .apply {
-                val transactionsMap = mutableMapOf<LocalDate, MutableList<Transaction>>()
-                transactions
-                    .forEach {
-                        transactionsMap.getOrPut(it.dateTime.toLocalDate()) { mutableListOf() }.add(it)
-                    }
-                transactionsMap.forEach { (date, transactions) ->
-                    add(HistoryListItem.TransactionDateScopeItem(date = date, amount = transactions.sumOf { it.amount }, Currency.RUB))
-                    transactions.forEach {
-                        when (it) {
-                            is ChargeTransaction -> add(HistoryListItem.ChargeTransactionItem(transaction = it))
-                            is TransferTransaction -> add(HistoryListItem.TransferTransactionItem(transaction = it))
-                        }
-                    }
-                }
+        val transactionsMap = mutableMapOf<LocalDate, MutableList<Transaction>>()
+        transactions
+            .forEach {
+                transactionsMap.getOrPut(it.dateTime.toLocalDate()) { mutableListOf() }.add(it)
             }
+        return transactionsMap.map { (date, transactions) ->
+            HistoryListItem(date = date, summaryAmount = transactions.sumOf { it.source.amount }, Currency.RUB, transactions = transactions)
+        }
     }
 }

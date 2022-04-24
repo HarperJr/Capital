@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.harper.capital.domain.model.AccountMetadataType
+import com.harper.capital.asset.model.AssetMetadataType
 import com.harper.capital.ext.resolveText
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CPreview
@@ -55,9 +55,9 @@ private fun AssetTypeBottomSheetLight() {
         SelectorBottomSheet(
             modifier = Modifier.fillMaxWidth(),
             data = SelectorBottomSheetData(
-                values = AccountMetadataType.values()
+                values = AssetMetadataType.values()
                     .map { SelectorBottomSheetData.Value(it.name, it.resolveText()) },
-                selectedValue = AccountMetadataType.LOAN.name
+                selectedValue = AssetMetadataType.LOAN.name
             ),
             onValueSelect = {}
         )
@@ -71,9 +71,9 @@ private fun AssetTypeBottomSheetDark() {
         SelectorBottomSheet(
             modifier = Modifier.fillMaxWidth(),
             data = SelectorBottomSheetData(
-                values = AccountMetadataType.values()
+                values = AssetMetadataType.values()
                     .map { SelectorBottomSheetData.Value(it.name, it.resolveText()) },
-                selectedValue = AccountMetadataType.GOAL.name
+                selectedValue = AssetMetadataType.GOAL.name
             ),
             onValueSelect = {}
         )

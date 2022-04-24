@@ -9,8 +9,7 @@ import com.harper.core.component.TabBarData
 
 data class TransactionState(
     val selectedPage: Int,
-    val pages: List<TransactionPage> = emptyPages(),
-    val isApplyButtonEnabled: Boolean = false
+    val pages: List<TransactionPage> = emptyPages()
 ) {
     val tabBarData: TabBarData
         @Composable
@@ -24,7 +23,7 @@ data class TransactionState(
 private fun emptyPages(): List<TransactionPage> = TransactionType.values()
     .filter { if (BuildConfig.DEBUG) true else it != TransactionType.DUTY }
     .map {
-        TransactionPage(type = it, accountDataSets = emptyList())
+        TransactionPage(type = it, accountDataSets = emptyMap())
     }
 
 private fun TransactionType.resolveTitleRes(): Int = when (this) {

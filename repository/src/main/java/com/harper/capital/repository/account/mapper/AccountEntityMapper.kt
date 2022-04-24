@@ -9,7 +9,7 @@ internal object AccountEntityMapper : (Account) -> AccountEntity {
         AccountEntity(
             id = id,
             name = name,
-            currencyId = currency.ordinal,
+            currency = currency.name,
             type = AccountEntityTypeMapper(type),
             icon = model.icon.name,
             color = model.color.name,

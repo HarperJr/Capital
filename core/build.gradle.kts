@@ -1,11 +1,4 @@
-import com.harper.buildsrc.Version
-import com.harper.buildsrc.accompanist
-import com.harper.buildsrc.android
-import com.harper.buildsrc.capitalLibBuildFeatures
-import com.harper.buildsrc.capitalLibDefaultConfig
-import com.harper.buildsrc.compose
-import com.harper.buildsrc.koin
-import com.harper.buildsrc.kotlin
+import com.harper.buildsrc.*
 
 plugins {
     id("com.android.library")
@@ -32,4 +25,5 @@ dependencies {
     compose()
     accompanist()
     koin()
+    timber()
 }

@@ -18,7 +18,7 @@
     <string name="asset_type">Тип счета</string>
     <string name="include_asset">Включить в баланс</string>
     <string name="include_asset_subtitle">Счет будет учитываться в общем балансе</string>
-    <string name="debet">Дебет</string>
+    <string name="default_asset">Обычный счет</string>
     <string name="loan">Кредит</string>
     <string name="new_category">Новая категория</string>
     <string name="settings">Настройки</string>
@@ -69,4 +69,8 @@
     <string name="income_liability">Доход и расход</string>
     <string name="balance">Баланс</string>
     <string name="liability">Расходы</string>
+    <string name="enter_limit">Введите кредитный лимит</string>
+    <string name="enter_goal">Введите цель</string>
+    <string name="enter_percent">Введите процент</string>
+    <string name="exchange_hint">Перевод произойдет по курсу %s</string>
 </resources>

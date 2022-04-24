@@ -15,6 +15,10 @@ fun DependencyHandlerScope.database() {
     project(":database")
 }
 
+fun DependencyHandlerScope.network() {
+    project(":network")
+}
+
 fun DependencyHandlerScope.spec() {
     project(":spec")
 }
@@ -77,7 +81,12 @@ fun DependencyHandlerScope.compose() {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
     implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
     implementation("androidx.compose.ui:ui-tooling-preview:${Version.Library.compose}")
+    implementation("androidx.datastore:datastore:${Version.Library.dataStore}")
     debugImplementation("androidx.compose.ui:ui-tooling:${Version.Library.compose}")
+}
+
+fun DependencyHandlerScope.protobuf() {
+    implementation("com.google.protobuf:protobuf-kotlin:3.19.4")
 }
 
 fun DependencyHandlerScope.accompanist() {

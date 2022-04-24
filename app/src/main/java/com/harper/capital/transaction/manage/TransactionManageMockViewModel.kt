@@ -1,11 +1,6 @@
 package com.harper.capital.transaction.manage
 
-import com.harper.capital.domain.model.Account
-import com.harper.capital.domain.model.AccountColor
-import com.harper.capital.domain.model.AccountIcon
-import com.harper.capital.domain.model.AccountType
-import com.harper.capital.domain.model.Currency
-import com.harper.capital.transaction.manage.model.AssetPair
+import com.harper.capital.domain.model.*
 import com.harper.capital.transaction.manage.model.TransactionManageEvent
 import com.harper.capital.transaction.manage.model.TransactionManageMode
 import com.harper.capital.transaction.manage.model.TransactionManageState
@@ -14,7 +9,7 @@ import com.harper.core.ui.ComponentViewModel
 class TransactionManageMockViewModel : ComponentViewModel<TransactionManageState, TransactionManageEvent>(
     initialState = TransactionManageState(
         mode = TransactionManageMode.ADD,
-        accountPair = AssetPair(
+        accounts = listOf(
             Account(
                 id = 0L,
                 name = "Tinkoff",

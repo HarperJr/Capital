@@ -1,7 +1,7 @@
 package com.harper.capital.settings.model
 
+import com.harper.capital.domain.model.ColorTheme
 import com.harper.capital.domain.model.Currency
-import com.harper.capital.ui.model.ColorTheme
 
 data class SettingsState(
     val email: String = "capitaluser@capital.com",

@@ -1,11 +1,10 @@
 package com.harper.capital.settings.domain
 
-import com.harper.capital.ui.ColorThemeProvider
-import com.harper.capital.ui.model.ColorTheme
+import com.harper.capital.domain.model.ColorTheme
+import com.harper.capital.prefs.SettingsProvider
 
-class ChangeColorThemeUseCase(private val colorThemeProvider: ColorThemeProvider) {
+class ChangeColorThemeUseCase(private val settingsProvider: SettingsProvider) {
 
-    operator fun invoke(colorTheme: ColorTheme) {
-        colorThemeProvider.colorTheme = colorTheme.name
-    }
+    suspend operator fun invoke(colorTheme: ColorTheme) =
+        settingsProvider.updateColorTheme(colorTheme)
 }

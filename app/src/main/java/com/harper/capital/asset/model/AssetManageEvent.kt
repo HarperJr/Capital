@@ -21,6 +21,8 @@ sealed class AssetManageEvent {
 
     class ActivateAssetCheckedChange(val isChecked: Boolean) : AssetManageEvent()
 
+    class MetadataValueChange(val value: Double) : AssetManageEvent()
+
     object Apply : AssetManageEvent()
 
     object CurrencySelectClick : AssetManageEvent()

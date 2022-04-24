@@ -11,7 +11,7 @@ internal object AccountTable {
     const val type = "type"
     const val color = "color"
     const val icon = "icon"
-    const val currencyId = "currency_id"
+    const val currency = "currency"
     const val metadataType = "metadata_type"
     const val isIncluded = "is_included"
     const val isArchived = "is_archived"
@@ -25,7 +25,7 @@ data class AccountEntity(
     @ColumnInfo(name = AccountTable.type) val type: AccountEntityType,
     @ColumnInfo(name = AccountTable.color) val color: String,
     @ColumnInfo(name = AccountTable.icon) val icon: String,
-    @ColumnInfo(name = AccountTable.currencyId) val currencyId: Int,
+    @ColumnInfo(name = AccountTable.currency) val currency: String,
     @ColumnInfo(name = AccountTable.metadataType) val metadataType: AccountEntityMetadataType,
     @ColumnInfo(name = AccountTable.isIncluded) val isIncluded: Boolean,
     @ColumnInfo(name = AccountTable.isArchived) val isArchived: Boolean

@@ -27,7 +27,7 @@
     <string name="include_asset">Include in balance</string>
     <string name="include_asset_subtitle">Check to include in balance</string>
 
-    <string name="debet">Debit</string>
+    <string name="default_asset">Default asset</string>
     <string name="loan">Loan</string>
     <string name="new_category">New category</string>
     <string name="settings">Settings</string>
@@ -78,4 +78,8 @@
     <string name="income_liability">Income &amp; liability</string>
     <string name="balance">Balance</string>
     <string name="liability">Liability</string>
+    <string name="enter_limit">Enter limit</string>
+    <string name="enter_goal">Enter goal</string>
+    <string name="enter_percent">Enter percent</string>
+    <string name="exchange_hint">Will be exchanged with rate %s</string>
 </resources>

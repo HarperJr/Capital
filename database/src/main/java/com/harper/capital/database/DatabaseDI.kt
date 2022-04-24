@@ -17,4 +17,6 @@ val databaseModule
         factory { get<Database>().accountDao() }
 
         factory { get<Database>().transactionDao() }
+
+        factory { get<Database>().currencyDao() }
     }

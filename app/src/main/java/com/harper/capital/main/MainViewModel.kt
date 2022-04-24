@@ -6,6 +6,7 @@ import com.harper.capital.asset.model.AssetManageMode
 import com.harper.capital.history.HistoryListParams
 import com.harper.capital.main.domain.FetchAssetsUseCase
 import com.harper.capital.main.domain.FetchSummaryUseCase
+import com.harper.capital.main.domain.UpdateCurrenciesUseCase
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
 import com.harper.capital.navigation.GlobalRouter
@@ -16,15 +17,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val router: GlobalRouter,
     private val fetchAssetsUseCase: FetchAssetsUseCase,
-    private val fetchSummaryUseCase: FetchSummaryUseCase
+    private val fetchSummaryUseCase: FetchSummaryUseCase,
+    private val updateCurrenciesUseCase: UpdateCurrenciesUseCase
 ) : ComponentViewModel<MainState, MainEvent>(initialState = MainState()) {
 
     override fun onFirstComposition() {
         super.onFirstComposition()
+        refreshCurrencies()
         fetchAssets()
     }
 
@@ -37,6 +41,12 @@ class MainViewModel(
             is MainEvent.EditClick -> onEditClick(event)
             is MainEvent.SettingsClick -> onSettingsClick()
             is MainEvent.ActionCardClick -> onActionCardClick(event)
+        }
+    }
+
+    private fun refreshCurrencies() {
+        launch {
+            updateCurrenciesUseCase()
         }
     }
 

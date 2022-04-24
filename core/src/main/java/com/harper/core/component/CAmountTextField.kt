@@ -47,12 +47,13 @@ fun CAmountTextField(
 ) {
     val amountTextValue = rememberSaveable(amount) { mutableStateOf(amount.format()) }
     CTextField(
-        modifier = modifier.onFocusChanged { focusState ->
-            val value = amountTextValue.value
-            if (!focusState.isFocused && value.endsWithDecimalSeparator()) {
-                amountTextValue.value = amountTextValue.value.removeDecimalSeparator()
-            }
-        },
+        modifier = modifier
+            .onFocusChanged { focusState ->
+                val value = amountTextValue.value
+                if (!focusState.isFocused && value.endsWithDecimalSeparator()) {
+                    amountTextValue.value = amountTextValue.value.removeDecimalSeparator()
+                }
+            },
         value = amountTextValue.value,
         placeholder = placeholder,
         title = title,
@@ -113,7 +114,7 @@ fun CAmountTextField(
 
 private fun String.endsWithDecimalSeparator(): Boolean =
     this.endsWith(suffix = ".", ignoreCase = true) ||
-        this.endsWith(suffix = ",", ignoreCase = true)
+            this.endsWith(suffix = ",", ignoreCase = true)
 
 private fun String.removeDecimalSeparator(): String =
     this.removeSuffix(suffix = ".")

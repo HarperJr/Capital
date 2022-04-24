@@ -7,15 +7,21 @@ import com.harper.capital.asset.model.AssetManageBottomSheetState
 import com.harper.capital.asset.model.AssetManageEvent
 import com.harper.capital.asset.model.AssetManageMode
 import com.harper.capital.asset.model.AssetManageState
+import com.harper.capital.asset.model.AssetMetadataType
 import com.harper.capital.domain.model.AccountIcon
-import com.harper.capital.domain.model.AccountMetadataType
+import com.harper.capital.domain.model.AccountMetadata
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.manage.domain.FetchAssetUseCase
 import com.harper.core.ext.orElse
 import com.harper.core.ui.ComponentViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
+private const val DEFAULT_LOAN_LIMIT = 50000.0
+private const val DEFAULT_GOAL = 100000.0
+private const val DEFAULT_INVESTMENT_PERCENT = 4.0
 
 class AssetManageViewModel(
     private val params: AssetManageParams,
@@ -42,6 +48,18 @@ class AssetManageViewModel(
             is AssetManageEvent.IconSelectClick -> onIconSelectClick()
             is AssetManageEvent.BackClick -> router.back()
             is AssetManageEvent.Apply -> onApply()
+            is AssetManageEvent.MetadataValueChange -> onMetadataValueChange(event)
+        }
+    }
+
+    private fun onMetadataValueChange(event: AssetManageEvent.MetadataValueChange) {
+        update {
+            when (it.metadata) {
+                is AccountMetadata.Loan -> it.copy(metadata = it.metadata.copy(limit = event.value))
+                is AccountMetadata.Goal -> it.copy(metadata = it.metadata.copy(goal = event.value))
+                is AccountMetadata.Investment -> it.copy(metadata = it.metadata.copy(percent = event.value))
+                null -> it
+            }
         }
     }
 
@@ -62,7 +80,7 @@ class AssetManageViewModel(
                         currency = asset.currency,
                         color = asset.color,
                         icon = asset.icon,
-                        metadataType = it.metadataType,
+                        metadata = it.metadata,
                         isIncluded = asset.isIncluded,
                         isArchived = asset.isArchived
                     )
@@ -75,7 +93,7 @@ class AssetManageViewModel(
         launch(context = Dispatchers.IO) {
             with(state.value) {
                 if (mode == AssetManageMode.ADD) {
-                    addAssetUseCase(name, color, icon, currency, balance, isIncluded, metadataType)
+                    addAssetUseCase(name, color, icon, currency, balance, isIncluded, metadata)
                 } else {
                     params.accountId?.let { assetId ->
                         updateAssetUseCase(
@@ -85,7 +103,7 @@ class AssetManageViewModel(
                             currency,
                             color,
                             icon,
-                            metadataType = metadataType,
+                            metadata = metadata,
                             isIncluded,
                             isArchived
                         )
@@ -126,19 +144,30 @@ class AssetManageViewModel(
 
     private fun onAssetTypeSelectClick() {
         update {
+            val selectedMetadataType = when (it.metadata) {
+                is AccountMetadata.Loan -> AssetMetadataType.LOAN
+                is AccountMetadata.Goal -> AssetMetadataType.GOAL
+                is AccountMetadata.Investment -> AssetMetadataType.INVESTMENT
+                null -> AssetMetadataType.DEFAULT
+            }
             it.copy(
                 bottomSheetState = AssetManageBottomSheetState(
-                    bottomSheet = AssetManageBottomSheet.MetadataTypes(it.metadataType.orElse(AccountMetadataType.UNDEFINED))
+                    bottomSheet = AssetManageBottomSheet.MetadataTypes(selectedMetadataType)
                 )
             )
         }
     }
 
     private fun onAssetTypeSelect(event: AssetManageEvent.AssetTypeSelect) {
-        val selectedAssetType = AccountMetadataType.valueOf(event.assetTypeName)
+        val metadata = when (AssetMetadataType.valueOf(event.assetTypeName)) {
+            AssetMetadataType.DEFAULT -> null
+            AssetMetadataType.LOAN -> AccountMetadata.Loan(limit = DEFAULT_LOAN_LIMIT)
+            AssetMetadataType.GOAL -> AccountMetadata.Goal(goal = DEFAULT_GOAL)
+            AssetMetadataType.INVESTMENT -> AccountMetadata.Investment(percent = DEFAULT_INVESTMENT_PERCENT)
+        }
         update {
             it.copy(
-                metadataType = selectedAssetType,
+                metadata = metadata,
                 bottomSheetState = it.bottomSheetState.copy(isExpended = false)
             )
         }

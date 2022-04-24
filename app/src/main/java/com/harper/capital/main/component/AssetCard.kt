@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,9 +29,11 @@ import com.harper.capital.domain.model.Currency
 import com.harper.capital.ext.accountBackgroundColor
 import com.harper.capital.ext.accountContentColorFor
 import com.harper.capital.ext.getImageVector
+import com.harper.capital.ext.resolveText
 import com.harper.core.component.CAmountText
 import com.harper.core.component.CPreview
 import com.harper.core.ext.compose.assetCardSize
+import com.harper.core.ext.formatPercent
 import com.harper.core.ext.formatWithCurrencySymbol
 import com.harper.core.theme.CapitalTheme
 
@@ -80,28 +81,16 @@ fun AssetCard(modifier: Modifier = Modifier, account: Account) {
                 style = CapitalTheme.typography.header
             )
 
-            val metadata = remember { account.metadata }
-            val (type, info) = when (metadata) {
-                is AccountMetadata.LoanAsset -> {
-                    stringResource(id = R.string.credit_card) to
-                        (account.balance - metadata.limit).formatWithCurrencySymbol(account.currency.name)
-                }
-                is AccountMetadata.GoalAsset -> {
-                    stringResource(id = R.string.goal) to
-                        metadata.goal.formatWithCurrencySymbol(account.currency.name)
-                }
-                else -> null to null
-            }
-
-            if (type != null && info != null) {
+            val metadata = account.metadata
+            if (metadata != null) {
                 MetadataBlock(
                     modifier = Modifier
                         .constrainAs(description) {
                             top.linkTo(amount.bottom, margin = 4.dp)
                             start.linkTo(amount.start)
                         },
-                    type = type,
-                    info = info
+                    account = account,
+                    metadata = metadata
                 )
             }
 
@@ -111,17 +100,41 @@ fun AssetCard(modifier: Modifier = Modifier, account: Account) {
                         bottom.linkTo(parent.bottom, margin = 12.dp)
                         start.linkTo(parent.start, margin = 16.dp)
                     },
-                text = account.name
+                text = account.name,
+                style = CapitalTheme.typography.subtitle
             )
         }
     }
 }
 
 @Composable
-fun MetadataBlock(modifier: Modifier = Modifier, type: String, info: String) {
+fun MetadataBlock(modifier: Modifier = Modifier, account: Account, metadata: AccountMetadata) {
+    val info = remember(metadata) {
+        when (metadata) {
+            is AccountMetadata.Loan -> {
+                val diff = metadata.limit - account.balance
+                if (diff > 0.0) {
+                    diff.formatWithCurrencySymbol(
+                        currencyIso = account.currency.name,
+                        minFractionDigits = 0
+                    )
+                } else {
+                    ""
+                }
+            }
+            is AccountMetadata.Goal -> {
+                metadata.goal.formatWithCurrencySymbol(
+                    currencyIso = account.currency.name,
+                    minFractionDigits = 0
+                )
+            }
+            is AccountMetadata.Investment -> metadata.percent.formatPercent()
+            else -> ""
+        }
+    }
     Column(modifier = modifier) {
         Text(
-            text = type,
+            text = metadata.resolveText(),
             color = CapitalTheme.colors.textSecondary,
             style = CapitalTheme.typography.regularSmall
         )
@@ -152,7 +165,7 @@ private fun AssetCardLight() {
                     icon = AccountIcon.TINKOFF,
                     Currency.EUR,
                     75000.00,
-                    metadata = AccountMetadata.GoalAsset(goal = 100000.00)
+                    metadata = AccountMetadata.Goal(goal = 100000.00)
                 )
             )
         }
@@ -177,7 +190,7 @@ private fun AssetCardDark() {
                     icon = AccountIcon.TINKOFF,
                     Currency.EUR,
                     75000.00,
-                    metadata = AccountMetadata.GoalAsset(goal = 100000.00)
+                    metadata = AccountMetadata.Goal(goal = 100000.00)
                 )
             )
         }

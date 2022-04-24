@@ -2,7 +2,6 @@ package com.harper.capital.transaction
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -23,13 +22,12 @@ import com.harper.capital.transaction.model.DataSetSection
 import com.harper.capital.transaction.model.TransactionEvent
 import com.harper.capital.transaction.model.TransactionPage
 import com.harper.capital.transaction.model.TransactionState
-import com.harper.core.component.CButton
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CIcon
 import com.harper.core.component.CPreview
 import com.harper.core.component.CScaffold
-import com.harper.core.component.CToolbar
 import com.harper.core.component.CTabBarCommon
+import com.harper.core.component.CToolbar
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentViewModel
@@ -38,35 +36,24 @@ import com.harper.core.ui.ComponentViewModel
 @OptIn(ExperimentalPagerApi::class)
 fun TransactionScreen(viewModel: ComponentViewModel<TransactionState, TransactionEvent>) {
     val state by viewModel.state.collectAsState()
-
     CScaffold(
         topBar = { TransactionTopBar(viewModel) },
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                val pagerState = rememberPagerState(initialPage = state.selectedPage)
-                CTabBarCommon(
-                    data = state.tabBarData,
-                    pagerState = pagerState,
-                    onTabSelect = { viewModel.onEvent(TransactionEvent.TabSelect(it)) }
-                )
-                HorizontalPager(
-                    state = pagerState,
-                    count = state.pages.size
-                ) { pageIndex ->
-                    PageBlock(page = state.pages[pageIndex], viewModel)
-                }
-            }
-            CButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                text = stringResource(id = R.string.next),
-                enabled = state.isApplyButtonEnabled,
-                onClick = { viewModel.onEvent(TransactionEvent.Apply) }
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            val pagerState = rememberPagerState(initialPage = state.selectedPage)
+            CTabBarCommon(
+                data = state.tabBarData,
+                pagerState = pagerState,
+                onTabSelect = { viewModel.onEvent(TransactionEvent.TabSelect(it)) }
             )
+            HorizontalPager(
+                state = pagerState,
+                count = state.pages.size
+            ) { pageIndex ->
+                PageBlock(page = state.pages[pageIndex], viewModel)
+            }
         }
     }
 }
@@ -78,9 +65,9 @@ private fun PageBlock(page: TransactionPage, viewModel: ComponentViewModel<Trans
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
-        page.accountDataSets.forEach { dataSet ->
+        page.accountDataSets.forEach { (section, dataSet) ->
             CHorizontalSpacer(height = 24.dp)
-            Text(text = dataSet.section.resolveTitle(), style = CapitalTheme.typography.button)
+            Text(text = section.resolveTitle(), style = CapitalTheme.typography.button)
             CHorizontalSpacer(height = 8.dp)
             FlowRow(
                 mainAxisSpacing = 8.dp,
@@ -88,7 +75,7 @@ private fun PageBlock(page: TransactionPage, viewModel: ComponentViewModel<Trans
             ) {
                 dataSet.accounts.forEach {
                     AssetSource(account = it, isSelected = it.id == dataSet.selectedAccountId) {
-                        viewModel.onEvent(TransactionEvent.AssetSourceSelect(page.type, dataSet.section, it))
+                        viewModel.onEvent(TransactionEvent.AssetSourceSelect(page.type, section, it))
                     }
                 }
                 NewSource { viewModel.onEvent(TransactionEvent.NewSourceClick(page.type, dataSet.type)) }

@@ -47,6 +47,7 @@ interface TransactionDao {
     )
     fun selectBalance(): Flow<Double>
 
+    @Transaction
     @Query(
         """
         SELECT A.id AS ${BalancePartitionTable.accountId}, T.date_time AS ${BalancePartitionTable.period}, 
@@ -62,6 +63,7 @@ interface TransactionDao {
     )
     fun selectBalancePartitionsByPeriod(periodInMillis: Long): Flow<List<BalancePartitionEntity>>
 
+    @Transaction
     @Query(
         """
         SELECT SUM(-L.${LedgerTable.amount}) FROM ${TransactionTable.tableName} T

@@ -4,7 +4,9 @@ import java.time.LocalDate
 
 sealed class TransactionManageEvent {
 
-    class AmountChange(val amount: Double) : TransactionManageEvent()
+    class SourceAmountChange(val amount: Double) : TransactionManageEvent()
+
+    class TargetAmountChange(val amount: Double) : TransactionManageEvent()
 
     class DateSelect(val date: LocalDate) : TransactionManageEvent()
 

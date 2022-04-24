@@ -3,7 +3,7 @@ package com.harper.capital.settings.ext
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.harper.capital.R
-import com.harper.capital.ui.model.ColorTheme
+import com.harper.capital.domain.model.ColorTheme
 
 @Composable
 fun ColorTheme.resolveText() = when (this) {

@@ -2,7 +2,7 @@ package com.harper.capital.asset.model
 
 import com.harper.capital.domain.model.AccountColor
 import com.harper.capital.domain.model.AccountIcon
-import com.harper.capital.domain.model.AccountMetadataType
+import com.harper.capital.domain.model.AccountMetadata
 import com.harper.capital.domain.model.Currency
 
 data class AssetManageState(
@@ -14,7 +14,7 @@ data class AssetManageState(
     val colors: List<AccountColor> = AccountColor.values().toList(),
     val color: AccountColor = AccountColor.TINKOFF,
     val icon: AccountIcon = AccountIcon.TINKOFF,
-    val metadataType: AccountMetadataType = AccountMetadataType.UNDEFINED,
+    val metadata: AccountMetadata? = null,
     val isIncluded: Boolean = true,
     val isArchived: Boolean = false,
     val bottomSheetState: AssetManageBottomSheetState = AssetManageBottomSheetState(isExpended = false)
