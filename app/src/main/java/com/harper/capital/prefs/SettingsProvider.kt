@@ -6,12 +6,12 @@ import com.harper.capital.domain.model.ColorTheme
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.domain.model.Settings
 import com.harper.core.ext.orElse
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 
 class SettingsProvider(private val context: Context) {

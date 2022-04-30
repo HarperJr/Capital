@@ -7,7 +7,7 @@ sealed class HistoryListEvent {
 
     class OnTransactionClick(val transaction: Transaction) : HistoryListEvent()
 
-    class MonthSelect(val month: LocalDate) : HistoryListEvent()
+    class DateRangeSelect(val dateStart: LocalDate?, val dateEnd: LocalDate?) : HistoryListEvent()
 
     object BackClick : HistoryListEvent()
 

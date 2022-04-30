@@ -12,6 +12,7 @@ import com.harper.capital.database.entity.TransactionEntity
 import com.harper.capital.database.entity.TransactionTable
 import com.harper.capital.database.entity.BalancePartitionEntity
 import com.harper.capital.database.entity.BalancePartitionTable
+import com.harper.capital.database.entity.embedded.AssetEntityEmbedded
 import com.harper.capital.database.entity.embedded.TransactionEntityEmbedded
 import com.harper.capital.database.view.AssetBalanceTable
 import kotlinx.coroutines.flow.Flow
@@ -39,13 +40,8 @@ interface TransactionDao {
     @Query("SELECT * FROM ${TransactionTable.tableName} WHERE ${TransactionTable.id} = :id")
     suspend fun selectById(id: Long): TransactionEntityEmbedded
 
-    @Query(
-        """
-        SELECT SUM(${AssetBalanceTable.balance}) FROM ${AssetBalanceTable.tableName} 
-        WHERE ${AccountTable.type} = 'ASSET' AND ${AccountTable.isIncluded} = 1
-        """
-    )
-    fun selectBalance(): Flow<Double>
+    @Query("SELECT * FROM ${AssetBalanceTable.tableName} WHERE ${AccountTable.type} = 'ASSET' AND ${AccountTable.isIncluded} = 1")
+    fun selectBalance(): Flow<List<AssetEntityEmbedded>>
 
     @Transaction
     @Query(
@@ -66,13 +62,14 @@ interface TransactionDao {
     @Transaction
     @Query(
         """
-        SELECT SUM(-L.${LedgerTable.amount}) FROM ${TransactionTable.tableName} T
+        SELECT *, SUM(-L.${LedgerTable.amount}) AS ${AssetBalanceTable.balance} FROM ${TransactionTable.tableName} T
         LEFT JOIN ${LedgerTable.tableName} L ON T.${TransactionTable.id} = L.${LedgerTable.transactionId} 
         LEFT JOIN ${AccountTable.tableName} A ON A.${AccountTable.id} = L.${LedgerTable.accountId}
         WHERE A.${AccountTable.type} = 'LIABILITY' AND T.${TransactionTable.dateTime} BETWEEN :dateTimeAfter AND :dateTimeBefore
+        GROUP BY A.${AccountTable.id}
         """
     )
-    fun selectLiabilitiesBetween(dateTimeAfter: LocalDateTime, dateTimeBefore: LocalDateTime): Flow<Double>
+    fun selectLiabilitiesBetween(dateTimeAfter: LocalDateTime, dateTimeBefore: LocalDateTime): Flow<List<AssetEntityEmbedded>>
 
     @Transaction
     @Query(

@@ -15,8 +15,13 @@ internal object AssetBalanceTable {
 @DatabaseView(
     viewName = AssetBalanceTable.tableName,
     value = """
-        SELECT *, SUM(CASE WHEN L.${LedgerTable.type} = 'DEBIT' THEN
-        L.${LedgerTable.amount} ELSE -L.${LedgerTable.amount} END) AS ${AssetBalanceTable.balance}
+        SELECT *, SUM(
+            CASE WHEN A.${AccountTable.type} = 'ASSET' THEN
+                CASE WHEN L.${LedgerTable.type} = 'DEBIT' THEN L.${LedgerTable.amount} ELSE -L.${LedgerTable.amount} END
+            ELSE 
+                CASE WHEN L.${LedgerTable.type} = 'DEBIT' THEN -L.${LedgerTable.amount} ELSE L.${LedgerTable.amount} END
+            END
+        ) AS ${AssetBalanceTable.balance}
         FROM ${AccountTable.tableName} A
         LEFT JOIN ${LedgerTable.tableName} L ON
         A.${AccountTable.id} = L.${LedgerTable.accountId}

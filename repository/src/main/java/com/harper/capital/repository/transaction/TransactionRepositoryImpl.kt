@@ -2,9 +2,11 @@ package com.harper.capital.repository.transaction
 
 import com.harper.capital.database.DatabaseTx
 import com.harper.capital.database.dao.TransactionDao
+import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.BalancePartition
 import com.harper.capital.domain.model.BalancePartitionPeriod
 import com.harper.capital.domain.model.Transaction
+import com.harper.capital.repository.account.mapper.AccountMapper
 import com.harper.capital.repository.transaction.mapper.*
 import com.harper.core.ext.defaultIfNull
 import kotlinx.coroutines.Dispatchers
@@ -49,17 +51,17 @@ internal class TransactionRepositoryImpl(
         transactionDao.deleteById(transactionId)
     }
 
-    override fun fetchBalance(): Flow<Double> = transactionDao.selectBalance()
-        .defaultIfNull(0.0)
+    override fun fetchBalance(): Flow<List<Account>> = transactionDao.selectBalance()
+        .map { entities -> entities.map { AccountMapper(it.account, null, it.balance) } }
         .flowOn(Dispatchers.IO)
 
-    override fun fetchLiabilitiesBetween(dateTimeAfter: LocalDateTime, dateTimeBefore: LocalDateTime): Flow<Double> =
+    override fun fetchLiabilitiesBetween(dateTimeAfter: LocalDateTime, dateTimeBefore: LocalDateTime): Flow<List<Account>> =
         transactionDao
             .selectLiabilitiesBetween(
                 dateTimeAfter = dateTimeAfter,
                 dateTimeBefore = dateTimeBefore
             )
-            .defaultIfNull(0.0)
+            .map { entities -> entities.map { AccountMapper(it.account, null, it.balance) } }
             .flowOn(Dispatchers.IO)
 
     override fun fetchTransactions(accountId: Long?, dateTimeAfter: LocalDateTime, dateTimeBefore: LocalDateTime): Flow<List<Transaction>> =

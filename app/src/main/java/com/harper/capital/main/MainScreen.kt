@@ -51,9 +51,9 @@ import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentViewModel
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
-import kotlinx.coroutines.flow.collect
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlinx.coroutines.flow.collect
 
 private const val ADD_ASSET_MENU_ITEM_ID = 0
 private const val SETTINGS_MENU_ITEM_ID = 1

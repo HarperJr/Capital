@@ -73,4 +73,5 @@
     <string name="enter_goal">Введите цель</string>
     <string name="enter_percent">Введите процент</string>
     <string name="exchange_hint">Перевод произойдет по курсу %s</string>
+    <string name="transaction_change">Баланс счета изменен на %s</string>
 </resources>

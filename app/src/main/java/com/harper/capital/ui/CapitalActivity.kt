@@ -5,10 +5,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.google.accompanist.insets.ProvideWindowInsets
@@ -31,6 +36,7 @@ import com.harper.capital.transaction.manage.transactionManage
 import com.harper.capital.transaction.transaction
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
+import kotlinx.coroutines.flow.collect
 import org.koin.android.ext.android.inject
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -46,10 +52,11 @@ class CapitalActivity : ComponentActivity() {
 
         setContent {
             ProvideWindowInsets {
-                val isDarkThemeState by produceState(initialValue = false, producer = {
-                    val settings = settingsProvider.provide()
-                    value = settings.colorTheme == ColorTheme.DARK
-                })
+                var isDarkThemeState by remember { mutableStateOf(false) }
+                LaunchedEffect(Unit) {
+                    settingsProvider.asFlow
+                        .collect { isDarkThemeState = it.colorTheme == ColorTheme.DARK }
+                }
 
                 CapitalTheme(isDark = isDarkThemeState) {
                     val systemUiController = rememberSystemUiController()
@@ -69,6 +76,7 @@ class CapitalActivity : ComponentActivity() {
                         }
                     }
                     AnimatedNavHost(
+                        modifier = Modifier.background(color = CapitalTheme.colors.background),
                         navController = navController,
                         startDestination = (if (BuildConfig.DEBUG) ScreenKey.SIGN_IN else ScreenKey.MAIN).route
                     ) {

@@ -82,4 +82,5 @@
     <string name="enter_goal">Enter goal</string>
     <string name="enter_percent">Enter percent</string>
     <string name="exchange_hint">Will be exchanged with rate %s</string>
+    <string name="transaction_change">Balance was changed on %s</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.harper.capital.repository.transaction
 
+import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.BalancePartition
 import com.harper.capital.domain.model.BalancePartitionPeriod
 import com.harper.capital.domain.model.Transaction
@@ -16,12 +17,12 @@ interface TransactionRepository {
 
     suspend fun fetchTransaction(transactionId: Long): Transaction
 
-    fun fetchBalance(): Flow<Double>
+    fun fetchBalance(): Flow<List<Account>>
 
     fun fetchLiabilitiesBetween(
         dateTimeAfter: LocalDateTime,
         dateTimeBefore: LocalDateTime
-    ): Flow<Double>
+    ): Flow<List<Account>>
 
     fun fetchTransactions(
         accountId: Long? = null,

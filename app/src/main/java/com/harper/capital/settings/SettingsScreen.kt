@@ -26,7 +26,6 @@ import com.harper.capital.settings.model.SettingsBottomSheet
 import com.harper.capital.settings.model.SettingsEvent
 import com.harper.capital.settings.model.SettingsState
 import com.harper.core.component.CBottomSheetScaffold
-import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CIcon
 import com.harper.core.component.CPreferenceArrow
 import com.harper.core.component.CPreferenceSwitch
@@ -122,7 +121,7 @@ private fun BottomSheetContent(bottomSheet: SettingsBottomSheet?, viewModel: Com
             CurrencyBottomSheet(
                 currencies = bottomSheet.currencies,
                 selectedCurrency = bottomSheet.selectedCurrency,
-                onCurrencySelect = { viewModel.onEvent(SettingsEvent.CurrencySelectClick) }
+                onCurrencySelect = { viewModel.onEvent(SettingsEvent.CurrencySelect(it)) }
             )
         }
         else -> {

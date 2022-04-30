@@ -1,20 +1,26 @@
 package com.harper.capital.transaction.manage
 
-import com.harper.capital.domain.model.*
+import com.harper.capital.domain.model.TransferTransaction
+import com.harper.capital.ext.getExchangeRate
 import com.harper.capital.navigation.GlobalRouter
-import com.harper.capital.transaction.manage.domain.*
-import com.harper.capital.transaction.manage.model.ExchangeState
+import com.harper.capital.transaction.manage.domain.AddTransactionUseCase
+import com.harper.capital.transaction.manage.domain.FetchAccountUseCase
+import com.harper.capital.transaction.manage.domain.FetchCurrencyRatesUseCase
+import com.harper.capital.transaction.manage.domain.FetchTransactionUseCase
+import com.harper.capital.transaction.manage.domain.UpdateTransactionUseCase
 import com.harper.capital.transaction.manage.model.TransactionManageEvent
 import com.harper.capital.transaction.manage.model.TransactionManageMode
 import com.harper.capital.transaction.manage.model.TransactionManageState
+import com.harper.core.ext.orElse
 import com.harper.core.ui.ComponentViewModel
-import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import java.time.LocalTime
+import kotlinx.coroutines.launch
 
 class TransactionManageViewModel(
     private val params: TransactionManageParams,
     private val router: GlobalRouter,
-    private val fetchAssetUseCase: FetchAssetUseCase,
+    private val fetchAccountUseCase: FetchAccountUseCase,
     private val addTransactionUseCase: AddTransactionUseCase,
     private val updateTransactionUseCase: UpdateTransactionUseCase,
     private val fetchTransactionUseCase: FetchTransactionUseCase,
@@ -36,63 +42,59 @@ class TransactionManageViewModel(
 
     override fun onFirstComposition() {
         super.onFirstComposition()
-        if (params.transactionId == null) {
-            fetchAccounts()
-        } else {
-            fetchTransaction(params.transactionId)
-        }
-    }
-
-    private fun fetchTransaction(transactionId: Long) {
         launch {
-            val transaction = fetchTransactionUseCase(transactionId)
+            if (params.transactionId == null) {
+                fetchAccounts()
+            } else {
+                fetchTransaction(params.transactionId)
+            }
             val rates = fetchCurrencyRatesUseCase()
-            val sourceAccount = transaction.ledgers[0].account
-            val receiverAccount = transaction.ledgers[1].account
-            val rate = getExchangeRate(rates, sourceAccount.currency, receiverAccount.currency)
-            update {
-                it.copy(
-                    accounts = transaction.ledgers.map { ledger -> ledger.account },
-                    exchangeState = ExchangeState(
-                        sourceCurrency = sourceAccount.currency,
-                        receiverCurrency = receiverAccount.currency,
-                        rate = rate
-                    ),
-                    date = transaction.dateTime,
-                    comment = transaction.comment,
-                    isScheduled = transaction.isScheduled,
-                    isLoading = false
-                )
+            update { prevState ->
+                prevState.transaction
+                    ?.let {
+                        prevState.copy(exchangeRate = it.source.currency.getExchangeRate(rates, it.receiver.currency))
+                    }.orElse(prevState)
             }
         }
     }
 
-    private fun fetchAccounts() {
-        launch {
-            val sourceAccount = fetchAssetUseCase(params.sourceAccountId)
-            val receiverAccount = fetchAssetUseCase(params.receiverAccountId)
-            val rates = fetchCurrencyRatesUseCase()
-            val rate = getExchangeRate(rates, sourceAccount.currency, receiverAccount.currency)
-            update {
+    private suspend fun fetchTransaction(transactionId: Long) {
+        val transaction = fetchTransactionUseCase(transactionId)
+        update {
+            if (transaction is TransferTransaction) {
                 it.copy(
-                    accounts = listOf(sourceAccount, receiverAccount),
-                    exchangeState = ExchangeState(
-                        sourceCurrency = sourceAccount.currency,
-                        receiverCurrency = receiverAccount.currency,
-                        rate = rate
-                    ),
+                    transaction = transaction,
                     isLoading = false
                 )
+            } else {
+                it.copy(isLoading = false)
             }
+        }
+    }
+
+    private suspend fun fetchAccounts() {
+        val source = fetchAccountUseCase(params.sourceAccountId)
+        val receiver = fetchAccountUseCase(params.receiverAccountId)
+        val transaction = TransferTransaction(
+            source = source,
+            receiver = receiver,
+            sourceAmount = 0.0,
+            receiverAmount = 0.0,
+            dateTime = LocalDateTime.now(),
+            comment = null,
+            isScheduled = false
+        )
+        update {
+            it.copy(transaction = transaction, isLoading = false)
         }
     }
 
     private fun onSourceAmountChange(event: TransactionManageEvent.SourceAmountChange) {
         update {
             it.copy(
-                exchangeState = it.exchangeState.copy(
+                transaction = it.transaction?.copy(
                     sourceAmount = event.amount,
-                    receiverAmount = event.amount / it.exchangeState.rate,
+                    receiverAmount = event.amount / it.exchangeRate,
                 )
             )
         }
@@ -101,8 +103,8 @@ class TransactionManageViewModel(
     private fun onTargetAmountChange(event: TransactionManageEvent.TargetAmountChange) {
         update {
             it.copy(
-                exchangeState = it.exchangeState.copy(
-                    sourceAmount = event.amount * it.exchangeState.rate,
+                transaction = it.transaction?.copy(
+                    sourceAmount = event.amount * it.exchangeRate,
                     receiverAmount = event.amount
                 )
             )
@@ -111,18 +113,18 @@ class TransactionManageViewModel(
 
     private fun onCommentChange(event: TransactionManageEvent.CommentChange) {
         update {
-            it.copy(comment = event.comment.takeIf { comment -> comment.isNotBlank() })
+            it.copy(transaction = it.transaction?.copy(comment = event.comment.takeIf { comment -> comment.isNotBlank() }))
         }
     }
 
     private fun onDateSelect(event: TransactionManageEvent.DateSelect) {
         update {
-            it.copy(date = event.date.atTime(LocalTime.now()))
+            it.copy(transaction = it.transaction?.copy(dateTime = event.date.atTime(LocalTime.now())))
         }
     }
 
     private fun onScheduledCheckChange(event: TransactionManageEvent.ScheduledCheckChange) {
-        update { it.copy(isScheduled = event.isChecked) }
+        update { it.copy(transaction = it.transaction?.copy(isScheduled = event.isChecked)) }
     }
 
     private fun onApply() {
@@ -133,56 +135,20 @@ class TransactionManageViewModel(
     }
 
     private fun updateTransaction() {
-        with(state.value) {
-            if (accounts.isNotEmpty() && params.transactionId != null) {
-                val (sourceAccount, receiverAccount) = accounts
-                val transaction = Transaction(
-                    id = params.transactionId,
-                    ledgers = listOf(
-                        Ledger(0L, sourceAccount, LedgerType.CREDIT, exchangeState.sourceAmount),
-                        Ledger(0L, receiverAccount, LedgerType.DEBIT, exchangeState.receiverAmount)
-                    ),
-                    dateTime = date,
-                    comment = comment,
-                    isScheduled = isScheduled
-                )
-                launch {
-                    updateTransactionUseCase(transaction)
-                    router.back()
-                }
+        state.value.transaction?.let {
+            launch {
+                updateTransactionUseCase(it)
+                router.back()
             }
         }
     }
 
     private fun addTransaction() {
-        with(state.value) {
-            if (accounts.isNotEmpty()) {
-                val (sourceAccount, receiverAccount) = accounts
-                val transaction = Transaction(
-                    id = 0L,
-                    ledgers = listOf(
-                        Ledger(0L, sourceAccount, LedgerType.CREDIT, exchangeState.sourceAmount),
-                        Ledger(0L, receiverAccount, LedgerType.DEBIT, exchangeState.receiverAmount)
-                    ),
-                    dateTime = date,
-                    comment = comment,
-                    isScheduled = isScheduled
-                )
-                launch {
-                    addTransactionUseCase(transaction)
-                    router.back()
-                }
+        state.value.transaction?.let {
+            launch {
+                addTransactionUseCase(it)
+                router.back()
             }
         }
-    }
-
-    private fun getExchangeRate(
-        rates: List<CurrencyRate>,
-        sourceCurrency: Currency,
-        targetCurrency: Currency
-    ): Double {
-        val sourceRate = rates.first { it.currency == sourceCurrency }
-        val targetRate = rates.first { it.currency == targetCurrency }
-        return sourceRate.rate / targetRate.rate
     }
 }

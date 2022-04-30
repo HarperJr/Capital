@@ -9,6 +9,8 @@ import com.harper.capital.repository.currency.mapper.LatestRatesResponseEntityMa
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+private const val MILLISECONDS_TIMESTAMP_MULTIPLIER = 1000L
+
 class CurrencyRepositoryImpl(
     private val exchangeApi: ExchangeApi,
     private val currencyDao: CurrencyDao
@@ -18,7 +20,7 @@ class CurrencyRepositoryImpl(
         val currencySymbols = Currency.values().joinToString(separator = ",") { it.name }
         val exchange = exchangeApi.getLatest(symbols = currencySymbols)
         currencyDao.insert(LatestRatesResponseEntityMapper(exchange))
-        return exchange.timestamp
+        return exchange.timestamp * MILLISECONDS_TIMESTAMP_MULTIPLIER
     }
 
     override fun fetchAll(): Flow<List<CurrencyRate>> = currencyDao.selectAll()

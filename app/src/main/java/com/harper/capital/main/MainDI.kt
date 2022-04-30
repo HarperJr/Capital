@@ -12,7 +12,7 @@ val mainModule
 
         factory { FetchAssetsUseCase(get()) }
 
-        factory { FetchSummaryUseCase(get()) }
+        factory { FetchSummaryUseCase(get(), get(), get()) }
 
         viewModel { MainViewModel(get(), get(), get(), get()) }
     }

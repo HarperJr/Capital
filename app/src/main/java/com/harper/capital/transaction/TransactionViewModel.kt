@@ -57,21 +57,6 @@ class TransactionViewModel(
         }
     }
 
-    private fun onApply() {
-        val page = state.value.pages[state.value.selectedPage]
-        val sourceAccountId = page.accountDataSets[DataSetSection.FROM]?.selectedAccountId
-        val receiverAccountId = page.accountDataSets[DataSetSection.TO]?.selectedAccountId
-        if (sourceAccountId != null && receiverAccountId != null) {
-            router.navigateToManageTransaction(
-                TransactionManageParams(
-                    mode = TransactionManageMode.ADD,
-                    sourceAccountId = sourceAccountId,
-                    receiverAccountId = receiverAccountId
-                )
-            )
-        }
-    }
-
     private fun onNewSourceClick(event: TransactionEvent.NewSourceClick) {
         when (event.dataSetType) {
             DataSetType.ASSET -> {
@@ -104,12 +89,8 @@ class TransactionViewModel(
                 }
             }
             it.copy(pages = pages)
-                .also { state ->
-                    if (checkSourcesAreSelected(state.pages, state.selectedPage)) {
-                        onApply()
-                    }
-                }
         }
+        tryApply()
     }
 
     private fun onTabSelect(event: TransactionEvent.TabSelect) {
@@ -118,9 +99,20 @@ class TransactionViewModel(
         }
     }
 
-    private fun checkSourcesAreSelected(pages: List<TransactionPage>, selectedPage: Int): Boolean {
-        val page = pages[selectedPage]
-        return page.accountDataSets[DataSetSection.FROM]?.selectedAccountId != null &&
-                page.accountDataSets[DataSetSection.TO]?.selectedAccountId != null
+    private fun tryApply() {
+        with(state.value) {
+            val page = pages[selectedPage]
+            val source = page.accountDataSets[DataSetSection.FROM]?.selectedAccountId
+            val receiver = page.accountDataSets[DataSetSection.TO]?.selectedAccountId
+            if (source != null && receiver != null) {
+                router.navigateToManageTransaction(
+                    TransactionManageParams(
+                        mode = TransactionManageMode.ADD,
+                        sourceAccountId = source,
+                        receiverAccountId = receiver
+                    )
+                )
+            }
+        }
     }
 }

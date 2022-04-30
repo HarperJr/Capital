@@ -5,10 +5,10 @@ import com.harper.capital.domain.model.BalancePartition
 import com.harper.capital.domain.model.BalancePartitionPeriod
 import com.harper.capital.repository.transaction.TransactionRepository
 import com.harper.core.ext.orElse
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.time.Period
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class FetchBalancePartitionsByPeriodUseCase(private val transactionRepository: TransactionRepository) {
     private val partitionAlignFactory: PartitionAlignFactory = PartitionAlignFactory()

@@ -9,7 +9,6 @@ internal object CurrencyRateMapper : (List<CurrencyRateEntity>) -> List<Currency
     override fun invoke(entities: List<CurrencyRateEntity>): List<CurrencyRate> = entities.map {
         CurrencyRate(
             currency = Currency.valueOf(it.name),
-            isBase = it.isBase,
             rate = it.rate
         )
     }

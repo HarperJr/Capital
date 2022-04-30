@@ -51,7 +51,7 @@ fun CurrencyBottomSheet(
     val filteredCurrencies = remember(currencies, searchQuery.value) {
         currencies.filter {
             searchQuery.value.isEmpty() ||
-                it.name.formatCurrencyName().contains(searchQuery.value, ignoreCase = true)
+                    it.name.formatCurrencyName().contains(searchQuery.value, ignoreCase = true)
         }
     }
     Column(

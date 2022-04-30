@@ -50,7 +50,7 @@ fun IconsBottomSheet(
     val filteredIcons = remember(ibsData.icons, searchQuery.value) {
         ibsData.icons.filter {
             searchQuery.value.isEmpty() ||
-                it.name.contains(searchQuery.value, ignoreCase = true)
+                    it.name.contains(searchQuery.value, ignoreCase = true)
         }
     }
     Column(

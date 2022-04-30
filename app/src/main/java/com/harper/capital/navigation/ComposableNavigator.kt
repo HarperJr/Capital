@@ -8,8 +8,8 @@ import com.github.terrakok.cicerone.Forward
 import com.github.terrakok.cicerone.Navigator
 import com.github.terrakok.cicerone.Replace
 import com.github.terrakok.cicerone.Screen
-import timber.log.Timber
 import java.lang.ref.WeakReference
+import timber.log.Timber
 
 class ComposableNavigator : Navigator {
     private val navController: NavController

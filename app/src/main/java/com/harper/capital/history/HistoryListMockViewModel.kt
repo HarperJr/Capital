@@ -1,6 +1,11 @@
 package com.harper.capital.history
 
-import com.harper.capital.domain.model.*
+import com.harper.capital.domain.model.Account
+import com.harper.capital.domain.model.AccountColor
+import com.harper.capital.domain.model.AccountIcon
+import com.harper.capital.domain.model.AccountType
+import com.harper.capital.domain.model.Currency
+import com.harper.capital.domain.model.TransferTransaction
 import com.harper.capital.history.model.HistoryListEvent
 import com.harper.capital.history.model.HistoryListItem
 import com.harper.capital.history.model.HistoryListState
@@ -11,7 +16,7 @@ import java.time.LocalDateTime
 class HistoryListMockViewModel : ComponentViewModel<HistoryListState, HistoryListEvent>(
     initialState = HistoryListState()
 ) {
-    private val assetFrom = Account(
+    private val source = Account(
         id = 0L,
         name = "Tinkoff Black",
         type = AccountType.ASSET,
@@ -21,7 +26,7 @@ class HistoryListMockViewModel : ComponentViewModel<HistoryListState, HistoryLis
         icon = AccountIcon.TINKOFF,
         metadata = null
     )
-    private val assetTo = Account(
+    private val receiver = Account(
         id = 1L,
         name = "Products",
         type = AccountType.LIABILITY,
@@ -44,16 +49,17 @@ class HistoryListMockViewModel : ComponentViewModel<HistoryListState, HistoryLis
 
     private fun createTransactions(): List<HistoryListItem> {
         return (0 until 3).map {
+            val amounts = (0 until 5).map { Math.random() * 10000 }
             HistoryListItem(
                 date = LocalDate.now(),
-                summaryAmount = Math.random() * 10000,
+                summaryAmount = amounts.sum(),
                 currency = Currency.RUB,
                 transactions = (0 until 5).map {
-                    Transaction(
-                        id = it.toLong(),
-                        ledgers = listOf(
-
-                        ),
+                    TransferTransaction(
+                        source = source,
+                        receiver = receiver,
+                        sourceAmount = amounts[it],
+                        receiverAmount = amounts[it],
                         dateTime = LocalDateTime.now(),
                         comment = null,
                         isScheduled = false

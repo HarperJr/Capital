@@ -11,8 +11,7 @@ internal object LatestRatesResponseEntityMapper : (LatestRatesResponse) -> List<
                 CurrencyRateEntity(
                     id = key.hashCode().toLong(),
                     name = key,
-                    rate = rate,
-                    isBase = key == response.base
+                    rate = rate
                 )
             }
         } else {

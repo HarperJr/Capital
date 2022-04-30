@@ -12,8 +12,7 @@ import com.harper.capital.domain.model.AccountIcon
 import com.harper.capital.domain.model.AccountMetadata
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.navigation.GlobalRouter
-import com.harper.capital.transaction.manage.domain.FetchAssetUseCase
-import com.harper.core.ext.orElse
+import com.harper.capital.transaction.manage.domain.FetchAccountUseCase
 import com.harper.core.ui.ComponentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +27,7 @@ class AssetManageViewModel(
     private val router: GlobalRouter,
     private val addAssetUseCase: AddAssetUseCase,
     private val updateAssetUseCase: UpdateAssetUseCase,
-    private val fetchAssetUseCase: FetchAssetUseCase
+    private val fetchAccountUseCase: FetchAccountUseCase
 ) : ComponentViewModel<AssetManageState, AssetManageEvent>(
     initialState = AssetManageState(mode = params.mode, isLoading = params.accountId != null)
 ) {
@@ -71,7 +70,7 @@ class AssetManageViewModel(
         super.onFirstComposition()
         params.accountId?.let { assetId ->
             launch {
-                val asset = fetchAssetUseCase(assetId)
+                val asset = fetchAccountUseCase(assetId)
                 update {
                     it.copy(
                         isLoading = false,
