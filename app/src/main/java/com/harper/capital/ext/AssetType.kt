@@ -20,6 +20,7 @@ fun AccountMetadata?.resolveText(): String = when (this) {
     is AccountMetadata.Loan -> stringResource(id = R.string.loan)
     is AccountMetadata.Goal -> stringResource(id = R.string.goal)
     is AccountMetadata.Investment -> stringResource(id = R.string.investment)
+    is AccountMetadata.Debt -> stringResource(id = R.string.debt)
 }
 
 @Composable
@@ -27,4 +28,5 @@ fun AccountMetadata.resolveValueHint(): String = when (this) {
     is AccountMetadata.Loan -> stringResource(id = R.string.enter_limit)
     is AccountMetadata.Goal -> stringResource(id = R.string.enter_goal)
     is AccountMetadata.Investment -> stringResource(id = R.string.enter_percent)
+    is AccountMetadata.Debt -> stringResource(id = R.string.debt)
 }

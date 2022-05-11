@@ -7,4 +7,6 @@ sealed class AccountMetadata {
     data class Goal(val goal: Double) : AccountMetadata()
 
     data class Investment(val percent: Double) : AccountMetadata()
+
+    data class Debt(val avatar: String?, val phone: String?) : AccountMetadata()
 }

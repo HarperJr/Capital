@@ -2,27 +2,29 @@ package com.harper.capital.transaction
 
 import com.harper.capital.asset.AssetManageParams
 import com.harper.capital.asset.model.AssetManageMode
-import com.harper.capital.category.CategoryManageParams
-import com.harper.capital.category.model.CategoryManageType
 import com.harper.capital.domain.model.Account
+import com.harper.capital.domain.model.AccountType
+import com.harper.capital.liability.LiabilityManageParams
+import com.harper.capital.liability.model.LiabilityManageType
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.domain.FetchAssetsUseCase
+import com.harper.capital.transaction.domain.FetchLiabilitiesUseCase
 import com.harper.capital.transaction.manage.TransactionManageParams
 import com.harper.capital.transaction.manage.model.TransactionManageMode
 import com.harper.capital.transaction.model.DataSetSection
-import com.harper.capital.transaction.model.DataSetType
 import com.harper.capital.transaction.model.TransactionEvent
 import com.harper.capital.transaction.model.TransactionPage
 import com.harper.capital.transaction.model.TransactionState
 import com.harper.capital.transaction.model.TransactionType
 import com.harper.core.ui.ComponentViewModel
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class TransactionViewModel(
     private val params: TransactionParams,
     private val router: GlobalRouter,
-    private val fetchAssetsUseCase: FetchAssetsUseCase
+    private val fetchAssetsUseCase: FetchAssetsUseCase,
+    private val fetchLiabilitiesUseCase: FetchLiabilitiesUseCase
 ) : ComponentViewModel<TransactionState, TransactionEvent>(
     initialState = TransactionState(selectedPage = params.transactionType.ordinal)
 ) {
@@ -31,9 +33,12 @@ class TransactionViewModel(
     override fun onFirstComposition() {
         super.onFirstComposition()
         launch {
-            fetchAssetsUseCase()
-                .collect { assets ->
-                    update { it.copy(pages = fillPages(it.pages, assets)) }
+            combine(
+                fetchAssetsUseCase(),
+                fetchLiabilitiesUseCase()
+            ) { assets, categories -> assets + categories }
+                .collect { accounts ->
+                    update { it.copy(pages = fillPages(it.pages, accounts)) }
                 }
         }
     }
@@ -58,17 +63,19 @@ class TransactionViewModel(
     }
 
     private fun onNewSourceClick(event: TransactionEvent.NewSourceClick) {
-        when (event.dataSetType) {
-            DataSetType.ASSET -> {
+        when (event.type) {
+            AccountType.ASSET -> {
                 router.navigateToManageAsset(AssetManageParams(AssetManageMode.ADD))
             }
-            DataSetType.CATEGORY -> {
-                val categoryType = when (event.transactionType) {
-                    TransactionType.EXPENSE -> CategoryManageType.LIABILITY
-                    TransactionType.INCOME -> CategoryManageType.INCOME
+            AccountType.INCOME,
+            AccountType.LIABILITY -> {
+                val liabilityType = when (event.transactionType) {
+                    TransactionType.EXPENSE -> LiabilityManageType.LIABILITY
+                    TransactionType.INCOME -> LiabilityManageType.INCOME
+                    TransactionType.DEBT -> LiabilityManageType.DEBT
                     else -> return
                 }
-                router.navigateToManageCategory(params = CategoryManageParams(categoryType))
+                router.navigateToManageLiability(params = LiabilityManageParams(liabilityType))
             }
         }
     }
@@ -81,7 +88,7 @@ class TransactionViewModel(
                         if (section == event.section) {
                             dataSet.copy(selectedAccountId = event.account.id)
                         } else {
-                            dataSet
+                            dataSet.copy(accounts = dataSet.accounts.map { item -> item.copy(isEnabled = item.account.id != event.account.id) })
                         }
                     })
                 } else {

@@ -119,7 +119,8 @@ class TransactionManageViewModel(
 
     private fun onDateSelect(event: TransactionManageEvent.DateSelect) {
         update {
-            it.copy(transaction = it.transaction?.copy(dateTime = event.date.atTime(LocalTime.now())))
+            val time = it.transaction?.dateTime?.toLocalTime().orElse(LocalTime.now())
+            it.copy(transaction = it.transaction?.copy(dateTime = event.date.atTime(time)))
         }
     }
 

@@ -7,5 +7,6 @@ enum class AccountEntityMetadataType {
     UNDEFINED,
     LOAN,
     GOAL,
-    INVESTMENT
+    INVESTMENT,
+    DEBT
 }

@@ -16,8 +16,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harper.core.theme.CapitalTheme
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
+@OptIn(ExperimentalMaterialApi::class)
 fun ActionCard(modifier: Modifier = Modifier, title: String, onClick: () -> Unit) {
     Card(
         modifier = modifier,
@@ -34,7 +34,7 @@ fun ActionCard(modifier: Modifier = Modifier, title: String, onClick: () -> Unit
             modifier = Modifier.padding(CapitalTheme.dimensions.medium),
             verticalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.medium)
         ) {
-            Text(text = title, style = CapitalTheme.typography.subtitle)
+            Text(text = title, style = CapitalTheme.typography.titleSmall)
             Box(
                 modifier = Modifier
                     .size(CapitalTheme.dimensions.imageMedium)

@@ -1,6 +1,7 @@
 package com.harper.capital.main
 
 import com.harper.capital.main.domain.FetchAssetsUseCase
+import com.harper.capital.main.domain.FetchFavoriteTransactionsUseCase
 import com.harper.capital.main.domain.FetchSummaryUseCase
 import com.harper.capital.main.domain.UpdateCurrenciesUseCase
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -14,5 +15,7 @@ val mainModule
 
         factory { FetchSummaryUseCase(get(), get(), get()) }
 
-        viewModel { MainViewModel(get(), get(), get(), get()) }
+        factory { FetchFavoriteTransactionsUseCase(get()) }
+
+        viewModel { MainViewModel(get(), get(), get(), get(), get()) }
     }

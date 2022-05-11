@@ -75,7 +75,6 @@ fun AnalyticsScreen(viewModel: ComponentViewModel<AnalyticsState, AnalyticsEvent
                         CHorizontalSpacer(height = CapitalTheme.dimensions.side)
                         ChartPageBlock(
                             modifier = Modifier
-                                .padding(CapitalTheme.dimensions.side)
                                 .fillParentMaxWidth(1f)
                                 .fillParentMaxHeight(0.33f),
                             page = page
@@ -217,7 +216,7 @@ private fun ChartPageBlock(modifier: Modifier = Modifier, page: AnalyticsPage) {
 @Composable
 private fun AnalyticsTopBar(viewModel: ComponentViewModel<AnalyticsState, AnalyticsEvent>) {
     CToolbarCommon(
-        title = stringResource(id = R.string.analytics),
+        title = stringResource(id = R.string.analytics_balance),
         onNavigationClick = { viewModel.onEvent(AnalyticsEvent.BackClick) }
     )
 }

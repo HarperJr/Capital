@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -21,10 +22,11 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.harper.capital.BuildConfig
+import com.harper.capital.accounts.accounts
 import com.harper.capital.analytics.analytics
 import com.harper.capital.asset.assetManage
 import com.harper.capital.auth.signin.signIn
-import com.harper.capital.category.categoryManage
+import com.harper.capital.liability.liabilityManage
 import com.harper.capital.domain.model.ColorTheme
 import com.harper.capital.history.historyList
 import com.harper.capital.main.main
@@ -53,19 +55,20 @@ class CapitalActivity : ComponentActivity() {
         setContent {
             ProvideWindowInsets {
                 var isDarkThemeState by remember { mutableStateOf(false) }
+                val isSystemInDarkTheme = isSystemInDarkTheme()
                 LaunchedEffect(Unit) {
                     settingsProvider.asFlow
-                        .collect { isDarkThemeState = it.colorTheme == ColorTheme.DARK }
+                        .collect {
+                            isDarkThemeState =
+                                if (it.colorTheme == ColorTheme.SYSTEM) isSystemInDarkTheme else it.colorTheme == ColorTheme.DARK
+                        }
                 }
 
                 CapitalTheme(isDark = isDarkThemeState) {
                     val systemUiController = rememberSystemUiController()
                     val useDarkIcons = CapitalTheme.colors.isLight
                     SideEffect {
-                        systemUiController.setSystemBarsColor(
-                            color = CapitalColors.Transparent,
-                            darkIcons = useDarkIcons
-                        )
+                        systemUiController.setSystemBarsColor(color = CapitalColors.Transparent, darkIcons = useDarkIcons)
                     }
 
                     val navController = rememberAnimatedNavController()
@@ -83,11 +86,12 @@ class CapitalActivity : ComponentActivity() {
                         main()
                         signIn()
                         assetManage()
-                        categoryManage()
+                        liabilityManage()
                         transaction()
                         transactionManage()
                         historyList()
                         analytics()
+                        accounts()
                         settings()
                     }
                 }

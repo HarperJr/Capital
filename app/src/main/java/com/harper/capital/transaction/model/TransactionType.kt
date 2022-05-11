@@ -4,5 +4,5 @@ enum class TransactionType {
     INCOME,
     EXPENSE,
     SEND,
-    DUTY
+    DEBT
 }

@@ -9,30 +9,11 @@ import androidx.compose.ui.graphics.Path
 
 object CLineChartUtils {
 
-    fun calculateDrawableArea(
-        size: Size,
-        xAxisDrawableArea: Rect
-    ): Rect {
-        return Rect(
-            left = 0f,
-            top = 0f,
-            bottom = xAxisDrawableArea.top,
-            right = size.width
-        )
-    }
+    fun calculateDrawableArea(size: Size, xAxisDrawableArea: Rect): Rect =
+        Rect(left = 0f, top = 0f, bottom = xAxisDrawableArea.top, right = size.width)
 
-    fun calculateXAxisDrawableArea(
-        labelHeight: Float,
-        size: Size
-    ): Rect {
-        val top = size.height - labelHeight
-        return Rect(
-            left = 0f,
-            top = top,
-            bottom = size.height,
-            right = size.width
-        )
-    }
+    fun calculateXAxisDrawableArea(labelHeight: Float, size: Size): Rect =
+        Rect(left = 0f, top = size.height - labelHeight, bottom = size.height, right = size.width)
 
     private fun calculatePointLocation(
         lineChartData: LineChartData.Line,
@@ -44,11 +25,12 @@ object CLineChartUtils {
         offset: Float,
         index: Int
     ): Offset {
-        val x = index.toFloat() * drawableArea.width * spacedByPercent
+        val pointAreaWidth = drawableArea.width * spacedByPercent
+        val x = (index.toFloat() - lineChartData.points.size) * pointAreaWidth + pointAreaWidth / 2f
         val y = ((point - minYValue) / yRange)
 
         return Offset(
-            x = x + drawableArea.left + offset,
+            x = x + drawableArea.right + offset,
             y = drawableArea.height - (y * drawableArea.height)
         )
     }

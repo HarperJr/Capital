@@ -97,7 +97,7 @@ class SimpleXAxisDrawer(
             val labelWidth = drawableArea.width * spacedByPercent
             labels.forEachIndexed { index, label ->
                 if (index.rem(labelRatio) == 0) {
-                    val x = drawableArea.left + index * labelWidth + offset
+                    val x = drawableArea.right + (index - labels.size) * labelWidth + offset + labelWidth / 2
                     val y = drawableArea.bottom
 
                     canvas.nativeCanvas.drawText(label, x, y, labelPaint)

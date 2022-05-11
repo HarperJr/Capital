@@ -3,7 +3,7 @@ package com.harper.capital.domain.model
 import java.time.LocalDateTime
 
 open class Transaction(
-    val id: Long = 0L,
+    open val id: Long = 0L,
     val ledgers: List<Ledger>,
     open val dateTime: LocalDateTime,
     open val comment: String?,
@@ -11,6 +11,7 @@ open class Transaction(
 )
 
 data class TransferTransaction(
+    override val id: Long = 0L,
     val source: Account,
     val receiver: Account,
     val sourceAmount: Double,
@@ -19,6 +20,7 @@ data class TransferTransaction(
     override val comment: String?,
     override val isScheduled: Boolean
 ) : Transaction(
+    id,
     ledgers = listOf(
         Ledger(
             account = source,
@@ -37,12 +39,14 @@ data class TransferTransaction(
 )
 
 data class ChangeTransaction(
+    override val id: Long = 0L,
     val account: Account,
     val amount: Double,
     override val dateTime: LocalDateTime,
     override val comment: String?,
     override val isScheduled: Boolean
 ) : Transaction(
+    id,
     ledgers = listOf(
         Ledger(account = account, type = if (account.type == AccountType.ASSET) LedgerType.DEBIT else LedgerType.CREDIT, amount = amount)
     ),

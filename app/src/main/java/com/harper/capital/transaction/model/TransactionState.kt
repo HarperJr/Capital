@@ -4,12 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.harper.capital.BuildConfig
 import com.harper.capital.R
+import com.harper.capital.domain.model.Contact
 import com.harper.core.component.Tab
 import com.harper.core.component.TabBarData
 
 data class TransactionState(
     val selectedPage: Int,
-    val pages: List<TransactionPage> = emptyPages()
+    val pages: List<TransactionPage> = emptyPages(),
+    val bottomSheetState: TransactionBottomSheetState = TransactionBottomSheetState(false)
 ) {
     val tabBarData: TabBarData
         @Composable
@@ -20,15 +22,14 @@ data class TransactionState(
         }
 }
 
+data class TransactionBottomSheetState(val isExpanded: Boolean, val contacts: List<Contact> = emptyList())
+
 private fun emptyPages(): List<TransactionPage> = TransactionType.values()
-    .filter { if (BuildConfig.DEBUG) true else it != TransactionType.DUTY }
-    .map {
-        TransactionPage(type = it, accountDataSets = emptyMap())
-    }
+    .map { TransactionPage(type = it, accountDataSets = emptyMap()) }
 
 private fun TransactionType.resolveTitleRes(): Int = when (this) {
     TransactionType.EXPENSE -> R.string.expense
     TransactionType.INCOME -> R.string.income
     TransactionType.SEND -> R.string.send
-    TransactionType.DUTY -> R.string.duty
+    TransactionType.DEBT -> R.string.debt
 }

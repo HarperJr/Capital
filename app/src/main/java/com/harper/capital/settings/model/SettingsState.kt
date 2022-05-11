@@ -8,10 +8,10 @@ data class SettingsState(
     val colorTheme: ColorTheme = ColorTheme.SYSTEM,
     val currency: Currency = Currency.RUB,
     val isNotificationsEnabled: Boolean = false,
-    val bottomSheetState: SettingsBottomSheetState = SettingsBottomSheetState(isExpended = false)
+    val bottomSheetState: SettingsBottomSheetState = SettingsBottomSheetState(isExpanded = false)
 )
 
 data class SettingsBottomSheetState(
     val bottomSheet: SettingsBottomSheet? = null,
-    val isExpended: Boolean = true
+    val isExpanded: Boolean = true
 )

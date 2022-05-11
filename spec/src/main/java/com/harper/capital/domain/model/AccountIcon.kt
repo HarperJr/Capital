@@ -19,7 +19,8 @@ enum class AccountIcon {
     BUSINESS,
     CAR,
     TRANSPORT,
-    BANK;
+    BANK,
+    DEBT;
 
     companion object {
         private val assetIcons = listOf(TINKOFF, ALPHA, VTB, SBER, RAIFFEISEN)

@@ -11,7 +11,8 @@ val alpha: Color = Color(0xFFEE3124)
 val vtbOld: Color = Color(0xFF244480)
 val vtb: Color = Color(0xFF1ABAEF)
 val raiffeizen: Color = Color(0xFFFDF41F)
-val category: Color = Color(0xFFE9E9E9)
+val liability: Color = Color(0xFFE9E9E9)
+val debt: Color = Color(0xFF3587DF)
 
 val onTinkoff: Color = Color(0xFF141414)
 val onTinkoffPlatinum: Color = Color(0xFF797979)
@@ -20,7 +21,8 @@ val onAlpha: Color = Color(0xFFA31F16)
 val onVtbOld: Color = Color(0xFF122955)
 val onVtb: Color = Color(0xFF117EA1)
 val onRaiffeizen: Color = Color(0xFFAFA800)
-val onCategory: Color = Color(0xFFA5A5A5)
+val onLiability: Color = Color(0xFFA5A5A5)
+val onDebt: Color = Color(0xFF1469B4)
 
 fun accountBackgroundColor(color: AccountColor) = when (color) {
     AccountColor.TINKOFF -> tinkoff
@@ -30,7 +32,8 @@ fun accountBackgroundColor(color: AccountColor) = when (color) {
     AccountColor.VTB_OLD -> vtbOld
     AccountColor.VTB -> vtb
     AccountColor.RAIFFEIZEN -> raiffeizen
-    AccountColor.CATEGORY -> category
+    AccountColor.LIABILITY -> liability
+    AccountColor.DEBT -> debt
 }
 
 fun accountOnBackgroundColorFor(color: Color) = when (color) {
@@ -41,7 +44,8 @@ fun accountOnBackgroundColorFor(color: Color) = when (color) {
     vtbOld -> onVtbOld
     vtb -> onVtb
     raiffeizen -> onRaiffeizen
-    category -> onCategory
+    liability -> onLiability
+    debt -> onDebt
     else -> Color.Unspecified
 }
 
@@ -53,6 +57,7 @@ fun accountContentColorFor(color: Color): Color = when (color) {
     vtbOld -> CapitalColors.White
     vtb -> CapitalColors.White
     raiffeizen -> CapitalColors.Black
-    category -> CapitalColors.Black
+    liability -> CapitalColors.Black
+    debt -> CapitalColors.White
     else -> Color.Unspecified
 }

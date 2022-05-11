@@ -32,13 +32,13 @@ class TransactionManageMockViewModel : ComponentViewModel<TransactionManageState
                 type = AccountType.LIABILITY,
                 balance = 1000.0,
                 currency = Currency.RUB,
-                color = AccountColor.CATEGORY,
+                color = AccountColor.LIABILITY,
                 icon = AccountIcon.PRODUCTS,
                 metadata = null
             ),
             sourceAmount = 1000.0,
             receiverAmount = 1000.0,
-            dateTime = LocalDateTime.of(2022, 4, 26, 10, 20, 20),
+            dateTime = LocalDateTime.of(2022, 4, 20, 10, 20, 20),
             comment = null,
             isScheduled = false
         ),

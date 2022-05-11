@@ -3,6 +3,7 @@ package com.harper.capital.transaction.component
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.consumeAllChanges
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harper.capital.domain.model.Account
@@ -36,16 +39,27 @@ import com.harper.core.theme.CapitalTheme
 fun AssetSource(
     modifier: Modifier = Modifier,
     account: Account,
+    isEnabled: Boolean,
     isSelected: Boolean,
-    onSelect: () -> Unit
+    onSelect: () -> Unit,
+    onDrag: (Float, Float) -> Unit
 ) {
     val borderColor =
         if (isSelected) CapitalTheme.colors.secondary else CapitalTheme.colors.primaryVariant
     Box(modifier = modifier) {
         Surface(
+            modifier = Modifier.pointerInput(Unit) {
+                detectDragGestures { change, dragAmount ->
+                    change.consumeAllChanges()
+                    if (change.pressed) {
+                        onDrag.invoke(dragAmount.x, dragAmount.y)
+                    }
+                }
+            },
             color = CapitalTheme.colors.background,
             shape = CircleShape,
             border = BorderStroke(width = 1.dp, color = borderColor),
+            enabled = isEnabled,
             onClick = { onSelect.invoke() }
         ) {
             Row {
@@ -74,7 +88,7 @@ fun AssetSource(
                     Text(
                         text = account.name,
                         style = CapitalTheme.typography.regular,
-                        color = CapitalTheme.colors.textPrimary
+                        color = if (isEnabled) CapitalTheme.colors.textPrimary else CapitalTheme.colors.textSecondary
                     )
                     Text(
                         text = account.balance.formatWithCurrencySymbol(account.currency.name),
@@ -110,8 +124,11 @@ private fun AssetSourceLight() {
                 icon = AccountIcon.TINKOFF,
                 metadata = null
             ),
-            isSelected = false
-        ) {}
+            isEnabled = false,
+            isSelected = false,
+            onSelect = {},
+            onDrag = { _, _ -> }
+        )
     }
 }
 
@@ -131,7 +148,10 @@ private fun AssetSourceDark() {
                 icon = AccountIcon.TINKOFF,
                 metadata = null
             ),
-            isSelected = true
-        ) {}
+            isEnabled = true,
+            isSelected = true,
+            onSelect = {},
+            onDrag = { _, _ -> }
+        )
     }
 }

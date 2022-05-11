@@ -62,7 +62,7 @@ interface TransactionDao {
     @Transaction
     @Query(
         """
-        SELECT *, SUM(-L.${LedgerTable.amount}) AS ${AssetBalanceTable.balance} FROM ${TransactionTable.tableName} T
+        SELECT *, SUM(L.${LedgerTable.amount}) AS ${AssetBalanceTable.balance} FROM ${TransactionTable.tableName} T
         LEFT JOIN ${LedgerTable.tableName} L ON T.${TransactionTable.id} = L.${LedgerTable.transactionId} 
         LEFT JOIN ${AccountTable.tableName} A ON A.${AccountTable.id} = L.${LedgerTable.accountId}
         WHERE A.${AccountTable.type} = 'LIABILITY' AND T.${TransactionTable.dateTime} BETWEEN :dateTimeAfter AND :dateTimeBefore

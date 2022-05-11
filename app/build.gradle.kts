@@ -6,6 +6,7 @@ import com.harper.buildsrc.accompanist
 import com.harper.buildsrc.android
 import com.harper.buildsrc.capitalAppDefaultConfig
 import com.harper.buildsrc.cicerone
+import com.harper.buildsrc.coil
 import com.harper.buildsrc.compose
 import com.harper.buildsrc.composeConstraintLayout
 import com.harper.buildsrc.core
@@ -95,6 +96,7 @@ dependencies {
     koin()
     timber()
     protobuf()
+    coil()
 
     core()
     database()

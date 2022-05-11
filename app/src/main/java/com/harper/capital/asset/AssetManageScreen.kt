@@ -44,7 +44,7 @@ import com.harper.capital.domain.model.AccountMetadata
 import com.harper.capital.ext.resolveText
 import com.harper.capital.ext.resolveValueHint
 import com.harper.core.component.CAmountTextField
-import com.harper.core.component.CBottomSheetScaffold
+import com.harper.core.component.CModalBottomSheetScaffold
 import com.harper.core.component.CButton
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CLoaderLayout
@@ -68,7 +68,7 @@ fun AssetManageScreen(viewModel: ComponentViewModel<AssetManageState, AssetManag
     val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val focusManager = LocalFocusManager.current
-    CBottomSheetScaffold(
+    CModalBottomSheetScaffold(
         sheetContent = {
             BottomSheetContent(state.bottomSheetState, viewModel)
             LaunchedEffect(state.bottomSheetState) {
@@ -205,6 +205,7 @@ private fun MetadataValueInput(modifier: Modifier = Modifier, metadata: AccountM
             is AccountMetadata.Loan -> metadata.limit
             is AccountMetadata.Goal -> metadata.goal
             is AccountMetadata.Investment -> metadata.percent
+            else -> 0.0
         }
     }
     val focusManager = LocalFocusManager.current

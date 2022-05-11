@@ -49,7 +49,7 @@ class SettingsViewModel(
         update {
             it.copy(
                 currency = event.currency,
-                bottomSheetState = it.bottomSheetState.copy(isExpended = false)
+                bottomSheetState = it.bottomSheetState.copy(isExpanded = false)
             )
         }
         launch {
@@ -62,7 +62,7 @@ class SettingsViewModel(
         update {
             it.copy(
                 colorTheme = selectedColorTheme,
-                bottomSheetState = it.bottomSheetState.copy(isExpended = false)
+                bottomSheetState = it.bottomSheetState.copy(isExpanded = false)
             )
         }
         launch {

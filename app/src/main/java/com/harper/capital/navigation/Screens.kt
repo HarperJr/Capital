@@ -5,8 +5,8 @@ import com.harper.capital.analytics.AnalyticsNavArgsSpec
 import com.harper.capital.analytics.AnalyticsParams
 import com.harper.capital.asset.AssetManageNavArgsSpec
 import com.harper.capital.asset.AssetManageParams
-import com.harper.capital.category.CategoryManageNavArgsSpec
-import com.harper.capital.category.CategoryManageParams
+import com.harper.capital.liability.LiabilityManageNavArgsSpec
+import com.harper.capital.liability.LiabilityManageParams
 import com.harper.capital.history.HistoryListManageNavArgsSpec
 import com.harper.capital.history.HistoryListParams
 import com.harper.capital.transaction.TransactionNavArgsSpec
@@ -23,8 +23,8 @@ object Screens {
     fun assetManage(params: AssetManageParams): Screen =
         ComposableScreen(ScreenKey.ASSET_MANAGE.route, arguments = AssetManageNavArgsSpec.args(params))
 
-    fun categoryManage(params: CategoryManageParams): Screen =
-        ComposableScreen(ScreenKey.CATEGORY_MANAGE.route, arguments = CategoryManageNavArgsSpec.args(params))
+    fun liabilityManage(params: LiabilityManageParams): Screen =
+        ComposableScreen(ScreenKey.LIABILITY_MANAGE.route, arguments = LiabilityManageNavArgsSpec.args(params))
 
     fun transaction(params: TransactionParams): Screen =
         ComposableScreen(ScreenKey.TRANSACTION.route, arguments = TransactionNavArgsSpec.args(params))
@@ -39,6 +39,8 @@ object Screens {
         ComposableScreen(ScreenKey.ANALYTICS.route, arguments = AnalyticsNavArgsSpec.args(params))
 
     fun settings(): Screen = ComposableScreen(ScreenKey.SETTINGS.route)
+
+    fun accounts(): Screen = ComposableScreen(ScreenKey.ACCOUNTS.route)
 
     fun shelter(): Screen = ComposableScreen(ScreenKey.SHELTER.route)
 }

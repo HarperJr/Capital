@@ -1,14 +1,15 @@
-package com.harper.capital.category.model
+package com.harper.capital.liability.model
 
 import androidx.compose.runtime.Composable
 import com.harper.capital.bottomsheet.IconsBottomSheetData
 import com.harper.capital.domain.model.AccountIcon
+import com.harper.capital.domain.model.Contact
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.ext.getImageVector
 
-sealed class CategoryManageBottomSheet {
+sealed class LiabilityManageBottomSheet {
 
-    class Icons(private val selectedIcon: AccountIcon) : CategoryManageBottomSheet() {
+    class Icons(private val selectedIcon: AccountIcon) : LiabilityManageBottomSheet() {
         val data: IconsBottomSheetData
             @Composable
             get() = IconsBottomSheetData(
@@ -20,5 +21,8 @@ sealed class CategoryManageBottomSheet {
     }
 
     class Currencies(val currencies: List<Currency>, val selectedCurrency: Currency) :
-        CategoryManageBottomSheet()
+        LiabilityManageBottomSheet()
+
+    class Contacts(val contacts: List<Contact>, val selectedContact: Contact?) :
+        LiabilityManageBottomSheet()
 }

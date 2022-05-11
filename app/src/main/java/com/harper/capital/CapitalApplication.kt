@@ -2,10 +2,11 @@ package com.harper.capital
 
 import android.app.Application
 import android.os.StrictMode
+import com.harper.capital.accounts.accountsModule
 import com.harper.capital.analytics.analyticsModule
 import com.harper.capital.asset.assetModule
 import com.harper.capital.auth.authModule
-import com.harper.capital.category.categoryModule
+import com.harper.capital.liability.liabilityModule
 import com.harper.capital.database.databaseModule
 import com.harper.capital.history.historyModule
 import com.harper.capital.main.mainModule
@@ -53,14 +54,15 @@ class CapitalApplication : Application() {
                 authModule,
                 assetModule,
                 transactionModule,
-                categoryModule,
+                liabilityModule,
                 historyModule,
                 settingsModule,
                 databaseModule,
                 networkModule,
                 repositoryModule,
                 shelterModule,
-                analyticsModule
+                analyticsModule,
+                accountsModule
             )
             androidContext(applicationContext)
             androidLogger()

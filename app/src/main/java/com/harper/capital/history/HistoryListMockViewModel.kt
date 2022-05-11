@@ -32,7 +32,7 @@ class HistoryListMockViewModel : ComponentViewModel<HistoryListState, HistoryLis
         type = AccountType.LIABILITY,
         balance = 100.0,
         currency = Currency.RUB,
-        color = AccountColor.CATEGORY,
+        color = AccountColor.LIABILITY,
         icon = AccountIcon.PRODUCTS,
         metadata = null
     )

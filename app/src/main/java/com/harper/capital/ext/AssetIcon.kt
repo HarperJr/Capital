@@ -26,4 +26,5 @@ fun AccountIcon.getImageVector(): ImageVector = when (this) {
     AccountIcon.CAR -> CapitalIcons.Car
     AccountIcon.TRANSPORT -> CapitalIcons.Transport
     AccountIcon.BANK -> CapitalIcons.BankWallet
+    AccountIcon.DEBT -> CapitalIcons.Business // TODO find icon
 }

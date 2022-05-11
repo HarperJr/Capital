@@ -17,6 +17,7 @@ import com.harper.capital.database.view.AssetBalanceView
         AccountEntity::class,
         LoanEntity::class,
         GoalEntity::class,
+        DebtEntity::class,
         TransactionEntity::class,
         LedgerEntity::class,
         CurrencyRateEntity::class

@@ -7,6 +7,7 @@ internal object BalancePartitionPeriodEntityMapper : (BalancePartitionPeriod) ->
 
     override fun invoke(model: BalancePartitionPeriod): BalancePartitionEntityPeriod = when (model) {
         BalancePartitionPeriod.DAY -> BalancePartitionEntityPeriod.DAY
+        BalancePartitionPeriod.WEEK -> BalancePartitionEntityPeriod.WEEK
         BalancePartitionPeriod.MONTH -> BalancePartitionEntityPeriod.MONTH
         BalancePartitionPeriod.QUARTER -> BalancePartitionEntityPeriod.QUARTER
         BalancePartitionPeriod.YEAR -> BalancePartitionEntityPeriod.YEAR

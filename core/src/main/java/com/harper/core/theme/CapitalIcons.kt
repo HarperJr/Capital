@@ -78,6 +78,9 @@ object CapitalIcons {
     val BankWallet
         @Composable
         get() = ImageVector.vectorResource(id = R.drawable.ic_bank)
+    val Repeat
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_repeat)
 
     val Edit: ImageVector
         get() = Icons.Rounded.Edit
@@ -152,7 +155,8 @@ private fun Icons() {
         CapitalIcons.Business,
         CapitalIcons.Car,
         CapitalIcons.Transport,
-        CapitalIcons.BankWallet
+        CapitalIcons.BankWallet,
+        CapitalIcons.Repeat
     )
     CWrappedGrid(
         modifier = Modifier.background(CapitalTheme.colors.background),

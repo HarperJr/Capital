@@ -41,7 +41,7 @@ internal class TransactionRepositoryImpl(
             transactionDao.updateLedgers(
                 LedgerEntityMapper(transaction.id, transaction.ledgers)
                     .map { ledger ->
-                        ledger.copy(id = existedTransaction.ledgers.first { it.ledger.type == ledger.type }.ledger.id)
+                        ledger.copy(id = existedTransaction.ledgers.first { it.ledger.accountId == ledger.accountId }.ledger.id)
                     }
             )
         }

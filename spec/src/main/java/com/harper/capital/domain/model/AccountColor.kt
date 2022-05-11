@@ -8,5 +8,6 @@ enum class AccountColor {
     VTB_OLD,
     VTB,
     RAIFFEIZEN,
-    CATEGORY
+    LIABILITY,
+    DEBT
 }

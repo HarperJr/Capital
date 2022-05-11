@@ -7,7 +7,7 @@
     <string name="income">Доход</string>
     <string name="expense">Расход</string>
     <string name="goal">Цель</string>
-    <string name="duty">Долг</string>
+    <string name="debt">Долг</string>
     <string name="new_asset_title">Новый счет</string>
     <string name="enter_name_hint">Введите наименование</string>
     <string name="enter_amount_hint">Введите сумму</string>
@@ -20,7 +20,7 @@
     <string name="include_asset_subtitle">Счет будет учитываться в общем балансе</string>
     <string name="default_asset">Обычный счет</string>
     <string name="loan">Кредит</string>
-    <string name="new_category">Новая категория</string>
+    <string name="new_liability">Новая категория</string>
     <string name="settings">Настройки</string>
     <string name="forgot_password">Я забыл пароль</string>
     <string name="sign_in">Войти</string>
@@ -32,14 +32,14 @@
     <string name="dont_have_an_account">Нет аккаунта</string>
     <string name="go_offline">Оффлайн</string>
     <string name="edit">Изменить</string>
-    <string name="expenses_in_month">%s за %s</string>
+    <string name="expenses_in_month">-%s за %s</string>
     <string name="new_transaction_title">Новая транзакция</string>
     <string name="from">Откуда</string>
     <string name="to">Куда</string>
     <string name="next">Далее</string>
     <string name="send">Перевод</string>
     <string name="add_new">Новый</string>
-    <string name="create_new_category">Создать новую категорию</string>
+    <string name="create_new_liability">Создать новую категорию</string>
     <string name="log_out">Выйти</string>
     <string name="system">Системная</string>
     <string name="light">Светлая</string>
@@ -65,7 +65,10 @@
     <string name="asset_name_is_empty_error">Пожалуйста, заполните наименование счета</string>
     <string name="investment">Инвестиции</string>
     <string name="summary_loss">Ваши общие расходы %s</string>
-    <string name="analytics">Аналитика</string>
+    <string name="analytics_balance">Баланс</string>
+    <string name="analytics_income">Доходы</string>
+    <string name="analytics_income_liability">Доходы и расходы</string>
+    <string name="analytics_liability">Расходы</string>
     <string name="income_liability">Доход и расход</string>
     <string name="balance">Баланс</string>
     <string name="liability">Расходы</string>
@@ -74,4 +77,13 @@
     <string name="enter_percent">Введите процент</string>
     <string name="exchange_hint">Перевод произойдет по курсу %s</string>
     <string name="transaction_change">Баланс счета изменен на %s</string>
+    <string name="accounts">Счета</string>
+    <string name="enter_phone">Введите номер телефона</string>
+    <string name="assets">Активы</string>
+    <string name="incomes">Доходы</string>
+    <string name="liabilities">Пассивы</string>
+    <string name="debts">Долги</string>
+    <string name="all_operations">Все операции</string>
+    <string name="in_period">За %s</string>
+
 </resources>

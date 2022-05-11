@@ -57,7 +57,7 @@ class AssetManageViewModel(
                 is AccountMetadata.Loan -> it.copy(metadata = it.metadata.copy(limit = event.value))
                 is AccountMetadata.Goal -> it.copy(metadata = it.metadata.copy(goal = event.value))
                 is AccountMetadata.Investment -> it.copy(metadata = it.metadata.copy(percent = event.value))
-                null -> it
+                else -> it
             }
         }
     }
@@ -147,7 +147,7 @@ class AssetManageViewModel(
                 is AccountMetadata.Loan -> AssetMetadataType.LOAN
                 is AccountMetadata.Goal -> AssetMetadataType.GOAL
                 is AccountMetadata.Investment -> AssetMetadataType.INVESTMENT
-                null -> AssetMetadataType.DEFAULT
+                else -> AssetMetadataType.DEFAULT
             }
             it.copy(
                 bottomSheetState = AssetManageBottomSheetState(

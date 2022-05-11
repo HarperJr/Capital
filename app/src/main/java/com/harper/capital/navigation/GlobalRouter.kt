@@ -2,7 +2,7 @@ package com.harper.capital.navigation
 
 import com.harper.capital.analytics.AnalyticsParams
 import com.harper.capital.asset.AssetManageParams
-import com.harper.capital.category.CategoryManageParams
+import com.harper.capital.liability.LiabilityManageParams
 import com.harper.capital.history.HistoryListParams
 import com.harper.capital.transaction.TransactionParams
 import com.harper.capital.transaction.manage.TransactionManageParams
@@ -17,7 +17,7 @@ interface GlobalRouter {
 
     fun navigateToTransaction(params: TransactionParams)
 
-    fun navigateToManageCategory(params: CategoryManageParams)
+    fun navigateToManageLiability(params: LiabilityManageParams)
 
     fun navigateToManageTransaction(params: TransactionManageParams)
 
@@ -26,6 +26,8 @@ interface GlobalRouter {
     fun navigateToAnalytics(params: AnalyticsParams)
 
     fun navigateToSettings()
+
+    fun navigateToAccounts()
 
     fun back()
 

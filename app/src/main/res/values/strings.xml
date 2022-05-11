@@ -10,7 +10,7 @@
     <string name="income">Income</string>
     <string name="expense">Expense</string>
     <string name="goal">Goal</string>
-    <string name="duty">Duty</string>
+    <string name="debt">Duty</string>
 
     <string name="new_asset_title">New asset</string>
     <string name="enter_name_hint">Enter the name</string>
@@ -29,7 +29,7 @@
 
     <string name="default_asset">Default asset</string>
     <string name="loan">Loan</string>
-    <string name="new_category">New category</string>
+    <string name="new_liability">New liability</string>
     <string name="settings">Settings</string>
     <string name="forgot_password">I forgot password</string>
     <string name="sign_in">Sign in</string>
@@ -41,14 +41,14 @@
     <string name="dont_have_an_account">I don\'t have an account</string>
     <string name="go_offline">Go offline</string>
     <string name="edit">Edit</string>
-    <string name="expenses_in_month">%s in %s</string>
+    <string name="expenses_in_month">-%s in %s</string>
     <string name="new_transaction_title">New transaction</string>
     <string name="from">From</string>
     <string name="to">To</string>
     <string name="next">Next</string>
     <string name="send">Send</string>
     <string name="add_new">New</string>
-    <string name="create_new_category">Create new category</string>
+    <string name="create_new_liability">Create new liability</string>
     <string name="log_out">Log out</string>
     <string name="system">System</string>
     <string name="light">Light</string>
@@ -74,7 +74,10 @@
     <string name="asset_name_is_empty_error">Asset name is required, please provide it</string>
     <string name="investment">Investment</string>
     <string name="summary_loss">Your summary loss is %s</string>
-    <string name="analytics">Analytics</string>
+    <string name="analytics_balance">Balance</string>
+    <string name="analytics_income">Income</string>
+    <string name="analytics_income_liability">Income &amp; Liability</string>
+    <string name="analytics_liability">Liability</string>
     <string name="income_liability">Income &amp; liability</string>
     <string name="balance">Balance</string>
     <string name="liability">Liability</string>
@@ -83,4 +86,13 @@
     <string name="enter_percent">Enter percent</string>
     <string name="exchange_hint">Will be exchanged with rate %s</string>
     <string name="transaction_change">Balance was changed on %s</string>
+    <string name="accounts">Accounts</string>
+    <string name="enter_phone">Enter phone</string>
+    <string name="assets">Assets</string>
+    <string name="incomes">Incomes</string>
+    <string name="liabilities">Liabilities</string>
+    <string name="debts">Debts</string>
+    <string name="all_operations">All operations</string>
+    <string name="in_period">In %s</string>
+    <string name="your_most_usable">Your most usable</string>
 </resources>

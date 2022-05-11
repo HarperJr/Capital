@@ -1,6 +1,8 @@
 package com.harper.capital.transaction
 
+import com.harper.capital.transaction.domain.AddDebtContactUseCase
 import com.harper.capital.transaction.domain.FetchAssetsUseCase
+import com.harper.capital.transaction.domain.FetchLiabilitiesUseCase
 import com.harper.capital.transaction.manage.TransactionManageParams
 import com.harper.capital.transaction.manage.TransactionManageViewModel
 import com.harper.capital.transaction.manage.domain.AddTransactionUseCase
@@ -17,8 +19,10 @@ val transactionModule
 
         factory { FetchCurrencyRatesUseCase(get()) }
 
+        factory { FetchLiabilitiesUseCase(get(), get()) }
+
         viewModel { (params: TransactionParams) ->
-            TransactionViewModel(params, get(), get())
+            TransactionViewModel(params, get(), get(), get())
         }
 
         factory { AddTransactionUseCase(get()) }

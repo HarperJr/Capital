@@ -25,7 +25,7 @@ import com.harper.capital.settings.ext.resolveText
 import com.harper.capital.settings.model.SettingsBottomSheet
 import com.harper.capital.settings.model.SettingsEvent
 import com.harper.capital.settings.model.SettingsState
-import com.harper.core.component.CBottomSheetScaffold
+import com.harper.core.component.CModalBottomSheetScaffold
 import com.harper.core.component.CIcon
 import com.harper.core.component.CPreferenceArrow
 import com.harper.core.component.CPreferenceSwitch
@@ -43,14 +43,14 @@ fun SettingsScreen(viewModel: ComponentViewModel<SettingsState, SettingsEvent>) 
     val state by viewModel.state.collectAsState()
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
-    CBottomSheetScaffold(
+    CModalBottomSheetScaffold(
         sheetContent = {
             val bottomSheet = remember(state.bottomSheetState) {
                 state.bottomSheetState.bottomSheet
             }
             BottomSheetContent(bottomSheet = bottomSheet, viewModel)
             LaunchedEffect(state.bottomSheetState) {
-                if (state.bottomSheetState.isExpended) {
+                if (state.bottomSheetState.isExpanded) {
                     sheetState.show()
                 } else {
                     sheetState.hide()

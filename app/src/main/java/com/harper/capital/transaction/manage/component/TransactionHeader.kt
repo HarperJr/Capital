@@ -80,7 +80,7 @@ private fun TransferHeaderPreview() {
                 type = AccountType.LIABILITY,
                 balance = 1000.0,
                 currency = Currency.RUB,
-                color = AccountColor.CATEGORY,
+                color = AccountColor.LIABILITY,
                 icon = AccountIcon.PRODUCTS,
                 metadata = null
             ),

@@ -36,11 +36,11 @@ import com.harper.core.theme.CapitalTheme
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.SnapOffsets
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 private const val selectorRectId = "SelectorRect"
@@ -68,25 +68,25 @@ fun CDatePicker(
         CDatePickerDialog(
             date = state.selectedDate,
             dateConstraints = DateConstraints(dateStart, dateEnd),
-            onDismiss = {
-                isDatePickerVisible.value = false
-            },
+            onDismiss = { isDatePickerVisible.value = false },
             onDateSelect = {
                 coroutineScope.launch {
-                    dateListState.animateScrollToItem(state.indexOf(it) - 3)
+                    dateListState.animateScrollToItem(state.indexOf(it))
                 }
             }
         )
     }
-    LaunchedEffect(dateListState.isScrollInProgress) {
-        snapshotFlow {
-            dateListState.layoutInfo.fullyVisibleItemIndex {
-                viewportEndOffset - ((viewportEndOffset - viewportStartOffset) / 2f) * 0.25f
+    LaunchedEffect(Unit) {
+        snapshotFlow { dateListState.layoutInfo }
+            .map {
+                it.fullyVisibleItemIndex {
+                    viewportEndOffset - ((viewportEndOffset - viewportStartOffset) / 2f) * 0.25f
+                }
             }
-        }.collect { dateIndex ->
-            state.selectedDate = dateStart.plusDays(dateIndex.toLong())
-            onDateSelect.invoke(state.selectedDate)
-        }
+            .collect { dateIndex ->
+                state.selectedDate = dateStart.plusDays(dateIndex.toLong())
+                onDateSelect.invoke(state.selectedDate)
+            }
     }
 
     Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -168,8 +168,7 @@ class DatePickerState(
     private val dateStart: LocalDate,
     private val dateEnd: LocalDate
 ) {
-    var date: LocalDate by mutableStateOf(initialDate)
-    var selectedDate: LocalDate by mutableStateOf(date)
+    var selectedDate: LocalDate by mutableStateOf(initialDate)
 
     val dateIndex: Int
         get() = indexOf(selectedDate)
@@ -180,7 +179,7 @@ class DatePickerState(
 
     fun indexOf(date: LocalDate): Int =
         Duration.between(dateStart.atStartOfDay(), date.atStartOfDay())
-            .toDays().toInt()
+            .toDays().toInt() - 3
 }
 
 @Composable

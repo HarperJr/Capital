@@ -9,6 +9,7 @@ internal object AccountMetadataTypeEntityMapper : (AccountMetadata?) -> AccountE
         is AccountMetadata.Loan -> AccountEntityMetadataType.LOAN
         is AccountMetadata.Goal -> AccountEntityMetadataType.GOAL
         is AccountMetadata.Investment -> AccountEntityMetadataType.INVESTMENT
+        is AccountMetadata.Debt -> AccountEntityMetadataType.DEBT
         else -> AccountEntityMetadataType.UNDEFINED
     }
 }

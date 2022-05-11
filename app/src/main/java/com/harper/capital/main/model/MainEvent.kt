@@ -1,6 +1,8 @@
 package com.harper.capital.main.model
 
 import com.harper.capital.domain.model.Account
+import com.harper.capital.domain.model.ChangeTransaction
+import com.harper.capital.domain.model.TransferTransaction
 
 sealed class MainEvent {
 
@@ -14,7 +16,11 @@ sealed class MainEvent {
 
     class ActionCardClick(val id: Int) : MainEvent()
 
+    class FavoriteTransferTransactionClick(val transaction: TransferTransaction) : MainEvent()
+
     object NewAssetClick : MainEvent()
 
     object SettingsClick : MainEvent()
+
+    object AllOperationsClick : MainEvent()
 }

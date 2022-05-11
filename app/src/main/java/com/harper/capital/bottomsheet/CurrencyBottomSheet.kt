@@ -1,9 +1,7 @@
 package com.harper.capital.bottomsheet
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -54,19 +52,17 @@ fun CurrencyBottomSheet(
                     it.name.formatCurrencyName().contains(searchQuery.value, ignoreCase = true)
         }
     }
-    Column(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        CHorizontalSpacer(height = 8.dp)
+    Column(modifier = modifier.fillMaxWidth()) {
+        CHorizontalSpacer(height = CapitalTheme.dimensions.medium)
         CTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = CapitalTheme.dimensions.side),
             value = searchQuery.value,
             placeholder = stringResource(id = R.string.search),
             leadingIcon = {
                 Image(
-                    modifier = Modifier.padding(end = 8.dp),
+                    modifier = Modifier.padding(end = CapitalTheme.dimensions.medium),
                     imageVector = CapitalIcons.Search,
                     colorFilter = ColorFilter.tint(color = CapitalColors.GreyDark),
                     contentDescription = null
@@ -83,12 +79,12 @@ fun CurrencyBottomSheet(
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(16.dp)
+                .height(CapitalTheme.dimensions.side)
         )
         CSeparator(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = CapitalTheme.dimensions.side)
         )
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
@@ -123,14 +119,14 @@ private fun CurrencyItem(modifier: Modifier = Modifier, currency: Currency, isSe
             Text(
                 modifier = Modifier
                     .weight(1f, fill = true)
-                    .padding(16.dp),
+                    .padding(CapitalTheme.dimensions.side),
                 text = currency.name.formatCurrencyName(),
                 style = textStyle,
                 color = textColor
             )
             Text(
                 modifier = Modifier
-                    .padding(16.dp),
+                    .padding(CapitalTheme.dimensions.side),
                 text = currency.name.formatCurrencySymbol(),
                 style = textStyle,
                 color = textColor
@@ -143,13 +139,12 @@ private fun CurrencyItem(modifier: Modifier = Modifier, currency: Currency, isSe
 @Composable
 private fun CurrencyBottomSheetLight() {
     CPreview {
-        Box(modifier = Modifier.background(color = CapitalTheme.colors.background)) {
-            CurrencyBottomSheet(
-                currencies = Currency.values().toList(),
-                selectedCurrency = Currency.USD,
-                onCurrencySelect = {}
-            )
-        }
+        CurrencyBottomSheet(
+            currencies = Currency.values().toList(),
+            selectedCurrency = Currency.USD,
+            onCurrencySelect = {}
+        )
+
     }
 }
 
@@ -157,12 +152,10 @@ private fun CurrencyBottomSheetLight() {
 @Composable
 private fun CurrencyBottomSheetDark() {
     CPreview(isDark = true) {
-        Box(modifier = Modifier.background(color = CapitalTheme.colors.background)) {
-            CurrencyBottomSheet(
-                currencies = Currency.values().toList(),
-                selectedCurrency = Currency.RUB,
-                onCurrencySelect = {}
-            )
-        }
+        CurrencyBottomSheet(
+            currencies = Currency.values().toList(),
+            selectedCurrency = Currency.RUB,
+            onCurrencySelect = {}
+        )
     }
 }

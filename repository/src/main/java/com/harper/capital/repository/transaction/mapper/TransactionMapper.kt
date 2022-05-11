@@ -16,6 +16,7 @@ internal object TransactionMapper : (TransactionEntityEmbedded) -> Transaction {
             when (ledgers.size) {
                 CHANGE_LEDGERS_SIZE -> {
                     ChangeTransaction(
+                        id = transaction.id,
                         account = AccountMapper(ledgers[0].account, null, null),
                         amount = ledgers[0].ledger.amount,
                         dateTime = transaction.dateTime,
@@ -25,6 +26,7 @@ internal object TransactionMapper : (TransactionEntityEmbedded) -> Transaction {
                 }
                 TRANSFER_LEDGERS_SIZE -> {
                     TransferTransaction(
+                        id = transaction.id,
                         source = AccountMapper(ledgers[0].account, null, null),
                         receiver = AccountMapper(ledgers[1].account, null, null),
                         sourceAmount = ledgers[0].ledger.amount,

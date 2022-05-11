@@ -31,6 +31,7 @@ import com.harper.core.component.CToolbar
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentViewModel
+import timber.log.Timber
 
 @Composable
 @OptIn(ExperimentalPagerApi::class)
@@ -73,10 +74,13 @@ private fun PageBlock(page: TransactionPage, viewModel: ComponentViewModel<Trans
                 mainAxisSpacing = 8.dp,
                 crossAxisSpacing = 8.dp
             ) {
-                dataSet.accounts.forEach {
-                    AssetSource(account = it, isSelected = it.id == dataSet.selectedAccountId) {
-                        viewModel.onEvent(TransactionEvent.AssetSourceSelect(page.type, section, it))
-                    }
+                dataSet.accounts.forEach { (account, isEnabled) ->
+                    AssetSource(
+                        account = account,
+                        isEnabled = isEnabled,
+                        isSelected = account.id == dataSet.selectedAccountId,
+                        onSelect = { viewModel.onEvent(TransactionEvent.AssetSourceSelect(page.type, section, account)) },
+                        onDrag = { x, y -> Timber.d("Drag ${account.name}: x=$x y=$y") })
                 }
                 NewSource { viewModel.onEvent(TransactionEvent.NewSourceClick(page.type, dataSet.type)) }
             }

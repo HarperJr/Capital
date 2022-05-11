@@ -8,6 +8,8 @@ import androidx.room.Update
 import com.harper.capital.database.entity.AccountEntity
 import com.harper.capital.database.entity.AccountEntityType
 import com.harper.capital.database.entity.AccountTable
+import com.harper.capital.database.entity.DebtEntity
+import com.harper.capital.database.entity.DebtTable
 import com.harper.capital.database.entity.GoalEntity
 import com.harper.capital.database.entity.GoalTable
 import com.harper.capital.database.entity.LoanEntity
@@ -28,6 +30,9 @@ interface AccountDao {
     @Insert
     suspend fun insertGoal(entity: GoalEntity)
 
+    @Insert
+    suspend fun insertDebt(entity: DebtEntity)
+
     @Update
     suspend fun update(entity: AccountEntity)
 
@@ -40,6 +45,9 @@ interface AccountDao {
 
     @Query("SELECT * FROM ${GoalTable.tableName} WHERE ${GoalTable.accountId} = :accountId")
     suspend fun selectGoalByAccountId(accountId: Long): GoalEntity
+
+    @Query("SELECT * FROM ${DebtTable.tableName} WHERE ${DebtTable.accountId} = :accountId")
+    suspend fun selectDebtByAccountId(accountId: Long): DebtEntity
 
     @Transaction
     @Query("SELECT * FROM ${AssetBalanceTable.tableName}")

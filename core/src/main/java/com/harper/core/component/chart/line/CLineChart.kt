@@ -1,8 +1,11 @@
 package com.harper.core.component.chart.line
 
+import androidx.annotation.FloatRange
+import androidx.annotation.IntRange
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationEndReason
 import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.DecayAnimationSpec
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.splineBasedDecay
 import androidx.compose.foundation.Canvas
@@ -18,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
@@ -44,86 +46,53 @@ import com.harper.core.component.chart.line.shader.NoLineShader
 import com.harper.core.component.chart.line.shader.SolidLineShader
 import com.harper.core.ext.orElse
 import com.harper.core.theme.CapitalTheme
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 @Composable
 fun CLineChart(
     modifier: Modifier = Modifier,
     lineChartData: LineChartData,
-    spacedByPercent: Float = 0.33f,
+    @FloatRange(from = 0.33, to = 0.75) spacedByPercent: Float = 0.33f,
     animation: AnimationSpec<Float> = simpleChartAnimation(),
     lineDrawer: LineDrawer = SolidLineDrawer(thickness = lineChartData.thickness),
     lineShader: LineShader = if (lineChartData.fillLines) SolidLineShader() else NoLineShader,
     xAxisDrawer: XAxisDrawer = SimpleXAxisDrawer(),
     valueDrawer: ValueDrawer = SimpleValueDrawer()
 ) {
-    require(spacedByPercent in 0.1f..0.75f) {
-        "spacedBy must be in range from 0.1 to 0.75"
-    }
     val state = rememberLineChartState(lineChartData, spacedByPercent)
-    val linesSortedByMaxY = remember(lineChartData.lines) {
-        lineChartData.lines.sortedByDescending { it.yMax }
-    }
-    val transition = remember(linesSortedByMaxY) { Animatable(initialValue = 0f) }
-    val offset = remember { Animatable(initialValue = 0f) }
-
-    LaunchedEffect(linesSortedByMaxY) {
-        transition.snapTo(0f)
-        transition.animateTo(1f, animationSpec = animation)
-    }
-
     val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(Unit) {
-        snapshotFlow { offset.value }
-            .filterNot { state.chartDrawableArea.isEmpty }
-            .collect { offset ->
-                state.updateByOffset(offset)
-            }
+    val transitionAnim = remember { Animatable(initialValue = 0f) }
+    LaunchedEffect(lineChartData) {
+        transitionAnim.snapTo(0f)
+        transitionAnim.animateTo(1f, animationSpec = animation)
     }
-    val decayAnimationSpec = splineBasedDecay<Float>(LocalDensity.current)
+
     Canvas(
         modifier = modifier
             .fillMaxSize()
             .draggable(
                 orientation = Orientation.Horizontal,
-                state = rememberDraggableState { delta ->
-                    coroutineScope.launch {
-                        offset.snapTo(offset.value + delta)
-                    }
-                },
-                onDragStopped = { velocity ->
-                    val result = offset.animateDecay(velocity, animationSpec = decayAnimationSpec)
-                    if (result.endReason == AnimationEndReason.Finished) {
-                        offset.animateTo(
-                            state.selectedPosition,
-                            animationSpec = spring(),
-                            initialVelocity = result.endState.velocity
-                        )
-                    }
-                }
+                state = rememberDraggableState { delta -> coroutineScope.launch { state.scroll(delta) } },
+                onDragStopped = { velocity -> state.applyVelocity(velocity) }
             )
     ) {
-        val xAxisDrawableArea = calculateXAxisDrawableArea(
-            labelHeight = xAxisDrawer.requiredHeight(this),
-            size = size
-        )
-        state.chartDrawableArea = calculateDrawableArea(size, xAxisDrawableArea)
+        val xAxisDrawableArea = calculateXAxisDrawableArea(labelHeight = xAxisDrawer.requiredHeight(this), size = size)
+        state.updateChartDrawableArea(calculateDrawableArea(size, xAxisDrawableArea))
         drawIntoCanvas { canvas ->
-            linesSortedByMaxY.forEach { line ->
+            lineChartData.sortedLines.forEach { line ->
                 lineDrawer.drawLine(
                     drawScope = this,
                     canvas = canvas,
                     linePath = calculateLinePath(
-                        drawableArea = state.chartDrawableArea,
+                        drawableArea = state.chartArea,
                         line = line,
                         spacedByPercent = spacedByPercent,
                         minYValue = lineChartData.minYValue,
                         yRange = lineChartData.yRange,
-                        offset = offset.value,
-                        transitionProgress = transition.value
+                        offset = state.offset,
+                        transitionProgress = transitionAnim.value
                     ),
                     color = line.color
                 )
@@ -132,18 +101,17 @@ fun CLineChart(
                     drawScope = this,
                     canvas = canvas,
                     fillPath = calculateFillPath(
-                        drawableArea = state.chartDrawableArea,
+                        drawableArea = state.chartArea,
                         lineChartData = line,
                         spacedByPercent = spacedByPercent,
                         minYValue = lineChartData.minYValue,
                         yRange = lineChartData.yRange,
-                        offset = offset.value,
-                        transitionProgress = transition.value
+                        offset = state.offset,
+                        transitionProgress = transitionAnim.value
                     ),
                     color = line.color,
                 )
             }
-
 
             // Draw the X Axis line.
             xAxisDrawer.drawAxisLine(
@@ -155,7 +123,7 @@ fun CLineChart(
                 drawScope = this,
                 canvas = canvas,
                 drawableArea = xAxisDrawableArea,
-                offset = offset.value,
+                offset = state.offset,
                 spacedByPercent = spacedByPercent,
                 labels = lineChartData.labels
             )
@@ -165,28 +133,9 @@ fun CLineChart(
 
 @Composable
 private fun rememberLineChartState(lineChartData: LineChartData, spacedByPercent: Float): CLineChartState {
-    return remember(lineChartData) { CLineChartState(lineChartData, spacedByPercent) }
-}
-
-class CLineChartState(private val lineChartData: LineChartData, private val spacedByPercent: Float) {
-    var selectedPosition: Float by mutableStateOf(0f)
-    var chartDrawableArea: Rect by mutableStateOf(Rect.Zero)
-
-    private var itemWidth: Float = 0f
-
-    fun updateByOffset(offset: Float) {
-        if (itemWidth == 0f) {
-            itemWidth = chartDrawableArea.width * spacedByPercent
-        }
-        val center = chartDrawableArea.center.x
-        val indexes = lineChartData.lines.maxOf { it.points.size }
-        for (i in 0 until indexes) {
-            val isItemInCenter = ((itemWidth * i + offset) + itemWidth) / 2f - center <= itemWidth / 2f
-            if (isItemInCenter) {
-                selectedPosition = i * itemWidth
-                break
-            }
-        }
+    val decayAnimationSpec = splineBasedDecay<Float>(LocalDensity.current)
+    return remember(lineChartData, spacedByPercent) {
+        CLineChartState(lineChartData, spacedByPercent, decayAnimationSpec = decayAnimationSpec)
     }
 }
 
@@ -211,6 +160,8 @@ class LineChartData(
 
     internal val minYValue: Float
         get() = if (startAtZero) 0f else yMin - ((yMax - yMin) * padBy / 100f)
+
+    internal val sortedLines: List<Line> = lines.sortedByDescending { it.yMax }
 
     internal val yRange = maxYValue - minYValue
 

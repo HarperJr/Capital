@@ -4,6 +4,7 @@ import com.harper.capital.database.DatabaseTx
 import com.harper.capital.database.dao.AccountDao
 import com.harper.capital.database.dao.TransactionDao
 import com.harper.capital.database.entity.AccountEntityMetadataType
+import com.harper.capital.database.entity.DebtEntity
 import com.harper.capital.database.entity.GoalEntity
 import com.harper.capital.database.entity.LedgerEntity
 import com.harper.capital.database.entity.LedgerEntityType
@@ -42,6 +43,10 @@ internal class AccountRepositoryImpl(
                 val metadata = account.metadata.cast<AccountMetadata.Goal>()
                 accountDao.insertGoal(GoalEntity(accountId = accountId, goal = metadata.goal))
             }
+            AccountEntityMetadataType.DEBT -> {
+                val metadata = account.metadata.cast<AccountMetadata.Debt>()
+                accountDao.insertDebt(DebtEntity(accountId = accountId, avatar = metadata.avatar, phone = metadata.phone))
+            }
             else -> {
             }
         }
@@ -79,6 +84,10 @@ internal class AccountRepositoryImpl(
             AccountEntityMetadataType.GOAL -> {
                 val goal = accountDao.selectGoalByAccountId(it.account.id)
                 AccountMetadata.Goal(goal.goal)
+            }
+            AccountEntityMetadataType.DEBT -> {
+                val debt = accountDao.selectDebtByAccountId(it.account.id)
+                AccountMetadata.Debt(debt.avatar, debt.phone)
             }
             else -> null
         }

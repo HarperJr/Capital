@@ -32,13 +32,7 @@ fun AssetColorSelector(
     isSelected: Boolean,
     onSelect: () -> Unit
 ) {
-    val selectionBoxColor by animateColorAsState(
-        targetValue = if (isSelected) {
-            CapitalTheme.colors.primaryVariant
-        } else {
-            CapitalColors.Transparent
-        }
-    )
+    val selectionBoxColor = if (isSelected) CapitalTheme.colors.primaryVariant else CapitalColors.Transparent
     Box(modifier = modifier) {
         Box(
             modifier = Modifier

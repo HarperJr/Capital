@@ -1,14 +1,23 @@
 package com.harper.capital.main
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.BottomSheetScaffoldDefaults
+import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -16,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
@@ -31,10 +41,15 @@ import com.harper.capital.main.component.ActionCard
 import com.harper.capital.main.component.AssetCard
 import com.harper.capital.main.component.AssetMenu
 import com.harper.capital.main.component.AssetSummaryCard
+import com.harper.capital.main.component.FavoriteTransferTransactionItem
+import com.harper.capital.main.component.OperationsActionCard
 import com.harper.capital.main.domain.model.Summary
+import com.harper.capital.main.model.MainBottomSheet
+import com.harper.capital.main.model.MainBottomSheetState
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
 import com.harper.core.component.CAmountText
+import com.harper.core.component.CBottomSheetScaffold
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CLoaderLayout
 import com.harper.core.component.CPreview
@@ -53,7 +68,6 @@ import com.harper.core.ui.ComponentViewModel
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import kotlinx.coroutines.flow.collect
 
 private const val ADD_ASSET_MENU_ITEM_ID = 0
 private const val SETTINGS_MENU_ITEM_ID = 1
@@ -61,12 +75,20 @@ private const val SETTINGS_MENU_ITEM_ID = 1
 private val MMMMDateTimeFormatter = DateTimeFormatter.ofPattern("LLLL")
 
 @Composable
-@OptIn(ExperimentalPagerApi::class, dev.chrisbanes.snapper.ExperimentalSnapperApi::class)
+@OptIn(ExperimentalPagerApi::class, dev.chrisbanes.snapper.ExperimentalSnapperApi::class, ExperimentalMaterialApi::class)
 fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
     val state by viewModel.state.collectAsState()
+    val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
 
     CLoaderLayout(isLoading = state.isLoading, loaderContent = { MainScreenLoaderContent() }) {
-        CScaffold(topBar = { MainScreenTopBar(viewModel, summary = state.summary) }) {
+        CBottomSheetScaffold(
+            topBar = { MainScreenTopBar(viewModel, summary = state.summary) },
+            sheetContent = {
+                BottomSheetContent(bottomSheetState = state.bottomSheetState, viewModel = viewModel)
+            },
+            sheetState = sheetState,
+            sheetPeekHeight = if (state.bottomSheetState.isExpended) BottomSheetScaffoldDefaults.SheetPeekHeight * 3 else 0.dp
+        ) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 CHorizontalSpacer(height = CapitalTheme.dimensions.large)
                 val accountListState = rememberLazyListState()
@@ -75,30 +97,27 @@ fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
                 LaunchedEffect(Unit) {
                     snapshotFlow { accountListState.layoutInfo }
                         .collect {
-                            selectedAssetIndex.value = it.fullyVisibleItemIndex()
+                            val fullyVisibleIndex = it.fullyVisibleItemIndex()
+                            if (fullyVisibleIndex != -1) {
+                                selectedAssetIndex.value = fullyVisibleIndex
+                            }
                         }
                 }
                 LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     state = accountListState,
-                    flingBehavior = rememberSnapperFlingBehavior(lazyListState = accountListState)
+                    flingBehavior = rememberSnapperFlingBehavior(
+                        lazyListState = accountListState,
+                        endContentPadding = CapitalTheme.dimensions.large
+                    ),
+                    horizontalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.side),
+                    contentPadding = PaddingValues(horizontal = CapitalTheme.dimensions.large)
                 ) {
                     items(state.accounts) {
-                        AssetCard(
-                            modifier = Modifier
-                                .fillParentMaxWidth()
-                                .padding(horizontal = CapitalTheme.dimensions.large),
-                            account = it
-                        )
+                        AssetCard(modifier = Modifier.fillParentMaxWidth(), account = it)
                     }
                     item {
-                        AssetSummaryCard(
-                            modifier = Modifier
-                                .fillParentMaxWidth()
-                                .padding(horizontal = CapitalTheme.dimensions.large),
-                            summary = state.summary
-                        )
+                        AssetSummaryCard(modifier = Modifier.fillParentMaxWidth(), summary = state.summary)
                     }
                 }
                 CHorizontalSpacer(height = CapitalTheme.dimensions.large)
@@ -118,24 +137,68 @@ fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
                 CHorizontalSpacer(height = CapitalTheme.dimensions.large)
                 val actionsListState = rememberLazyListState()
                 val actionCards = state.actionCards
+
                 LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = actionsListState,
+                    flingBehavior = rememberSnapperFlingBehavior(actionsListState, endContentPadding = CapitalTheme.dimensions.large),
+                    horizontalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.side),
+                    contentPadding = PaddingValues(horizontal = CapitalTheme.dimensions.large)
+                ) {
+                    items(actionCards) {
+                        ActionCard(modifier = Modifier.fillParentMaxWidth(0.45f), title = it.title) {
+                            viewModel.onEvent(MainEvent.ActionCardClick(it.id))
+                        }
+                    }
+                }
+                CHorizontalSpacer(height = CapitalTheme.dimensions.side)
+                OperationsActionCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = CapitalTheme.dimensions.large),
-                    state = actionsListState,
-                    flingBehavior = rememberSnapperFlingBehavior(actionsListState)
+                    summary = state.summary,
+                    chunks = state.chunks
                 ) {
-                    items(actionCards) {
-                        ActionCard(
-                            modifier = Modifier.fillParentMaxWidth(0.33f),
-                            title = it.title
-                        ) {
-                            viewModel.onEvent(MainEvent.ActionCardClick(it.id))
+                    viewModel.onEvent(MainEvent.AllOperationsClick)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BottomSheetContent(
+    modifier: Modifier = Modifier,
+    bottomSheetState: MainBottomSheetState,
+    viewModel: ComponentViewModel<MainState, MainEvent>
+) {
+    when (bottomSheetState.bottomSheet) {
+        is MainBottomSheet -> {
+            Column(modifier = modifier.fillMaxWidth()) {
+                CHorizontalSpacer(height = CapitalTheme.dimensions.medium)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = CapitalTheme.dimensions.side),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = stringResource(id = R.string.your_most_usable), style = CapitalTheme.typography.bottomSheetTitle)
+                    Icon(imageVector = CapitalIcons.Repeat, contentDescription = null)
+                }
+                CHorizontalSpacer(height = CapitalTheme.dimensions.medium)
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    items(bottomSheetState.bottomSheet.transactions) {
+                        FavoriteTransferTransactionItem(modifier = Modifier.fillParentMaxWidth(), it) {
+                            viewModel.onEvent(MainEvent.FavoriteTransferTransactionClick(it))
                         }
                     }
                 }
             }
         }
+        else -> {}
     }
 }
 

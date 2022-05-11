@@ -80,7 +80,7 @@ fun TransactionManageScreen(
                         CHorizontalSpacer(height = CapitalTheme.dimensions.large)
                         Text(text = stringResource(id = R.string.date))
                         CDatePicker(
-                            dateStart = LocalDate.now().minusDays(30),
+                            dateStart = LocalDate.of(1970, 1, 1),
                             dateEnd = LocalDate.now(),
                             date = transaction.dateTime.toLocalDate(),
                             onDateSelect = { viewModel.onEvent(TransactionManageEvent.DateSelect(it)) }
