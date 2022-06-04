@@ -1,11 +1,13 @@
 package com.harper.core.theme
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.structuralEqualityPolicy
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 private val primaryLight = CapitalColors.White
@@ -105,19 +107,19 @@ class CapitalColors(
 
     override fun toString(): String {
         return "Colors(" +
-            "primary=$primary, " +
-            "primaryVariant=$primaryVariant, " +
-            "secondary=$secondary, " +
-            "secondaryVariant=$secondaryVariant, " +
-            "textPrimary=$textPrimary, " +
-            "textSecondary=$textSecondary, " +
-            "background=$background, " +
-            "error=$error, " +
-            "onPrimary=$onPrimary, " +
-            "onSecondary=$onSecondary, " +
-            "onBackground=$onBackground, " +
-            "isLight=$isLight" +
-            ")"
+                "primary=$primary, " +
+                "primaryVariant=$primaryVariant, " +
+                "secondary=$secondary, " +
+                "secondaryVariant=$secondaryVariant, " +
+                "textPrimary=$textPrimary, " +
+                "textSecondary=$textSecondary, " +
+                "background=$background, " +
+                "error=$error, " +
+                "onPrimary=$onPrimary, " +
+                "onSecondary=$onSecondary, " +
+                "onBackground=$onBackground, " +
+                "isLight=$isLight" +
+                ")"
     }
 
     companion object {
@@ -131,6 +133,15 @@ class CapitalColors(
         val Blue: Color = Color(0xFF2186EB)
         val BlueLight: Color = Color(0xFF8DB3FF)
         val RedError: Color = Color(0xFFFF4848)
+        val BackgroundGradient: Brush
+            @Composable
+            get() = Brush.verticalGradient(
+                if (CapitalTheme.colors.isLight) {
+                    listOf(GreyLight, CapitalTheme.colors.background)
+                } else {
+                    listOf(CapitalTheme.colors.background, GreyDarkest)
+                }
+            )
     }
 }
 

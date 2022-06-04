@@ -34,11 +34,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.harper.capital.R
+import com.harper.capital.asset.model.AssetManageEvent
 import com.harper.capital.bottomsheet.ContactBottomSheet
 import com.harper.capital.bottomsheet.CurrencyBottomSheet
 import com.harper.capital.bottomsheet.IconsBottomSheet
@@ -226,14 +228,18 @@ private fun DebtPageBlock(page: LiabilityManagePage, viewModel: ComponentViewMod
         )
         CHorizontalSpacer(height = CapitalTheme.dimensions.large)
         CPreferenceArrow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = CapitalTheme.dimensions.side),
-            title = "${page.currency.name} ${page.currency.name.formatCurrencySymbol()}",
-            subtitle = page.currency.name.formatCurrencyName()
-        ) {
-            viewModel.onEvent(LiabilityManageEvent.CurrencySelectClick)
-        }
+            modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
+            title = stringResource(id = R.string.currency),
+            subtitle = page.currency.name.formatCurrencyName(),
+            icon = {
+                Text(
+                    text = page.currency.name.formatCurrencySymbol(),
+                    style = CapitalTheme.typography.title,
+                    textAlign = TextAlign.Center
+                )
+            },
+            onClick = { viewModel.onEvent(LiabilityManageEvent.CurrencySelectClick) }
+        )
     }
 }
 
@@ -295,14 +301,18 @@ fun PageBlock(page: LiabilityManagePage, viewModel: ComponentViewModel<Liability
         )
         CHorizontalSpacer(height = CapitalTheme.dimensions.large)
         CPreferenceArrow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = CapitalTheme.dimensions.side),
-            title = "${page.currency.name} ${page.currency.name.formatCurrencySymbol()}",
-            subtitle = page.currency.name.formatCurrencyName()
-        ) {
-            viewModel.onEvent(LiabilityManageEvent.CurrencySelectClick)
-        }
+            modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
+            title = stringResource(id = R.string.currency),
+            subtitle = page.currency.name.formatCurrencyName(),
+            icon = {
+                Text(
+                    text = page.currency.name.formatCurrencySymbol(),
+                    style = CapitalTheme.typography.title,
+                    textAlign = TextAlign.Center
+                )
+            },
+            onClick = { viewModel.onEvent(LiabilityManageEvent.CurrencySelectClick) }
+        )
     }
 }
 

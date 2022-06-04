@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,24 +53,22 @@ fun AssetMenu(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = CapitalTheme.dimensions.medium, horizontal = CapitalTheme.dimensions.large),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 ToolbarItem(
-                    modifier = Modifier.weight(1f),
                     icon = CapitalIcons.History,
                     text = stringResource(id = R.string.history),
                     onClick = onHistoryClick
                 )
 
                 ToolbarItem(
-                    modifier = Modifier.weight(1f),
                     icon = CapitalIcons.Income,
                     text = stringResource(id = R.string.income),
                     onClick = onIncomeClick
                 )
 
                 ToolbarItem(
-                    modifier = Modifier.weight(1f),
                     icon = CapitalIcons.Expense,
                     text = stringResource(id = R.string.expense),
                     onClick = onExpenseClick
@@ -77,7 +76,6 @@ fun AssetMenu(
 
                 onEditClick?.let {
                     ToolbarItem(
-                        modifier = Modifier.weight(1f),
                         icon = CapitalIcons.EditAsset,
                         text = stringResource(id = R.string.edit),
                         onClick = it
@@ -93,7 +91,7 @@ private fun ToolbarItem(modifier: Modifier = Modifier, icon: ImageVector, text: 
     Column(modifier = modifier.clickable { onClick.invoke() }) {
         Image(
             modifier = Modifier
-                .size(24.dp)
+                .size(20.dp)
                 .align(Alignment.CenterHorizontally),
             imageVector = icon,
             contentDescription = null,
@@ -101,7 +99,7 @@ private fun ToolbarItem(modifier: Modifier = Modifier, icon: ImageVector, text: 
         )
         Text(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            style = CapitalTheme.typography.titleSmall,
+            style = CapitalTheme.typography.regularSmall,
             text = text,
         )
     }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.harper.capital.R
@@ -44,17 +46,17 @@ import com.harper.capital.domain.model.AccountMetadata
 import com.harper.capital.ext.resolveText
 import com.harper.capital.ext.resolveValueHint
 import com.harper.core.component.CAmountTextField
-import com.harper.core.component.CModalBottomSheetScaffold
 import com.harper.core.component.CButton
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CLoaderLayout
+import com.harper.core.component.CModalBottomSheetScaffold
 import com.harper.core.component.CPreferenceArrow
 import com.harper.core.component.CPreferenceSwitch
 import com.harper.core.component.CPreview
-import com.harper.core.component.CSeparator
 import com.harper.core.component.CToolbarCommon
 import com.harper.core.ext.formatCurrencyName
 import com.harper.core.ext.formatCurrencySymbol
+import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentViewModel
 
@@ -93,7 +95,7 @@ fun AssetManageScreen(viewModel: ComponentViewModel<AssetManageState, AssetManag
                     AssetManageMode.EDIT -> R.string.save
                 }
             }
-            Box(modifier = Modifier.background(color = CapitalTheme.colors.background)) {
+            Box {
                 CButton(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -154,17 +156,25 @@ private fun SettingsBlock(
     state: AssetManageState,
     viewModel: ComponentViewModel<AssetManageState, AssetManageEvent>
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.medium)) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = CapitalTheme.dimensions.side),
+        verticalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.large)
+    ) {
         if (state.mode == AssetManageMode.ADD) {
             CPreferenceArrow(
-                modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
-                title = "${state.currency.name} ${state.currency.name.formatCurrencySymbol()}",
+                title = stringResource(id = R.string.currency),
                 subtitle = state.currency.name.formatCurrencyName(),
+                icon = {
+                    Text(
+                        text = state.currency.name.formatCurrencySymbol(),
+                        style = CapitalTheme.typography.title,
+                        textAlign = TextAlign.Center
+                    )
+                },
                 onClick = { viewModel.onEvent(AssetManageEvent.CurrencySelectClick) }
             )
-            CSeparator(modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side))
             CPreferenceArrow(
-                modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
                 title = stringResource(id = R.string.asset_type),
                 subtitle = state.metadata.resolveText(),
                 onClick = { viewModel.onEvent(AssetManageEvent.AssetTypeSelectClick) }
@@ -180,7 +190,6 @@ private fun SettingsBlock(
             }
         }
         CPreferenceSwitch(
-            modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
             title = stringResource(id = R.string.include_asset),
             subtitle = stringResource(id = R.string.include_asset_subtitle),
             isChecked = state.isIncluded,
@@ -188,7 +197,6 @@ private fun SettingsBlock(
         )
         if (state.mode == AssetManageMode.EDIT) {
             CPreferenceSwitch(
-                modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
                 title = stringResource(id = R.string.is_archived_asset),
                 subtitle = stringResource(id = R.string.is_archived_asset_subtitle),
                 isChecked = state.isArchived,

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -97,6 +98,9 @@ fun TransactionManageScreen(
                         CPreferenceSwitch(
                             title = stringResource(id = R.string.schedule_transaction),
                             isChecked = transaction.isScheduled,
+                            icon = {
+                                Icon(imageVector = CapitalIcons.Calendar, contentDescription = null)
+                            },
                             onCheckedChange = { viewModel.onEvent(TransactionManageEvent.ScheduledCheckChange(it)) }
                         )
                     }

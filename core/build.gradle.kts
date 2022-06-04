@@ -8,9 +8,7 @@ plugins {
 }
 
 android {
-    capitalLibDefaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
+    capitalLibDefaultConfig { }
 
     capitalLibBuildFeatures()
 

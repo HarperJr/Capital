@@ -1,10 +1,12 @@
 import com.harper.buildsrc.Version
+import com.harper.buildsrc.androidTest
 import com.harper.buildsrc.capitalLibDefaultConfig
 import com.harper.buildsrc.core
 import com.harper.buildsrc.gson
 import com.harper.buildsrc.koin
 import com.harper.buildsrc.kotlin
 import com.harper.buildsrc.room
+import com.harper.buildsrc.test
 
 plugins {
     id("com.android.library")
@@ -14,7 +16,6 @@ plugins {
 
 android {
     capitalLibDefaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("int", "DATABASE_VERSION", "2")
         buildConfigField("String", "DATABASE_NAME", "\"capital_db\"")
     }
@@ -39,4 +40,6 @@ dependencies {
     core()
     room()
     gson()
+    test()
+    androidTest()
 }

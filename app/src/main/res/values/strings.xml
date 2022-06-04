@@ -95,4 +95,5 @@
     <string name="all_operations">All operations</string>
     <string name="in_period">In %s</string>
     <string name="your_most_usable">Your most usable</string>
+    <string name="currency">Currency</string>
 </resources>

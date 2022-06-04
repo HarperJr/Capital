@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Card
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.harper.capital.R
 import com.harper.capital.domain.model.Account
@@ -28,6 +31,7 @@ import com.harper.capital.domain.model.AccountType
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.ext.accountBackgroundColor
 import com.harper.capital.ext.accountContentColorFor
+import com.harper.capital.ext.accountGradientBackgroundColor
 import com.harper.capital.ext.getImageVector
 import com.harper.capital.ext.resolveText
 import com.harper.core.component.CAmountText
@@ -35,6 +39,7 @@ import com.harper.core.component.CPreview
 import com.harper.core.ext.compose.assetCardSize
 import com.harper.core.ext.formatPercent
 import com.harper.core.ext.formatWithCurrencySymbol
+import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
 @Composable
@@ -43,66 +48,72 @@ fun AssetCard(modifier: Modifier = Modifier, account: Account) {
     Card(
         modifier = modifier.assetCardSize(),
         backgroundColor = cardBackgroundColor,
-        contentColor = accountContentColorFor(cardBackgroundColor),
+        contentColor = CapitalColors.Transparent,
         elevation = 0.dp,
         shape = CapitalTheme.shapes.extraLarge
     ) {
-        Image(
-            modifier = Modifier
-                .fillMaxSize(0.5f),
-            imageVector = ImageVector.vectorResource(id = R.drawable.bg_card_whiteness),
-            contentDescription = null,
-            alignment = Alignment.CenterEnd
-        )
-        ConstraintLayout(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            val (icon, name, description, amount) = createRefs()
-            Image(
+        CompositionLocalProvider(LocalContentColor provides accountContentColorFor(cardBackgroundColor)) {
+            Box(
                 modifier = Modifier
-                    .size(CapitalTheme.dimensions.imageLarge)
-                    .constrainAs(icon) {
-                        end.linkTo(parent.end, margin = 8.dp)
-                        top.linkTo(parent.top, margin = 8.dp)
-                    },
-                imageVector = account.icon.getImageVector(),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(color = accountContentColorFor(cardBackgroundColor))
-            )
-            CAmountText(
-                modifier = Modifier
-                    .constrainAs(amount) {
-                        start.linkTo(parent.start, margin = 16.dp)
-                        top.linkTo(parent.top, margin = 16.dp)
-                    },
-                amount = account.balance,
-                currencyIso = account.currency.name,
-                style = CapitalTheme.typography.header
-            )
-
-            val metadata = account.metadata
-            if (metadata != null) {
-                MetadataBlock(
-                    modifier = Modifier
-                        .constrainAs(description) {
-                            top.linkTo(amount.bottom, margin = 4.dp)
-                            start.linkTo(amount.start)
-                        },
-                    account = account,
-                    metadata = metadata
+                    .fillMaxSize()
+                    .background(brush = accountGradientBackgroundColor(account.color))
+            ) {
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    imageVector = ImageVector.vectorResource(id = R.drawable.bg_card_whiteness),
+                    contentDescription = null,
+                    alignment = Alignment.CenterEnd
                 )
-            }
+                ConstraintLayout(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    val (icon, name, description, amount) = createRefs()
+                    Image(
+                        modifier = Modifier
+                            .size(CapitalTheme.dimensions.imageLarge)
+                            .constrainAs(icon) {
+                                end.linkTo(parent.end, margin = 12.dp)
+                                top.linkTo(parent.top, margin = 12.dp)
+                            },
+                        imageVector = account.icon.getImageVector(),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(color = accountContentColorFor(cardBackgroundColor).copy(alpha = 0.5f))
+                    )
+                    Text(
+                        modifier = Modifier
+                            .constrainAs(name) {
+                                top.linkTo(parent.top, margin = 12.dp)
+                                start.linkTo(parent.start, margin = 16.dp)
+                            },
+                        text = account.name,
+                        style = CapitalTheme.typography.regular
+                    )
+                    CAmountText(
+                        modifier = Modifier
+                            .constrainAs(amount) {
+                                start.linkTo(parent.start, margin = 16.dp)
+                                top.linkTo(name.bottom, margin = 8.dp)
+                            },
+                        amount = account.balance,
+                        currencyIso = account.currency.name,
+                        style = CapitalTheme.typography.header.copy(fontSize = 32.sp)
+                    )
 
-            Text(
-                modifier = Modifier
-                    .constrainAs(name) {
-                        bottom.linkTo(parent.bottom, margin = 12.dp)
-                        start.linkTo(parent.start, margin = 16.dp)
-                    },
-                text = account.name,
-                style = CapitalTheme.typography.subtitle
-            )
+                    val metadata = account.metadata
+                    if (metadata != null) {
+                        MetadataBlock(
+                            modifier = Modifier
+                                .constrainAs(description) {
+                                    top.linkTo(amount.bottom, margin = 4.dp)
+                                    start.linkTo(amount.start)
+                                },
+                            account = account,
+                            metadata = metadata
+                        )
+                    }
+                }
+            }
         }
     }
 }

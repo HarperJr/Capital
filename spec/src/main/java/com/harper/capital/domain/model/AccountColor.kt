@@ -9,5 +9,10 @@ enum class AccountColor {
     VTB,
     RAIFFEIZEN,
     LIABILITY,
-    DEBT
+    DEBT;
+
+    companion object {
+
+        fun assetColors(): List<AccountColor> = values().filter { it !in listOf(LIABILITY, DEBT) }
+    }
 }

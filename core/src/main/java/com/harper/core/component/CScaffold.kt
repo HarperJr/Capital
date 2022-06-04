@@ -1,11 +1,16 @@
 package com.harper.core.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetScaffoldDefaults
 import androidx.compose.material.BottomSheetScaffoldState
@@ -26,9 +31,8 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.ui.Scaffold
+import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
 @Composable
@@ -44,8 +48,10 @@ fun CScaffold(
     content: @Composable () -> Unit
 ) {
     Scaffold(
-        modifier = modifier,
-        backgroundColor = CapitalTheme.colors.background,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(CapitalColors.BackgroundGradient),
+        backgroundColor = CapitalColors.Transparent,
         topBar = topBar,
         bottomBar = {
             Column {
@@ -53,7 +59,7 @@ fun CScaffold(
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .navigationBarsHeight()
+                        .windowInsetsBottomHeight(WindowInsets.navigationBars)
                 )
             }
         },
@@ -63,7 +69,7 @@ fun CScaffold(
         isFloatingActionButtonDocked = isFloatingActionButtonDocked,
         scaffoldState = scaffoldState
     ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
+        Box(modifier = modifier.padding(paddingValues)) {
             content.invoke()
         }
     }
@@ -85,7 +91,6 @@ fun CModalBottomSheetScaffold(
     content: @Composable () -> Unit
 ) {
     ModalBottomSheetLayout(
-        modifier = modifier,
         sheetState = sheetState,
         sheetContent = {
             CBottomSheet {
@@ -96,6 +101,7 @@ fun CModalBottomSheetScaffold(
         sheetShape = CapitalTheme.shapes.bottomSheet
     ) {
         CScaffold(
+            modifier = modifier,
             topBar = topBar,
             bottomBar = bottomBar,
             snackbarHost = snackbarHost,
@@ -124,8 +130,10 @@ fun CBottomSheetScaffold(
     content: @Composable () -> Unit
 ) {
     BottomSheetScaffold(
-        modifier = modifier,
-        backgroundColor = CapitalTheme.colors.background,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(CapitalColors.BackgroundGradient),
+        backgroundColor = CapitalColors.Transparent,
         sheetContent = {
             CBottomSheet {
                 sheetContent.invoke(this)
@@ -141,7 +149,7 @@ fun CBottomSheetScaffold(
         floatingActionButtonPosition = floatingActionButtonPosition,
         scaffoldState = scaffoldState,
     ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
+        Box(modifier = modifier.padding(paddingValues)) {
             content.invoke()
         }
     }

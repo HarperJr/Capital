@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
@@ -90,6 +92,10 @@ object CapitalIcons {
         get() = Icons.Rounded.Settings
     val Add: ImageVector
         get() = Icons.Rounded.Add
+    val Palette: ImageVector
+        get() = Icons.Rounded.Palette
+    val Notifications: ImageVector
+        get() = Icons.Rounded.Notifications
 
     object Bank {
 

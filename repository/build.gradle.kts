@@ -7,9 +7,7 @@ plugins {
 }
 
 android {
-    capitalLibDefaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
+    capitalLibDefaultConfig { }
 
     buildFeatures {
         buildConfig = false

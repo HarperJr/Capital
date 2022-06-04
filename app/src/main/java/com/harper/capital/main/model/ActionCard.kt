@@ -1,3 +1,5 @@
 package com.harper.capital.main.model
 
-class ActionCard(val id: Int, val title: String)
+import androidx.compose.ui.graphics.Color
+
+class ActionCard(val id: Int, val color: Color, val title: String)

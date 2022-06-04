@@ -79,7 +79,7 @@ fun SignInScreen(viewModel: ComponentViewModel<SignInState, SignInEvent>) {
                     CSeparator()
                     Text(
                         modifier = Modifier
-                            .background(color = CapitalTheme.colors.background)
+                            .background(color = CapitalColors.Transparent)
                             .padding(horizontal = CapitalTheme.dimensions.small, vertical = CapitalTheme.dimensions.medium),
                         text = stringResource(id = R.string.or).uppercase(),
                         color = CapitalTheme.colors.onBackground

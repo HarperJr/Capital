@@ -1,10 +1,17 @@
 package com.harper.capital.main.model
 
 import androidx.compose.runtime.Composable
-import com.harper.capital.asset.model.AssetManageBottomSheet
+import androidx.compose.ui.graphics.Color
 import com.harper.capital.domain.model.Account
+import com.harper.capital.domain.model.AccountColor
 import com.harper.capital.ext.accountBackgroundColor
+import com.harper.capital.ext.alpha
+import com.harper.capital.ext.debt
+import com.harper.capital.ext.raiffeizen
 import com.harper.capital.ext.resolveTitle
+import com.harper.capital.ext.sber
+import com.harper.capital.ext.vtb
+import com.harper.capital.ext.vtbOld
 import com.harper.capital.main.domain.model.Summary
 import com.harper.core.component.ProgressChunk
 import com.harper.core.ext.orElse
@@ -20,7 +27,7 @@ data class MainState(
     val actionCards: List<ActionCard>
         @Composable
         get() = actions.map {
-            ActionCard(id = it.ordinal, title = it.resolveTitle())
+            ActionCard(id = it.ordinal, color = resolveActionCardColor(it), title = it.resolveTitle())
         }
 
     val chunks: List<ProgressChunk>
@@ -35,3 +42,11 @@ data class MainBottomSheetState(
     val bottomSheet: MainBottomSheet? = null,
     val isExpended: Boolean = true
 )
+
+private fun resolveActionCardColor(type: ActionCardType): Color = when (type) {
+    ActionCardType.ACCOUNTS -> vtb
+    ActionCardType.ANALYTICS_BALANCE -> alpha
+    ActionCardType.ANALYTICS_INCOME -> sber
+    ActionCardType.ANALYTICS_INCOME_LIABILITY -> raiffeizen
+    ActionCardType.ANALYTICS_LIABILITY -> debt
+}

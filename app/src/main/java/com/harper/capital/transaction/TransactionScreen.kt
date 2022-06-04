@@ -1,8 +1,13 @@
 package com.harper.capital.transaction
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -11,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -33,6 +37,8 @@ import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentViewModel
 import timber.log.Timber
 
+private const val COLUMNS_COUNT = 3
+
 @Composable
 @OptIn(ExperimentalPagerApi::class)
 fun TransactionScreen(viewModel: ComponentViewModel<TransactionState, TransactionEvent>) {
@@ -40,9 +46,7 @@ fun TransactionScreen(viewModel: ComponentViewModel<TransactionState, Transactio
     CScaffold(
         topBar = { TransactionTopBar(viewModel) },
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        Column(modifier = Modifier.fillMaxSize()) {
             val pagerState = rememberPagerState(initialPage = state.selectedPage)
             CTabBarCommon(
                 data = state.tabBarData,
@@ -64,25 +68,31 @@ private fun PageBlock(page: TransactionPage, viewModel: ComponentViewModel<Trans
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = CapitalTheme.dimensions.side)
     ) {
         page.accountDataSets.forEach { (section, dataSet) ->
-            CHorizontalSpacer(height = 24.dp)
-            Text(text = section.resolveTitle(), style = CapitalTheme.typography.button)
-            CHorizontalSpacer(height = 8.dp)
-            FlowRow(
-                mainAxisSpacing = 8.dp,
-                crossAxisSpacing = 8.dp
+            CHorizontalSpacer(height = CapitalTheme.dimensions.large)
+            Text(text = section.resolveTitle(), style = CapitalTheme.typography.header)
+            CHorizontalSpacer(height = CapitalTheme.dimensions.side)
+            LazyVerticalGrid(
+                modifier = Modifier.fillMaxWidth(),
+                columns = GridCells.Fixed(COLUMNS_COUNT),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.side),
+                userScrollEnabled = false
             ) {
-                dataSet.accounts.forEach { (account, isEnabled) ->
+                items(dataSet.accounts) { (account, isEnabled) ->
                     AssetSource(
                         account = account,
                         isEnabled = isEnabled,
                         isSelected = account.id == dataSet.selectedAccountId,
-                        onSelect = { viewModel.onEvent(TransactionEvent.AssetSourceSelect(page.type, section, account)) },
-                        onDrag = { x, y -> Timber.d("Drag ${account.name}: x=$x y=$y") })
+                        onClick = { viewModel.onEvent(TransactionEvent.AssetSourceSelect(page.type, section, account)) },
+                        onDrag = { x, y -> Timber.d("Drag ${account.name}: x=$x y=$y") }
+                    )
                 }
-                NewSource { viewModel.onEvent(TransactionEvent.NewSourceClick(page.type, dataSet.type)) }
+                item {
+                    NewSource { viewModel.onEvent(TransactionEvent.NewSourceClick(page.type, dataSet.type)) }
+                }
             }
         }
     }

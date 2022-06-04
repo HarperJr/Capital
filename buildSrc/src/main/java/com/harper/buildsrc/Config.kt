@@ -18,7 +18,7 @@ fun BaseAppModuleExtension.capitalAppDefaultConfig(configClosure: ApplicationDef
         targetSdk = Version.App.targetSdk
         versionCode = Version.App.versionCode
         versionName = Version.App.versionName
-
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         configClosure.invoke(this)
     }
 
@@ -75,7 +75,7 @@ fun LibraryExtension.capitalLibDefaultConfig(configClosure: LibraryDefaultConfig
     defaultConfig {
         minSdk = Version.App.minSdk
         targetSdk = Version.App.targetSdk
-
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         configClosure.invoke(this)
     }
 

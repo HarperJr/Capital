@@ -1,7 +1,6 @@
 package com.harper.buildsrc
 
 import org.gradle.kotlin.dsl.DependencyHandlerScope
-import org.gradle.kotlin.dsl.PluginDependenciesSpecScope
 
 fun DependencyHandlerScope.shelter() {
     project(":shelter")
@@ -83,6 +82,10 @@ fun DependencyHandlerScope.compose() {
     implementation("androidx.compose.ui:ui-tooling-preview:${Version.Library.compose}")
     implementation("androidx.datastore:datastore:${Version.Library.dataStore}")
     debugImplementation("androidx.compose.ui:ui-tooling:${Version.Library.compose}")
+    // Remove after IDE update
+    // Fix to show Preview according to https://issuetracker.google.com/issues/227767363
+    debugImplementation("androidx.customview:customview:1.2.0-alpha01")
+    debugImplementation("androidx.customview:customview-poolingcontainer:1.0.0-beta01")
 }
 
 fun DependencyHandlerScope.protobuf() {
@@ -108,10 +111,35 @@ fun DependencyHandlerScope.composeConstraintLayout() {
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.0-rc01")
 }
 
-fun DependencyHandlerScope.implementation(module: String) = add("implementation", module)
+fun DependencyHandlerScope.test() {
+    testImplementation("junit:junit:${Version.Test.junit}")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Version.Test.coroutines}")
+    testImplementation("org.mockito:mockito-core:${Version.Test.mockito}")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:${Version.Test.mockitoKotlin}")
+    testImplementation("io.mockk:mockk:${Version.Test.mockk}")
 
-fun DependencyHandlerScope.debugImplementation(module: String) = add("debugImplementation", module)
+}
 
-fun DependencyHandlerScope.kapt(module: String) = add("kapt", module)
+fun DependencyHandlerScope.androidTest() {
+    androidTestImplementation("androidx.test:core:${Version.Test.core}")
 
-fun DependencyHandlerScope.project(path: String) = add("implementation", (project(mapOf("path" to path))))
+    androidTestImplementation("androidx.test:runner:${Version.Test.runner}")
+    androidTestImplementation("androidx.test:rules:${Version.Test.rules}")
+
+    androidTestImplementation("androidx.test.ext:junit:${Version.Test.junit}")
+    androidTestImplementation("androidx.test.ext:truth:${Version.Test.truth}")
+
+    androidTestImplementation("io.mockk:mockk-android:${Version.Test.mockkAndroid}")
+}
+
+fun DependencyHandlerScope.implementation(module: Any) = add("implementation", module)
+
+fun DependencyHandlerScope.debugImplementation(module: Any) = add("debugImplementation", module)
+
+fun DependencyHandlerScope.testImplementation(module: Any) = add("testImplementation", module)
+
+fun DependencyHandlerScope.androidTestImplementation(module: Any) = add("androidTestImplementation", module)
+
+fun DependencyHandlerScope.kapt(module: Any) = add("kapt", module)
+
+fun DependencyHandlerScope.project(path: Any) = add("implementation", (project(mapOf("path" to path))))

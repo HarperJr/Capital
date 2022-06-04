@@ -75,7 +75,7 @@ private const val SETTINGS_MENU_ITEM_ID = 1
 private val MMMMDateTimeFormatter = DateTimeFormatter.ofPattern("LLLL")
 
 @Composable
-@OptIn(ExperimentalPagerApi::class, dev.chrisbanes.snapper.ExperimentalSnapperApi::class, ExperimentalMaterialApi::class)
+@OptIn(dev.chrisbanes.snapper.ExperimentalSnapperApi::class, ExperimentalMaterialApi::class)
 fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
     val state by viewModel.state.collectAsState()
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
@@ -120,13 +120,13 @@ fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
                         AssetSummaryCard(modifier = Modifier.fillParentMaxWidth(), summary = state.summary)
                     }
                 }
-                CHorizontalSpacer(height = CapitalTheme.dimensions.large)
+                CHorizontalSpacer(height = 12.dp)
                 val selectedAsset = state.accounts.getOrNull(selectedAssetIndex.value)
                 AssetMenu(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = CapitalTheme.dimensions.large),
-                    color = selectedAsset?.color.orElse(AccountColor.TINKOFF_PLATINUM),
+                    color = selectedAsset?.color.orElse(AccountColor.VTB_OLD),
                     onHistoryClick = { viewModel.onEvent(MainEvent.HistoryClick(selectedAsset)) },
                     onIncomeClick = { viewModel.onEvent(MainEvent.IncomeClick(selectedAsset)) },
                     onExpenseClick = { viewModel.onEvent(MainEvent.ExpenseClick(selectedAsset)) },
@@ -146,21 +146,12 @@ fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
                     contentPadding = PaddingValues(horizontal = CapitalTheme.dimensions.large)
                 ) {
                     items(actionCards) {
-                        ActionCard(modifier = Modifier.fillParentMaxWidth(0.45f), title = it.title) {
+                        ActionCard(modifier = Modifier.fillParentMaxWidth(0.4f), color = it.color, title = it.title) {
                             viewModel.onEvent(MainEvent.ActionCardClick(it.id))
                         }
                     }
                 }
                 CHorizontalSpacer(height = CapitalTheme.dimensions.side)
-                OperationsActionCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = CapitalTheme.dimensions.large),
-                    summary = state.summary,
-                    chunks = state.chunks
-                ) {
-                    viewModel.onEvent(MainEvent.AllOperationsClick)
-                }
             }
         }
     }
@@ -287,7 +278,7 @@ fun MainScreenTopBar(viewModel: ComponentViewModel<MainState, MainEvent>, summar
         },
         menu = Menu(
             listOf(
-                MenuItem(ADD_ASSET_MENU_ITEM_ID, CapitalIcons.AddAsset),
+                MenuItem(ADD_ASSET_MENU_ITEM_ID, CapitalIcons.NewAsset),
                 MenuItem(SETTINGS_MENU_ITEM_ID, CapitalIcons.Settings)
             )
         ),

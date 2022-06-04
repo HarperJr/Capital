@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
@@ -16,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.harper.capital.BuildConfig
 import com.harper.capital.R
@@ -25,13 +27,15 @@ import com.harper.capital.settings.ext.resolveText
 import com.harper.capital.settings.model.SettingsBottomSheet
 import com.harper.capital.settings.model.SettingsEvent
 import com.harper.capital.settings.model.SettingsState
-import com.harper.core.component.CModalBottomSheetScaffold
+import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CIcon
+import com.harper.core.component.CModalBottomSheetScaffold
 import com.harper.core.component.CPreferenceArrow
 import com.harper.core.component.CPreferenceSwitch
 import com.harper.core.component.CPreview
 import com.harper.core.component.CToolbar
 import com.harper.core.ext.formatCurrencyName
+import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
@@ -60,12 +64,14 @@ fun SettingsScreen(viewModel: ComponentViewModel<SettingsState, SettingsEvent>) 
         topBar = { SettingsTopBar(viewModel) },
         sheetState = sheetState
     ) {
-        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.medium)) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(CapitalTheme.dimensions.side)
-            ) {
+        CHorizontalSpacer(height = CapitalTheme.dimensions.large)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = CapitalTheme.dimensions.side),
+            verticalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.large)
+        ) {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     modifier = Modifier.weight(1f),
                     text = state.email,
@@ -79,28 +85,31 @@ fun SettingsScreen(viewModel: ComponentViewModel<SettingsState, SettingsEvent>) 
                 )
             }
             CPreferenceArrow(
-                modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
                 title = stringResource(id = R.string.color_theme),
-                subtitle = state.colorTheme.resolveText()
+                subtitle = state.colorTheme.resolveText(),
+                icon = { Icon(imageVector = CapitalIcons.Palette, contentDescription = null) }
             ) {
                 viewModel.onEvent(SettingsEvent.ColorThemeSelectClick)
             }
-            if (BuildConfig.DEBUG) {
-                CPreferenceArrow(
-                    modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
-                    title = stringResource(id = R.string.default_currency),
-                    subtitle = state.currency.name.formatCurrencyName()
-                ) {
-                    viewModel.onEvent(SettingsEvent.CurrencySelectClick)
+            CPreferenceArrow(
+                title = stringResource(id = R.string.default_currency),
+                subtitle = state.currency.name.formatCurrencyName(),
+                icon = {
+                    Text(
+                        text = state.currency.name.formatCurrencySymbol(),
+                        style = CapitalTheme.typography.title,
+                        textAlign = TextAlign.Center
+                    )
                 }
-                CPreferenceArrow(
-                    modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
-                    title = stringResource(id = R.string.help)
-                ) {}
+            ) {
+                viewModel.onEvent(SettingsEvent.CurrencySelectClick)
+            }
+            if (BuildConfig.DEBUG) {
                 CPreferenceSwitch(
-                    modifier = Modifier.padding(horizontal = CapitalTheme.dimensions.side),
-                    title = stringResource(id = R.string.notifications)
+                    title = stringResource(id = R.string.notifications),
+                    icon = { Icon(imageVector = CapitalIcons.Notifications, contentDescription = null) }
                 ) {}
+                CPreferenceArrow(title = stringResource(id = R.string.help)) {}
             }
         }
     }
@@ -153,7 +162,7 @@ private fun SettingsTopBar(viewModel: ComponentViewModel<SettingsState, Settings
 @Preview(showBackground = true)
 @Composable
 private fun SettingsScreenLight() {
-    CPreview(isDark = true) {
+    CPreview(isDark = false) {
         SettingsScreen(SettingsMockViewModel())
     }
 }

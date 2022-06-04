@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.Text
@@ -21,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 
@@ -36,11 +40,8 @@ fun CToolbar(
         modifier = modifier,
         elevation = 0.dp,
         contentColor = CapitalTheme.colors.onPrimary,
-        backgroundColor = CapitalTheme.colors.background,
-        contentPadding = rememberInsetsPaddingValues(
-            LocalWindowInsets.current.statusBars,
-            applyBottom = false,
-        )
+        backgroundColor = CapitalColors.Transparent,
+        contentPadding = WindowInsets.statusBars.asPaddingValues()
     ) {
         CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
             navigation?.invoke()

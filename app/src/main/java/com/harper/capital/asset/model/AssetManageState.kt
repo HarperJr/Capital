@@ -11,7 +11,7 @@ data class AssetManageState(
     val name: String = "",
     val balance: Double = 0.0,
     val currency: Currency = Currency.RUB,
-    val colors: List<AccountColor> = AccountColor.values().toList(),
+    val colors: List<AccountColor> = AccountColor.assetColors(),
     val color: AccountColor = AccountColor.TINKOFF,
     val icon: AccountIcon = AccountIcon.TINKOFF,
     val metadata: AccountMetadata? = null,

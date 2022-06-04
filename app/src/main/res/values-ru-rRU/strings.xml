@@ -85,5 +85,7 @@
     <string name="debts">Долги</string>
     <string name="all_operations">Все операции</string>
     <string name="in_period">За %s</string>
+    <string name="your_most_usable">Часто используемые</string>
+    <string name="currency">Валюта</string>
 
 </resources>

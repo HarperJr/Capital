@@ -1,26 +1,27 @@
 package com.harper.capital.transaction.component
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.consumeAllChanges
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.harper.capital.domain.model.Account
 import com.harper.capital.domain.model.AccountColor
 import com.harper.capital.domain.model.AccountIcon
@@ -31,78 +32,67 @@ import com.harper.capital.ext.accountContentColorFor
 import com.harper.capital.ext.getImageVector
 import com.harper.core.component.CPreview
 import com.harper.core.ext.formatWithCurrencySymbol
-import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 
+private val requiredWidth = 86.dp
+
 @Composable
-@OptIn(ExperimentalMaterialApi::class)
 fun AssetSource(
     modifier: Modifier = Modifier,
     account: Account,
     isEnabled: Boolean,
     isSelected: Boolean,
-    onSelect: () -> Unit,
+    onClick: () -> Unit,
     onDrag: (Float, Float) -> Unit
 ) {
-    val borderColor =
-        if (isSelected) CapitalTheme.colors.secondary else CapitalTheme.colors.primaryVariant
-    Box(modifier = modifier) {
-        Surface(
-            modifier = Modifier.pointerInput(Unit) {
+    val backgroundColor = if (isSelected) CapitalTheme.colors.primaryVariant else CapitalTheme.colors.background
+    Column(
+        modifier = modifier
+            .requiredWidth(requiredWidth)
+            .background(backgroundColor, shape = CapitalTheme.shapes.extraLarge)
+            .clip(shape = CapitalTheme.shapes.extraLarge)
+            .clickable { onClick.invoke() }
+            .padding(
+                horizontal = CapitalTheme.dimensions.small,
+                vertical = CapitalTheme.dimensions.medium
+            )
+            .pointerInput(Unit) {
                 detectDragGestures { change, dragAmount ->
-                    change.consumeAllChanges()
+                    change.consume()
                     if (change.pressed) {
                         onDrag.invoke(dragAmount.x, dragAmount.y)
                     }
                 }
             },
-            color = CapitalTheme.colors.background,
-            shape = CircleShape,
-            border = BorderStroke(width = 1.dp, color = borderColor),
-            enabled = isEnabled,
-            onClick = { onSelect.invoke() }
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.small)
+    ) {
+        val accountIconContentColor = accountBackgroundColor(account.color)
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(color = accountIconContentColor, shape = CapitalTheme.shapes.extraLarge),
+            contentAlignment = Alignment.Center
         ) {
-            Row {
-                val circleColor = accountBackgroundColor(account.color)
-                Box(
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .size(36.dp)
-                        .background(
-                            color = circleColor,
-                            shape = CircleShape
-                        )
-                ) {
-                    Icon(
-                        modifier = Modifier.align(Alignment.Center),
-                        imageVector = account.icon.getImageVector(),
-                        contentDescription = null,
-                        tint = accountContentColorFor(circleColor)
-                    )
-                }
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .padding(end = 24.dp)
-                ) {
-                    Text(
-                        text = account.name,
-                        style = CapitalTheme.typography.regular,
-                        color = if (isEnabled) CapitalTheme.colors.textPrimary else CapitalTheme.colors.textSecondary
-                    )
-                    Text(
-                        text = account.balance.formatWithCurrencySymbol(account.currency.name),
-                        style = CapitalTheme.typography.regularSmall,
-                        color = CapitalTheme.colors.textSecondary
-                    )
-                }
-            }
+            Icon(
+                modifier = Modifier.size(24.dp),
+                imageVector = account.icon.getImageVector(),
+                contentDescription = null,
+                tint = accountContentColorFor(accountIconContentColor)
+            )
         }
-        if (isSelected) {
-            Image(
-                modifier = Modifier.align(Alignment.TopEnd),
-                imageVector = CapitalIcons.RoundCheck,
-                contentDescription = null
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = account.name,
+                style = CapitalTheme.typography.titleSmall,
+                color = if (isEnabled) CapitalTheme.colors.textPrimary else CapitalTheme.colors.textSecondary,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
+            Text(
+                text = account.balance.formatWithCurrencySymbol(account.currency.name, minFractionDigits = 0),
+                style = CapitalTheme.typography.regular.copy(fontSize = 10.sp),
+                color = CapitalTheme.colors.textSecondary
             )
         }
     }
@@ -111,24 +101,12 @@ fun AssetSource(
 @Preview(showBackground = true)
 @Composable
 private fun AssetSourceLight() {
-    CPreview {
-        AssetSource(
-            modifier = Modifier.padding(16.dp),
-            account = Account(
-                id = 0L,
-                name = "Tinkoff Black",
-                type = AccountType.ASSET,
-                balance = 1500.0,
-                currency = Currency.RUB,
-                color = AccountColor.TINKOFF,
-                icon = AccountIcon.TINKOFF,
-                metadata = null
-            ),
-            isEnabled = false,
-            isSelected = false,
-            onSelect = {},
-            onDrag = { _, _ -> }
-        )
+    CPreview(isDark = false) {
+        Row {
+            AssetSourcePreview(isSelected = false, isEnabled = true)
+            AssetSourcePreview(isSelected = true, isEnabled = true)
+            AssetSourcePreview(isSelected = false, isEnabled = false)
+        }
     }
 }
 
@@ -136,22 +114,31 @@ private fun AssetSourceLight() {
 @Composable
 private fun AssetSourceDark() {
     CPreview(isDark = true) {
-        AssetSource(
-            modifier = Modifier.padding(16.dp),
-            account = Account(
-                id = 0L,
-                name = "Tinkoff Black",
-                type = AccountType.ASSET,
-                balance = 1500.0,
-                currency = Currency.RUB,
-                color = AccountColor.TINKOFF,
-                icon = AccountIcon.TINKOFF,
-                metadata = null
-            ),
-            isEnabled = true,
-            isSelected = true,
-            onSelect = {},
-            onDrag = { _, _ -> }
-        )
+        Row {
+            AssetSourcePreview(isSelected = false, isEnabled = true)
+            AssetSourcePreview(isSelected = true, isEnabled = true)
+            AssetSourcePreview(isSelected = false, isEnabled = false)
+        }
     }
+}
+
+@Composable
+private fun AssetSourcePreview(isSelected: Boolean, isEnabled: Boolean) {
+    AssetSource(
+        modifier = Modifier.padding(16.dp),
+        account = Account(
+            id = 0L,
+            name = "Tinkoff Black",
+            type = AccountType.ASSET,
+            balance = 15000000.0,
+            currency = Currency.RUB,
+            color = AccountColor.TINKOFF,
+            icon = AccountIcon.TINKOFF,
+            metadata = null
+        ),
+        isEnabled = isEnabled,
+        isSelected = isSelected,
+        onClick = {},
+        onDrag = { _, _ -> }
+    )
 }

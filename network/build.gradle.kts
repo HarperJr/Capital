@@ -8,7 +8,6 @@ plugins {
 
 android {
     capitalLibDefaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "EXCHANGE_URL", "\"http://api.exchangeratesapi.io/v1/\"")
         buildConfigField("String", "EXCHANGE_API_KEY", "\"271a48b04c0a86f10e877d69322bc958\"")
     }
@@ -28,7 +27,7 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.20")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.21")
 
     kotlin()
     koin()

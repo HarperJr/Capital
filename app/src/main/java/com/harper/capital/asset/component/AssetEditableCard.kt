@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
@@ -34,6 +33,7 @@ import com.harper.capital.domain.model.AccountIcon
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.ext.accountBackgroundColor
 import com.harper.capital.ext.accountContentColorFor
+import com.harper.capital.ext.accountGradientBackgroundColor
 import com.harper.capital.ext.accountOnBackgroundColorFor
 import com.harper.capital.ext.getImageVector
 import com.harper.core.component.CAmountTextField
@@ -42,6 +42,7 @@ import com.harper.core.component.CPreview
 import com.harper.core.component.CTextField
 import com.harper.core.component.CVerticalSpacer
 import com.harper.core.ext.compose.assetCardSize
+import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
 @Composable
@@ -59,69 +60,73 @@ fun AssetEditableCard(
     val cardBackgroundColor = accountBackgroundColor(color)
     Card(
         modifier = modifier.assetCardSize(),
-        backgroundColor = cardBackgroundColor,
+        backgroundColor = CapitalColors.Transparent,
         contentColor = accountContentColorFor(cardBackgroundColor),
         elevation = 0.dp,
         shape = CapitalTheme.shapes.extraLarge
     ) {
-        Image(
-            modifier = Modifier.fillMaxSize(0.5f),
-            imageVector = ImageVector.vectorResource(id = R.drawable.bg_card_whiteness),
-            contentDescription = null,
-            alignment = Alignment.CenterEnd
-        )
-        val focusManager = LocalFocusManager.current
-        val overCardBackgroundColor = accountOnBackgroundColorFor(cardBackgroundColor)
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(CapitalTheme.dimensions.side)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(44.dp)
-                        .background(color = overCardBackgroundColor, shape = CircleShape)
-                        .clickable { onIconClick.invoke() }
-                ) {
-                    Image(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(CapitalTheme.dimensions.medium),
-                        imageVector = icon.getImageVector(),
-                        contentDescription = null,
-                        colorFilter = ColorFilter.tint(color = LocalContentColor.current)
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .background(brush = accountGradientBackgroundColor(color))) {
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                imageVector = ImageVector.vectorResource(id = R.drawable.bg_card_whiteness),
+                contentDescription = null,
+                alignment = Alignment.CenterEnd
+            )
+            val focusManager = LocalFocusManager.current
+            val overCardBackgroundColor = accountOnBackgroundColorFor(cardBackgroundColor)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(CapitalTheme.dimensions.side)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    CTextField(
+                        modifier = Modifier.weight(1f),
+                        value = name,
+                        placeholder = stringResource(id = R.string.asset_name_hint),
+                        backgroundColor = overCardBackgroundColor,
+                        singleLine = true,
+                        onValueChange = { onNameChange.invoke(it) },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            capitalization = KeyboardCapitalization.Words,
+                            imeAction = ImeAction.Next,
+                            autoCorrect = true
+                        ),
+                        keyboardActions = KeyboardActions(onNext = {
+                            focusManager.moveFocus(FocusDirection.Down)
+                        })
                     )
+                    CVerticalSpacer(width = CapitalTheme.dimensions.medium)
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .background(color = overCardBackgroundColor, shape = CapitalTheme.shapes.extraLarge)
+                            .clickable { onIconClick.invoke() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            modifier = Modifier.size(CapitalTheme.dimensions.imageMedium),
+                            imageVector = icon.getImageVector(),
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(color = LocalContentColor.current.copy(alpha = 0.5f))
+                        )
+                    }
                 }
-                CVerticalSpacer(width = CapitalTheme.dimensions.side)
-                CTextField(
-                    value = name,
-                    placeholder = stringResource(id = R.string.asset_name_hint),
+                CHorizontalSpacer(height = CapitalTheme.dimensions.side)
+                CAmountTextField(
+                    amount = balance,
+                    currencyIso = currency.name,
                     backgroundColor = overCardBackgroundColor,
-                    singleLine = true,
-                    onValueChange = { onNameChange.invoke(it) },
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        capitalization = KeyboardCapitalization.Words,
-                        imeAction = ImeAction.Next,
-                        autoCorrect = true
-                    ),
-                    keyboardActions = KeyboardActions(onNext = {
-                        focusManager.moveFocus(FocusDirection.Down)
+                    onValueChange = { onAmountChange.invoke(it) },
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {
+                        focusManager.clearFocus()
                     })
+
                 )
             }
-            CHorizontalSpacer(height = CapitalTheme.dimensions.side)
-            CAmountTextField(
-                amount = balance,
-                currencyIso = currency.name,
-                backgroundColor = overCardBackgroundColor,
-                onValueChange = { onAmountChange.invoke(it) },
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    focusManager.clearFocus()
-                })
-
-            )
         }
     }
 }
