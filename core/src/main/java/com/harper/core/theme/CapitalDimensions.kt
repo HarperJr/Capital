@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 class CapitalDimensions(
     val small: Dp,
     val medium: Dp,
+    val big: Dp,
     val side: Dp,
     val large: Dp,
     val largest: Dp,
@@ -21,6 +22,7 @@ class CapitalDimensions(
 fun dimensions(): CapitalDimensions = CapitalDimensions(
     small = 4.dp,
     medium = 8.dp,
+    big = 12.dp,
     side = 16.dp,
     large = 24.dp,
     largest = 32.dp,

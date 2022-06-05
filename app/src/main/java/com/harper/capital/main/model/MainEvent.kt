@@ -1,7 +1,6 @@
 package com.harper.capital.main.model
 
 import com.harper.capital.domain.model.Account
-import com.harper.capital.domain.model.ChangeTransaction
 import com.harper.capital.domain.model.TransferTransaction
 
 sealed class MainEvent {
@@ -14,7 +13,7 @@ sealed class MainEvent {
 
     class HistoryClick(val account: Account?) : MainEvent()
 
-    class ActionCardClick(val id: Int) : MainEvent()
+    class ActionCardClick(val type: ActionCardType) : MainEvent()
 
     class FavoriteTransferTransactionClick(val transaction: TransferTransaction) : MainEvent()
 

@@ -110,11 +110,10 @@ class MainViewModel(
     }
 
     private fun onActionCardClick(event: MainEvent.ActionCardClick) {
-        val actionCardType = ActionCardType.of(event.id)
-        getAnalyticsType(actionCardType)
+        getAnalyticsType(event.type)
             ?.let { router.navigateToAnalytics(AnalyticsParams(it)) }
             .orElse {
-                if (actionCardType == ActionCardType.ACCOUNTS) {
+                if (event.type == ActionCardType.ACCOUNTS) {
                     router.navigateToAccounts()
                     return
                 }

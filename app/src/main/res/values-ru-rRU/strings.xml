@@ -87,5 +87,7 @@
     <string name="in_period">За %s</string>
     <string name="your_most_usable">Часто используемые</string>
     <string name="currency">Валюта</string>
+    <string name="accounts_presentation">Отображение счетов</string>
+    <string name="carousel">Карусель</string>
 
 </resources>

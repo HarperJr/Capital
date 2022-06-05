@@ -1,6 +1,5 @@
 package com.harper.capital.asset
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,7 +45,7 @@ import com.harper.capital.domain.model.AccountMetadata
 import com.harper.capital.ext.resolveText
 import com.harper.capital.ext.resolveValueHint
 import com.harper.core.component.CAmountTextField
-import com.harper.core.component.CButton
+import com.harper.core.component.CButtonPrimary
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CLoaderLayout
 import com.harper.core.component.CModalBottomSheetScaffold
@@ -56,7 +55,6 @@ import com.harper.core.component.CPreview
 import com.harper.core.component.CToolbarCommon
 import com.harper.core.ext.formatCurrencyName
 import com.harper.core.ext.formatCurrencySymbol
-import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentViewModel
 
@@ -96,7 +94,7 @@ fun AssetManageScreen(viewModel: ComponentViewModel<AssetManageState, AssetManag
                 }
             }
             Box {
-                CButton(
+                CButtonPrimary(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(CapitalTheme.dimensions.side),

@@ -46,20 +46,20 @@ private fun CPreference(
             .heightIn(min = preferenceMinHeight)
             .background(color = CapitalTheme.colors.primaryVariant, shape = CapitalTheme.shapes.large)
             .clip(shape = CapitalTheme.shapes.large)
-            .padding(horizontal = CapitalTheme.dimensions.side),
+            .padding(start = CapitalTheme.dimensions.big, end = CapitalTheme.dimensions.side),
         verticalAlignment = Alignment.CenterVertically
     ) {
         CompositionLocalProvider(LocalContentColor provides CapitalColors.White) {
             icon?.let {
                 Box(
                     modifier = Modifier
-                        .size(38.dp)
+                        .size(32.dp)
                         .background(color = CapitalTheme.colors.secondary, shape = CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     it.invoke(this)
                 }
-                CVerticalSpacer(width = CapitalTheme.dimensions.medium)
+                CVerticalSpacer(width = CapitalTheme.dimensions.big)
             }
         }
         Column(modifier = Modifier.weight(1f)) {

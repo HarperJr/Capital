@@ -40,7 +40,6 @@ import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.harper.capital.R
-import com.harper.capital.asset.model.AssetManageEvent
 import com.harper.capital.bottomsheet.ContactBottomSheet
 import com.harper.capital.bottomsheet.CurrencyBottomSheet
 import com.harper.capital.bottomsheet.IconsBottomSheet
@@ -53,7 +52,7 @@ import com.harper.capital.liability.model.LiabilityManageState
 import com.harper.capital.liability.model.LiabilityManageType
 import com.harper.core.component.CAmountTextField
 import com.harper.core.component.CModalBottomSheetScaffold
-import com.harper.core.component.CButton
+import com.harper.core.component.CButtonPrimary
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CIcon
 import com.harper.core.component.CPreferenceArrow
@@ -99,7 +98,7 @@ fun LiabilityManageScreen(
         },
         topBar = { LiabilityManageTopBar(viewModel) },
         bottomBar = {
-            CButton(
+            CButtonPrimary(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(CapitalTheme.dimensions.side),

@@ -131,11 +131,11 @@ private fun CDateRangeDialogContent(
                         .align(Alignment.End)
                         .padding(CapitalTheme.dimensions.side)
                 ) {
-                    CButton(text = stringResource(id = R.string.cancel).uppercase(), borderless = true) {
+                    CButtonPrimary(text = stringResource(id = R.string.cancel)) {
                         onNegativeClick.invoke()
                     }
                     CVerticalSpacer(width = CapitalTheme.dimensions.side)
-                    CButton(text = stringResource(id = R.string.ok).uppercase(), borderless = true) {
+                    CButtonPrimary(text = stringResource(id = R.string.ok).uppercase()) {
                         onPositiveClick.invoke(dateStart, dateEnd)
                     }
                 }

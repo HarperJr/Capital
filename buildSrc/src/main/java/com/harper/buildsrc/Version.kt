@@ -18,7 +18,7 @@ object Version {
     object Library {
         const val ktx = "1.7.0"
         const val coroutines = "1.6.0-RC"
-        const val appCompat = "1.3.1"
+        const val appCompat = "1.6.0-alpha04"
         const val material = "1.4.0"
         const val compose = "1.2.0-beta02"
         const val accompanist = "0.24.9-beta"

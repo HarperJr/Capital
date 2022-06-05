@@ -2,12 +2,17 @@ package com.harper.core.theme
 
 import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.ViewCarousel
+import androidx.compose.material.icons.rounded.Visibility
+import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -83,6 +88,12 @@ object CapitalIcons {
     val Repeat
         @Composable
         get() = ImageVector.vectorResource(id = R.drawable.ic_repeat)
+    val Cards
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_credit_cards)
+    val Chart
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_chart)
 
     val Edit: ImageVector
         get() = Icons.Rounded.Edit
@@ -96,6 +107,16 @@ object CapitalIcons {
         get() = Icons.Rounded.Palette
     val Notifications: ImageVector
         get() = Icons.Rounded.Notifications
+    val Password: ImageVector
+        get() = Icons.Rounded.Lock
+    val Account: ImageVector
+        get() = Icons.Rounded.AccountCircle
+    val EyeOn: ImageVector
+        get() = Icons.Rounded.Visibility
+    val EyeOff: ImageVector
+        get() = Icons.Rounded.VisibilityOff
+    val Carousel: ImageVector
+        get() = Icons.Rounded.ViewCarousel
 
     object Bank {
 
@@ -162,7 +183,14 @@ private fun Icons() {
         CapitalIcons.Car,
         CapitalIcons.Transport,
         CapitalIcons.BankWallet,
-        CapitalIcons.Repeat
+        CapitalIcons.Repeat,
+        CapitalIcons.Password,
+        CapitalIcons.Account,
+        CapitalIcons.EyeOn,
+        CapitalIcons.EyeOff,
+        CapitalIcons.Carousel,
+        CapitalIcons.Cards,
+        CapitalIcons.Chart
     )
     CWrappedGrid(
         modifier = Modifier.background(CapitalTheme.colors.background),

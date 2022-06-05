@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 private val primaryLight = CapitalColors.White
-private val primaryVariantLight = CapitalColors.GreyLight
+private val primaryVariantLight = CapitalColors.GreyMedium
 private val secondaryLight = CapitalColors.Blue
 private val secondaryVariantLight = CapitalColors.BlueLight
 private val textPrimaryLight = CapitalColors.Black
@@ -126,8 +126,8 @@ class CapitalColors(
         val White: Color = Color.White
         val Black: Color = Color.Black
         val Transparent: Color = Color.Transparent
-        val GreyLight: Color = Color(0xFFE5E5E5)
-        val GreyMedium: Color = Color(0xFFCCCCCC)
+        val GreyLight: Color = Color(0xFFF5F5F5)
+        val GreyMedium: Color = Color(0xFFE5E5E5)
         val GreyDark: Color = Color(0xFF7F7F7F)
         val GreyDarkest: Color = Color(0xFF242424)
         val Blue: Color = Color(0xFF2186EB)

@@ -96,4 +96,6 @@
     <string name="in_period">In %s</string>
     <string name="your_most_usable">Your most usable</string>
     <string name="currency">Currency</string>
+    <string name="accounts_presentation">Accounts presentation</string>
+    <string name="carousel">Carousel</string>
 </resources>

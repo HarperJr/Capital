@@ -26,7 +26,7 @@ import com.harper.capital.transaction.manage.model.TransactionManageEvent
 import com.harper.capital.transaction.manage.model.TransactionManageMode
 import com.harper.capital.transaction.manage.model.TransactionManageState
 import com.harper.core.component.CAmountTextField
-import com.harper.core.component.CButton
+import com.harper.core.component.CButtonPrimary
 import com.harper.core.component.CDatePicker
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CIcon
@@ -108,7 +108,7 @@ fun TransactionManageScreen(
                         TransactionManageMode.ADD -> stringResource(id = R.string.create_new_transaction)
                         TransactionManageMode.EDIT -> stringResource(id = R.string.save)
                     }
-                    CButton(
+                    CButtonPrimary(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(CapitalTheme.dimensions.side)

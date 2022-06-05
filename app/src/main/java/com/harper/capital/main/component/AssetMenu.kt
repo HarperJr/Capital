@@ -34,8 +34,8 @@ import com.harper.core.theme.CapitalTheme
 
 @Composable
 fun AssetMenu(
-    modifier: Modifier = Modifier,
     color: AccountColor,
+    modifier: Modifier = Modifier,
     onHistoryClick: () -> Unit,
     onIncomeClick: () -> Unit,
     onExpenseClick: () -> Unit,
@@ -107,25 +107,27 @@ private fun ToolbarItem(modifier: Modifier = Modifier, icon: ImageVector, text: 
 
 @Preview
 @Composable
-private fun CardToolbarLight() {
+private fun AssetMenuLight() {
     CPreview {
-        Box(modifier = Modifier.background(CapitalTheme.colors.background)) {
-            AssetMenu(modifier = Modifier
+        AssetMenu(
+            color = AccountColor.RAIFFEIZEN,
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp), color = AccountColor.RAIFFEIZEN, {}, {}, {}, {})
-        }
+                .padding(16.dp), {}, {}, {}, {}
+        )
     }
 }
 
 @Preview
 @Composable
-private fun CardbarboxDark() {
+private fun AssetMenuDark() {
     CPreview(isDark = true) {
-        Box(modifier = Modifier.background(CapitalTheme.colors.background)) {
-            AssetMenu(modifier = Modifier
+        AssetMenu(
+            color = AccountColor.SBER,
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp), color = AccountColor.SBER, {}, {}, {}, {})
-        }
+                .padding(16.dp), {}, {}, {}, {}
+        )
     }
 }
 

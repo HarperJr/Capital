@@ -16,7 +16,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.harper.core.R
 import com.harper.core.ext.orElse
@@ -117,11 +116,11 @@ private fun CDatePickerDialogContent(
                     .align(Alignment.End)
                     .padding(CapitalTheme.dimensions.side)
             ) {
-                CButton(text = stringResource(id = R.string.cancel).uppercase(), borderless = true) {
+                CButtonPrimary(text = stringResource(id = R.string.cancel)) {
                     onNegativeClick.invoke()
                 }
                 CVerticalSpacer(width = CapitalTheme.dimensions.side)
-                CButton(text = stringResource(id = R.string.ok).uppercase(), borderless = true) {
+                CButtonPrimary(text = stringResource(id = R.string.ok).uppercase()) {
                     onPositiveClick.invoke(state.pickedDate)
                 }
             }

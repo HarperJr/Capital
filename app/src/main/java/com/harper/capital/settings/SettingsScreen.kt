@@ -64,25 +64,27 @@ fun SettingsScreen(viewModel: ComponentViewModel<SettingsState, SettingsEvent>) 
         topBar = { SettingsTopBar(viewModel) },
         sheetState = sheetState
     ) {
-        CHorizontalSpacer(height = CapitalTheme.dimensions.large)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = CapitalTheme.dimensions.side),
             verticalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.large)
         ) {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = state.email,
-                    style = CapitalTheme.typography.subtitle,
-                    color = CapitalColors.BlueLight
-                )
-                Text(
-                    text = stringResource(id = R.string.log_out),
-                    style = CapitalTheme.typography.buttonSmall,
-                    color = CapitalColors.Blue
-                )
+            Column {
+                CHorizontalSpacer(height = CapitalTheme.dimensions.large)
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = state.email,
+                        style = CapitalTheme.typography.subtitle,
+                        color = CapitalColors.BlueLight
+                    )
+                    Text(
+                        text = stringResource(id = R.string.log_out),
+                        style = CapitalTheme.typography.buttonSmall,
+                        color = CapitalColors.Blue
+                    )
+                }
             }
             CPreferenceArrow(
                 title = stringResource(id = R.string.color_theme),
@@ -103,6 +105,13 @@ fun SettingsScreen(viewModel: ComponentViewModel<SettingsState, SettingsEvent>) 
                 }
             ) {
                 viewModel.onEvent(SettingsEvent.CurrencySelectClick)
+            }
+            CPreferenceArrow(
+                title = stringResource(id = R.string.accounts_presentation),
+                subtitle = stringResource(id = R.string.carousel),
+                icon = { Icon(imageVector = CapitalIcons.Carousel, contentDescription = null) }
+            ) {
+
             }
             if (BuildConfig.DEBUG) {
                 CPreferenceSwitch(

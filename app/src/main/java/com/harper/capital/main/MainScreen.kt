@@ -24,14 +24,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
@@ -42,8 +43,8 @@ import com.harper.capital.main.component.AssetCard
 import com.harper.capital.main.component.AssetMenu
 import com.harper.capital.main.component.AssetSummaryCard
 import com.harper.capital.main.component.FavoriteTransferTransactionItem
-import com.harper.capital.main.component.OperationsActionCard
 import com.harper.capital.main.domain.model.Summary
+import com.harper.capital.main.model.ActionCardType
 import com.harper.capital.main.model.MainBottomSheet
 import com.harper.capital.main.model.MainBottomSheetState
 import com.harper.capital.main.model.MainEvent
@@ -89,17 +90,20 @@ fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
             sheetState = sheetState,
             sheetPeekHeight = if (state.bottomSheetState.isExpended) BottomSheetScaffoldDefaults.SheetPeekHeight * 3 else 0.dp
         ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                CHorizontalSpacer(height = CapitalTheme.dimensions.large)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = CapitalTheme.dimensions.side),
+                verticalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.side)
+            ) {
                 val accountListState = rememberLazyListState()
-                val selectedAssetIndex =
-                    rememberSaveable { mutableStateOf(accountListState.firstVisibleItemIndex) }
+                var selectedAssetIndex by rememberSaveable { mutableStateOf(accountListState.firstVisibleItemIndex) }
                 LaunchedEffect(Unit) {
                     snapshotFlow { accountListState.layoutInfo }
                         .collect {
                             val fullyVisibleIndex = it.fullyVisibleItemIndex()
                             if (fullyVisibleIndex != -1) {
-                                selectedAssetIndex.value = fullyVisibleIndex
+                                selectedAssetIndex = fullyVisibleIndex
                             }
                         }
                 }
@@ -120,8 +124,7 @@ fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
                         AssetSummaryCard(modifier = Modifier.fillParentMaxWidth(), summary = state.summary)
                     }
                 }
-                CHorizontalSpacer(height = 12.dp)
-                val selectedAsset = state.accounts.getOrNull(selectedAssetIndex.value)
+                val selectedAsset = state.accounts.getOrNull(selectedAssetIndex)
                 AssetMenu(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -134,7 +137,6 @@ fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
                         { viewModel.onEvent(MainEvent.EditClick(selectedAsset)) }
                     } else null
                 )
-                CHorizontalSpacer(height = CapitalTheme.dimensions.large)
                 val actionsListState = rememberLazyListState()
                 val actionCards = state.actionCards
 
@@ -146,15 +148,34 @@ fun MainScreen(viewModel: ComponentViewModel<MainState, MainEvent>) {
                     contentPadding = PaddingValues(horizontal = CapitalTheme.dimensions.large)
                 ) {
                     items(actionCards) {
-                        ActionCard(modifier = Modifier.fillParentMaxWidth(0.4f), color = it.color, title = it.title) {
-                            viewModel.onEvent(MainEvent.ActionCardClick(it.id))
+                        ActionCard(
+                            title = it.title,
+                            backgroundColor = it.backgroundColor,
+                            iconBackgroundColor = CapitalColors.White,
+                            icon = {
+                                Icon(
+                                    imageVector = resolveActionCardIcon(it.type),
+                                    contentDescription = null,
+                                    tint = it.iconColor
+                                )
+                            }
+                        ) {
+                            viewModel.onEvent(MainEvent.ActionCardClick(it.type))
                         }
                     }
                 }
-                CHorizontalSpacer(height = CapitalTheme.dimensions.side)
             }
         }
     }
+}
+
+@Composable
+private fun resolveActionCardIcon(type: ActionCardType): ImageVector = when (type) {
+    ActionCardType.ACCOUNTS -> CapitalIcons.Cards
+    ActionCardType.ANALYTICS_BALANCE -> CapitalIcons.Wallet
+    ActionCardType.ANALYTICS_INCOME -> CapitalIcons.Chart
+    ActionCardType.ANALYTICS_INCOME_LIABILITY -> CapitalIcons.Chart
+    ActionCardType.ANALYTICS_LIABILITY -> CapitalIcons.Chart
 }
 
 @Composable
