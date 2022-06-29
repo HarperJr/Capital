@@ -54,8 +54,8 @@ object TransactionManageNavArgsSpec : NavArgsSpec<TransactionManageParams> {
 class TransactionManageParams(
     val mode: TransactionManageMode,
     val transactionId: Long? = null,
-    val sourceAccountId: Long,
-    val receiverAccountId: Long
+    val sourceAccountId: Long? = null,
+    val receiverAccountId: Long? = null
 )
 
 @ExperimentalAnimationApi

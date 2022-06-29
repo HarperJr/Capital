@@ -76,7 +76,7 @@ class CapitalActivity : ComponentActivity() {
                     }
                 }
                 AnimatedNavHost(
-                    modifier = Modifier.background(brush = CapitalColors.BackgroundGradient),
+                    modifier = Modifier.background(color = CapitalTheme.colors.background),
                     navController = navController,
                     startDestination = (if (BuildConfig.DEBUG) ScreenKey.SIGN_IN else ScreenKey.MAIN).route
                 ) {

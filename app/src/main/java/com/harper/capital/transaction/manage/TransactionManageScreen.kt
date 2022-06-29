@@ -48,7 +48,7 @@ fun TransactionManageScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val focusManager = LocalFocusManager.current
-    CScaffold(topBar = { TransactionManageTopBar(viewModel) }) {
+    CScaffold(topBar = { TransactionManageTopBar(viewModel, state.mode) }) {
         CLoaderLayout(isLoading = state.isLoading, loaderContent = {}) {
             state.transaction?.let { transaction ->
                 Column(modifier = Modifier.fillMaxWidth()) {
@@ -186,12 +186,26 @@ private fun OptionalCommentTitle() {
 }
 
 @Composable
-private fun TransactionManageTopBar(viewModel: ComponentViewModel<TransactionManageState, TransactionManageEvent>) {
+private fun TransactionManageTopBar(
+    viewModel: ComponentViewModel<TransactionManageState, TransactionManageEvent>,
+    mode: TransactionManageMode
+) {
     CToolbar(
         navigation = {
-            CIcon(imageVector = CapitalIcons.ArrowLeft, onClick = {
-                viewModel.onEvent(TransactionManageEvent.BackClick)
-            })
+            when (mode) {
+                TransactionManageMode.ADD -> {
+                    CIcon(
+                        imageVector = CapitalIcons.ArrowLeft,
+                        onClick = { viewModel.onEvent(TransactionManageEvent.BackClick) }
+                    )
+                }
+                TransactionManageMode.EDIT -> {
+                    CIcon(
+                        imageVector = CapitalIcons.ArrowLeft,
+                        onClick = { viewModel.onEvent(TransactionManageEvent.BackClick) }
+                    )
+                }
+            }
         }
     )
 }

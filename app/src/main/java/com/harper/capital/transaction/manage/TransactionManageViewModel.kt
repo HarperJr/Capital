@@ -37,6 +37,7 @@ class TransactionManageViewModel(
             is TransactionManageEvent.DateSelect -> onDateSelect(event)
             is TransactionManageEvent.ScheduledCheckChange -> onScheduledCheckChange(event)
             is TransactionManageEvent.Apply -> onApply()
+            is TransactionManageEvent.Init -> onInit(event)
         }
     }
 
@@ -73,19 +74,23 @@ class TransactionManageViewModel(
     }
 
     private suspend fun fetchAccounts() {
-        val source = fetchAccountUseCase(params.sourceAccountId)
-        val receiver = fetchAccountUseCase(params.receiverAccountId)
-        val transaction = TransferTransaction(
-            source = source,
-            receiver = receiver,
-            sourceAmount = 0.0,
-            receiverAmount = 0.0,
-            dateTime = LocalDateTime.now(),
-            comment = null,
-            isScheduled = false
-        )
-        update {
-            it.copy(transaction = transaction, isLoading = false)
+        val sourceId = params.sourceAccountId
+        val receiverId = params.receiverAccountId
+        if (sourceId != null && receiverId != null) {
+            val source = fetchAccountUseCase(sourceId)
+            val receiver = fetchAccountUseCase(receiverId)
+            val transaction = TransferTransaction(
+                source = source,
+                receiver = receiver,
+                sourceAmount = 0.0,
+                receiverAmount = 0.0,
+                dateTime = LocalDateTime.now(),
+                comment = null,
+                isScheduled = false
+            )
+            update {
+                it.copy(transaction = transaction, isLoading = false)
+            }
         }
     }
 
@@ -97,6 +102,21 @@ class TransactionManageViewModel(
                     receiverAmount = event.amount / it.exchangeRate,
                 )
             )
+        }
+    }
+
+    private fun onInit(event: TransactionManageEvent.Init) {
+        val transaction = TransferTransaction(
+            source = event.source,
+            receiver = event.receiver,
+            sourceAmount = 0.0,
+            receiverAmount = 0.0,
+            dateTime = LocalDateTime.now(),
+            comment = null,
+            isScheduled = false
+        )
+        update {
+            it.copy(transaction = transaction, isLoading = false)
         }
     }
 

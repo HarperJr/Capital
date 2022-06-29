@@ -9,8 +9,6 @@ import com.harper.capital.liability.model.LiabilityManageType
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.domain.FetchAssetsUseCase
 import com.harper.capital.transaction.domain.FetchLiabilitiesUseCase
-import com.harper.capital.transaction.manage.TransactionManageParams
-import com.harper.capital.transaction.manage.model.TransactionManageMode
 import com.harper.capital.transaction.model.DataSetSection
 import com.harper.capital.transaction.model.TransactionEvent
 import com.harper.capital.transaction.model.TransactionPage
@@ -28,6 +26,7 @@ class TransactionViewModel(
 ) : ComponentViewModel<TransactionState, TransactionEvent>(
     initialState = TransactionState(selectedPage = params.transactionType.ordinal)
 ) {
+    var onAccountsSelect: ((Account, Account) -> Unit)? = null
     private val transactionDataSetFactory: TransactionDataSetFactory = TransactionDataSetFactory()
 
     override fun onFirstComposition() {
@@ -109,16 +108,12 @@ class TransactionViewModel(
     private fun tryApply() {
         with(state.value) {
             val page = pages[selectedPage]
-            val source = page.accountDataSets[DataSetSection.FROM]?.selectedAccountId
-            val receiver = page.accountDataSets[DataSetSection.TO]?.selectedAccountId
-            if (source != null && receiver != null) {
-                router.navigateToManageTransaction(
-                    TransactionManageParams(
-                        mode = TransactionManageMode.ADD,
-                        sourceAccountId = source,
-                        receiverAccountId = receiver
-                    )
-                )
+            val fromDataSet = page.accountDataSets[DataSetSection.FROM]
+            val toDateSet = page.accountDataSets[DataSetSection.TO]
+            if (fromDataSet != null && toDateSet != null) {
+                val source = fromDataSet.accounts.first { it.account.id == fromDataSet.selectedAccountId }
+                val receiver = toDateSet.accounts.first { it.account.id == toDateSet.selectedAccountId }
+                onAccountsSelect?.invoke(source.account, receiver.account)
             }
         }
     }

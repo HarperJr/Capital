@@ -1,8 +1,10 @@
 package com.harper.capital.settings
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
@@ -15,6 +17,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -64,62 +67,72 @@ fun SettingsScreen(viewModel: ComponentViewModel<SettingsState, SettingsEvent>) 
         topBar = { SettingsTopBar(viewModel) },
         sheetState = sheetState
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = CapitalTheme.dimensions.side),
-            verticalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.large)
-        ) {
-            Column {
-                CHorizontalSpacer(height = CapitalTheme.dimensions.large)
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Text(
-                        modifier = Modifier.weight(1f),
-                        text = state.email,
-                        style = CapitalTheme.typography.subtitle,
-                        color = CapitalColors.BlueLight
-                    )
-                    Text(
-                        text = stringResource(id = R.string.log_out),
-                        style = CapitalTheme.typography.buttonSmall,
-                        color = CapitalColors.Blue
-                    )
+        Column {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(horizontal = CapitalTheme.dimensions.side),
+                verticalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.large)
+            ) {
+                Column {
+                    CHorizontalSpacer(height = CapitalTheme.dimensions.large)
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            modifier = Modifier.weight(1f),
+                            text = state.email,
+                            style = CapitalTheme.typography.subtitle,
+                            color = CapitalColors.BlueLight
+                        )
+                        Text(
+                            text = stringResource(id = R.string.log_out),
+                            style = CapitalTheme.typography.buttonSmall,
+                            color = CapitalColors.Blue
+                        )
+                    }
                 }
-            }
-            CPreferenceArrow(
-                title = stringResource(id = R.string.color_theme),
-                subtitle = state.colorTheme.resolveText(),
-                icon = { Icon(imageVector = CapitalIcons.Palette, contentDescription = null) }
-            ) {
-                viewModel.onEvent(SettingsEvent.ColorThemeSelectClick)
-            }
-            CPreferenceArrow(
-                title = stringResource(id = R.string.default_currency),
-                subtitle = state.currency.name.formatCurrencyName(),
-                icon = {
-                    Text(
-                        text = state.currency.name.formatCurrencySymbol(),
-                        style = CapitalTheme.typography.title,
-                        textAlign = TextAlign.Center
-                    )
+                CPreferenceArrow(
+                    title = stringResource(id = R.string.color_theme),
+                    subtitle = state.colorTheme.resolveText(),
+                    icon = { Icon(imageVector = CapitalIcons.Palette, contentDescription = null) }
+                ) {
+                    viewModel.onEvent(SettingsEvent.ColorThemeSelectClick)
                 }
-            ) {
-                viewModel.onEvent(SettingsEvent.CurrencySelectClick)
-            }
-            CPreferenceArrow(
-                title = stringResource(id = R.string.accounts_presentation),
-                subtitle = stringResource(id = R.string.carousel),
-                icon = { Icon(imageVector = CapitalIcons.Carousel, contentDescription = null) }
-            ) {
+                CPreferenceArrow(
+                    title = stringResource(id = R.string.default_currency),
+                    subtitle = state.currency.name.formatCurrencyName(),
+                    icon = {
+                        Text(
+                            text = state.currency.name.formatCurrencySymbol(),
+                            style = CapitalTheme.typography.title,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                ) {
+                    viewModel.onEvent(SettingsEvent.CurrencySelectClick)
+                }
+                CPreferenceArrow(
+                    title = stringResource(id = R.string.accounts_presentation),
+                    subtitle = stringResource(id = R.string.carousel),
+                    icon = { Icon(imageVector = CapitalIcons.Carousel, contentDescription = null) }
+                ) {
 
+                }
+                if (BuildConfig.DEBUG) {
+                    CPreferenceSwitch(
+                        title = stringResource(id = R.string.notifications),
+                        icon = { Icon(imageVector = CapitalIcons.Notifications, contentDescription = null) }
+                    ) {}
+                    CPreferenceArrow(title = stringResource(id = R.string.help)) {}
+                }
             }
-            if (BuildConfig.DEBUG) {
-                CPreferenceSwitch(
-                    title = stringResource(id = R.string.notifications),
-                    icon = { Icon(imageVector = CapitalIcons.Notifications, contentDescription = null) }
-                ) {}
-                CPreferenceArrow(title = stringResource(id = R.string.help)) {}
-            }
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = CapitalTheme.dimensions.largest),
+                text = BuildConfig.VERSION_NAME,
+                color = CapitalTheme.colors.textSecondary
+            )
         }
     }
 }

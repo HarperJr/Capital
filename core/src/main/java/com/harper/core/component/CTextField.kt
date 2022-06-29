@@ -1,16 +1,18 @@
 package com.harper.core.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.BasicTextField
@@ -28,8 +30,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,7 +40,9 @@ import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import kotlinx.coroutines.launch
 
-private val minTextFieldHeight = 38.dp
+private val minTextFieldHeight = 32.dp
+private val iconRequiredSize = 20.dp
+private val padding = 6.dp
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -84,20 +88,21 @@ private fun CBasicTextField(
             modifier = Modifier
                 .background(color = backgroundColor, shape = CapitalTheme.shapes.extraLarge)
                 .defaultMinSize(minHeight = minTextFieldHeight)
-                .padding(horizontal = 8.dp),
+                .padding(horizontal = padding),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.medium)
+            horizontalArrangement = Arrangement.spacedBy(padding)
         ) {
             if (leadingIcon != null) {
                 Box(
-                    modifier = Modifier
-                        .defaultMinSize(24.dp, 24.dp),
+                    modifier = Modifier.requiredSize(iconRequiredSize),
                     contentAlignment = Alignment.Center
                 ) {
                     CompositionLocalProvider(LocalContentColor provides placeholderColor) {
                         leadingIcon.invoke()
                     }
                 }
+            } else {
+                Spacer(modifier = Modifier.width(CapitalTheme.dimensions.smallest))
             }
             Box(modifier = Modifier.weight(1f, fill = trailingIcon != null)) {
                 if (value.isEmpty()) {
@@ -111,13 +116,15 @@ private fun CBasicTextField(
             }
             if (trailingIcon != null) {
                 Box(
-                    modifier = Modifier.defaultMinSize(24.dp, 24.dp),
+                    modifier = Modifier.requiredSize(iconRequiredSize),
                     contentAlignment = Alignment.Center
                 ) {
                     CompositionLocalProvider(LocalContentColor provides placeholderColor) {
                         trailingIcon.invoke()
                     }
                 }
+            } else {
+                Spacer(modifier = Modifier.width(CapitalTheme.dimensions.smallest))
             }
         }
     }
@@ -168,33 +175,61 @@ fun CTextField(
                 }
             }
         )
-        error?.invoke()
+        CompositionLocalProvider(LocalContentColor provides CapitalTheme.colors.error) {
+            error?.invoke()
+        }
     }
 }
 
 @Preview
 @Composable
-private fun CapitalTextFieldLight() {
-    CPreview {
-        CTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(CapitalTheme.dimensions.side),
-            value = "",
-            placeholder = "Enter some text here",
-            leadingIcon = { Icon(CapitalIcons.Search, null) }
-        ) {}
+private fun CTextFieldLight() {
+    CPreview(isDark = false) {
+        Column {
+            CTextFieldPreview(null, placeholder = "Enter the text")
+            CTextFieldPreview(null, placeholder = "Enter the text", title = "Title")
+            CTextFieldPreview(null, placeholder = "Enter the text", title = "Title", error = "Error")
+            CTextFieldPreview("Some text")
+            CTextFieldPreview("Some text", leadingIcon = CapitalIcons.Search)
+            CTextFieldPreview("Some text", leadingIcon = CapitalIcons.Search, trailingIcon = CapitalIcons.Calendar)
+        }
     }
 }
 
 @Preview
 @Composable
-private fun CapitalTextFieldDark() {
+private fun CTextFieldDark() {
     CPreview(isDark = true) {
-        CTextField(
-            modifier = Modifier.padding(CapitalTheme.dimensions.side),
-            value = "TextField"
-        ) {}
+        Column {
+            CTextFieldPreview(null, placeholder = "Enter the text")
+            CTextFieldPreview(null, placeholder = "Enter the text", title = "Title")
+            CTextFieldPreview(null, placeholder = "Enter the text", title = "Title", error = "Error")
+            CTextFieldPreview("Some text")
+            CTextFieldPreview("Some text", leadingIcon = CapitalIcons.Search)
+            CTextFieldPreview("Some text", leadingIcon = CapitalIcons.Search, trailingIcon = CapitalIcons.Calendar)
+        }
     }
 }
 
+@Composable
+private fun CTextFieldPreview(
+    value: String?,
+    modifier: Modifier = Modifier,
+    title: String? = null,
+    placeholder: String? = null,
+    error: String? = null,
+    leadingIcon: ImageVector? = null,
+    trailingIcon: ImageVector? = null
+) {
+    CTextField(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(CapitalTheme.dimensions.side),
+        value = value.orEmpty(),
+        placeholder = placeholder,
+        title = title?.let { { Text(it) } },
+        error = error?.let { { Text(it) } },
+        leadingIcon = leadingIcon?.let { { Icon(it, null) } },
+        trailingIcon = trailingIcon?.let { { Icon(it, null) } }
+    ) {}
+}

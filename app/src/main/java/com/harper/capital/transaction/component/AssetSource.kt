@@ -32,6 +32,7 @@ import com.harper.capital.ext.accountContentColorFor
 import com.harper.capital.ext.getImageVector
 import com.harper.core.component.CPreview
 import com.harper.core.ext.formatWithCurrencySymbol
+import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
 private val requiredWidth = 86.dp
@@ -45,7 +46,7 @@ fun AssetSource(
     onClick: () -> Unit,
     onDrag: (Float, Float) -> Unit
 ) {
-    val backgroundColor = if (isSelected) CapitalTheme.colors.primaryVariant else CapitalTheme.colors.background
+    val backgroundColor = if (isSelected) CapitalTheme.colors.primaryVariant else CapitalColors.Transparent
     Column(
         modifier = modifier
             .requiredWidth(requiredWidth)

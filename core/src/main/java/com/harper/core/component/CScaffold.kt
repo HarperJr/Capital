@@ -48,9 +48,7 @@ fun CScaffold(
     content: @Composable () -> Unit
 ) {
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(CapitalColors.BackgroundGradient),
+        modifier = Modifier.fillMaxSize(),
         backgroundColor = CapitalColors.Transparent,
         topBar = topBar,
         bottomBar = {
@@ -130,9 +128,7 @@ fun CBottomSheetScaffold(
     content: @Composable () -> Unit
 ) {
     BottomSheetScaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(CapitalColors.BackgroundGradient),
+        modifier = Modifier.fillMaxSize(),
         backgroundColor = CapitalColors.Transparent,
         sheetContent = {
             CBottomSheet {
