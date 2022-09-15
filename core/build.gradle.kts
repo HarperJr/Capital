@@ -8,6 +8,7 @@ plugins {
 }
 
 android {
+    namespace = "com.harper.core"
     capitalLibDefaultConfig { }
 
     capitalLibBuildFeatures()

@@ -60,9 +60,9 @@ fun ActionCard(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .padding(CapitalTheme.dimensions.medium),
-                    text = title,
-                    style = CapitalTheme.typography.buttonSmall,
-                    color = CapitalColors.White
+                    text = title.uppercase(),
+                    style = CapitalTheme.typography.button,
+                    color = CapitalColors.White.copy(0.9f)
                 )
             }
         }

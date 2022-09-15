@@ -7,10 +7,10 @@ import com.harper.core.theme.CapitalTheme
 
 @Composable
 fun CPreview(
-    isDark: Boolean = false,
+    isDark: Boolean? = null,
     content: @Composable () -> Unit
 ) {
-    CapitalTheme(isSystemInDarkTheme()) {
+    CapitalTheme(isDark ?: isSystemInDarkTheme()) {
         Surface(color = CapitalTheme.colors.background) {
             content.invoke()
         }

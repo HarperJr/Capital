@@ -68,7 +68,7 @@ fun DependencyHandlerScope.room() {
 }
 
 fun DependencyHandlerScope.compose() {
-    implementation("androidx.activity:activity-compose:1.6.0-alpha03")
+    implementation("androidx.activity:activity-compose:1.6.0-rc02")
     implementation("androidx.compose.runtime:runtime:${Version.Library.compose}")
     implementation("androidx.compose.runtime:runtime-livedata:${Version.Library.compose}")
     implementation("androidx.compose.material:material:${Version.Library.compose}")

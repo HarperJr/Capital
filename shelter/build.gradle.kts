@@ -20,6 +20,7 @@ plugins {
 }
 
 android {
+    namespace = "com.harper.capital.shelter"
     capitalLibDefaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

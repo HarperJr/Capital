@@ -47,7 +47,7 @@ fun BaseAppModuleExtension.capitalAppDefaultConfig(configClosure: ApplicationDef
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Version.Library.compose
+        kotlinCompilerExtensionVersion = Version.Library.composeCompiler
     }
 
     buildFeatures {
@@ -95,7 +95,7 @@ fun LibraryExtension.capitalLibDefaultConfig(configClosure: LibraryDefaultConfig
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Version.Library.compose
+        kotlinCompilerExtensionVersion = Version.Library.composeCompiler
     }
 
     packagingOptions {

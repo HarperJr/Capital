@@ -2,7 +2,6 @@ import com.harper.buildsrc.Version
 import com.harper.buildsrc.capitalLibDefaultConfig
 import com.harper.buildsrc.core
 import com.harper.buildsrc.kotlin
-import com.harper.buildsrc.repository
 
 plugins {
     id("com.android.library")
@@ -11,6 +10,7 @@ plugins {
 }
 
 android {
+    namespace = "com.harper.capital.domain"
     capitalLibDefaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -16,8 +16,8 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:7.2.1")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21")
+        classpath("com.android.tools.build:gradle:7.3.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
         classpath("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.19.0")
         classpath("com.google.protobuf:protobuf-gradle-plugin:0.8.18")
     }

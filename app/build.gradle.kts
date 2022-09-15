@@ -30,6 +30,7 @@ plugins {
 }
 
 android {
+    namespace = "com.harper.capital"
     signingConfigs {
         create("release") {
             storeFile = file("C:\\Users\\HarperJr\\Desktop\\InDev\\Capital\\capitalkeystore")

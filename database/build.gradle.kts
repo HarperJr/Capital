@@ -15,6 +15,7 @@ plugins {
 }
 
 android {
+    namespace = "com.harper.capital.database"
     capitalLibDefaultConfig {
         buildConfigField("int", "DATABASE_VERSION", "2")
         buildConfigField("String", "DATABASE_NAME", "\"capital_db\"")

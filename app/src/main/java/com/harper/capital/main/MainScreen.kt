@@ -1,5 +1,7 @@
 package com.harper.capital.main
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -323,7 +325,9 @@ fun MainScreenTopBar(viewModel: ComponentViewModel<MainState, MainEvent>, summar
     )
 }
 
-@Preview(showBackground = true, name = "Content light")
+@Preview(showBackground = true, name = "Content dark", uiMode = UI_MODE_NIGHT_NO)
+@Preview(showBackground = true, name = "Content light", uiMode = UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, name = "Content side small", device = Devices.PIXEL)
 @Composable
 private fun ContentLight() {
     CPreview {
@@ -331,18 +335,3 @@ private fun ContentLight() {
     }
 }
 
-@Preview(showBackground = true, name = "Content dark")
-@Composable
-private fun MainScreenDark() {
-    CPreview(isDark = true) {
-        MainScreen(MainMockViewModel(isLoading = true))
-    }
-}
-
-@Preview(showBackground = true, name = "Content side small", device = Devices.PIXEL)
-@Composable
-private fun ContentSizeSmall() {
-    CPreview {
-        MainScreen(MainMockViewModel())
-    }
-}
