@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -41,7 +42,7 @@ import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CPreview
 import com.harper.core.component.CTextField
 import com.harper.core.component.CVerticalSpacer
-import com.harper.core.ext.compose.assetCardSize
+import com.harper.core.ext.compose.ACCOUNT_CARD_ASPECT_RATIO
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
@@ -59,7 +60,7 @@ fun AssetEditableCard(
 ) {
     val cardBackgroundColor = accountBackgroundColor(color)
     Card(
-        modifier = modifier.assetCardSize(),
+        modifier = modifier.aspectRatio(ACCOUNT_CARD_ASPECT_RATIO),
         backgroundColor = CapitalColors.Transparent,
         contentColor = accountContentColorFor(cardBackgroundColor),
         elevation = 0.dp,

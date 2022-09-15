@@ -22,7 +22,7 @@ object Version {
         const val material = "1.4.0"
         const val compose = "1.2.0-beta02"
         const val accompanist = "0.24.9-beta"
-        const val koin = "3.1.5"
+        const val koin = "3.2.0"
         const val room = "2.4.1"
         const val dataStore = "1.0.0"
     }

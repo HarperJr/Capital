@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,7 +38,7 @@ import com.harper.capital.ext.getImageVector
 import com.harper.capital.ext.resolveText
 import com.harper.core.component.CAmountText
 import com.harper.core.component.CPreview
-import com.harper.core.ext.compose.assetCardSize
+import com.harper.core.ext.compose.ACCOUNT_CARD_ASPECT_RATIO
 import com.harper.core.ext.formatPercent
 import com.harper.core.ext.formatWithCurrencySymbol
 import com.harper.core.theme.CapitalColors
@@ -46,7 +48,7 @@ import com.harper.core.theme.CapitalTheme
 fun AssetCard(modifier: Modifier = Modifier, account: Account) {
     val cardBackgroundColor = accountBackgroundColor(account.color)
     Card(
-        modifier = modifier.assetCardSize(),
+        modifier = modifier.aspectRatio(ACCOUNT_CARD_ASPECT_RATIO),
         backgroundColor = cardBackgroundColor,
         contentColor = CapitalColors.Transparent,
         elevation = 0.dp,
@@ -62,6 +64,7 @@ fun AssetCard(modifier: Modifier = Modifier, account: Account) {
                     modifier = Modifier.fillMaxSize(),
                     imageVector = ImageVector.vectorResource(id = R.drawable.bg_card_whiteness),
                     contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     alignment = Alignment.CenterEnd
                 )
                 ConstraintLayout(

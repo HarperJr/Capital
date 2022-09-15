@@ -1,13 +1,12 @@
 package com.harper.core.component
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
@@ -30,8 +29,11 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import com.google.accompanist.insets.ui.Scaffold
+import com.harper.core.ext.orElse
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalTheme
 
@@ -49,7 +51,7 @@ fun CScaffold(
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        backgroundColor = CapitalColors.Transparent,
+        backgroundColor = CapitalTheme.colors.background,
         topBar = topBar,
         bottomBar = {
             Column {
@@ -67,7 +69,7 @@ fun CScaffold(
         isFloatingActionButtonDocked = isFloatingActionButtonDocked,
         scaffoldState = scaffoldState
     ) { paddingValues ->
-        Box(modifier = modifier.padding(paddingValues)) {
+        ScaffoldContent(modifier = modifier.padding(paddingValues)) {
             content.invoke()
         }
     }
@@ -78,7 +80,10 @@ fun CScaffold(
 fun CModalBottomSheetScaffold(
     modifier: Modifier = Modifier,
     sheetContent: @Composable () -> Unit,
-    sheetState: ModalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+    sheetState: ModalBottomSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = true
+    ),
     topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable (SnackbarHostState) -> Unit = { SnackbarHost(it) },
@@ -129,7 +134,7 @@ fun CBottomSheetScaffold(
 ) {
     BottomSheetScaffold(
         modifier = Modifier.fillMaxSize(),
-        backgroundColor = CapitalColors.Transparent,
+        backgroundColor = CapitalTheme.colors.background,
         sheetContent = {
             CBottomSheet {
                 sheetContent.invoke(this)
@@ -145,8 +150,36 @@ fun CBottomSheetScaffold(
         floatingActionButtonPosition = floatingActionButtonPosition,
         scaffoldState = scaffoldState,
     ) { paddingValues ->
-        Box(modifier = modifier.padding(paddingValues)) {
+        ScaffoldContent(modifier = modifier.padding(paddingValues)) {
             content.invoke()
+        }
+    }
+}
+
+@Composable
+private fun ScaffoldContent(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    val imeHeight = WindowInsets.ime.getBottom(LocalDensity.current)
+    val navBarHeight = WindowInsets.navigationBars.getBottom(LocalDensity.current)
+    Layout(modifier = modifier, content = content) { measurables, constraints ->
+        val looseConstraints = if (imeHeight > 0) {
+            constraints.copy(
+                maxHeight = constraints.maxHeight - (imeHeight - navBarHeight).coerceIn(
+                    constraints.minHeight,
+                    constraints.maxHeight
+                )
+            )
+        } else {
+            constraints
+        }
+        val placeables = measurables.map { it.measure(looseConstraints) }
+        val width = if (constraints.hasBoundedWidth) {
+            placeables.maxOfOrNull { it.width }.orElse(looseConstraints.maxWidth)
+        } else looseConstraints.maxWidth
+        val height = if (constraints.hasBoundedHeight) {
+            placeables.maxOfOrNull { it.height }.orElse(looseConstraints.maxHeight)
+        } else looseConstraints.maxHeight
+        layout(width, height) {
+            placeables.forEach { it.place(0, 0) }
         }
     }
 }

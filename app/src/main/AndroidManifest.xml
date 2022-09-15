@@ -17,6 +17,7 @@
 
         <activity
             android:name=".ui.CapitalActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:screenOrientation="portrait">
 

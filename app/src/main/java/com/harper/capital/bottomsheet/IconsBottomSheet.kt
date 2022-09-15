@@ -2,18 +2,24 @@ package com.harper.capital.bottomsheet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +30,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.harper.capital.R
@@ -33,7 +40,6 @@ import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CPreview
 import com.harper.core.component.CSeparator
 import com.harper.core.component.CTextField
-import com.harper.core.component.CWrappedGrid
 import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
@@ -81,27 +87,43 @@ fun IconsBottomSheet(
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(16.dp)
+                .height(CapitalTheme.dimensions.side)
         )
         CSeparator(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = CapitalTheme.dimensions.side)
         )
-        CWrappedGrid(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            columns = 4,
-            items = filteredIcons
-        ) {
-            Box {
-                IconItem(
-                    modifier = Modifier
-                        .size(44.dp)
-                        .align(Alignment.Center),
-                    icon = it.imageVector,
-                    isSelected = it.name == ibsData.selectedIcon
-                ) {
-                    onIconSelect.invoke(it.name)
+        if (filteredIcons.isEmpty()) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = CapitalTheme.dimensions.large),
+                text = stringResource(id = R.string.no_items_found),
+                color = CapitalTheme.colors.textSecondary,
+                textAlign = TextAlign.Center
+            )
+        } else {
+            LazyVerticalGrid(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = CapitalTheme.dimensions.side),
+                columns = GridCells.Fixed(4),
+                contentPadding = PaddingValues(vertical = CapitalTheme.dimensions.large),
+                verticalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.large)
+            ) {
+                items(filteredIcons) {
+                    Box {
+                        IconItem(
+                            modifier = Modifier
+                                .size(44.dp)
+                                .align(Alignment.Center),
+                            icon = it.imageVector,
+                            isSelected = it.name == ibsData.selectedIcon
+                        ) {
+                            onIconSelect.invoke(it.name)
+                        }
+                    }
                 }
             }
         }

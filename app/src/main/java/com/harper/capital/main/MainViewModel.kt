@@ -15,22 +15,22 @@ import com.harper.capital.main.model.MainBottomSheetState
 import com.harper.capital.main.model.MainEvent
 import com.harper.capital.main.model.MainState
 import com.harper.capital.navigation.GlobalRouter
+import com.harper.capital.settings.domain.FetchSettingsUseCase
 import com.harper.capital.transaction.TransactionParams
 import com.harper.capital.transaction.manage.TransactionManageParams
 import com.harper.capital.transaction.manage.model.TransactionManageMode
 import com.harper.capital.transaction.model.TransactionType
 import com.harper.core.ext.orElse
 import com.harper.core.ui.ComponentViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val router: GlobalRouter,
     private val fetchAssetsUseCase: FetchAssetsUseCase,
     private val fetchSummaryUseCase: FetchSummaryUseCase,
+    private val fetchSettingsUseCase: FetchSettingsUseCase,
     private val fetchFavoriteTransactionsUseCase: FetchFavoriteTransactionsUseCase,
     private val updateCurrenciesUseCase: UpdateCurrenciesUseCase
 ) : ComponentViewModel<MainState, MainEvent>(initialState = MainState()) {
@@ -81,7 +81,6 @@ class MainViewModel(
         launch {
             fetchFavoriteTransactionsUseCase()
                 .filter { it.isNotEmpty() }
-                .flowOn(Dispatchers.Main)
                 .collect { transactions ->
                     update {
                         it.copy(bottomSheetState = MainBottomSheetState(bottomSheet = MainBottomSheet(transactions)))
@@ -94,13 +93,14 @@ class MainViewModel(
         launch {
             combine(
                 fetchAssetsUseCase(),
-                fetchSummaryUseCase()
-            ) { assets, summary -> assets to summary }
-                .flowOn(Dispatchers.Main)
-                .collect { (assets, summary) ->
+                fetchSummaryUseCase(),
+                fetchSettingsUseCase()
+            ) { assets, summary, settings -> Triple(assets, summary, settings) }
+                .collect { (assets, summary, settings) ->
                     update {
                         it.copy(
                             accounts = assets,
+                            accountPresentation = settings.accountPresentation,
                             summary = summary,
                             isLoading = false
                         )
@@ -110,14 +110,12 @@ class MainViewModel(
     }
 
     private fun onActionCardClick(event: MainEvent.ActionCardClick) {
-        getAnalyticsType(event.type)
-            ?.let { router.navigateToAnalytics(AnalyticsParams(it)) }
-            .orElse {
-                if (event.type == ActionCardType.ACCOUNTS) {
-                    router.navigateToAccounts()
-                    return
-                }
-            }
+        when (event.type) {
+            ActionCardType.ACCOUNTS -> router.navigateToAccounts()
+            ActionCardType.ANALYTICS -> router.navigateToAnalytics(AnalyticsParams(AnalyticsType.BALANCE))
+            ActionCardType.FAVORITE -> {}
+            ActionCardType.PLAN -> {}
+        }
     }
 
     private fun onSettingsClick() {
@@ -157,13 +155,5 @@ class MainViewModel(
                 accountId = event.account.id
             )
         )
-    }
-
-    private fun getAnalyticsType(actionCardType: ActionCardType): AnalyticsType? = when (actionCardType) {
-        ActionCardType.ANALYTICS_BALANCE -> AnalyticsType.BALANCE
-        ActionCardType.ANALYTICS_INCOME -> AnalyticsType.INCOME
-        ActionCardType.ANALYTICS_INCOME_LIABILITY -> AnalyticsType.INCOME_LIABILITY
-        ActionCardType.ANALYTICS_LIABILITY -> AnalyticsType.LIABILITY
-        else -> null
     }
 }

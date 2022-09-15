@@ -8,6 +8,8 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.harper.capital.asset.model.AssetManageMode
 import com.harper.capital.navigation.ScreenKey
+import com.harper.core.component.transition.Transitions
+import com.harper.core.component.transition.verticalSlideTransition
 import com.harper.core.navigation.NavArgsSpec
 import com.harper.core.navigation.composable
 import org.koin.androidx.compose.getViewModel
@@ -41,7 +43,8 @@ class AssetManageParams(val mode: AssetManageMode, val accountId: Long? = null)
 fun NavGraphBuilder.assetManage() {
     composable(
         route = ScreenKey.ASSET_MANAGE.route,
-        argsSpec = AssetManageNavArgsSpec
+        argsSpec = AssetManageNavArgsSpec,
+        transitions = Transitions(enterExit = verticalSlideTransition())
     ) { (mode: String, accountId: Long) ->
         val viewModel = getViewModel<AssetManageViewModel> {
             parametersOf(

@@ -1,8 +1,10 @@
 package com.harper.capital.settings
 
+import com.harper.capital.domain.model.AccountPresentation
 import com.harper.capital.domain.model.ColorTheme
 import com.harper.capital.domain.model.Currency
 import com.harper.capital.navigation.GlobalRouter
+import com.harper.capital.settings.domain.ChangeAccountPresentationUseCase
 import com.harper.capital.settings.domain.ChangeColorThemeUseCase
 import com.harper.capital.settings.domain.ChangeCurrencyUseCase
 import com.harper.capital.settings.domain.GetSettingsUseCase
@@ -16,6 +18,7 @@ import kotlinx.coroutines.launch
 class SettingsViewModel(
     private val router: GlobalRouter,
     private val changeColorThemeUseCase: ChangeColorThemeUseCase,
+    private val changeAccountPresentationUseCase: ChangeAccountPresentationUseCase,
     private val changeCurrencyUseCase: ChangeCurrencyUseCase,
     private val getSettingsUseCase: GetSettingsUseCase
 ) : ComponentViewModel<SettingsState, SettingsEvent>(
@@ -29,6 +32,10 @@ class SettingsViewModel(
             is SettingsEvent.ColorThemeSelectClick -> onColorThemeSelectClick()
             is SettingsEvent.CurrencySelectClick -> onCurrencySelectClick()
             is SettingsEvent.BackClick -> router.back()
+            SettingsEvent.AccountPresentationSelectClick -> onAccountPresentationSelectClick()
+            is SettingsEvent.AccountPresentationSelect -> onAccountPresentationSelect(event)
+            is SettingsEvent.AccountSyncClick -> {}
+            is SettingsEvent.CashSyncClick -> {}
         }
     }
 
@@ -39,6 +46,7 @@ class SettingsViewModel(
             update {
                 it.copy(
                     colorTheme = settings.colorTheme,
+                    accountPresentation = settings.accountPresentation,
                     currency = settings.currency
                 )
             }
@@ -67,6 +75,31 @@ class SettingsViewModel(
         }
         launch {
             changeColorThemeUseCase(selectedColorTheme)
+        }
+    }
+
+    private fun onAccountPresentationSelect(event: SettingsEvent.AccountPresentationSelect) {
+        val selectedAccountPresentation = AccountPresentation.valueOf(event.accountPresentationName)
+        update {
+            it.copy(
+                accountPresentation = selectedAccountPresentation,
+                bottomSheetState = it.bottomSheetState.copy(isExpanded = false)
+            )
+        }
+        launch {
+            changeAccountPresentationUseCase(selectedAccountPresentation)
+        }
+    }
+
+    private fun onAccountPresentationSelectClick() {
+        update {
+            it.copy(
+                bottomSheetState = SettingsBottomSheetState(
+                    bottomSheet = SettingsBottomSheet.AccountPresentations(
+                        selectedAccountPresentation = it.accountPresentation
+                    )
+                )
+            )
         }
     }
 

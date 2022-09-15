@@ -1,10 +1,8 @@
 package com.harper.capital.settings
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
@@ -33,6 +31,7 @@ import com.harper.capital.settings.model.SettingsState
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CIcon
 import com.harper.core.component.CModalBottomSheetScaffold
+import com.harper.core.component.CPreference
 import com.harper.core.component.CPreferenceArrow
 import com.harper.core.component.CPreferenceSwitch
 import com.harper.core.component.CPreview
@@ -91,13 +90,20 @@ fun SettingsScreen(viewModel: ComponentViewModel<SettingsState, SettingsEvent>) 
                         )
                     }
                 }
-                CPreferenceArrow(
-                    title = stringResource(id = R.string.color_theme),
-                    subtitle = state.colorTheme.resolveText(),
-                    icon = { Icon(imageVector = CapitalIcons.Palette, contentDescription = null) }
-                ) {
-                    viewModel.onEvent(SettingsEvent.ColorThemeSelectClick)
-                }
+                CPreference(
+                    title = stringResource(id = R.string.account_sync),
+                    subtitle = state.currency.name.formatCurrencyName(),
+                    onClick = { viewModel.onEvent(SettingsEvent.AccountSyncClick) },
+                    icon = { Icon(imageVector = CapitalIcons.AccountCircle, contentDescription = null) },
+                    action = { Icon(imageVector = CapitalIcons.Sync, contentDescription = null, tint = CapitalTheme.colors.primaryVariant) }
+                )
+                CPreference(
+                    title = stringResource(id = R.string.currencies_sync),
+                    subtitle = state.currency.name.formatCurrencyName(),
+                    onClick = { viewModel.onEvent(SettingsEvent.CashSyncClick) },
+                    icon = { Icon(imageVector = CapitalIcons.Cash, contentDescription = null) },
+                    action = { Icon(imageVector = CapitalIcons.Sync, contentDescription = null, tint = CapitalTheme.colors.primaryVariant) }
+                )
                 CPreferenceArrow(
                     title = stringResource(id = R.string.default_currency),
                     subtitle = state.currency.name.formatCurrencyName(),
@@ -112,11 +118,18 @@ fun SettingsScreen(viewModel: ComponentViewModel<SettingsState, SettingsEvent>) 
                     viewModel.onEvent(SettingsEvent.CurrencySelectClick)
                 }
                 CPreferenceArrow(
+                    title = stringResource(id = R.string.color_theme),
+                    subtitle = state.colorTheme.resolveText(),
+                    icon = { Icon(imageVector = CapitalIcons.Palette, contentDescription = null) }
+                ) {
+                    viewModel.onEvent(SettingsEvent.ColorThemeSelectClick)
+                }
+                CPreferenceArrow(
                     title = stringResource(id = R.string.accounts_presentation),
-                    subtitle = stringResource(id = R.string.carousel),
+                    subtitle = state.accountPresentation.resolveText(),
                     icon = { Icon(imageVector = CapitalIcons.Carousel, contentDescription = null) }
                 ) {
-
+                    viewModel.onEvent(SettingsEvent.AccountPresentationSelectClick)
                 }
                 if (BuildConfig.DEBUG) {
                     CPreferenceSwitch(
@@ -145,6 +158,14 @@ private fun BottomSheetContent(bottomSheet: SettingsBottomSheet?, viewModel: Com
                 data = bottomSheet.data,
                 onValueSelect = {
                     viewModel.onEvent(SettingsEvent.ColorThemeSelect(it))
+                }
+            )
+        }
+        is SettingsBottomSheet.AccountPresentations -> {
+            SelectorBottomSheet(
+                data = bottomSheet.data,
+                onValueSelect = {
+                    viewModel.onEvent(SettingsEvent.AccountPresentationSelect(it))
                 }
             )
         }

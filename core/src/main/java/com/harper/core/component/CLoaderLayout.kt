@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import com.harper.core.theme.CapitalTheme
 
 @Composable
-@OptIn(ExperimentalAnimationApi::class)
 fun CLoaderLayout(
     isLoading: Boolean,
     loaderContent: @Composable () -> Unit = { CDefaultLoader() },

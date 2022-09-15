@@ -13,8 +13,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 @Composable
 fun CIcon(
-    modifier: Modifier = Modifier,
     imageVector: ImageVector,
+    modifier: Modifier = Modifier,
     color: Color = LocalContentColor.current,
     isEnabled: Boolean = true,
     onClick: () -> Unit = {}

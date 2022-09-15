@@ -96,7 +96,6 @@ fun CLineChart(
                     ),
                     color = line.color
                 )
-
                 lineShader.fillLine(
                     drawScope = this,
                     canvas = canvas,
@@ -112,7 +111,6 @@ fun CLineChart(
                     color = line.color,
                 )
             }
-
             // Draw the X Axis line.
             xAxisDrawer.drawAxisLine(
                 drawScope = this,

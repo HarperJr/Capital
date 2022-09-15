@@ -1,5 +1,6 @@
 package com.harper.core.component
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import com.harper.core.theme.CapitalTheme
@@ -9,7 +10,7 @@ fun CPreview(
     isDark: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    CapitalTheme(isDark) {
+    CapitalTheme(isSystemInDarkTheme()) {
         Surface(color = CapitalTheme.colors.background) {
             content.invoke()
         }

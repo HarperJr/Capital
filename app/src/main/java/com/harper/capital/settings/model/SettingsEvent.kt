@@ -8,9 +8,17 @@ sealed class SettingsEvent {
 
     class CurrencySelect(val currency: Currency) : SettingsEvent()
 
+    class AccountPresentationSelect(val accountPresentationName: String) : SettingsEvent()
+
     object BackClick : SettingsEvent()
 
     object ColorThemeSelectClick : SettingsEvent()
 
     object CurrencySelectClick : SettingsEvent()
+
+    object AccountSyncClick : SettingsEvent()
+
+    object CashSyncClick : SettingsEvent()
+
+    object AccountPresentationSelectClick : SettingsEvent()
 }

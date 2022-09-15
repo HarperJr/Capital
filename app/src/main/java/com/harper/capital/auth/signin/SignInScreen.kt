@@ -62,7 +62,7 @@ fun SignInScreen(viewModel: ComponentViewModel<SignInState, SignInEvent>) {
                     modifier = Modifier.fillMaxWidth(),
                     value = state.username,
                     placeholder = stringResource(id = R.string.username_or_email_hint),
-                    leadingIcon = { Icon(CapitalIcons.Account, null) },
+                    leadingIcon = { Icon(CapitalIcons.AccountCircle, null) },
                     onValueChange = { viewModel.onEvent(SignInEvent.UsernameChange(it)) }
                 )
                 Column {

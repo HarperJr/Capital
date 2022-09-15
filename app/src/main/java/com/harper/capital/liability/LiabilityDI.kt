@@ -15,8 +15,6 @@ val liabilityModule
 
         factory { FetchContactsUseCase(ContactsProvider(get())) }
 
-        factory { GetSettingsUseCase(get()) }
-
         factory { FetchAccountUseCase(get()) }
 
         viewModel { (params: LiabilityManageParams) ->

@@ -33,10 +33,11 @@ import com.harper.core.theme.capitalSwitchColors
 private val preferenceMinHeight = 56.dp
 
 @Composable
-private fun CPreference(
+fun CPreference(
     modifier: Modifier = Modifier,
     title: String,
     subtitle: String?,
+    onClick: () -> Unit,
     icon: (@Composable BoxScope.() -> Unit)? = null,
     action: @Composable () -> Unit
 ) {
@@ -46,6 +47,7 @@ private fun CPreference(
             .heightIn(min = preferenceMinHeight)
             .background(color = CapitalTheme.colors.primaryVariant, shape = CapitalTheme.shapes.large)
             .clip(shape = CapitalTheme.shapes.large)
+            .clickable { onClick.invoke() }
             .padding(start = CapitalTheme.dimensions.big, end = CapitalTheme.dimensions.side),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -81,9 +83,10 @@ fun CPreferenceArrow(
     onClick: () -> Unit
 ) {
     CPreference(
-        modifier.clickable { onClick.invoke() },
+        modifier,
         title = title,
         subtitle = subtitle,
+        onClick = onClick,
         icon = icon
     ) {
         Icon(
@@ -93,7 +96,6 @@ fun CPreferenceArrow(
         )
     }
 }
-
 
 @Composable
 fun CPreferenceSwitch(
@@ -106,12 +108,13 @@ fun CPreferenceSwitch(
 ) {
     val isSwitchChecked = remember(isChecked) { mutableStateOf(isChecked) }
     CPreference(
-        modifier.clickable {
+        modifier,
+        title = title,
+        subtitle = subtitle,
+        onClick = {
             isSwitchChecked.value = !isSwitchChecked.value
             onCheckedChange.invoke(isSwitchChecked.value)
         },
-        title = title,
-        subtitle = subtitle,
         icon = icon
     ) {
         Switch(

@@ -31,7 +31,7 @@ import com.harper.capital.liability.liabilityManage
 import com.harper.capital.main.main
 import com.harper.capital.navigation.ComposableNavigator
 import com.harper.capital.navigation.ScreenKey
-import com.harper.capital.prefs.SettingsProvider
+import com.harper.capital.prefs.SettingsManager
 import com.harper.capital.settings.settings
 import com.harper.capital.transaction.manage.transactionManage
 import com.harper.capital.transaction.transaction
@@ -43,7 +43,7 @@ import org.koin.android.ext.android.inject
 class CapitalActivity : ComponentActivity() {
     private val navigator: ComposableNavigator = ComposableNavigator()
     private val navigationHolder: NavigatorHolder by inject()
-    private val settingsProvider: SettingsProvider by inject()
+    private val settingsManager: SettingsManager by inject()
 
     @SuppressLint("FlowOperatorInvokedInComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +54,7 @@ class CapitalActivity : ComponentActivity() {
             var isDarkThemeState by remember { mutableStateOf(false) }
             val isSystemInDarkTheme = isSystemInDarkTheme()
             LaunchedEffect(Unit) {
-                settingsProvider.asFlow
+                settingsManager.asFlow
                     .collect {
                         isDarkThemeState =
                             if (it.colorTheme == ColorTheme.SYSTEM) isSystemInDarkTheme else it.colorTheme == ColorTheme.DARK

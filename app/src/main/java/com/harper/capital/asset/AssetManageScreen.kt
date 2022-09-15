@@ -1,5 +1,7 @@
 package com.harper.capital.asset
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,8 +25,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -45,6 +51,7 @@ import com.harper.capital.domain.model.AccountMetadata
 import com.harper.capital.ext.resolveText
 import com.harper.capital.ext.resolveValueHint
 import com.harper.core.component.CAmountTextField
+import com.harper.core.component.CButtonOverlap
 import com.harper.core.component.CButtonPrimary
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CLoaderLayout
@@ -57,93 +64,101 @@ import com.harper.core.ext.formatCurrencyName
 import com.harper.core.ext.formatCurrencySymbol
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.ui.ComponentViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 private val cardHorizontalPadding: Dp
     @Composable
     get() = CapitalTheme.dimensions.side * 2
 
 @Composable
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 fun AssetManageScreen(viewModel: ComponentViewModel<AssetManageState, AssetManageEvent>) {
     val state by viewModel.state.collectAsState()
-    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    val focusManager = LocalFocusManager.current
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true)
+    val keyboardController = LocalSoftwareKeyboardController.current
+    LaunchedEffect(Unit) {
+        snapshotFlow { sheetState.currentValue }
+            .collectLatest {
+                if (it == ModalBottomSheetValue.Hidden) {
+                    keyboardController?.hide()
+                }
+            }
+    }
     CModalBottomSheetScaffold(
         sheetContent = {
             BottomSheetContent(state.bottomSheetState, viewModel)
             LaunchedEffect(state.bottomSheetState) {
+                keyboardController?.hide()
                 if (state.bottomSheetState.isExpended) {
-                    focusManager.clearFocus(force = true)
                     sheetState.show()
                 } else {
                     sheetState.hide()
                 }
             }
         },
-        topBar = {
-            AssetManageTopBar(
-                state,
-                onBackClick = { viewModel.onEvent(AssetManageEvent.BackClick) }
-            )
-        },
-        bottomBar = {
-            val applyButtonTextRes = remember(state.mode) {
-                when (state.mode) {
-                    AssetManageMode.ADD -> R.string.add_asset
-                    AssetManageMode.EDIT -> R.string.save
-                }
-            }
-            Box {
-                CButtonPrimary(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(CapitalTheme.dimensions.side),
-                    text = stringResource(id = applyButtonTextRes),
-                    enabled = state.name.isNotEmpty(),
-                    onClick = { viewModel.onEvent(AssetManageEvent.Apply) }
-                )
-            }
-        },
+        topBar = { AssetManageTopBar(state, onBackClick = { viewModel.onEvent(AssetManageEvent.BackClick) }) },
         sheetState = sheetState
     ) {
         CLoaderLayout(isLoading = state.isLoading, loaderContent = {}) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                AssetEditableCard(
-                    modifier = Modifier.padding(
-                        horizontal = cardHorizontalPadding,
-                        vertical = CapitalTheme.dimensions.side
-                    ),
-                    name = state.name,
-                    balance = state.balance,
-                    icon = state.icon,
-                    color = state.color,
-                    currency = state.currency,
-                    onNameChange = { viewModel.onEvent(AssetManageEvent.NameChange(it)) },
-                    onAmountChange = { viewModel.onEvent(AssetManageEvent.AmountChange(it)) },
-                    onIconClick = { viewModel.onEvent(AssetManageEvent.IconSelectClick) }
-                )
-                CHorizontalSpacer(height = CapitalTheme.dimensions.medium)
-                LazyRow(
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = CapitalTheme.dimensions.small),
-                    horizontalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.medium),
-                    contentPadding = PaddingValues(horizontal = cardHorizontalPadding)
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
                 ) {
-                    items(state.colors) { item ->
-                        AssetColorSelector(
-                            color = item,
-                            isSelected = state.color == item,
-                            onSelect = { viewModel.onEvent(AssetManageEvent.ColorSelect(color = item)) }
-                        )
+                    AssetEditableCard(
+                        modifier = Modifier.padding(
+                            horizontal = cardHorizontalPadding,
+                            vertical = CapitalTheme.dimensions.side
+                        ),
+                        name = state.name,
+                        balance = state.balance,
+                        icon = state.icon,
+                        color = state.color,
+                        currency = state.currency,
+                        onNameChange = { viewModel.onEvent(AssetManageEvent.NameChange(it)) },
+                        onAmountChange = { viewModel.onEvent(AssetManageEvent.AmountChange(it)) },
+                        onIconClick = { viewModel.onEvent(AssetManageEvent.IconSelectClick) }
+                    )
+                    CHorizontalSpacer(height = CapitalTheme.dimensions.side)
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = CapitalTheme.dimensions.small),
+                        horizontalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.medium),
+                        contentPadding = PaddingValues(horizontal = cardHorizontalPadding)
+                    ) {
+                        items(state.colors) { item ->
+                            AssetColorSelector(
+                                color = item,
+                                isSelected = state.color == item,
+                                onSelect = { viewModel.onEvent(AssetManageEvent.ColorSelect(color = item)) }
+                            )
+                        }
+                    }
+                    CHorizontalSpacer(height = CapitalTheme.dimensions.large)
+                    SettingsBlock(state, viewModel, Modifier.padding(bottom = CapitalTheme.dimensions.large))
+                }
+
+                val applyButtonTextRes = remember(state.mode) {
+                    when (state.mode) {
+                        AssetManageMode.ADD -> R.string.create
+                        AssetManageMode.EDIT -> R.string.save
                     }
                 }
-                CHorizontalSpacer(height = CapitalTheme.dimensions.side)
-                SettingsBlock(state, viewModel)
+                CButtonOverlap(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .padding(CapitalTheme.dimensions.side)
+                ) { overlapModifier ->
+                    CButtonPrimary(
+                        modifier = overlapModifier,
+                        text = stringResource(id = applyButtonTextRes),
+                        enabled = state.name.isNotEmpty(),
+                        onClick = { viewModel.onEvent(AssetManageEvent.Apply) }
+                    )
+                }
             }
         }
     }
@@ -152,10 +167,11 @@ fun AssetManageScreen(viewModel: ComponentViewModel<AssetManageState, AssetManag
 @Composable
 private fun SettingsBlock(
     state: AssetManageState,
-    viewModel: ComponentViewModel<AssetManageState, AssetManageEvent>
+    viewModel: ComponentViewModel<AssetManageState, AssetManageEvent>,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = CapitalTheme.dimensions.side),
         verticalArrangement = Arrangement.spacedBy(CapitalTheme.dimensions.large)
     ) {
@@ -271,18 +287,11 @@ private fun AssetManageTopBar(state: AssetManageState, onBackClick: () -> Unit) 
     )
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 private fun AssetManageScreenLight() {
     CPreview {
-        AssetManageScreen(AssetManageMockViewModel())
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun AssetManageScreenDark() {
-    CPreview(isDark = true) {
         AssetManageScreen(AssetManageMockViewModel())
     }
 }

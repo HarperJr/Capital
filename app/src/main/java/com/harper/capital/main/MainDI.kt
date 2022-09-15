@@ -17,5 +17,5 @@ val mainModule
 
         factory { FetchFavoriteTransactionsUseCase(get()) }
 
-        viewModel { MainViewModel(get(), get(), get(), get(), get()) }
+        viewModel { MainViewModel(get(), get(), get(), get(), get(), get()) }
     }

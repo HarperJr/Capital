@@ -3,13 +3,13 @@ package com.harper.capital
 import com.github.terrakok.cicerone.Cicerone
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.navigation.GlobalRouterImpl
-import com.harper.capital.prefs.SettingsProvider
+import com.harper.capital.prefs.SettingsManager
 import org.koin.dsl.module
 
 val appModule
     get() = module {
 
-        single { SettingsProvider(get()) }
+        single { SettingsManager(get()) }
 
         single { Cicerone.create(GlobalRouterImpl()) }
 

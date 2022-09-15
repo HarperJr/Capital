@@ -98,4 +98,13 @@
     <string name="currency">Currency</string>
     <string name="accounts_presentation">Accounts presentation</string>
     <string name="carousel">Carousel</string>
+    <string name="create">Create</string>
+    <string name="account_sync">Account sync</string>
+    <string name="currencies_sync">Currencies sync</string>
+    <string name="empty_list">List is empty</string>
+    <string name="no_items_found">No items found</string>
+    <string name="list">List</string>
+    <string name="analytics">Analytics</string>
+    <string name="favorite">Favorite</string>
+    <string name="plan">Plan</string>
 </resources>

@@ -3,25 +3,30 @@ package com.harper.core.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Colors
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.harper.core.theme.CapitalColors
 import com.harper.core.theme.CapitalIcons
 import com.harper.core.theme.CapitalTheme
 import com.harper.core.theme.capitalButtonColors
@@ -139,6 +144,41 @@ fun CButtonCommon(
         icon = icon,
         onClick = onClick
     )
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun CButtonOverlap(modifier: Modifier = Modifier, enabled: Boolean = true, content: @Composable (Modifier) -> Unit) {
+    val isImeVisible = WindowInsets.isImeVisible
+    if (isImeVisible) {
+        content.invoke(modifier.transformOverlap(enabled))
+    } else {
+        content.invoke(modifier)
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+internal fun Modifier.transformOverlap(enabled: Boolean = true): Modifier = composed(inspectorInfo = debugInspectorInfo {
+    name = "transformOverlapModifier"
+    value = true
+}) {
+    val isImeVisible = WindowInsets.isImeVisible
+    val color = CapitalTheme.colors.secondary
+    if (isImeVisible && enabled) {
+        this.then(
+            Modifier
+                .wrapContentWidth()
+                .shadow(
+                    elevation = CapitalTheme.dimensions.small,
+                    shape = CapitalTheme.shapes.extraLarge,
+                    ambientColor = color,
+                    spotColor = color
+                )
+                .padding(CapitalTheme.dimensions.small)
+        )
+    } else {
+        this
+    }
 }
 
 @Preview(showBackground = true)

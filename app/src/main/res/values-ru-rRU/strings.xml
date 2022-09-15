@@ -89,5 +89,14 @@
     <string name="currency">Валюта</string>
     <string name="accounts_presentation">Отображение счетов</string>
     <string name="carousel">Карусель</string>
+    <string name="create">Создать</string>
+    <string name="account_sync">Синхронизация с аккаунтом</string>
+    <string name="currencies_sync">Сихронизация курсов</string>
+    <string name="empty_list">Список пуст</string>
+    <string name="no_items_found">Не найдено элементов</string>
+    <string name="list">Список</string>
+    <string name="analytics">Analytics</string>
+    <string name="favorite">Favorite</string>
+    <string name="plan">Plan</string>
 
 </resources>

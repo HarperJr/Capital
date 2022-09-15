@@ -1,6 +1,9 @@
 package com.harper.core.theme
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Add
@@ -21,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.harper.core.R
 import com.harper.core.component.CIcon
 import com.harper.core.component.CPreview
-import com.harper.core.component.CWrappedGrid
 
 object CapitalIcons {
 
@@ -94,6 +96,15 @@ object CapitalIcons {
     val Chart
         @Composable
         get() = ImageVector.vectorResource(id = R.drawable.ic_chart)
+    val Cash
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_cash)
+    val Flash
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_flash)
+    val Sync
+        @Composable
+        get() = ImageVector.vectorResource(id = R.drawable.ic_sync)
 
     val Edit: ImageVector
         get() = Icons.Rounded.Edit
@@ -109,7 +120,7 @@ object CapitalIcons {
         get() = Icons.Rounded.Notifications
     val Password: ImageVector
         get() = Icons.Rounded.Lock
-    val Account: ImageVector
+    val AccountCircle: ImageVector
         get() = Icons.Rounded.AccountCircle
     val EyeOn: ImageVector
         get() = Icons.Rounded.Visibility
@@ -185,19 +196,20 @@ private fun Icons() {
         CapitalIcons.BankWallet,
         CapitalIcons.Repeat,
         CapitalIcons.Password,
-        CapitalIcons.Account,
+        CapitalIcons.AccountCircle,
         CapitalIcons.EyeOn,
         CapitalIcons.EyeOff,
         CapitalIcons.Carousel,
         CapitalIcons.Cards,
         CapitalIcons.Chart
     )
-    CWrappedGrid(
+    LazyVerticalGrid(
         modifier = Modifier.background(CapitalTheme.colors.background),
-        columns = 6,
-        icons
+        columns = GridCells.Fixed(6)
     ) {
-        CIcon(imageVector = it)
+        items(icons) {
+            CIcon(imageVector = it)
+        }
     }
 }
 
@@ -216,12 +228,13 @@ private fun BankIcons() {
         CapitalIcons.Bank.Dogecoin,
         CapitalIcons.Bank.PiggyBank
     )
-    CWrappedGrid(
+    LazyVerticalGrid(
         modifier = Modifier.background(CapitalTheme.colors.background),
-        columns = 6,
-        icons
+        columns = GridCells.Fixed(6)
     ) {
-        CIcon(imageVector = it)
+        items(icons) {
+            CIcon(imageVector = it)
+        }
     }
 }
 

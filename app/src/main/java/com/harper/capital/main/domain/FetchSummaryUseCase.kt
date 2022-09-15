@@ -5,7 +5,7 @@ import com.harper.capital.domain.model.Currency
 import com.harper.capital.domain.model.CurrencyRate
 import com.harper.capital.ext.getExchangeRate
 import com.harper.capital.main.domain.model.Summary
-import com.harper.capital.prefs.SettingsProvider
+import com.harper.capital.prefs.SettingsManager
 import com.harper.capital.repository.currency.CurrencyRepository
 import com.harper.capital.repository.transaction.TransactionRepository
 import java.time.LocalDate
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.combine
 class FetchSummaryUseCase(
     private val transactionRepository: TransactionRepository,
     private val currencyRepository: CurrencyRepository,
-    private val settingsProvider: SettingsProvider
+    private val settingsManager: SettingsManager
 ) {
 
     operator fun invoke(): Flow<Summary> {
@@ -25,7 +25,7 @@ class FetchSummaryUseCase(
         return combine(
             transactionRepository.fetchBalance(),
             transactionRepository.fetchLiabilitiesBetween(dateTimeAfter = startOfMonth, dateTimeBefore = endOfMonth),
-            settingsProvider.asFlow,
+            settingsManager.asFlow,
             currencyRepository.fetchAll()
         ) { balance, expenses, settings, rates ->
             Summary(
