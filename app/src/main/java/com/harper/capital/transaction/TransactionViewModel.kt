@@ -35,7 +35,7 @@ class TransactionViewModel(
             combine(
                 fetchAssetsUseCase(),
                 fetchLiabilitiesUseCase()
-            ) { assets, categories -> assets + categories }
+            ) { assets, liabilities -> assets + liabilities }
                 .collect { accounts ->
                     update { it.copy(pages = fillPages(it.pages, accounts)) }
                 }
@@ -63,13 +63,11 @@ class TransactionViewModel(
 
     private fun onNewSourceClick(event: TransactionEvent.NewSourceClick) {
         when (event.type) {
-            AccountType.ASSET -> {
-                router.navigateToManageAsset(AssetManageParams(AssetManageMode.ADD))
-            }
+            AccountType.ASSET -> router.navigateToManageAsset(AssetManageParams(AssetManageMode.ADD))
             AccountType.INCOME,
             AccountType.LIABILITY -> {
                 val liabilityType = when (event.transactionType) {
-                    TransactionType.EXPENSE -> LiabilityManageType.LIABILITY
+                    TransactionType.LIABILITY -> LiabilityManageType.LIABILITY
                     TransactionType.INCOME -> LiabilityManageType.INCOME
                     TransactionType.DEBT -> LiabilityManageType.DEBT
                     else -> return
@@ -111,9 +109,11 @@ class TransactionViewModel(
             val fromDataSet = page.accountDataSets[DataSetSection.FROM]
             val toDateSet = page.accountDataSets[DataSetSection.TO]
             if (fromDataSet != null && toDateSet != null) {
-                val source = fromDataSet.accounts.first { it.account.id == fromDataSet.selectedAccountId }
-                val receiver = toDateSet.accounts.first { it.account.id == toDateSet.selectedAccountId }
-                onAccountsSelect?.invoke(source.account, receiver.account)
+                val source = fromDataSet.accounts.find { it.account.id == fromDataSet.selectedAccountId }
+                val receiver = toDateSet.accounts.find { it.account.id == toDateSet.selectedAccountId }
+                if (source != null && receiver != null) {
+                    onAccountsSelect?.invoke(source.account, receiver.account)
+                }
             }
         }
     }

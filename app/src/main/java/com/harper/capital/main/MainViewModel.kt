@@ -20,7 +20,6 @@ import com.harper.capital.transaction.TransactionParams
 import com.harper.capital.transaction.manage.TransactionManageParams
 import com.harper.capital.transaction.manage.model.TransactionManageMode
 import com.harper.capital.transaction.model.TransactionType
-import com.harper.core.ext.orElse
 import com.harper.core.ui.ComponentViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
@@ -143,7 +142,7 @@ class MainViewModel(
         router.navigateToTransaction(
             TransactionParams(
                 accountId = event.account?.id,
-                TransactionType.EXPENSE
+                TransactionType.LIABILITY
             )
         )
     }

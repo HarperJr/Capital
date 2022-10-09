@@ -2,7 +2,6 @@ package com.harper.capital.transaction.model
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.harper.capital.BuildConfig
 import com.harper.capital.R
 import com.harper.capital.domain.model.Contact
 import com.harper.core.component.Tab
@@ -28,7 +27,7 @@ private fun emptyPages(): List<TransactionPage> = TransactionType.values()
     .map { TransactionPage(type = it, accountDataSets = emptyMap()) }
 
 private fun TransactionType.resolveTitleRes(): Int = when (this) {
-    TransactionType.EXPENSE -> R.string.expense
+    TransactionType.LIABILITY -> R.string.expense
     TransactionType.INCOME -> R.string.income
     TransactionType.SEND -> R.string.send
     TransactionType.DEBT -> R.string.debt

@@ -59,10 +59,10 @@ fun ActionCard(
                 Text(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
-                        .padding(CapitalTheme.dimensions.medium),
+                        .padding(CapitalTheme.dimensions.big),
                     text = title.uppercase(),
                     style = CapitalTheme.typography.button,
-                    color = CapitalColors.White.copy(0.9f)
+                    color = CapitalColors.White.copy(0.8f)
                 )
             }
         }

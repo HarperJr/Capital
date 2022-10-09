@@ -95,8 +95,8 @@
     <string name="empty_list">Список пуст</string>
     <string name="no_items_found">Не найдено элементов</string>
     <string name="list">Список</string>
-    <string name="analytics">Analytics</string>
-    <string name="favorite">Favorite</string>
-    <string name="plan">Plan</string>
+    <string name="analytics">Аналитика</string>
+    <string name="favorite">Нужное</string>
+    <string name="plan">График</string>
 
 </resources>

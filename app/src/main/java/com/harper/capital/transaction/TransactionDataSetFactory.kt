@@ -15,7 +15,7 @@ class TransactionDataSetFactory {
         selectedAccountId: Long?,
         accounts: List<Account>
     ): Map<DataSetSection, AccountDataSet> = when (type) {
-        TransactionType.EXPENSE -> createExpenseDataSets(selectedAccountId, accounts)
+        TransactionType.LIABILITY -> createExpenseDataSets(selectedAccountId, accounts)
         TransactionType.INCOME -> createIncomeDataSets(selectedAccountId, accounts)
         TransactionType.SEND -> createSendDataSets(selectedAccountId, accounts)
         TransactionType.DEBT -> createDutyDataSets(selectedAccountId, accounts)

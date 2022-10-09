@@ -56,12 +56,10 @@ internal class AccountRepositoryImpl(
     override fun fetchByType(type: AccountType): Flow<List<Account>> =
         accountDao.selectByType(AccountEntityTypeMapper(type))
             .map { entities -> entities.map { mapToAccount(it) } }
-            .flowOn(Dispatchers.IO)
 
     override fun fetchAll(): Flow<List<Account>> =
         accountDao.selectAll()
             .map { entities -> entities.map { mapToAccount(it) } }
-            .flowOn(Dispatchers.IO)
 
     override suspend fun fetchById(id: Long): Account = withContext(Dispatchers.IO) {
         mapToAccount(accountDao.selectById(id))

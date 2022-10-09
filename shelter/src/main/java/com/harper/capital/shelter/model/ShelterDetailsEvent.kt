@@ -1,5 +1,3 @@
 package com.harper.capital.shelter.model
 
-sealed class ShelterDetailsEvent {
-
-}
+sealed class ShelterDetailsEvent

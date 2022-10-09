@@ -31,8 +31,10 @@ import com.harper.capital.liability.liabilityManage
 import com.harper.capital.main.main
 import com.harper.capital.navigation.ComposableNavigator
 import com.harper.capital.navigation.ScreenKey
+import com.harper.capital.navigation.Screens.shelter
 import com.harper.capital.prefs.SettingsManager
 import com.harper.capital.settings.settings
+import com.harper.capital.shelter.shelter
 import com.harper.capital.transaction.manage.transactionManage
 import com.harper.capital.transaction.transaction
 import com.harper.core.theme.CapitalColors
@@ -90,6 +92,7 @@ class CapitalActivity : ComponentActivity() {
                     analytics()
                     accounts()
                     settings()
+                    shelter()
                 }
             }
         }

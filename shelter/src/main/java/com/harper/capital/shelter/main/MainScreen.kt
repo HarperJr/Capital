@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import com.harper.capital.shelter.core.ComposableViewModel
 import com.harper.capital.shelter.model.ShelterEvent
 import com.harper.capital.shelter.model.ShelterState
+import com.harper.core.component.CButtonCommon
 import com.harper.core.component.CHorizontalSpacer
 import com.harper.core.component.CScaffold
 import com.harper.core.component.CTextField
@@ -23,7 +24,7 @@ import com.harper.core.component.CToolbarCommon
 import com.harper.core.theme.CapitalTheme
 
 @Composable
-fun MainScreen(viewModel: ComposableViewModel<ShelterState, ShelterEvent>, onDetailsClick: (String) -> Unit) {
+fun MainScreen(viewModel: ComposableViewModel<ShelterState, ShelterEvent>, onDetailsClick: (String) -> Unit, onExampleClick: () -> Unit) {
     val state by viewModel.state.collectAsState()
     LaunchedEffect(Unit) {
         viewModel.onFirstCompose()
@@ -60,6 +61,12 @@ fun MainScreen(viewModel: ComposableViewModel<ShelterState, ShelterEvent>, onDet
                     }
                 }
             }
+            CButtonCommon(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = CapitalTheme.dimensions.side),
+                text = "Example Screen"
+            ) { onExampleClick.invoke() }
         }
     }
 }

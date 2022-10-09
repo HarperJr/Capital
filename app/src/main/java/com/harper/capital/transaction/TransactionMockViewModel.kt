@@ -19,7 +19,7 @@ class TransactionMockViewModel : ComponentViewModel<TransactionState, Transactio
         selectedPage = 0,
         pages = listOf(
             TransactionPage(
-                type = TransactionType.EXPENSE,
+                type = TransactionType.LIABILITY,
                 accountDataSets = mapOf(
                     DataSetSection.FROM to AccountDataSet(
                         type = AccountType.ASSET,

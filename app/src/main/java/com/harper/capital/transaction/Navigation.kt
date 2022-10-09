@@ -38,7 +38,7 @@ object TransactionNavArgsSpec : NavArgsSpec<TransactionParams> {
         },
         navArgument(TRANSACTION_TYPE) {
             type = NavType.StringType
-            defaultValue = TransactionType.EXPENSE.name
+            defaultValue = TransactionType.LIABILITY.name
         }
     )
 
