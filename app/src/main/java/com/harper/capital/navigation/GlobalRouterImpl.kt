@@ -3,8 +3,8 @@ package com.harper.capital.navigation
 import com.github.terrakok.cicerone.Router
 import com.harper.capital.analytics.AnalyticsParams
 import com.harper.capital.asset.AssetManageParams
-import com.harper.capital.liability.LiabilityManageParams
 import com.harper.capital.history.HistoryListParams
+import com.harper.capital.liability.LiabilityManageParams
 import com.harper.capital.transaction.TransactionParams
 import com.harper.capital.transaction.manage.TransactionManageParams
 
@@ -37,6 +37,8 @@ class GlobalRouterImpl : Router(), GlobalRouter {
     override fun navigateToAccounts() = navigateTo(Screens.accounts())
 
     override fun back() = exit()
+
+    override fun <T : Any> backWithResult(key: String, result: T) = executeCommands(BackWithResult(key, result))
 
     override fun shelter() = navigateTo(Screens.shelter())
 }

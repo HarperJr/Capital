@@ -98,5 +98,6 @@
     <string name="analytics">Аналитика</string>
     <string name="favorite">Нужное</string>
     <string name="plan">График</string>
+    <string name="no_expenses_in_mount">Нет трат за %s</string>
 
 </resources>

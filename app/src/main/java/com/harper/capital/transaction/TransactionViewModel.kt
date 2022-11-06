@@ -9,25 +9,32 @@ import com.harper.capital.liability.model.LiabilityManageType
 import com.harper.capital.navigation.GlobalRouter
 import com.harper.capital.transaction.domain.FetchAssetsUseCase
 import com.harper.capital.transaction.domain.FetchLiabilitiesUseCase
-import com.harper.capital.transaction.model.DataSetSection
+import com.harper.capital.transaction.model.PagedAccountSelection
 import com.harper.capital.transaction.model.TransactionEvent
 import com.harper.capital.transaction.model.TransactionPage
 import com.harper.capital.transaction.model.TransactionState
 import com.harper.capital.transaction.model.TransactionType
 import com.harper.core.ui.ComponentViewModel
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class TransactionViewModel(
-    private val params: TransactionParams,
+    params: TransactionParams,
     private val router: GlobalRouter,
     private val fetchAssetsUseCase: FetchAssetsUseCase,
     private val fetchLiabilitiesUseCase: FetchLiabilitiesUseCase
 ) : ComponentViewModel<TransactionState, TransactionEvent>(
-    initialState = TransactionState(selectedPage = params.transactionType.ordinal)
+    initialState = TransactionState(
+        selectedPage = params.transactionType.ordinal,
+        accountSelection = PagedAccountSelection(
+            type = params.transactionType,
+            sourceId = params.accountId.takeIf { params.transactionType != TransactionType.INCOME },
+            receiverId = params.accountId.takeIf { params.transactionType == TransactionType.INCOME } // TODO set from outer call
+        )
+    )
 ) {
-    var onAccountsSelect: ((Account, Account) -> Unit)? = null
-    private val transactionDataSetFactory: TransactionDataSetFactory = TransactionDataSetFactory()
+    private val transactionPageFactory: TransactionPageFactory = TransactionPageFactory()
 
     override fun onFirstComposition() {
         super.onFirstComposition()
@@ -36,32 +43,37 @@ class TransactionViewModel(
                 fetchAssetsUseCase(),
                 fetchLiabilitiesUseCase()
             ) { assets, liabilities -> assets + liabilities }
-                .collect { accounts ->
-                    update { it.copy(pages = fillPages(it.pages, accounts)) }
-                }
+                .map { accounts -> createPages(accounts) }
+                .collect { pages -> update { it.copy(pages = pages) } }
         }
     }
 
-    private fun fillPages(
-        pages: List<TransactionPage>,
-        accounts: List<Account>
-    ): List<TransactionPage> =
-        pages.map {
-            it.copy(
-                accountDataSets = transactionDataSetFactory.create(it.type, params.accountId, accounts)
-            )
-        }
+    private fun createPages(accounts: List<Account>): List<TransactionPage> = TransactionType.values()
+        .map { transactionPageFactory.create(it, accounts) }
 
     override fun onEvent(event: TransactionEvent) {
         when (event) {
             is TransactionEvent.BackClick -> router.back()
             is TransactionEvent.TabSelect -> onTabSelect(event)
-            is TransactionEvent.AssetSourceSelect -> onAssetSourceSelect(event)
-            is TransactionEvent.NewSourceClick -> onNewSourceClick(event)
+            is TransactionEvent.NewAccountClick -> onNewAccountClick(event)
+            is TransactionEvent.SourceAccountSelect -> onSourceAccountSelect(event)
+            is TransactionEvent.ReceiverAccountSelect -> onReceiverAccountSelect(event)
         }
     }
 
-    private fun onNewSourceClick(event: TransactionEvent.NewSourceClick) {
+    private fun onSourceAccountSelect(event: TransactionEvent.SourceAccountSelect) {
+        update {
+            it.copy(accountSelection = it.accountSelection?.copy(type = event.type, sourceId = event.accountId))
+        }
+    }
+
+    private fun onReceiverAccountSelect(event: TransactionEvent.ReceiverAccountSelect) {
+        update {
+            it.copy(accountSelection = it.accountSelection?.copy(type = event.type, receiverId = event.accountId))
+        }
+    }
+
+    private fun onNewAccountClick(event: TransactionEvent.NewAccountClick) {
         when (event.type) {
             AccountType.ASSET -> router.navigateToManageAsset(AssetManageParams(AssetManageMode.ADD))
             AccountType.INCOME,
@@ -77,44 +89,9 @@ class TransactionViewModel(
         }
     }
 
-    private fun onAssetSourceSelect(event: TransactionEvent.AssetSourceSelect) {
-        update {
-            val pages = it.pages.map { page ->
-                if (page.type == event.transactionType) {
-                    page.copy(accountDataSets = page.accountDataSets.mapValues { (section, dataSet) ->
-                        if (section == event.section) {
-                            dataSet.copy(selectedAccountId = event.account.id)
-                        } else {
-                            dataSet.copy(accounts = dataSet.accounts.map { item -> item.copy(isEnabled = item.account.id != event.account.id) })
-                        }
-                    })
-                } else {
-                    page
-                }
-            }
-            it.copy(pages = pages)
-        }
-        tryApply()
-    }
-
     private fun onTabSelect(event: TransactionEvent.TabSelect) {
         update { prevState ->
             prevState.copy(selectedPage = event.tabIndex)
-        }
-    }
-
-    private fun tryApply() {
-        with(state.value) {
-            val page = pages[selectedPage]
-            val fromDataSet = page.accountDataSets[DataSetSection.FROM]
-            val toDateSet = page.accountDataSets[DataSetSection.TO]
-            if (fromDataSet != null && toDateSet != null) {
-                val source = fromDataSet.accounts.find { it.account.id == fromDataSet.selectedAccountId }
-                val receiver = toDateSet.accounts.find { it.account.id == toDateSet.selectedAccountId }
-                if (source != null && receiver != null) {
-                    onAccountsSelect?.invoke(source.account, receiver.account)
-                }
-            }
         }
     }
 }

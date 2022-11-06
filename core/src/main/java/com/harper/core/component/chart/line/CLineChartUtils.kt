@@ -12,8 +12,8 @@ object CLineChartUtils {
     fun calculateDrawableArea(size: Size, xAxisDrawableArea: Rect): Rect =
         Rect(left = 0f, top = 0f, bottom = xAxisDrawableArea.top, right = size.width)
 
-    fun calculateXAxisDrawableArea(labelHeight: Float, size: Size): Rect =
-        Rect(left = 0f, top = size.height - labelHeight, bottom = size.height, right = size.width)
+    fun calculateXAxisDrawableArea(height: Float, size: Size): Rect =
+        Rect(left = 0f, top = size.height - height, bottom = size.height, right = size.width)
 
     private fun calculatePointLocation(
         lineChartData: LineChartData.Line,
@@ -49,7 +49,6 @@ object CLineChartUtils {
             val sizeF = lineChartData.points.size.toFloat()
             val perIndex = (1f / sizeF)
             val down = (index - 1) * perIndex
-
             showWithProgress((transitionProgress - down) / perIndex)
         } else if (index < toIndex) {
             showWithProgress(1f)
@@ -107,7 +106,7 @@ object CLineChartUtils {
 
     fun calculateFillPath(
         drawableArea: Rect,
-        lineChartData: LineChartData.Line,
+        line: LineChartData.Line,
         spacedByPercent: Float,
         minYValue: Float,
         yRange: Float,
@@ -119,15 +118,15 @@ object CLineChartUtils {
         moveTo(drawableArea.left, drawableArea.bottom)
         var prevPointX: Float? = null
         var prevPointLocation: Offset? = null
-        lineChartData.points.forEachIndexed { index, point ->
+        line.points.forEachIndexed { index, point ->
             withProgress(
                 index = index,
                 transitionProgress = transitionProgress,
-                lineChartData = lineChartData
+                lineChartData = line
             ) { progress ->
                 val pointLocation = calculatePointLocation(
                     drawableArea = drawableArea,
-                    lineChartData = lineChartData,
+                    lineChartData = line,
                     spacedByPercent = spacedByPercent,
                     point = point,
                     minYValue = minYValue,

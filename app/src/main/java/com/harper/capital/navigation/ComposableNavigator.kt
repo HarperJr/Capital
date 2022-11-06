@@ -1,5 +1,7 @@
 package com.harper.capital.navigation
 
+import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import com.github.terrakok.cicerone.Back
 import com.github.terrakok.cicerone.BackTo
@@ -51,6 +53,7 @@ class ComposableNavigator : Navigator {
             is Replace -> applyReplace(command.screen)
             is Forward -> applyForward(command.screen)
             is BackTo -> applyBackTo(command.screen)
+            is BackWithResult<*> -> applyBackWithResult(command.key, command.result)
         }
     }
 
@@ -102,6 +105,15 @@ class ComposableNavigator : Navigator {
     private fun applyBack() {
         if (localStackCopy.isNotEmpty()) {
             localStackCopy.removeAt(localStackCopy.lastIndex)
+            navController.navigateUp()
+        }
+    }
+
+    private fun <T : Any> applyBackWithResult(key: String, result: T) {
+        if (localStackCopy.isNotEmpty()) {
+            localStackCopy.removeAt(localStackCopy.lastIndex)
+            val prevBackStackEntry = navController.previousBackStackEntry
+            prevBackStackEntry?.savedStateHandle?.set(key, result)
             navController.navigateUp()
         }
     }

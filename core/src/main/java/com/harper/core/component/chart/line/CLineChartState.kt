@@ -8,59 +8,35 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Rect
-import com.harper.core.ext.orElse
-import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.roundToInt
 
 internal class CLineChartState(
     lineChartData: LineChartData,
     private val spacedByPercent: Float,
     private val decayAnimationSpec: DecayAnimationSpec<Float>
 ) {
-    val snappedPosition: Float get() = position * itemWidth
-
-    val offset: Float get() = offsetAnim.value
-
-    var position: Int by mutableStateOf(0)
-    var chartArea: Rect by mutableStateOf(Rect.Zero)
+    internal val offset: Float get() = offsetAnim.value
+    internal var chartArea: Rect by mutableStateOf(Rect.Zero)
 
     private val offsetAnim = Animatable(initialValue = 0f)
-    private val indexes: Int = lineChartData.lines.maxOfOrNull { it.points.size }.orElse(0)
 
-    private var itemWidth: Float = 0f
-
-    fun updateChartDrawableArea(area: Rect) {
-        chartArea = area
-        if (itemWidth == 0f) {
-            itemWidth = chartArea.width * spacedByPercent
-        }
-    }
+    private val itemWidth: Float
+        get() = chartArea.width * spacedByPercent
 
     suspend fun scroll(delta: Float) {
         offsetAnim.snapTo(offsetAnim.value + delta)
-        onScroll()
     }
 
     suspend fun applyVelocity(velocity: Float) {
-        val result = offsetAnim.animateDecay(velocity, animationSpec = decayAnimationSpec)
+        val result = offsetAnim.animateDecay(velocity.coerceIn(-0.5f, 0.5f), decayAnimationSpec)
         if (result.endReason == AnimationEndReason.Finished) {
+            val targetPosition = (result.endState.value / itemWidth).roundToInt() * itemWidth
             offsetAnim.animateTo(
-                snappedPosition,
+                targetPosition,
                 animationSpec = spring(),
                 initialVelocity = result.endState.velocity
             )
-        }
-    }
-
-    private fun onScroll() {
-        if (chartArea.isEmpty) {
-            return
-        }
-        for (i in 0 until indexes) {
-            val isItemInCenter = abs(offset + itemWidth / 2f - chartArea.center.x) <= itemWidth / 2f
-            if (isItemInCenter) {
-                position = i
-                break
-            }
         }
     }
 }

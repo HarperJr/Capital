@@ -52,7 +52,7 @@ fun AssetSource(
             .requiredWidth(requiredWidth)
             .background(backgroundColor, shape = CapitalTheme.shapes.extraLarge)
             .clip(shape = CapitalTheme.shapes.extraLarge)
-            .clickable { onClick.invoke() }
+            .clickable(isEnabled) { onClick.invoke() }
             .padding(
                 horizontal = CapitalTheme.dimensions.small,
                 vertical = CapitalTheme.dimensions.medium

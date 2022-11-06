@@ -16,7 +16,7 @@ import com.harper.core.component.chart.line.CLineChartUtils.toLegacyInt
 
 interface XAxisDrawer {
 
-    fun requiredHeight(drawScope: DrawScope): Float
+    fun measureHeight(drawScope: DrawScope): Float
 
     fun drawAxisLine(drawScope: DrawScope, canvas: Canvas, drawableArea: Rect)
 
@@ -49,7 +49,7 @@ class SimpleXAxisDrawer(
         color = labelTextColor.toLegacyInt()
     }
 
-    override fun requiredHeight(drawScope: DrawScope): Float {
+    override fun measureHeight(drawScope: DrawScope): Float {
         return with(drawScope) {
             (3f / 2f) * (labelTextSize.toPx() + axisLineThickness.toPx())
         }
@@ -99,7 +99,6 @@ class SimpleXAxisDrawer(
                 if (index.rem(labelRatio) == 0) {
                     val x = drawableArea.right + (index - labels.size) * labelWidth + offset + labelWidth / 2
                     val y = drawableArea.bottom
-
                     canvas.nativeCanvas.drawText(label, x, y, labelPaint)
                 }
             }

@@ -106,17 +106,17 @@ class TransactionManageViewModel(
     }
 
     private fun onInit(event: TransactionManageEvent.Init) {
-        val transaction = TransferTransaction(
-            source = event.source,
-            receiver = event.receiver,
-            sourceAmount = 0.0,
-            receiverAmount = 0.0,
-            dateTime = LocalDateTime.now(),
-            comment = null,
-            isScheduled = false
-        )
-        update {
-            it.copy(transaction = transaction, isLoading = false)
+        launch {
+            val transaction = TransferTransaction(
+                source = fetchAccountUseCase(event.sourceId),
+                receiver = fetchAccountUseCase(event.receiverId),
+                sourceAmount = 0.0,
+                receiverAmount = 0.0,
+                dateTime = LocalDateTime.now(),
+                comment = null,
+                isScheduled = false
+            )
+            update { it.copy(transaction = transaction, isLoading = false) }
         }
     }
 

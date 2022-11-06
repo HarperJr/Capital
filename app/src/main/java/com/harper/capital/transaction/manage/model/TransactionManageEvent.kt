@@ -1,6 +1,5 @@
 package com.harper.capital.transaction.manage.model
 
-import com.harper.capital.domain.model.Account
 import java.time.LocalDate
 
 sealed class TransactionManageEvent {
@@ -15,7 +14,7 @@ sealed class TransactionManageEvent {
 
     class ScheduledCheckChange(val isChecked: Boolean) : TransactionManageEvent()
 
-    class Init(val source: Account, val receiver: Account) : TransactionManageEvent()
+    class Init(val sourceId: Long, val receiverId: Long) : TransactionManageEvent()
 
     object BackClick : TransactionManageEvent()
 

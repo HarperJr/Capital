@@ -1,5 +1,6 @@
 package com.harper.capital.navigation
 
+import android.os.Bundle
 import com.harper.capital.analytics.AnalyticsParams
 import com.harper.capital.asset.AssetManageParams
 import com.harper.capital.liability.LiabilityManageParams
@@ -30,6 +31,8 @@ interface GlobalRouter {
     fun navigateToAccounts()
 
     fun back()
+
+    fun <T : Any> backWithResult(key: String, result: T)
 
     fun shelter()
 }

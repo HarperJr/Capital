@@ -18,24 +18,19 @@ import kotlin.math.roundToInt
 
 interface YAxisDrawer {
 
-    fun drawAxisLine(drawScope: DrawScope, canvas: Canvas, drawableArea: Rect)
+    fun drawAxisLines(
+        drawScope: DrawScope,
+        canvas: Canvas,
+        drawableArea: Rect,
+        offset: Float,
+        spacedByPercent: Float,
+        labels: List<String>
+    )
 
     fun drawAxisLabels(drawScope: DrawScope, canvas: Canvas, drawableArea: Rect, minValue: Float, maxValue: Float)
 }
 
 typealias LabelFormatter = (value: Float) -> String
-
-class EmptyYAxisDrawer : YAxisDrawer {
-
-    override fun drawAxisLine(drawScope: DrawScope, canvas: Canvas, drawableArea: Rect) {
-
-    }
-
-    override fun drawAxisLabels(drawScope: DrawScope, canvas: Canvas, drawableArea: Rect, minValue: Float, maxValue: Float) {
-
-    }
-
-}
 
 class SimpleYAxisDrawer(
     private val labelTextSize: TextUnit = 12.sp,
@@ -56,27 +51,26 @@ class SimpleYAxisDrawer(
     }
     private val textBounds = android.graphics.Rect()
 
-    override fun drawAxisLine(
+    override fun drawAxisLines(
         drawScope: DrawScope,
         canvas: Canvas,
-        drawableArea: Rect
+        drawableArea: Rect,
+        offset: Float,
+        spacedByPercent: Float,
+        labels: List<String>
     ) = with(drawScope) {
         val lineThickness = axisLineThickness.toPx()
-        val x = drawableArea.right - (lineThickness / 2f)
-
-        canvas.drawLine(
-            p1 = Offset(
-                x = x,
-                y = drawableArea.top
-            ),
-            p2 = Offset(
-                x = x,
-                y = drawableArea.bottom
-            ),
-            paint = axisLinePaint.apply {
-                strokeWidth = lineThickness
-            }
-        )
+        val axisSpace = drawableArea.width * spacedByPercent
+        repeat(labels.size) { index ->
+            val x = drawableArea.right + (index - labels.size) * axisSpace + offset + axisSpace / 2
+            canvas.drawLine(
+                Offset(x, drawableArea.bottom),
+                Offset(x, drawableArea.top),
+                axisLinePaint.apply {
+                    strokeWidth = lineThickness
+                }
+            )
+        }
     }
 
     override fun drawAxisLabels(

@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 
 interface LineDrawer {
 
-    fun drawLine(drawScope: DrawScope, canvas: Canvas, linePath: Path, color: Color)
+    fun draw(drawScope: DrawScope, canvas: Canvas, linePath: Path, color: Color)
 }
 
 data class SolidLineDrawer(
@@ -24,16 +24,13 @@ data class SolidLineDrawer(
         this.isAntiAlias = true
     }
 
-    override fun drawLine(
+    override fun draw(
         drawScope: DrawScope,
         canvas: Canvas,
         linePath: Path,
         color: Color
     ) {
-        val lineThickness = with(drawScope) {
-            thickness.toPx()
-        }
-
+        val lineThickness = with(drawScope) { thickness.toPx() }
         canvas.drawPath(
             path = linePath,
             paint = paint.apply {

@@ -299,12 +299,17 @@ fun MainScreenTopBar(viewModel: ComponentViewModel<MainState, MainEvent>, summar
                     style = CapitalTheme.typography.header,
                     color = CapitalTheme.colors.onBackground
                 )
-                Text(
-                    text = stringResource(
+                val expensesText = if (summary.expenses == 0.0) {
+                    stringResource(id = R.string.no_expenses_in_mount, LocalDate.now().formatBy(TimePattern.LLLL))
+                } else {
+                    stringResource(
                         id = R.string.expenses_in_month,
                         summary.expenses.formatWithCurrencySymbol(summary.currency.name),
                         LocalDate.now().formatBy(TimePattern.LLLL)
-                    ),
+                    )
+                }
+                Text(
+                    text = expensesText,
                     style = CapitalTheme.typography.titleSmall,
                     color = CapitalTheme.colors.secondary
                 )

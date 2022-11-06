@@ -80,11 +80,6 @@ fun NavGraphBuilder.transaction() {
         LaunchedEffect(Unit) {
             transactionViewModel.apply {
                 onComposition()
-                onAccountsSelect = { source, receiver ->
-                    isNavigationScrollEnabled = true
-                    transactionManageViewModel.onEvent(TransactionManageEvent.Init(source, receiver))
-                    coroutineScope.launch { pagerState.animateScrollToPage(TRANSACTION_PAGE_MANAGE_INDEX) }
-                }
             }
         }
 
@@ -94,8 +89,14 @@ fun NavGraphBuilder.transaction() {
             userScrollEnabled = isNavigationScrollEnabled
         ) { pageIndex ->
             when (pageIndex) {
-                TRANSACTION_PAGE_INDEX -> TransactionScreen(viewModel = transactionViewModel)
-                TRANSACTION_PAGE_MANAGE_INDEX -> TransactionManageScreen(viewModel = transactionManageViewModel)
+                TRANSACTION_PAGE_INDEX -> TransactionScreen(viewModel = transactionViewModel) { source, receiver ->
+                    isNavigationScrollEnabled = true
+                    transactionManageViewModel.onEvent(TransactionManageEvent.Init(source, receiver))
+                    coroutineScope.launch { pagerState.animateScrollToPage(TRANSACTION_PAGE_MANAGE_INDEX) }
+                }
+                TRANSACTION_PAGE_MANAGE_INDEX -> TransactionManageScreen(viewModel = transactionManageViewModel) {
+                    coroutineScope.launch { pagerState.animateScrollToPage(TRANSACTION_PAGE_INDEX) }
+                }
             }
         }
     }

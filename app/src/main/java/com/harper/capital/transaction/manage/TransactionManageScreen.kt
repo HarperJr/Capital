@@ -44,11 +44,12 @@ import java.time.LocalDate
 
 @Composable
 fun TransactionManageScreen(
-    viewModel: ComponentViewModel<TransactionManageState, TransactionManageEvent>
+    viewModel: ComponentViewModel<TransactionManageState, TransactionManageEvent>,
+    onBackClick: (() -> Unit)? = null
 ) {
     val state by viewModel.state.collectAsState()
     val focusManager = LocalFocusManager.current
-    CScaffold(topBar = { TransactionManageTopBar(viewModel, state.mode) }) {
+    CScaffold(topBar = { TransactionManageTopBar(viewModel, state.mode, onBackClick) }) {
         CLoaderLayout(isLoading = state.isLoading, loaderContent = {}) {
             state.transaction?.let { transaction ->
                 Column(modifier = Modifier.fillMaxWidth()) {
@@ -188,7 +189,8 @@ private fun OptionalCommentTitle() {
 @Composable
 private fun TransactionManageTopBar(
     viewModel: ComponentViewModel<TransactionManageState, TransactionManageEvent>,
-    mode: TransactionManageMode
+    mode: TransactionManageMode,
+    onBackClick: (() -> Unit)?
 ) {
     CToolbar(
         navigation = {
@@ -196,13 +198,13 @@ private fun TransactionManageTopBar(
                 TransactionManageMode.ADD -> {
                     CIcon(
                         imageVector = CapitalIcons.ArrowLeft,
-                        onClick = { viewModel.onEvent(TransactionManageEvent.BackClick) }
+                        onClick = onBackClick ?: { viewModel.onEvent(TransactionManageEvent.BackClick) }
                     )
                 }
                 TransactionManageMode.EDIT -> {
                     CIcon(
                         imageVector = CapitalIcons.ArrowLeft,
-                        onClick = { viewModel.onEvent(TransactionManageEvent.BackClick) }
+                        onClick = onBackClick ?: { viewModel.onEvent(TransactionManageEvent.BackClick) }
                     )
                 }
             }
